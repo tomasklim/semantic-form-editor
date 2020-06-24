@@ -1,6 +1,6 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import Index from '../index';
+import Index from '../index.page';
 
 describe('index page', () => {
   it('should have App component', () => {
