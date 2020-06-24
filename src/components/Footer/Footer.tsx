@@ -1,4 +1,4 @@
-import { Container, Link } from '@material-ui/core';
+import { Link } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import { FC } from 'react';
 import useStyles from './Footer.styles';
