@@ -1,6 +1,10 @@
 import React from 'react';
 import Layout from '@components/Layout/Layout';
-import Editor from '@components/Editor/Editor';
+import dynamic from 'next/dynamic';
+
+const Editor = dynamic(() => import('@components/Editor/Editor'), {
+  ssr: false
+});
 
 const IndexPage: React.FC = () => (
   <>

@@ -18,6 +18,7 @@ export const buildTree = () => {
   const rootNode = new ENode(null, rootData);
 
   const tree = new ETree(rootNode);
+  tree.addNode(rootNode.data['@id'], rootNode);
 
   preOrderBuild(rootNode, tree);
 
@@ -28,7 +29,8 @@ const preOrderBuild = (parentNode: ENode, tree: ETree) => {
   let relatedQuestions = parentNode.data['has_related_question'];
   if (relatedQuestions) {
     if (!Array.isArray(relatedQuestions)) {
-      relatedQuestions = [relatedQuestions];
+      parentNode.data.has_related_question = [relatedQuestions];
+      relatedQuestions = parentNode.data['has_related_question'];
     }
     relatedQuestions.forEach((nodeId) => {
       const nodeIndex = mapping.get(nodeId);

@@ -5,7 +5,7 @@ export interface ENodeData {
   'has-layout-class': Array<string> | string;
   'has-preceding-question': string;
   'is-relevant-if': string;
-  'rdfs:label': string;
+  label: string;
 }
 
 class ENode {
