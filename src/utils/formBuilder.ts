@@ -9,6 +9,8 @@ let mapping: Map<string, number> = new Map<string, number>();
 let formElements: EForm;
 
 export const buildFormStructure = async (form: Document) => {
+  unifyFormStructure(form);
+
   // @ts-ignore
   formElements = await jsonld.flatten(form, {});
 
@@ -40,11 +42,6 @@ const findFormRoot = () => {
 const preOrderBuild = (parentNode: ENode, tree: ETree) => {
   let relatedQuestions = parentNode.data[Constants.HAS_SUBQUESTION];
   if (relatedQuestions) {
-    if (!Array.isArray(relatedQuestions)) {
-      parentNode.data[Constants.HAS_SUBQUESTION] = [relatedQuestions];
-      relatedQuestions = parentNode.data[Constants.HAS_SUBQUESTION];
-    }
-
     relatedQuestions = sortRelatedQuestions(relatedQuestions);
 
     relatedQuestions.forEach((question: ENodeData) => {
@@ -72,4 +69,22 @@ export const sortRelatedQuestions = (relatedQuestions: Array<ENodeData>): Array<
   );
 
   return relatedQuestions;
+};
+
+const unifyFormStructure = (form: Document): Document => {
+  form['@graph'].forEach((node) => {
+    if (node[Constants.HAS_SUBQUESTION] && !Array.isArray(node[Constants.HAS_SUBQUESTION])) {
+      node[Constants.HAS_SUBQUESTION] = transformToArray(node[Constants.HAS_SUBQUESTION]);
+    }
+
+    if (node[Constants.HAS_LAYOUT_CLASS] && !Array.isArray(node[Constants.HAS_LAYOUT_CLASS])) {
+      node[Constants.HAS_LAYOUT_CLASS] = transformToArray(node[Constants.HAS_LAYOUT_CLASS]);
+    }
+  });
+
+  return form;
+};
+
+const transformToArray = (element: string): Array<string> => {
+  return [element];
 };
