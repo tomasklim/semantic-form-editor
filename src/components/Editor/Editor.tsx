@@ -164,50 +164,34 @@ const Editor: FC<Props> = ({}) => {
 
     const root = tree.root;
 
-    const buildTreeList = (node: ENodeData) => {
-      const listItem =
-        root.data === node ? (
-          <li id={node['@id']} className={`${classes.listItem} ${classes.listItemRoot}`}>
-            {node['@id']}
-          </li>
-        ) : (
-          <li
-            id={node['@id']}
-            className={classes.listItem}
-            draggable={true}
-            onDragStart={handleDragStart}
-            onDragEnd={handleDragEnd}
-            onDragOver={handleDragOver}
-            onDragEnter={handleDragEnter}
-            onDragLeave={handleDragLeave}
-            onDrop={handleDrop}
-          >
-            {node[Constants.RDFS_LABEL] || node['@id']}
-          </li>
-        );
+    const buildTreeList = (node: ENodeData, isRoot: boolean = false) => {
+      const listItem = !isRoot && (
+        <li
+          id={node['@id']}
+          className={classes.listItem}
+          draggable={true}
+          onDragStart={handleDragStart}
+          onDragEnd={handleDragEnd}
+          onDragOver={handleDragOver}
+          onDragEnter={handleDragEnter}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+        >
+          {node[Constants.RDFS_LABEL] || node['@id']}
+        </li>
+      );
 
-      let relatedQuestions = node[Constants.HAS_SUBQUESTION];
+      const relatedQuestions = node[Constants.HAS_SUBQUESTION];
 
       return (
         <Fragment key={node['@id']}>
           {listItem}
-          {relatedQuestions && (
-            <ul>
-              {relatedQuestions.map((q) => {
-                if (!q) {
-                  console.error('err');
-                  return;
-                }
-
-                return buildTreeList(q);
-              })}
-            </ul>
-          )}
+          {relatedQuestions && <ul>{relatedQuestions.map((q) => buildTreeList(q))}</ul>}
         </Fragment>
       );
     };
 
-    return <ul>{buildTreeList(root.data)}</ul>;
+    return buildTreeList(root.data, true);
   };
 
   return treeList();
