@@ -45,16 +45,7 @@ const preOrderBuild = (parentNode: ENode, tree: ETree) => {
       relatedQuestions = parentNode.data[Constants.HAS_SUBQUESTION];
     }
 
-    // sort by label
-    relatedQuestions = JsonLdObjectUtils.orderByLocalizedLabels(relatedQuestions, {
-      locale: 'en'
-    });
-
-    // sort by property
-    relatedQuestions = JsonLdObjectUtils.orderPreservingToplogicalSort(
-      relatedQuestions,
-      Constants.HAS_PRECEDING_QUESTION
-    );
+    relatedQuestions = sortRelatedQuestions(relatedQuestions);
 
     relatedQuestions.forEach((question: ENodeData) => {
       const node = new ENode(parentNode, question);
@@ -66,4 +57,19 @@ const preOrderBuild = (parentNode: ENode, tree: ETree) => {
   }
 
   return;
+};
+
+export const sortRelatedQuestions = (relatedQuestions: Array<ENodeData>): Array<ENodeData> => {
+  // sort by label
+  relatedQuestions = JsonLdObjectUtils.orderByLocalizedLabels(relatedQuestions, {
+    locale: 'en'
+  });
+
+  // sort by property
+  relatedQuestions = JsonLdObjectUtils.orderPreservingToplogicalSort(
+    relatedQuestions,
+    Constants.HAS_PRECEDING_QUESTION
+  );
+
+  return relatedQuestions;
 };

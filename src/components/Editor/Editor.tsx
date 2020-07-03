@@ -1,7 +1,7 @@
-import React, { FC, useState, Fragment, useEffect } from 'react';
+import React, { FC, Fragment, useEffect, useState } from 'react';
 import { cloneDeep } from 'lodash';
-import { buildFormStructure } from '../../utils/formBuilder';
-import { ENodeData } from '../../model/ENode';
+import { buildFormStructure, sortRelatedQuestions } from '../../utils/formBuilder';
+import ENode, { ENodeData } from '../../model/ENode';
 import useStyles from './Editor.styles';
 import { Constants } from 's-forms';
 import ETree from '../../model/ETree';
@@ -23,11 +23,19 @@ const Editor: FC<Props> = ({}) => {
     getTree();
   }, []);
 
+  const detectChild = (testedNode: ENode, exemplarNode: ENode): boolean => {
+    if (!exemplarNode.parent) {
+      return false;
+    }
+
+    return testedNode.data['@id'] === exemplarNode.data['@id'] ? true : detectChild(testedNode, exemplarNode.parent);
+  };
+
   const handleDragStart = (e: React.DragEvent<HTMLLIElement>) => {
     (e.target as HTMLLIElement).style.opacity = '0.4';
 
     e.dataTransfer.effectAllowed = 'move';
-    e.dataTransfer.setData('text', (e.target as HTMLLIElement).id);
+    e.dataTransfer.setData((e.target as HTMLLIElement).id, '');
   };
 
   const handleDragEnd = (e: React.DragEvent<HTMLLIElement>) => {
@@ -60,7 +68,14 @@ const Editor: FC<Props> = ({}) => {
     });
 
     if ((e.target as HTMLLIElement).id) {
-      move(e.dataTransfer.getData('text'), (e.target as HTMLLIElement).id);
+      const moving = tree?.structure.get(e.dataTransfer.types.slice(-1)[0]);
+      const target = tree?.structure.get((e.target as HTMLLIElement).id);
+
+      if (moving && target && detectChild(moving, target)) {
+        return;
+      }
+
+      move(moving, target);
       e.dataTransfer.clearData();
     }
 
@@ -69,6 +84,13 @@ const Editor: FC<Props> = ({}) => {
 
   const handleDragEnter = (e: React.DragEvent<HTMLLIElement>) => {
     if ((e.target as HTMLLIElement).nodeName === 'LI') {
+      const moving = tree?.structure.get(e.dataTransfer.types.slice(-1)[0]);
+      const target = tree?.structure.get((e.target as HTMLLIElement).id);
+
+      if (moving && target && detectChild(moving, target)) {
+        return;
+      }
+
       (e.target as HTMLLIElement).classList.add(classes.over);
     }
   };
@@ -77,11 +99,22 @@ const Editor: FC<Props> = ({}) => {
     (e.target as HTMLLIElement).classList.remove(classes.over);
   };
 
-  const move = (idToMove: string, idOfPlace: string) => {
+  const move = (nodeToMove: ENode, nodeOfPlace: ENode) => {
     const newTree = cloneDeep(tree);
 
-    const nodeToMove = newTree.structure.get(idToMove);
-    const nodeOfPlace = newTree.structure.get(idOfPlace);
+    nodeToMove = newTree.structure.get(nodeToMove.data['@id']);
+    nodeOfPlace = newTree.structure.get(nodeOfPlace.data['@id']);
+
+    if (!nodeToMove?.data || !nodeOfPlace?.data) {
+      console.warn('Error3');
+
+      return;
+    }
+
+    // if node with preceding question is moved, it loses its preceding question
+    if (nodeToMove.data[Constants.HAS_PRECEDING_QUESTION]) {
+      delete nodeToMove.data[Constants.HAS_PRECEDING_QUESTION];
+    }
 
     if (!nodeToMove?.parent || !nodeOfPlace?.parent) {
       console.warn('Error');
@@ -91,8 +124,23 @@ const Editor: FC<Props> = ({}) => {
     const oldNodeParent = nodeToMove.parent;
     const newNodeParent = nodeOfPlace.parent;
 
+    if (!oldNodeParent?.data || !newNodeParent?.data) {
+      console.warn('Error1');
+      return;
+    }
+
+    // if some node has nodeToMove as a preceding node, it loses it
+    oldNodeParent.data[Constants.HAS_SUBQUESTION].forEach((nodeData: ENodeData) => {
+      if (
+        nodeData[Constants.HAS_PRECEDING_QUESTION] &&
+        nodeData[Constants.HAS_PRECEDING_QUESTION]['@id'] === nodeToMove.data['@id']
+      ) {
+        delete nodeData[Constants.HAS_PRECEDING_QUESTION];
+      }
+    });
+
     if (!oldNodeParent || !newNodeParent) {
-      console.warn('Error');
+      console.warn('Error2');
       return;
     }
 
@@ -103,6 +151,8 @@ const Editor: FC<Props> = ({}) => {
     );
 
     newNodeParent.data[Constants.HAS_SUBQUESTION].push(nodeToMove.data);
+
+    newNodeParent.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(newNodeParent.data[Constants.HAS_SUBQUESTION]);
 
     setTree(newTree);
   };
