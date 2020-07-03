@@ -1,5 +1,6 @@
-declare global {
-  interface Array<T> {
-    move(from: T, to: T): Array<T>;
-  }
+import { ENodeData } from '../model/ENode';
+import { JsonLdObj } from 'jsonld/jsonld-spec';
+
+export interface EForm extends JsonLdObj {
+  '@graph': Array<ENodeData>;
 }

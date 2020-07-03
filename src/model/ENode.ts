@@ -1,18 +1,19 @@
+import { Constants } from 's-forms';
+
 export interface ENodeData {
   '@id': string;
   '@type': string;
-  has_related_question: Array<string>;
-  'has-layout-class': Array<string> | string;
-  'has-preceding-question': string;
-  'is-relevant-if': string;
-  label: string;
+  [Constants.HAS_SUBQUESTION]: Array<ENodeData> | null;
+  [Constants.RDFS_LABEL]: string;
+  [Constants.HAS_LAYOUT_CLASS]: Array<string> | string;
+  [Constants.HAS_PRECEDING_QUESTION]: ENodeData;
 }
 
 class ENode {
-  public parent: string | null;
+  public parent: ENode | null;
   public data: ENodeData;
 
-  constructor(parent: string | null, data: any) {
+  constructor(parent: ENode | null, data: any) {
     this.parent = parent;
     this.data = data;
   }

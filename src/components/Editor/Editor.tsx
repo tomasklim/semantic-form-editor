@@ -1,15 +1,27 @@
-import React, { FC, useState, Fragment } from 'react';
+import React, { FC, useState, Fragment, useEffect } from 'react';
 import { cloneDeep } from 'lodash';
-import { buildTree } from '../../utils/treeBuilder';
-import ENode from '../../model/ENode';
+import { buildFormStructure } from '../../utils/formBuilder';
+import { ENodeData } from '../../model/ENode';
 import useStyles from './Editor.styles';
+import { Constants } from 's-forms';
+import ETree from '../../model/ETree';
 
 type Props = {};
 
 const Editor: FC<Props> = ({}) => {
   const classes = useStyles();
 
-  const [tree, setTree] = useState(buildTree());
+  const [tree, setTree] = useState<ETree | null>(null);
+
+  useEffect(() => {
+    async function getTree() {
+      const form = require('../../utils/form.json');
+      const tree = await buildFormStructure(form);
+
+      setTree(tree);
+    }
+    getTree();
+  }, []);
 
   const handleDragStart = (e: React.DragEvent<HTMLLIElement>) => {
     (e.target as HTMLLIElement).style.opacity = '0.4';
@@ -76,8 +88,8 @@ const Editor: FC<Props> = ({}) => {
       return;
     }
 
-    const oldNodeParent = newTree.structure.get(nodeToMove.parent);
-    const newNodeParent = newTree.structure.get(nodeOfPlace.parent);
+    const oldNodeParent = nodeToMove.parent;
+    const newNodeParent = nodeOfPlace.parent;
 
     if (!oldNodeParent || !newNodeParent) {
       console.warn('Error');
@@ -86,22 +98,31 @@ const Editor: FC<Props> = ({}) => {
 
     nodeToMove.parent = nodeOfPlace.parent;
 
-    oldNodeParent.data.has_related_question = oldNodeParent.data.has_related_question.filter((id) => id !== idToMove);
-    newNodeParent.data.has_related_question.push(idToMove);
+    oldNodeParent.data[Constants.HAS_SUBQUESTION] = oldNodeParent.data[Constants.HAS_SUBQUESTION].filter(
+      (node: ENodeData) => node['@id'] !== nodeToMove.data['@id']
+    );
+
+    newNodeParent.data[Constants.HAS_SUBQUESTION].push(nodeToMove.data);
 
     setTree(newTree);
   };
 
   const treeList = () => {
+    if (!tree) {
+      return null;
+    }
+
     const root = tree.root;
 
-    const buildTreeList = (node: ENode) => {
-      let relatedQuestions = node.data.has_related_question;
-
-      return (
-        <Fragment key={node.data['@id']}>
+    const buildTreeList = (node: ENodeData) => {
+      const listItem =
+        root.data === node ? (
+          <li id={node['@id']} className={`${classes.listItem} ${classes.listItemRoot}`}>
+            {node['@id']}
+          </li>
+        ) : (
           <li
-            id={node.data['@id']}
+            id={node['@id']}
             className={classes.listItem}
             draggable={true}
             onDragStart={handleDragStart}
@@ -111,19 +132,24 @@ const Editor: FC<Props> = ({}) => {
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
           >
-            {node.data['label'] || node.data['@id']}
+            {node[Constants.RDFS_LABEL] || node['@id']}
           </li>
+        );
+
+      let relatedQuestions = node[Constants.HAS_SUBQUESTION];
+
+      return (
+        <Fragment key={node['@id']}>
+          {listItem}
           {relatedQuestions && (
             <ul>
               {relatedQuestions.map((q) => {
-                const nodeId = tree.structure.get(q);
-
-                if (!nodeId) {
+                if (!q) {
                   console.error('err');
                   return;
                 }
 
-                return buildTreeList(nodeId);
+                return buildTreeList(q);
               })}
             </ul>
           )}
@@ -131,7 +157,7 @@ const Editor: FC<Props> = ({}) => {
       );
     };
 
-    return <ul>{buildTreeList(root)}</ul>;
+    return <ul>{buildTreeList(root.data)}</ul>;
   };
 
   return treeList();

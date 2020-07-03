@@ -8,6 +8,11 @@ export default makeStyles((theme) => ({
       backgroundColor: 'gray'
     }
   },
+  listItemRoot: {
+    '&:hover': {
+      backgroundColor: 'initial'
+    }
+  },
   over: {
     border: '1px solid red',
     backgroundColor: 'orange'
