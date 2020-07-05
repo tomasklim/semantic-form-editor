@@ -76,6 +76,7 @@ const EditorItem: FC<Props> = ({ data, tree, setTree }) => {
       }
 
       (e.target as HTMLLIElement).classList.add(classes.over);
+      e.dataTransfer.dropEffect = 'move';
     }
   };
 

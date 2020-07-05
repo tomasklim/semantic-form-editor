@@ -34,7 +34,15 @@ const Editor: FC<Props> = ({}) => {
       const relatedQuestions = question[Constants.HAS_SUBQUESTION];
 
       if (FormUtils.isForm(question)) {
-        return <EditorWizard key={question['@id']} buildTreeList={buildTreeList} question={question} />;
+        return (
+          <EditorWizard
+            key={question['@id']}
+            buildTreeList={buildTreeList}
+            question={question}
+            tree={tree}
+            setTree={setTree}
+          />
+        );
       } else if (FormUtils.isSection(question)) {
         item = <EditorItem data={question} setTree={setTree} tree={tree} />;
       } else if (FormUtils.isTypeahead(question)) {
