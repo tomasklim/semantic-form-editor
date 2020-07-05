@@ -9,7 +9,6 @@ const Editor = dynamic(() => import('@components/Editor/Editor'), {
 const IndexPage: React.FC = () => (
   <>
     <Layout title="Home">
-      <h1>Semantic Form Web Editor 👋</h1>
       <Editor />
     </Layout>
   </>

@@ -88,3 +88,11 @@ const unifyFormStructure = (form: Document): Document => {
 const transformToArray = (element: string): Array<string> => {
   return [element];
 };
+
+export const detectChild = (testedNode: ENode, exemplarNode: ENode): boolean => {
+  if (!exemplarNode.parent) {
+    return false;
+  }
+
+  return testedNode.data['@id'] === exemplarNode.data['@id'] ? true : detectChild(testedNode, exemplarNode.parent);
+};
