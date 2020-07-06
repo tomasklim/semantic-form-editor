@@ -16,15 +16,13 @@ type Props = {
 
 const EditorWizard: FC<Props> = ({ question, buildTreeList, tree, setTree }) => {
   const classes = useStyles();
-  const relatedQuestions = question[Constants.HAS_SUBQUESTION];
 
   const handleDragOver = (e: React.DragEvent<HTMLLIElement>) => {
-    if (e.preventDefault) {
+    if ((e.target as HTMLDivElement).classList.contains(classes.page)) {
       e.preventDefault();
+
+      e.dataTransfer.dropEffect = 'move';
     }
-
-    e.dataTransfer.dropEffect = 'move';
-
     return false;
   };
 
@@ -42,11 +40,9 @@ const EditorWizard: FC<Props> = ({ question, buildTreeList, tree, setTree }) => 
   };
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    if (e.preventDefault) {
-      e.preventDefault();
-    }
-
     if ((e.target as HTMLDivElement).classList.contains(classes.page)) {
+      e.preventDefault();
+
       (e.target as HTMLLIElement).style.opacity = '1';
 
       [].forEach.call(document.getElementsByClassName(classes.page), (page: HTMLDivElement) => {
@@ -54,14 +50,14 @@ const EditorWizard: FC<Props> = ({ question, buildTreeList, tree, setTree }) => 
       });
 
       if ((e.target as HTMLDivElement).id) {
-        const moving = tree?.structure.get(e.dataTransfer.types.slice(-1)[0]);
-        const target = tree?.structure.get((e.target as HTMLDivElement).id);
+        const movingNode = tree?.structure.get(e.dataTransfer.types.slice(-1)[0]);
+        const page = tree?.structure.get((e.target as HTMLDivElement).id);
 
-        if (!moving || !target) {
+        if (!movingNode || !page) {
           return;
         }
 
-        move(moving, target);
+        moveNodeToPage(movingNode, page);
 
         e.dataTransfer.clearData();
       }
@@ -70,61 +66,62 @@ const EditorWizard: FC<Props> = ({ question, buildTreeList, tree, setTree }) => 
     return false;
   };
 
-  const move = (nodeToMove: ENode, page: ENode) => {
+  const moveNodeToPage = (movingNode: ENode, page: ENode) => {
     const newTree = cloneDeep(tree);
 
-    nodeToMove = newTree.structure.get(nodeToMove.data['@id']);
+    movingNode = newTree.structure.get(movingNode.data['@id']);
     page = newTree.structure.get(page.data['@id']);
 
-    if (!nodeToMove?.data || !page?.data) {
+    if (!movingNode?.data || !page?.data) {
       console.warn('Error3');
       return;
     }
 
     // if node with preceding question is moved, it loses its preceding question
-    if (nodeToMove.data[Constants.HAS_PRECEDING_QUESTION]) {
-      delete nodeToMove.data[Constants.HAS_PRECEDING_QUESTION];
+    if (movingNode.data[Constants.HAS_PRECEDING_QUESTION]) {
+      delete movingNode.data[Constants.HAS_PRECEDING_QUESTION];
     }
 
-    if (!nodeToMove?.parent) {
-      console.warn('Error');
+    if (!movingNode?.parent) {
       return;
     }
 
-    const oldNodeParent = nodeToMove.parent;
+    const movingNodeParent = movingNode.parent;
 
-    if (!oldNodeParent?.data || !page?.data) {
+    if (!movingNodeParent?.data || !page?.data) {
       console.warn('Error1');
       return;
     }
 
     // if some node has nodeToMove as a preceding node, it loses it
-    oldNodeParent.data[Constants.HAS_SUBQUESTION].forEach((nodeData: ENodeData) => {
+    movingNodeParent.data[Constants.HAS_SUBQUESTION].forEach((nodeData: ENodeData) => {
       if (
         nodeData[Constants.HAS_PRECEDING_QUESTION] &&
-        nodeData[Constants.HAS_PRECEDING_QUESTION]['@id'] === nodeToMove.data['@id']
+        nodeData[Constants.HAS_PRECEDING_QUESTION]['@id'] === movingNode.data['@id']
       ) {
         delete nodeData[Constants.HAS_PRECEDING_QUESTION];
       }
     });
 
-    if (!oldNodeParent || !page) {
+    if (!movingNodeParent || !page) {
       console.warn('Error2');
       return;
     }
 
-    nodeToMove.parent = page;
+    movingNode.parent = page;
 
-    oldNodeParent.data[Constants.HAS_SUBQUESTION] = oldNodeParent.data[Constants.HAS_SUBQUESTION].filter(
-      (node: ENodeData) => node['@id'] !== nodeToMove.data['@id']
+    movingNodeParent.data[Constants.HAS_SUBQUESTION] = movingNodeParent.data[Constants.HAS_SUBQUESTION].filter(
+      (node: ENodeData) => node['@id'] !== movingNode.data['@id']
     );
 
-    page.data[Constants.HAS_SUBQUESTION].push(nodeToMove.data);
+    page.data[Constants.HAS_SUBQUESTION].push(movingNode.data);
 
     page.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(page.data[Constants.HAS_SUBQUESTION]);
 
     setTree(newTree);
   };
+
+  const relatedQuestions = question[Constants.HAS_SUBQUESTION];
 
   return (
     <React.Fragment>
@@ -147,9 +144,9 @@ const EditorWizard: FC<Props> = ({ question, buildTreeList, tree, setTree }) => 
                 <Typography>{q[Constants.RDFS_LABEL]}</Typography>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails className={classes.body}>
-                <ul id={q['@id']}>
+                <ol id={q['@id']}>
                   {q[Constants.HAS_SUBQUESTION] && q[Constants.HAS_SUBQUESTION].map((q) => buildTreeList(q))}
-                </ul>
+                </ol>
               </ExpansionPanelDetails>
             </ExpansionPanel>
           </Box>

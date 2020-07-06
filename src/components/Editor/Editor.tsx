@@ -62,7 +62,7 @@ const Editor: FC<Props> = ({}) => {
       return (
         <React.Fragment key={question['@id']}>
           {item}
-          {relatedQuestions && relatedQuestions.map((q) => <ul key={q['@id']}>{buildTreeList(q)}</ul>)}
+          {relatedQuestions && relatedQuestions.map((q) => <ol key={q['@id']}>{buildTreeList(q)}</ol>)}
         </React.Fragment>
       );
     };

@@ -1,10 +1,12 @@
-import React, { Dispatch, FC, SetStateAction } from 'react';
+import React, { Dispatch, FC, SetStateAction, useRef } from 'react';
 import ENode, { ENodeData } from '../../model/ENode';
 import ETree from '../../model/ETree';
 import { Constants } from 's-forms';
 import useStyles from './EditorItem.styles';
 import { cloneDeep } from 'lodash';
 import { detectChild, sortRelatedQuestions } from '../../utils/formBuilder';
+import { Card, CardContent, CardHeader } from '@material-ui/core';
+import { DragHandle, MoreVert } from '@material-ui/icons';
 
 type Props = {
   data: ENodeData;
@@ -14,11 +16,11 @@ type Props = {
 
 const EditorItem: FC<Props> = ({ data, tree, setTree }) => {
   const classes = useStyles();
+  const liContainer = useRef(null);
 
   const handleDragStart = (e: React.DragEvent<HTMLLIElement>) => {
     (e.target as HTMLLIElement).style.opacity = '0.4';
 
-    e.dataTransfer.effectAllowed = 'move';
     e.dataTransfer.setData((e.target as HTMLLIElement).id, '');
   };
 
@@ -142,19 +144,48 @@ const EditorItem: FC<Props> = ({ data, tree, setTree }) => {
     setTree(newTree);
   };
 
+  const handleMouseEnter = () => {
+    liContainer.current.setAttribute('draggable', 'true');
+  };
+
+  const handleMouseLeave = () => {
+    liContainer.current.setAttribute('draggable', 'false');
+  };
+
   return (
     <li
       id={data['@id']}
       className={classes.listItem}
-      draggable={true}
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
       onDragOver={handleDragOver}
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
+      ref={liContainer}
     >
-      {data[Constants.RDFS_LABEL] || data['@id']}
+      <Card variant="outlined">
+        <CardHeader
+          title={
+            <div className={classes.cardHeader}>
+              <span className={classes.cardHeaderItem}>{data[Constants.RDFS_LABEL] || data['@id']}</span>
+              <span className={`${classes.cardHeaderItem} ${classes.cardHeaderItemCenter}`}>
+                <DragHandle
+                  className={classes.cardHeaderDrag}
+                  focusable={true}
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
+                />
+              </span>
+              <span className={`${classes.cardHeaderItem} ${classes.cardHeaderItemRight}`}>
+                <MoreVert />
+              </span>
+            </div>
+          }
+          disableTypography={true}
+        />
+        <CardContent>kuk</CardContent>
+      </Card>
     </li>
   );
 };
