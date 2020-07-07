@@ -45,6 +45,10 @@ const EditorWizard: FC<Props> = ({ question, buildTreeList, tree, setTree }) => 
 
       (e.target as HTMLLIElement).style.opacity = '1';
 
+      document
+        .querySelectorAll('*:not([data-droppable=true])')
+        .forEach((element) => (element.style.pointerEvents = 'all'));
+
       [].forEach.call(document.getElementsByClassName(classes.page), (page: HTMLDivElement) => {
         page.classList.remove(classes.pageOver);
       });
@@ -131,6 +135,7 @@ const EditorWizard: FC<Props> = ({ question, buildTreeList, tree, setTree }) => 
             key={q['@id']}
             id={q['@id']}
             className={classes.page}
+            data-droppable={true}
             onDragOver={handleDragOver}
             onDragEnter={handleDragEnter}
             onDragLeave={handleDragLeave}

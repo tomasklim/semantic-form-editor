@@ -5,7 +5,7 @@ import { Constants } from 's-forms';
 import useStyles from './EditorItem.styles';
 import { cloneDeep } from 'lodash';
 import { detectChild, sortRelatedQuestions } from '../../utils/formBuilder';
-import { Card, CardContent, CardHeader } from '@material-ui/core';
+import { Box, Card, CardContent, CardHeader } from '@material-ui/core';
 import { DragHandle, MoreVert } from '@material-ui/icons';
 
 type Props = {
@@ -21,11 +21,19 @@ const EditorItem: FC<Props> = ({ data, tree, setTree }) => {
   const handleDragStart = (e: React.DragEvent<HTMLLIElement>) => {
     (e.target as HTMLLIElement).style.opacity = '0.4';
 
+    document
+      .querySelectorAll('*:not([data-droppable=true])')
+      .forEach((element) => (element.style.pointerEvents = 'none'));
+
+    document.querySelectorAll('[data-droppable=true]').forEach((element) => (element.style.pointerEvents = 'all'));
+
     e.dataTransfer.setData((e.target as HTMLLIElement).id, '');
   };
 
   const handleDragEnd = (e: React.DragEvent<HTMLLIElement>) => {
     (e.target as HTMLLIElement).style.opacity = '1';
+
+    document.querySelectorAll('*').forEach((element) => (element.style.pointerEvents = 'all'));
 
     [].forEach.call(document.querySelectorAll('li'), (li: HTMLLIElement) => {
       li.classList.remove(classes.over);
@@ -48,6 +56,10 @@ const EditorItem: FC<Props> = ({ data, tree, setTree }) => {
     }
 
     (e.target as HTMLLIElement).style.opacity = '1';
+
+    document
+      .querySelectorAll('*:not([data-droppable=true])')
+      .forEach((element) => (element.style.pointerEvents = 'all'));
 
     [].forEach.call(document.querySelectorAll('li'), (li: HTMLLIElement) => {
       li.classList.remove(classes.over);
@@ -163,6 +175,7 @@ const EditorItem: FC<Props> = ({ data, tree, setTree }) => {
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
       ref={liContainer}
+      data-droppable={true}
     >
       <Card variant="outlined">
         <CardHeader
