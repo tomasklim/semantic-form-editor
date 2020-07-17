@@ -5,10 +5,13 @@ import { Constants, FormUtils } from 's-forms';
 import ETree from '../../model/ETree';
 import EditorItem from '@components/EditorItem/EditorItem';
 import EditorWizard from '@components/EditorWizard/EditorWizard';
+import useStyles from '../EditorWizard/EditorWizard.styles';
+import EditorAdd from '@components/EditorAdd/EditorAdd';
 
 type Props = {};
 
 const Editor: FC<Props> = ({}) => {
+  const classes = useStyles();
   const [tree, setTree] = useState<ETree | null>(null);
 
   useEffect(() => {
@@ -28,7 +31,7 @@ const Editor: FC<Props> = ({}) => {
 
     const root = tree.root;
 
-    const buildTreeList = (question: ENodeData) => {
+    const buildTreeList = (question: ENodeData, position: number, parentQuestion: ENodeData) => {
       let item = null;
 
       const relatedQuestions = question[Constants.HAS_SUBQUESTION];
@@ -62,12 +65,19 @@ const Editor: FC<Props> = ({}) => {
       return (
         <React.Fragment key={question['@id']}>
           {item}
-          {relatedQuestions && relatedQuestions.map((q) => <ol key={q['@id']}>{buildTreeList(q)}</ol>)}
+          {relatedQuestions &&
+            relatedQuestions.map((q, index) => (
+              <ol key={q['@id']}>
+                <EditorAdd parentId={question['@id']} position={0} tree={tree} setTree={setTree} />
+                {buildTreeList(q, index + 1, question)}
+              </ol>
+            ))}
+          <EditorAdd parentId={parentQuestion?.['@id']} position={position} tree={tree} setTree={setTree} />
         </React.Fragment>
       );
     };
 
-    return buildTreeList(root.data);
+    return buildTreeList(root.data, 1, null);
   };
 
   return treeList();

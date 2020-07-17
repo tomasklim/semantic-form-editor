@@ -6,6 +6,7 @@ import useStyles from './EditorWizard.styles';
 import { sortRelatedQuestions } from '../../utils/formBuilder';
 import ETree from '../../model/ETree';
 import { cloneDeep } from 'lodash';
+import EditorAdd from '@components/EditorAdd/EditorAdd';
 
 type Props = {
   question: ENodeData;
@@ -33,7 +34,7 @@ const EditorWizard: FC<Props> = ({ question, buildTreeList, tree, setTree }) => 
     }
   };
 
-  const handleDragLeave = (e: React.DragEvent<HTMLLIElement>) => {
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
     if ((e.target as HTMLDivElement).classList.contains(classes.page)) {
       (e.target as HTMLDivElement).classList.remove(classes.pageOver);
     }
@@ -150,7 +151,11 @@ const EditorWizard: FC<Props> = ({ question, buildTreeList, tree, setTree }) => 
               </ExpansionPanelSummary>
               <ExpansionPanelDetails className={classes.body}>
                 <ol id={q['@id']}>
-                  {q[Constants.HAS_SUBQUESTION] && q[Constants.HAS_SUBQUESTION].map((q) => buildTreeList(q))}
+                  {q[Constants.HAS_SUBQUESTION]?.length > 0 && (
+                    <EditorAdd parentId={q['@id']} position={0} tree={tree} setTree={setTree} />
+                  )}
+                  {q[Constants.HAS_SUBQUESTION] &&
+                    q[Constants.HAS_SUBQUESTION].map((question, index) => buildTreeList(question, index + 1, q))}
                 </ol>
               </ExpansionPanelDetails>
             </ExpansionPanel>
