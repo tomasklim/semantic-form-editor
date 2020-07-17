@@ -28,7 +28,7 @@
     "next": "^9.4.4",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "s-forms": "../s-forms-0.2.8.tgz"
+    "s-forms": "../s-forms-0.2.9.tgz"
   },
   "devDependencies": {
     "@types/enzyme": "^3.10.5",

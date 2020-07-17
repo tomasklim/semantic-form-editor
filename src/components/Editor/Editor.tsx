@@ -5,6 +5,7 @@ import { Constants, FormUtils } from 's-forms';
 import ETree from '../../model/ETree';
 import EditorItem from '@components/EditorItem/EditorItem';
 import EditorWizard from '@components/EditorWizard/EditorWizard';
+import EditorAdd from '@components/EditorAdd/EditorAdd';
 
 type Props = {};
 
@@ -28,7 +29,7 @@ const Editor: FC<Props> = ({}) => {
 
     const root = tree.root;
 
-    const buildTreeList = (question: ENodeData) => {
+    const buildTreeList = (question: ENodeData, position: number, parentQuestion: ENodeData) => {
       let item = null;
 
       const relatedQuestions = question[Constants.HAS_SUBQUESTION];
@@ -44,30 +45,37 @@ const Editor: FC<Props> = ({}) => {
           />
         );
       } else if (FormUtils.isSection(question)) {
-        item = <EditorItem data={question} setTree={setTree} tree={tree} />;
+        item = <EditorItem data={question} />;
       } else if (FormUtils.isTypeahead(question)) {
-        item = <EditorItem data={question} setTree={setTree} tree={tree} />;
+        item = <EditorItem data={question} />;
       } else if (FormUtils.isCalendar(question)) {
-        item = <EditorItem data={question} setTree={setTree} tree={tree} />;
+        item = <EditorItem data={question} />;
       } else if (FormUtils.isCheckbox(question)) {
-        item = <EditorItem data={question} setTree={setTree} tree={tree} />;
+        item = <EditorItem data={question} />;
       } else if (FormUtils.isMaskedInput(question)) {
-        item = <EditorItem data={question} setTree={setTree} tree={tree} />;
+        item = <EditorItem data={question} />;
       } else if (FormUtils.isTextarea(question, '')) {
-        item = <EditorItem data={question} setTree={setTree} tree={tree} />;
+        item = <EditorItem data={question} />;
       } else {
-        item = <EditorItem data={question} setTree={setTree} tree={tree} />;
+        item = <EditorItem data={question} />;
       }
 
       return (
         <React.Fragment key={question['@id']}>
           {item}
-          {relatedQuestions && relatedQuestions.map((q) => <ul key={q['@id']}>{buildTreeList(q)}</ul>)}
+          {relatedQuestions &&
+            relatedQuestions.map((q, index) => (
+              <ol key={q['@id']}>
+                <EditorAdd parentId={question['@id']} position={0} tree={tree} setTree={setTree} />
+                {buildTreeList(q, index + 1, question)}
+              </ol>
+            ))}
+          <EditorAdd parentId={parentQuestion?.['@id']} position={position} tree={tree} setTree={setTree} />
         </React.Fragment>
       );
     };
 
-    return buildTreeList(root.data);
+    return buildTreeList(root.data, 1, null);
   };
 
   return treeList();

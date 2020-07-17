@@ -13,13 +13,5 @@ export default makeStyles((theme) => ({
   },
   pageOver: {
     border: '1px dashed red'
-  },
-  panel: {
-    pointerEvents: 'none',
-    '@global': {
-      li: {
-        pointerEvents: 'all'
-      }
-    }
   }
 }));
