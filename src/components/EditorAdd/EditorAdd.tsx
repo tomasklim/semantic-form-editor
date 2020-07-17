@@ -103,7 +103,12 @@ const EditorAdd: FC<Props> = ({ parentId, position, tree, setTree }) => {
 
     removeBeingPrecedingQuestion(movingNodeParent, movingNode);
 
-    removeFromSubQuestions(movingNodeParent, movingNode);
+    const removedIndex = removeFromSubQuestions(movingNodeParent, movingNode);
+
+    // if moving node from top to down, position is decreased by one, because node is deleted 1 line before
+    if (removedIndex < position) {
+      position--;
+    }
 
     moveQuestionToSpecificPosition(position, targetNode, movingNode);
 

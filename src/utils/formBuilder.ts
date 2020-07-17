@@ -121,19 +121,34 @@ export const removeBeingPrecedingQuestion = (movingNodeParent: ENode, movingNode
   });
 };
 
-export const removeFromSubQuestions = (movingNodeParent: ENode, movingNode: ENode) => {
+export const removeFromSubQuestions = (movingNodeParent: ENode, movingNode: ENode): number => {
+  let removedNodeIndex = -1;
+
   movingNodeParent.data[Constants.HAS_SUBQUESTION] = movingNodeParent.data[Constants.HAS_SUBQUESTION]?.filter(
-    (node: ENodeData) => node['@id'] !== movingNode.data['@id']
+    (node: ENodeData, index: number) => {
+      if (node['@id'] === movingNode.data['@id']) {
+        removedNodeIndex = index;
+      }
+      return node['@id'] !== movingNode.data['@id'];
+    }
   );
+
+  return removedNodeIndex;
 };
 
 export const moveQuestionToSpecificPosition = (position: number, targetNode: ENode, movingNode: ENode) => {
+  movingNode.parent = targetNode;
+
   if (position !== targetNode.data[Constants.HAS_SUBQUESTION]?.length) {
-    targetNode.data[Constants.HAS_SUBQUESTION][position][Constants.HAS_PRECEDING_QUESTION] = movingNode.data['@id'];
+    targetNode.data[Constants.HAS_SUBQUESTION][position][Constants.HAS_PRECEDING_QUESTION] = {
+      '@id': movingNode.data['@id']
+    };
   }
 
   if (position !== 0) {
-    movingNode.data[Constants.HAS_PRECEDING_QUESTION] = targetNode.data[Constants.HAS_SUBQUESTION][position - 1];
+    movingNode.data[Constants.HAS_PRECEDING_QUESTION] = {
+      '@id': targetNode.data[Constants.HAS_SUBQUESTION][position - 1]['@id']
+    };
   }
 
   targetNode.data[Constants.HAS_SUBQUESTION].splice(position, 0, movingNode.data);

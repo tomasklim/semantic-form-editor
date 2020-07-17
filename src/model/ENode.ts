@@ -6,7 +6,7 @@ export interface ENodeData {
   [Constants.HAS_SUBQUESTION]: Array<ENodeData> | undefined;
   [Constants.RDFS_LABEL]: string;
   [Constants.HAS_LAYOUT_CLASS]: Array<string> | string;
-  [Constants.HAS_PRECEDING_QUESTION]: ENodeData;
+  [Constants.HAS_PRECEDING_QUESTION]: { '@id': string };
 }
 
 class ENode {
