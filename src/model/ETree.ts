@@ -16,6 +16,10 @@ class ETree {
   addNode(nodeId: string, node: ENode) {
     this.structure.set(nodeId, node);
   }
+
+  getNode(nodeId: string): ENode | undefined {
+    return this.structure.get(nodeId);
+  }
 }
 
 export default ETree;

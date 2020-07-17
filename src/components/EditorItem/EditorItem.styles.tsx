@@ -8,22 +8,5 @@ export default makeStyles((theme) => ({
     '&:hover': {
       backgroundColor: 'gray'
     }
-  },
-  over: {
-    border: '1px dashed red'
-  },
-  cardHeader: {
-    fontSize: '1rem',
-    display: 'flex',
-    alignContent: 'center',
-    justifyContent: 'space-between'
-  },
-  cardHeaderItem: {
-    width: '33%'
-  },
-  cardHeaderItemRight: { textAlign: 'right' },
-  cardHeaderItemCenter: { textAlign: 'center' },
-  cardHeaderDrag: {
-    cursor: 'move'
   }
 }));

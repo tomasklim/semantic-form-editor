@@ -47,7 +47,7 @@ const EditorWizard: FC<Props> = ({ question, buildTreeList, tree, setTree }) => 
       (e.target as HTMLLIElement).style.opacity = '1';
 
       document
-        .querySelectorAll('*:not([data-droppable=true])')
+        .querySelectorAll('*:not([data-droppable=true]):not([draggable=true])')
         .forEach((element) => (element.style.pointerEvents = 'all'));
 
       [].forEach.call(document.getElementsByClassName(classes.page), (page: HTMLDivElement) => {

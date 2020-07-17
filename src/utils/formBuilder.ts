@@ -56,19 +56,23 @@ const preOrderBuild = (parentNode: ENode, tree: ETree) => {
   return;
 };
 
-export const sortRelatedQuestions = (relatedQuestions: Array<ENodeData>): Array<ENodeData> => {
+export const sortRelatedQuestions = (relatedQuestions: Array<ENodeData> | undefined): Array<ENodeData> => {
+  if (!relatedQuestions) {
+    return [];
+  }
+
   // sort by label
-  relatedQuestions = JsonLdObjectUtils.orderByLocalizedLabels(relatedQuestions, {
+  const localizedRelatedQuestions = JsonLdObjectUtils.orderByLocalizedLabels(relatedQuestions, {
     locale: 'en'
   });
 
   // sort by property
-  relatedQuestions = JsonLdObjectUtils.orderPreservingToplogicalSort(
-    relatedQuestions,
+  const topologicalSortedRelatedQuestions = JsonLdObjectUtils.orderPreservingToplogicalSort(
+    localizedRelatedQuestions,
     Constants.HAS_PRECEDING_QUESTION
   );
 
-  return relatedQuestions;
+  return topologicalSortedRelatedQuestions;
 };
 
 const unifyFormStructure = (form: Document): Document => {
@@ -89,10 +93,48 @@ const transformToArray = (element: string): Array<string> => {
   return [element];
 };
 
-export const detectChild = (testedNode: ENode, exemplarNode: ENode): boolean => {
+export const detectIsChildNode = (testedNode: ENode, exemplarNode: ENode): boolean => {
   if (!exemplarNode.parent) {
     return false;
   }
 
-  return testedNode.data['@id'] === exemplarNode.data['@id'] ? true : detectChild(testedNode, exemplarNode.parent);
+  return testedNode.data['@id'] === exemplarNode.data['@id']
+    ? true
+    : detectIsChildNode(testedNode, exemplarNode.parent);
+};
+
+export const removePrecedingQuestion = (node: ENode) => {
+  if (node.data[Constants.HAS_PRECEDING_QUESTION]) {
+    delete node.data[Constants.HAS_PRECEDING_QUESTION];
+  }
+};
+
+export const removeBeingPrecedingQuestion = (movingNodeParent: ENode, movingNode: ENode) => {
+  // if some node has nodeToMove as a preceding node, it loses it
+  movingNodeParent.data[Constants.HAS_SUBQUESTION]?.forEach((nodeData: ENodeData) => {
+    if (
+      nodeData[Constants.HAS_PRECEDING_QUESTION] &&
+      nodeData[Constants.HAS_PRECEDING_QUESTION]['@id'] === movingNode.data['@id']
+    ) {
+      delete nodeData[Constants.HAS_PRECEDING_QUESTION];
+    }
+  });
+};
+
+export const removeFromSubQuestions = (movingNodeParent: ENode, movingNode: ENode) => {
+  movingNodeParent.data[Constants.HAS_SUBQUESTION] = movingNodeParent.data[Constants.HAS_SUBQUESTION]?.filter(
+    (node: ENodeData) => node['@id'] !== movingNode.data['@id']
+  );
+};
+
+export const moveQuestionToSpecificPosition = (position: number, targetNode: ENode, movingNode: ENode) => {
+  if (position !== targetNode.data[Constants.HAS_SUBQUESTION]?.length) {
+    targetNode.data[Constants.HAS_SUBQUESTION][position][Constants.HAS_PRECEDING_QUESTION] = movingNode.data['@id'];
+  }
+
+  if (position !== 0) {
+    movingNode.data[Constants.HAS_PRECEDING_QUESTION] = targetNode.data[Constants.HAS_SUBQUESTION][position - 1];
+  }
+
+  targetNode.data[Constants.HAS_SUBQUESTION].splice(position, 0, movingNode.data);
 };

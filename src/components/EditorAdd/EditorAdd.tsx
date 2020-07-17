@@ -2,9 +2,15 @@ import React, { Dispatch, FC, SetStateAction } from 'react';
 import useStyles from './EditorAdd.styles';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import { Box } from '@material-ui/core';
-import { detectChild, sortRelatedQuestions } from '../../utils/formBuilder';
+import {
+  detectIsChildNode,
+  moveQuestionToSpecificPosition,
+  removeBeingPrecedingQuestion,
+  removeFromSubQuestions,
+  removePrecedingQuestion,
+  sortRelatedQuestions
+} from '../../utils/formBuilder';
 import ETree from '../../model/ETree';
-import ENode, { ENodeData } from '../../model/ENode';
 import { cloneDeep } from 'lodash';
 import { Constants } from 's-forms';
 
@@ -24,129 +30,99 @@ const EditorAdd: FC<Props> = ({ parentId, position, tree, setTree }) => {
     }
 
     e.dataTransfer.dropEffect = 'move';
-
-    return false;
   };
 
   const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
     if ((e.target as HTMLDivElement).nodeName === 'DIV') {
-      const moving = tree?.structure.get(e.dataTransfer.types.slice(-1)[0]);
-      const target = tree?.structure.get(parentId);
+      const movingNode = tree.getNode(e.dataTransfer.types.slice(-1)[0]);
+      const targetNode = tree.getNode(parentId);
 
-      if (moving && target && detectChild(moving, target)) {
+      // if target element is child of moving element => no highlight
+      if (movingNode && targetNode && detectIsChildNode(movingNode, targetNode)) {
         return;
       }
 
-      (e.target as HTMLDivElement).classList.add(classes.over);
+      (e.target as HTMLDivElement).classList.add(classes.overAdd);
+
       e.dataTransfer.dropEffect = 'move';
     }
   };
 
   const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
-    (e.target as HTMLDivElement).classList.remove(classes.over);
+    (e.target as HTMLDivElement).classList.remove(classes.overAdd);
   };
 
-  const handleDrop = (e: React.DragEvent<HTMLLIElement>) => {
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     if (e.preventDefault) {
       e.preventDefault();
     }
 
     document
-      .querySelectorAll('*:not([data-droppable=true])')
-      .forEach((element) => (element.style.pointerEvents = 'all'));
+      .querySelectorAll('*:not([data-droppable=true]):not([draggable=true])')
+      .forEach((element) => ((element as HTMLDivElement | HTMLLIElement).style.pointerEvents = 'all'));
 
-    [].forEach.call(document.querySelectorAll('[data-droppable=true]'), (li: HTMLLIElement) => {
-      li.classList.remove(classes.over);
+    [].forEach.call(document.querySelectorAll('[data-droppable=true]'), (el: HTMLDivElement) => {
+      el.classList.remove(classes.overAdd);
     });
 
-    if ((e.target as HTMLDivElement).getAttribute('data-parentid')) {
-      const moving = tree?.structure.get(e.dataTransfer.types.slice(-1)[0]);
-      const target = tree?.structure.get(parentId);
+    if ((e.target as HTMLDivElement).nodeName === 'DIV') {
+      const movingNodeId = e.dataTransfer.types.slice(-1)[0];
+      e.dataTransfer.clearData();
 
-      if (moving && target && detectChild(moving, target)) {
+      const movingNode = tree.getNode(movingNodeId);
+      const targetNode = tree.getNode(parentId);
+
+      if (!movingNode || !targetNode) {
+        console.warn('Missing movingNode or targetNode');
         return;
       }
 
-      move(moving, target);
-      e.dataTransfer.clearData();
-    }
+      // if target element is child of moving element => no moving allowed
+      if (movingNode && targetNode && detectIsChildNode(movingNode, targetNode)) {
+        return;
+      }
 
-    return false;
+      moveNodes(movingNodeId, parentId);
+    }
   };
 
-  const move = (nodeToMove: ENode, nodeOfPlace: ENode) => {
+  const moveNodes = (movingNodeId: string, targetNodeId: string) => {
     const newTree = cloneDeep(tree);
 
-    nodeToMove = newTree.structure.get(nodeToMove.data['@id']);
-    nodeOfPlace = newTree.structure.get(nodeOfPlace.data['@id']);
+    const movingNode = newTree.getNode(movingNodeId);
+    const targetNode = newTree.getNode(targetNodeId);
 
-    if (!nodeToMove?.data || !nodeOfPlace?.data) {
-      console.warn('Error3');
+    if (!movingNode?.data || !movingNode?.parent || !targetNode?.data) {
+      console.error("Missing movingNode' data or parent, or targetNode's data");
       return;
     }
 
-    // if node with preceding question is moved, it loses its preceding question
-    if (nodeToMove.data[Constants.HAS_PRECEDING_QUESTION]) {
-      delete nodeToMove.data[Constants.HAS_PRECEDING_QUESTION];
-    }
+    const movingNodeParent = movingNode.parent;
 
-    if (!nodeToMove?.parent) {
-      console.warn('Error');
-      return;
-    }
+    removePrecedingQuestion(movingNode);
 
-    const oldNodeParent = nodeToMove.parent;
+    removeBeingPrecedingQuestion(movingNodeParent, movingNode);
 
-    if (!oldNodeParent?.data || !nodeOfPlace?.data) {
-      console.warn('Error1');
-      return;
-    }
+    removeFromSubQuestions(movingNodeParent, movingNode);
 
-    // if some node has nodeToMove as a preceding node, it loses it
-    oldNodeParent.data[Constants.HAS_SUBQUESTION].forEach((nodeData: ENodeData) => {
-      if (
-        nodeData[Constants.HAS_PRECEDING_QUESTION] &&
-        nodeData[Constants.HAS_PRECEDING_QUESTION]['@id'] === nodeToMove.data['@id']
-      ) {
-        delete nodeData[Constants.HAS_PRECEDING_QUESTION];
-      }
-    });
+    moveQuestionToSpecificPosition(position, targetNode, movingNode);
 
-    if (!oldNodeParent || !nodeOfPlace) {
-      console.warn('Error2');
-      return;
-    }
-
-    oldNodeParent.data[Constants.HAS_SUBQUESTION] = oldNodeParent.data[Constants.HAS_SUBQUESTION].filter(
-      (node: ENodeData) => node['@id'] !== nodeToMove.data['@id']
-    );
-
-    if (position !== nodeOfPlace.data[Constants.HAS_SUBQUESTION]?.length) {
-      nodeOfPlace.data[Constants.HAS_SUBQUESTION][position][Constants.HAS_PRECEDING_QUESTION] = nodeToMove.data['@id'];
-    }
-
-    if (position !== 0) {
-      nodeToMove.data[Constants.HAS_PRECEDING_QUESTION] = nodeOfPlace.data[Constants.HAS_SUBQUESTION][position - 1];
-    }
-
-    nodeOfPlace.data[Constants.HAS_SUBQUESTION].splice(position, 0, nodeToMove.data);
-
-    nodeOfPlace.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(nodeOfPlace.data[Constants.HAS_SUBQUESTION]);
+    targetNode.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(targetNode.data[Constants.HAS_SUBQUESTION]);
 
     setTree(newTree);
   };
 
   return (
     <Box
-      className={classes.addLine}
       display={'flex'}
       alignItems={'center'}
       justifyContent={'center'}
-      data-droppable={true}
+      className={classes.addLine}
       onDragOver={handleDragOver}
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
+      data-droppable={true}
     >
       <AddCircleIcon fontSize={'large'} />
     </Box>

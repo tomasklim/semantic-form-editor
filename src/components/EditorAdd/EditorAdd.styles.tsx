@@ -13,7 +13,7 @@ export default makeStyles((theme) => ({
       }
     }
   },
-  over: {
+  overAdd: {
     backgroundColor: 'red',
     '& svg': {
       display: 'flex'
