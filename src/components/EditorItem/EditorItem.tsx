@@ -6,10 +6,10 @@ import ItemHeader from '@components/ItemHeader/ItemHeader';
 import ItemContent from '@components/ItemContent/ItemContent';
 
 type Props = {
-  data: ENodeData;
+  questionData: ENodeData;
 };
 
-const EditorItem: FC<Props> = ({ data }) => {
+const EditorItem: FC<Props> = ({ questionData }) => {
   const classes = useStyles();
   const itemContainer = useRef<HTMLLIElement | null>(null);
 
@@ -37,14 +37,14 @@ const EditorItem: FC<Props> = ({ data }) => {
 
   return (
     <li
-      id={data['@id']}
-      className={classes.listItem}
+      id={questionData['@id']}
+      ref={itemContainer}
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
-      ref={itemContainer}
+      className={classes.listItem}
     >
       <Card variant="outlined">
-        <ItemHeader container={itemContainer} nodeData={data} />
+        <ItemHeader container={itemContainer} nodeData={questionData} />
         <ItemContent />
       </Card>
     </li>

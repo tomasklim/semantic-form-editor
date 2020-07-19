@@ -1,4 +1,4 @@
-import { JsonLdObjectUtils, Constants, FormUtils, JsonLdFramingUtils, JsonLdObjectMap } from 's-forms';
+import { Constants, FormUtils, JsonLdFramingUtils, JsonLdObjectMap, JsonLdObjectUtils } from 's-forms';
 import * as jsonld from 'jsonld';
 import ETree from '../model/ETree';
 import ENode, { ENodeData } from '../model/ENode';
@@ -152,4 +152,14 @@ export const moveQuestionToSpecificPosition = (position: number, targetNode: ENo
   }
 
   targetNode.data[Constants.HAS_SUBQUESTION].splice(position, 0, movingNode.data);
+  movingNode.parent = targetNode;
+};
+
+export const moveQuestion = (movingNode: ENode, destinationNode: ENode) => {
+  if (!destinationNode.data[Constants.HAS_SUBQUESTION]) {
+    destinationNode.data[Constants.HAS_SUBQUESTION] = [];
+  }
+
+  destinationNode.data[Constants.HAS_SUBQUESTION].push(movingNode.data);
+  movingNode.parent = destinationNode;
 };
