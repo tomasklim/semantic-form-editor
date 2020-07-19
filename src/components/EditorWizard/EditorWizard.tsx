@@ -1,30 +1,33 @@
 import React, { Dispatch, FC, SetStateAction } from 'react';
-import ENode, { ENodeData } from '../../model/ENode';
+import { ENodeData } from '../../model/ENode';
 import { Box, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, Typography } from '@material-ui/core';
 import { Constants } from 's-forms';
 import useStyles from './EditorWizard.styles';
-import { sortRelatedQuestions } from '../../utils/formBuilder';
+import {
+  moveQuestion,
+  removeBeingPrecedingQuestion,
+  removeFromSubQuestions,
+  removePrecedingQuestion,
+  sortRelatedQuestions
+} from '../../utils/formBuilder';
 import ETree from '../../model/ETree';
 import { cloneDeep } from 'lodash';
 import EditorAdd from '@components/EditorAdd/EditorAdd';
 
 type Props = {
   question: ENodeData;
-  buildTreeList: any;
-  tree: ETree;
-  setTree: Dispatch<SetStateAction<ETree | null>>;
+  buildFormUI: (question: ENodeData, position: number, parentQuestion: ENodeData) => JSX.Element;
+  formStructure: ETree;
+  setFormStructure: Dispatch<SetStateAction<ETree | null>>;
 };
 
-const EditorWizard: FC<Props> = ({ question, buildTreeList, tree, setTree }) => {
+const EditorWizard: FC<Props> = ({ question, buildFormUI, formStructure, setFormStructure }) => {
   const classes = useStyles();
 
   const handleDragOver = (e: React.DragEvent<HTMLLIElement>) => {
-    if ((e.target as HTMLDivElement).classList.contains(classes.page)) {
-      e.preventDefault();
+    e.preventDefault();
 
-      e.dataTransfer.dropEffect = 'move';
-    }
-    return false;
+    e.dataTransfer.dropEffect = 'move';
   };
 
   const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
@@ -44,86 +47,56 @@ const EditorWizard: FC<Props> = ({ question, buildTreeList, tree, setTree }) => 
     if ((e.target as HTMLDivElement).classList.contains(classes.page)) {
       e.preventDefault();
 
-      (e.target as HTMLLIElement).style.opacity = '1';
+      (e.target as HTMLDivElement).style.opacity = '1';
 
       document
         .querySelectorAll('*:not([data-droppable=true]):not([draggable=true])')
-        .forEach((element) => (element.style.pointerEvents = 'all'));
+        .forEach((el) => ((el as HTMLDivElement).style.pointerEvents = 'all'));
 
       [].forEach.call(document.getElementsByClassName(classes.page), (page: HTMLDivElement) => {
         page.classList.remove(classes.pageOver);
       });
 
-      if ((e.target as HTMLDivElement).id) {
-        const movingNode = tree?.structure.get(e.dataTransfer.types.slice(-1)[0]);
-        const page = tree?.structure.get((e.target as HTMLDivElement).id);
+      const destinationPageId = (e.target as HTMLDivElement).id;
+      const movingNodeId = e.dataTransfer.types.slice(-1)[0];
 
-        if (!movingNode || !page) {
-          return;
-        }
+      e.dataTransfer.clearData();
 
-        moveNodeToPage(movingNode, page);
-
-        e.dataTransfer.clearData();
+      if (!destinationPageId || !movingNodeId) {
+        console.warn('Missing destinationPageId or movingNodeId');
+        return;
       }
-    }
 
-    return false;
+      moveNodeToPage(movingNodeId, destinationPageId);
+    }
   };
 
-  const moveNodeToPage = (movingNode: ENode, page: ENode) => {
-    const newTree = cloneDeep(tree);
+  const moveNodeToPage = (movingNodeId: string, destinationPageId: string) => {
+    const newTree = cloneDeep(formStructure);
 
-    movingNode = newTree.structure.get(movingNode.data['@id']);
-    page = newTree.structure.get(page.data['@id']);
+    const movingNode = newTree.structure.get(movingNodeId);
+    const destinationPage = newTree.structure.get(destinationPageId);
 
-    if (!movingNode?.data || !page?.data) {
-      console.warn('Error3');
-      return;
-    }
-
-    // if node with preceding question is moved, it loses its preceding question
-    if (movingNode.data[Constants.HAS_PRECEDING_QUESTION]) {
-      delete movingNode.data[Constants.HAS_PRECEDING_QUESTION];
-    }
-
-    if (!movingNode?.parent) {
+    if (!movingNode?.data || !movingNode?.parent || !destinationPage?.data) {
+      console.warn("Missing movingNode's data or parent, or destinationPage's data");
       return;
     }
 
     const movingNodeParent = movingNode.parent;
 
-    if (!movingNodeParent?.data || !page?.data) {
-      console.warn('Error1');
-      return;
-    }
+    removePrecedingQuestion(movingNode);
 
-    // if some node has nodeToMove as a preceding node, it loses it
-    movingNodeParent.data[Constants.HAS_SUBQUESTION].forEach((nodeData: ENodeData) => {
-      if (
-        nodeData[Constants.HAS_PRECEDING_QUESTION] &&
-        nodeData[Constants.HAS_PRECEDING_QUESTION]['@id'] === movingNode.data['@id']
-      ) {
-        delete nodeData[Constants.HAS_PRECEDING_QUESTION];
-      }
-    });
+    removeBeingPrecedingQuestion(movingNodeParent, movingNode);
 
-    if (!movingNodeParent || !page) {
-      console.warn('Error2');
-      return;
-    }
+    removeFromSubQuestions(movingNodeParent, movingNode);
 
-    movingNode.parent = page;
+    moveQuestion(movingNode, destinationPage);
 
-    movingNodeParent.data[Constants.HAS_SUBQUESTION] = movingNodeParent.data[Constants.HAS_SUBQUESTION].filter(
-      (node: ENodeData) => node['@id'] !== movingNode.data['@id']
+    destinationPage.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(
+      destinationPage.data[Constants.HAS_SUBQUESTION]
     );
 
-    page.data[Constants.HAS_SUBQUESTION].push(movingNode.data);
-
-    page.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(page.data[Constants.HAS_SUBQUESTION]);
-
-    setTree(newTree);
+    setFormStructure(newTree);
   };
 
   const relatedQuestions = question[Constants.HAS_SUBQUESTION];
@@ -142,7 +115,7 @@ const EditorWizard: FC<Props> = ({ question, buildTreeList, tree, setTree }) => 
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
           >
-            <ExpansionPanel expanded={true} className={classes.panel}>
+            <ExpansionPanel expanded={true}>
               <ExpansionPanelSummary
                 className={classes.header}
                 // expandIcon={<ExpandMoreIcon />}
@@ -152,10 +125,15 @@ const EditorWizard: FC<Props> = ({ question, buildTreeList, tree, setTree }) => 
               <ExpansionPanelDetails className={classes.body}>
                 <ol id={q['@id']}>
                   {q[Constants.HAS_SUBQUESTION]?.length > 0 && (
-                    <EditorAdd parentId={q['@id']} position={0} tree={tree} setTree={setTree} />
+                    <EditorAdd
+                      parentId={q['@id']}
+                      position={0}
+                      formStructure={formStructure}
+                      setFormStructure={setFormStructure}
+                    />
                   )}
                   {q[Constants.HAS_SUBQUESTION] &&
-                    q[Constants.HAS_SUBQUESTION].map((question, index) => buildTreeList(question, index + 1, q))}
+                    q[Constants.HAS_SUBQUESTION].map((question, index) => buildFormUI(question, index + 1, q))}
                 </ol>
               </ExpansionPanelDetails>
             </ExpansionPanel>

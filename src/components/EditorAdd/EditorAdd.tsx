@@ -17,25 +17,23 @@ import { Constants } from 's-forms';
 type Props = {
   parentId: string;
   position: number;
-  tree: ETree;
-  setTree: Dispatch<SetStateAction<ETree | null>>;
+  formStructure: ETree;
+  setFormStructure: Dispatch<SetStateAction<ETree | null>>;
 };
 
-const EditorAdd: FC<Props> = ({ parentId, position, tree, setTree }) => {
+const EditorAdd: FC<Props> = ({ parentId, position, formStructure, setFormStructure }) => {
   const classes = useStyles();
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    if (e.preventDefault) {
-      e.preventDefault();
-    }
+    e.preventDefault();
 
     e.dataTransfer.dropEffect = 'move';
   };
 
   const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
-    if ((e.target as HTMLDivElement).nodeName === 'DIV') {
-      const movingNode = tree.getNode(e.dataTransfer.types.slice(-1)[0]);
-      const targetNode = tree.getNode(parentId);
+    if ((e.target as HTMLDivElement).classList.contains(classes.addLine)) {
+      const movingNode = formStructure.getNode(e.dataTransfer.types.slice(-1)[0]);
+      const targetNode = formStructure.getNode(parentId);
 
       // if target element is child of moving element => no highlight
       if (movingNode && targetNode && detectIsChildNode(movingNode, targetNode)) {
@@ -49,28 +47,28 @@ const EditorAdd: FC<Props> = ({ parentId, position, tree, setTree }) => {
   };
 
   const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
-    (e.target as HTMLDivElement).classList.remove(classes.overAdd);
+    if ((e.target as HTMLDivElement).classList.contains(classes.addLine)) {
+      (e.target as HTMLDivElement).classList.remove(classes.overAdd);
+    }
   };
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    if (e.preventDefault) {
+    if ((e.target as HTMLDivElement).classList.contains(classes.addLine)) {
       e.preventDefault();
-    }
 
-    document
-      .querySelectorAll('*:not([data-droppable=true]):not([draggable=true])')
-      .forEach((element) => ((element as HTMLDivElement | HTMLLIElement).style.pointerEvents = 'all'));
+      document
+        .querySelectorAll('*:not([data-droppable=true]):not([draggable=true])')
+        .forEach((element) => ((element as HTMLDivElement | HTMLLIElement).style.pointerEvents = 'all'));
 
-    [].forEach.call(document.querySelectorAll('[data-droppable=true]'), (el: HTMLDivElement) => {
-      el.classList.remove(classes.overAdd);
-    });
+      [].forEach.call(document.querySelectorAll('[data-droppable=true]'), (el: HTMLDivElement) => {
+        el.classList.remove(classes.overAdd);
+      });
 
-    if ((e.target as HTMLDivElement).nodeName === 'DIV') {
       const movingNodeId = e.dataTransfer.types.slice(-1)[0];
       e.dataTransfer.clearData();
 
-      const movingNode = tree.getNode(movingNodeId);
-      const targetNode = tree.getNode(parentId);
+      const movingNode = formStructure.getNode(movingNodeId);
+      const targetNode = formStructure.getNode(parentId);
 
       if (!movingNode || !targetNode) {
         console.warn('Missing movingNode or targetNode');
@@ -87,13 +85,13 @@ const EditorAdd: FC<Props> = ({ parentId, position, tree, setTree }) => {
   };
 
   const moveNodes = (movingNodeId: string, targetNodeId: string) => {
-    const newTree = cloneDeep(tree);
+    const newTree = cloneDeep(formStructure);
 
     const movingNode = newTree.getNode(movingNodeId);
     const targetNode = newTree.getNode(targetNodeId);
 
     if (!movingNode?.data || !movingNode?.parent || !targetNode?.data) {
-      console.error("Missing movingNode' data or parent, or targetNode's data");
+      console.error("Missing movingNode' questionData or parent, or targetNode's questionData");
       return;
     }
 
@@ -105,8 +103,8 @@ const EditorAdd: FC<Props> = ({ parentId, position, tree, setTree }) => {
 
     const removedIndex = removeFromSubQuestions(movingNodeParent, movingNode);
 
-    // if moving node from top to down, position is decreased by one, because node is deleted 1 line before
-    if (removedIndex < position) {
+    // if moving node within one parent from top to down, position is decreased by one, because node is deleted 1 line before
+    if (movingNodeParent.data['@id'] === targetNode.data['@id'] && removedIndex < position) {
       position--;
     }
 
@@ -114,7 +112,7 @@ const EditorAdd: FC<Props> = ({ parentId, position, tree, setTree }) => {
 
     targetNode.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(targetNode.data[Constants.HAS_SUBQUESTION]);
 
-    setTree(newTree);
+    setFormStructure(newTree);
   };
 
   return (
