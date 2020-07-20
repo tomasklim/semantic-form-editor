@@ -3,12 +3,11 @@ import * as jsonld from 'jsonld';
 import ETree from '../model/ETree';
 import ENode, { ENodeData } from '../model/ENode';
 import { EForm } from '../interfaces';
-import { Document } from 'jsonld/jsonld-spec';
 
 let mapping: Map<string, number> = new Map<string, number>();
 let formElements: EForm;
 
-export const buildFormStructure = async (form: Document) => {
+export const buildFormStructure = async (form: EForm) => {
   unifyFormStructure(form);
 
   // @ts-ignore
@@ -75,21 +74,27 @@ export const sortRelatedQuestions = (relatedQuestions: Array<ENodeData> | undefi
   return topologicalSortedRelatedQuestions;
 };
 
-const unifyFormStructure = (form: Document): Document => {
+const unifyFormStructure = (form: EForm): EForm => {
   form['@graph'].forEach((node) => {
     if (node[Constants.HAS_SUBQUESTION] && !Array.isArray(node[Constants.HAS_SUBQUESTION])) {
-      node[Constants.HAS_SUBQUESTION] = transformToArray(node[Constants.HAS_SUBQUESTION]);
+      // @ts-ignore
+      node[Constants.HAS_SUBQUESTION] = transformSubQuestionsToArray(node[Constants.HAS_SUBQUESTION]);
     }
 
     if (node[Constants.HAS_LAYOUT_CLASS] && !Array.isArray(node[Constants.HAS_LAYOUT_CLASS])) {
-      node[Constants.HAS_LAYOUT_CLASS] = transformToArray(node[Constants.HAS_LAYOUT_CLASS]);
+      // @ts-ignore
+      node[Constants.HAS_LAYOUT_CLASS] = transformHasLayoutClassToArray(node[Constants.HAS_LAYOUT_CLASS]);
     }
   });
 
   return form;
 };
 
-const transformToArray = (element: string): Array<string> => {
+const transformSubQuestionsToArray = (element: ENodeData): Array<ENodeData> => {
+  return [element];
+};
+
+const transformHasLayoutClassToArray = (element: string): Array<string> => {
   return [element];
 };
 
@@ -140,18 +145,18 @@ export const moveQuestionToSpecificPosition = (position: number, targetNode: ENo
   movingNode.parent = targetNode;
 
   if (position !== targetNode.data[Constants.HAS_SUBQUESTION]?.length) {
-    targetNode.data[Constants.HAS_SUBQUESTION][position][Constants.HAS_PRECEDING_QUESTION] = {
+    targetNode.data[Constants.HAS_SUBQUESTION]![position][Constants.HAS_PRECEDING_QUESTION] = {
       '@id': movingNode.data['@id']
     };
   }
 
   if (position !== 0) {
     movingNode.data[Constants.HAS_PRECEDING_QUESTION] = {
-      '@id': targetNode.data[Constants.HAS_SUBQUESTION][position - 1]['@id']
+      '@id': targetNode.data[Constants.HAS_SUBQUESTION]![position - 1]['@id']
     };
   }
 
-  targetNode.data[Constants.HAS_SUBQUESTION].splice(position, 0, movingNode.data);
+  targetNode.data[Constants.HAS_SUBQUESTION]!.splice(position, 0, movingNode.data);
   movingNode.parent = targetNode;
 };
 
@@ -160,6 +165,6 @@ export const moveQuestion = (movingNode: ENode, destinationNode: ENode) => {
     destinationNode.data[Constants.HAS_SUBQUESTION] = [];
   }
 
-  destinationNode.data[Constants.HAS_SUBQUESTION].push(movingNode.data);
+  destinationNode.data[Constants.HAS_SUBQUESTION]!.push(movingNode.data);
   movingNode.parent = destinationNode;
 };

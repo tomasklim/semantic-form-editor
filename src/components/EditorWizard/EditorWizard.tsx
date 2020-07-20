@@ -18,7 +18,7 @@ type Props = {
   question: ENodeData;
   buildFormUI: (question: ENodeData, position: number, parentQuestion: ENodeData) => JSX.Element;
   formStructure: ETree;
-  setFormStructure: Dispatch<SetStateAction<ETree | null>>;
+  setFormStructure: Dispatch<SetStateAction<ETree | undefined>>;
 };
 
 const EditorWizard: FC<Props> = ({ question, buildFormUI, formStructure, setFormStructure }) => {
@@ -124,7 +124,7 @@ const EditorWizard: FC<Props> = ({ question, buildFormUI, formStructure, setForm
               </ExpansionPanelSummary>
               <ExpansionPanelDetails className={classes.body}>
                 <ol id={q['@id']}>
-                  {q[Constants.HAS_SUBQUESTION]?.length > 0 && (
+                  {q[Constants.HAS_SUBQUESTION]!.length > 0 && (
                     <EditorAdd
                       parentId={q['@id']}
                       position={0}
@@ -133,7 +133,7 @@ const EditorWizard: FC<Props> = ({ question, buildFormUI, formStructure, setForm
                     />
                   )}
                   {q[Constants.HAS_SUBQUESTION] &&
-                    q[Constants.HAS_SUBQUESTION].map((question, index) => buildFormUI(question, index + 1, q))}
+                    q[Constants.HAS_SUBQUESTION]!.map((question, index) => buildFormUI(question, index + 1, q))}
                 </ol>
               </ExpansionPanelDetails>
             </ExpansionPanel>

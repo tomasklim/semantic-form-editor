@@ -10,7 +10,7 @@ import EditorAdd from '@components/EditorAdd/EditorAdd';
 type Props = {};
 
 const Editor: FC<Props> = ({}) => {
-  const [formStructure, setFormStructure] = useState<ETree | null>(null);
+  const [formStructure, setFormStructure] = useState<ETree>();
 
   useEffect(() => {
     async function getFormStructure() {
@@ -23,7 +23,11 @@ const Editor: FC<Props> = ({}) => {
     getFormStructure();
   }, []);
 
-  const buildFormUI = (questionData: ENodeData, position: number, parentQuestion: ENodeData): JSX.Element => {
+  const buildFormUI = (
+    questionData: ENodeData,
+    position: number,
+    parentQuestion: ENodeData | undefined
+  ): JSX.Element => {
     const relatedQuestions = questionData[Constants.HAS_SUBQUESTION];
     let item = null;
 
@@ -33,7 +37,7 @@ const Editor: FC<Props> = ({}) => {
           key={questionData['@id']}
           question={questionData}
           buildFormUI={buildFormUI}
-          formStructure={formStructure}
+          formStructure={formStructure!}
           setFormStructure={setFormStructure}
         />
       );
@@ -62,16 +66,16 @@ const Editor: FC<Props> = ({}) => {
               <EditorAdd
                 parentId={questionData['@id']}
                 position={0}
-                formStructure={formStructure}
+                formStructure={formStructure!}
                 setFormStructure={setFormStructure}
               />
               {buildFormUI(q, index + 1, questionData)}
             </ol>
           ))}
         <EditorAdd
-          parentId={parentQuestion?.['@id']}
+          parentId={parentQuestion?.['@id'] || ''} // empty string for root only
           position={position}
-          formStructure={formStructure}
+          formStructure={formStructure!}
           setFormStructure={setFormStructure}
         />
       </React.Fragment>
@@ -82,7 +86,7 @@ const Editor: FC<Props> = ({}) => {
     return null;
   }
 
-  return buildFormUI(formStructure.root.data, 1, null);
+  return buildFormUI(formStructure.root.data, 1, undefined);
 };
 
 export default Editor;

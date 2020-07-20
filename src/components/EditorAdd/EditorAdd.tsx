@@ -18,7 +18,7 @@ type Props = {
   parentId: string;
   position: number;
   formStructure: ETree;
-  setFormStructure: Dispatch<SetStateAction<ETree | null>>;
+  setFormStructure: Dispatch<SetStateAction<ETree | undefined>>;
 };
 
 const EditorAdd: FC<Props> = ({ parentId, position, formStructure, setFormStructure }) => {
