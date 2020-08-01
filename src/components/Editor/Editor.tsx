@@ -65,7 +65,7 @@ const Editor: FC<Props> = ({}) => {
             <EditorAdd
               parentId={questionData['@id']}
               position={0}
-              formStructure={formStructure}
+              formStructure={formStructure!}
               setFormStructure={setFormStructure}
             />
           )}

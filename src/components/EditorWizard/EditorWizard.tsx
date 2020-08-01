@@ -1,5 +1,5 @@
 import React, { Dispatch, FC, SetStateAction } from 'react';
-import { ENodeData } from '../../model/ENode';
+import ENode, { ENodeData } from '../../model/ENode';
 import { Box, Accordion, AccordionDetails, AccordionSummary, Typography } from '@material-ui/core';
 import { Constants } from 's-forms';
 import useStyles from './EditorWizard.styles';
@@ -13,6 +13,7 @@ import {
 import ETree from '../../model/ETree';
 import { cloneDeep } from 'lodash';
 import EditorAdd from '@components/EditorAdd/EditorAdd';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
 
 type Props = {
   question: ENodeData;
@@ -99,6 +100,38 @@ const EditorWizard: FC<Props> = ({ question, buildFormUI, formStructure, setForm
     setFormStructure(newTree);
   };
 
+  const addNewQuestion = (targetId: string) => {
+    const newTree = cloneDeep(formStructure);
+
+    const id = Math.floor(Math.random() * 10000) + 'editorwizard';
+
+    // temporary
+    const newQuestion = {
+      '@id': id,
+      '@type': 'http://onto.fel.cvut.cz/ontologies/documentation/question',
+      'http://onto.fel.cvut.cz/ontologies/form-layout/has-layout-class': ['new'],
+      'http://www.w3.org/2000/01/rdf-schema#label': id,
+      'http://onto.fel.cvut.cz/ontologies/documentation/has_related_question': []
+    };
+
+    const targetNode = newTree.getNode(targetId);
+
+    if (!targetNode) {
+      console.error('Missing targetNode');
+      return;
+    }
+
+    const node = new ENode(targetNode, newQuestion);
+
+    newTree.addNode(newQuestion['@id'], node);
+
+    moveQuestion(node, targetNode);
+
+    targetNode.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(targetNode.data[Constants.HAS_SUBQUESTION]);
+
+    setFormStructure(newTree);
+  };
+
   const relatedQuestions = question[Constants.HAS_SUBQUESTION];
 
   return (
@@ -121,6 +154,7 @@ const EditorWizard: FC<Props> = ({ question, buildFormUI, formStructure, setForm
                 // expandIcon={<ExpandMoreIcon />}
               >
                 <Typography>{q[Constants.RDFS_LABEL]}</Typography>
+                <AddCircleIcon fontSize={'large'} onClick={() => addNewQuestion(q['@id'])} />
               </AccordionSummary>
               <AccordionDetails className={classes.body}>
                 <ol id={q['@id']}>

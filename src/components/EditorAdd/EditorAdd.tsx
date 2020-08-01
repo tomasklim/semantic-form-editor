@@ -119,7 +119,7 @@ const EditorAdd: FC<Props> = ({ parentId, position, formStructure, setFormStruct
   const addNewQuestion = () => {
     const newTree = cloneDeep(formStructure);
 
-    const id = Math.floor(Math.random() * 10000) + '';
+    const id = Math.floor(Math.random() * 10000) + 'editoradd';
 
     // temporary
     const newQuestion = {
@@ -142,6 +142,8 @@ const EditorAdd: FC<Props> = ({ parentId, position, formStructure, setFormStruct
     newTree.addNode(newQuestion['@id'], node);
 
     moveQuestionToSpecificPosition(position, targetNode, node);
+
+    targetNode.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(targetNode.data[Constants.HAS_SUBQUESTION]);
 
     setFormStructure(newTree);
   };
