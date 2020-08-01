@@ -1,6 +1,6 @@
 import React, { Dispatch, FC, SetStateAction } from 'react';
 import { ENodeData } from '../../model/ENode';
-import { Box, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, Typography } from '@material-ui/core';
+import { Box, Accordion, AccordionDetails, AccordionSummary, Typography } from '@material-ui/core';
 import { Constants } from 's-forms';
 import useStyles from './EditorWizard.styles';
 import {
@@ -115,14 +115,14 @@ const EditorWizard: FC<Props> = ({ question, buildFormUI, formStructure, setForm
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
           >
-            <ExpansionPanel expanded={true}>
-              <ExpansionPanelSummary
+            <Accordion expanded={true}>
+              <AccordionSummary
                 className={classes.header}
                 // expandIcon={<ExpandMoreIcon />}
               >
                 <Typography>{q[Constants.RDFS_LABEL]}</Typography>
-              </ExpansionPanelSummary>
-              <ExpansionPanelDetails className={classes.body}>
+              </AccordionSummary>
+              <AccordionDetails className={classes.body}>
                 <ol id={q['@id']}>
                   {q[Constants.HAS_SUBQUESTION]!.length > 0 && (
                     <EditorAdd
@@ -135,8 +135,8 @@ const EditorWizard: FC<Props> = ({ question, buildFormUI, formStructure, setForm
                   {q[Constants.HAS_SUBQUESTION] &&
                     q[Constants.HAS_SUBQUESTION]!.map((question, index) => buildFormUI(question, index + 1, q))}
                 </ol>
-              </ExpansionPanelDetails>
-            </ExpansionPanel>
+              </AccordionDetails>
+            </Accordion>
           </Box>
         ))}
     </React.Fragment>
