@@ -25,7 +25,9 @@ const ItemHeader: FC<ItemHeaderProps> = ({ container, nodeData }) => {
     <CardHeader
       title={
         <div className={classes.cardHeader}>
-          <span className={classes.cardHeaderItem}>{nodeData[Constants.RDFS_LABEL] || nodeData['@id']}</span>
+          <span className={classes.cardHeaderItem}>
+            {nodeData[Constants.RDFS_LABEL] || nodeData['@id']} {nodeData[Constants.HAS_PRECEDING_QUESTION] && '^'}
+          </span>
           <span className={`${classes.cardHeaderItem} ${classes.cardHeaderItemCenter}`}>
             <DragHandle
               className={classes.cardHeaderDrag}
