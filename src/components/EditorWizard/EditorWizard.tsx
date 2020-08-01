@@ -1,6 +1,6 @@
 import React, { Dispatch, FC, SetStateAction } from 'react';
 import ENode, { ENodeData } from '../../model/ENode';
-import { Box, Accordion, AccordionDetails, AccordionSummary, Typography } from '@material-ui/core';
+import { Accordion, AccordionDetails, Button } from '@material-ui/core';
 import { Constants } from 's-forms';
 import useStyles from './EditorWizard.styles';
 import {
@@ -12,8 +12,8 @@ import {
 } from '../../utils/formBuilder';
 import ETree from '../../model/ETree';
 import { cloneDeep } from 'lodash';
-import EditorAdd from '@components/EditorAdd/EditorAdd';
-import AddCircleIcon from '@material-ui/icons/AddCircle';
+import WizardHeader from '@components/WizardHeader/WizardHeader';
+import WizardContent from '@components/WizardContent/WizardContent';
 
 type Props = {
   question: ENodeData;
@@ -24,8 +24,9 @@ type Props = {
 
 const EditorWizard: FC<Props> = ({ question, buildFormUI, formStructure, setFormStructure }) => {
   const classes = useStyles();
+  const relatedQuestions = question[Constants.HAS_SUBQUESTION];
 
-  const handleDragOver = (e: React.DragEvent<HTMLLIElement>) => {
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
 
     e.dataTransfer.dropEffect = 'move';
@@ -132,13 +133,55 @@ const EditorWizard: FC<Props> = ({ question, buildFormUI, formStructure, setForm
     setFormStructure(newTree);
   };
 
-  const relatedQuestions = question[Constants.HAS_SUBQUESTION];
+  const addNewPage = () => {
+    const newTree = cloneDeep(formStructure);
+
+    const id = Math.floor(Math.random() * 10000) + 'editorwizard-page';
+
+    const root = newTree.getRoot();
+
+    if (!root) {
+      console.error('Missing root');
+      return;
+    }
+
+    const precedingQuestion: ENodeData | undefined =
+      root.data[Constants.HAS_SUBQUESTION] && root.data[Constants.HAS_SUBQUESTION]?.length
+        ? root.data[Constants.HAS_SUBQUESTION]![root.data[Constants.HAS_SUBQUESTION]!.length - 1]
+        : undefined;
+
+    // temporary
+    const newPage = {
+      '@id': id,
+      '@type': 'http://onto.fel.cvut.cz/ontologies/documentation/question',
+      'http://onto.fel.cvut.cz/ontologies/form-layout/has-layout-class': ['section', 'wizard-step'],
+      'http://www.w3.org/2000/01/rdf-schema#label': id,
+      'http://onto.fel.cvut.cz/ontologies/documentation/has_related_question': [],
+      'http://onto.fel.cvut.cz/ontologies/form/has-preceding-question': precedingQuestion
+        ? {
+            '@id': precedingQuestion['@id']
+          }
+        : ''
+    };
+
+    const page = new ENode(root, newPage);
+
+    newTree.addNode(newPage['@id'], page);
+
+    moveQuestion(page, root);
+
+    root.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(root.data[Constants.HAS_SUBQUESTION]);
+
+    setFormStructure(newTree);
+
+    console.log(newTree);
+  };
 
   return (
     <React.Fragment>
       {relatedQuestions &&
         relatedQuestions.map((q) => (
-          <Box
+          <div
             key={q['@id']}
             id={q['@id']}
             className={classes.page}
@@ -149,30 +192,25 @@ const EditorWizard: FC<Props> = ({ question, buildFormUI, formStructure, setForm
             onDrop={handleDrop}
           >
             <Accordion expanded={true}>
-              <AccordionSummary
-                className={classes.header}
-                // expandIcon={<ExpandMoreIcon />}
-              >
-                <Typography>{q[Constants.RDFS_LABEL]}</Typography>
-                <AddCircleIcon fontSize={'large'} onClick={() => addNewQuestion(q['@id'])} />
-              </AccordionSummary>
-              <AccordionDetails className={classes.body}>
-                <ol id={q['@id']}>
-                  {q[Constants.HAS_SUBQUESTION]!.length > 0 && (
-                    <EditorAdd
-                      parentId={q['@id']}
-                      position={0}
-                      formStructure={formStructure}
-                      setFormStructure={setFormStructure}
-                    />
-                  )}
-                  {q[Constants.HAS_SUBQUESTION] &&
-                    q[Constants.HAS_SUBQUESTION]!.map((question, index) => buildFormUI(question, index + 1, q))}
-                </ol>
-              </AccordionDetails>
+              <WizardHeader question={q} addNewQuestion={addNewQuestion} />
+              <WizardContent
+                question={q}
+                setFormStructure={setFormStructure}
+                formStructure={formStructure}
+                buildFormUI={buildFormUI}
+              />
             </Accordion>
-          </Box>
+          </div>
         ))}
+      <div className={classes.page}>
+        <Accordion expanded={true}>
+          <AccordionDetails className={classes.newPage}>
+            <Button variant="outlined" onClick={addNewPage}>
+              ADD NEW PAGE
+            </Button>
+          </AccordionDetails>
+        </Accordion>
+      </div>
     </React.Fragment>
   );
 };
