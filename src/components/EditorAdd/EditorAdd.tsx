@@ -13,6 +13,7 @@ import {
 import ETree from '../../model/ETree';
 import { cloneDeep } from 'lodash';
 import { Constants } from 's-forms';
+import ENode from '../../model/ENode';
 
 type Props = {
   parentId: string;
@@ -115,6 +116,36 @@ const EditorAdd: FC<Props> = ({ parentId, position, formStructure, setFormStruct
     setFormStructure(newTree);
   };
 
+  const addNewQuestion = () => {
+    const newTree = cloneDeep(formStructure);
+
+    const id = Math.floor(Math.random() * 10000) + '';
+
+    // temporary
+    const newQuestion = {
+      '@id': id,
+      '@type': 'http://onto.fel.cvut.cz/ontologies/documentation/question',
+      'http://onto.fel.cvut.cz/ontologies/form-layout/has-layout-class': ['new'],
+      'http://www.w3.org/2000/01/rdf-schema#label': id,
+      'http://onto.fel.cvut.cz/ontologies/documentation/has_related_question': []
+    };
+
+    const targetNode = newTree.getNode(parentId);
+
+    if (!targetNode) {
+      console.error('Missing targetNode');
+      return;
+    }
+
+    const node = new ENode(targetNode, newQuestion);
+
+    newTree.addNode(newQuestion['@id'], node);
+
+    moveQuestionToSpecificPosition(position, targetNode, node);
+
+    setFormStructure(newTree);
+  };
+
   return (
     <Box
       display={'flex'}
@@ -126,6 +157,7 @@ const EditorAdd: FC<Props> = ({ parentId, position, formStructure, setFormStruct
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
       data-droppable={true}
+      onClick={addNewQuestion}
     >
       <AddCircleIcon fontSize={'large'} />
     </Box>

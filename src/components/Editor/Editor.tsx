@@ -60,18 +60,18 @@ const Editor: FC<Props> = ({}) => {
     return (
       <React.Fragment key={questionData['@id']}>
         {item}
-        {relatedQuestions &&
-          relatedQuestions.map((q, index) => (
-            <ol key={q['@id']}>
-              <EditorAdd
-                parentId={questionData['@id']}
-                position={0}
-                formStructure={formStructure!}
-                setFormStructure={setFormStructure}
-              />
-              {buildFormUI(q, index + 1, questionData)}
-            </ol>
-          ))}
+        <ol id={questionData['@id']}>
+          {relatedQuestions && relatedQuestions!.length > 0 && (
+            <EditorAdd
+              parentId={questionData['@id']}
+              position={0}
+              formStructure={formStructure}
+              setFormStructure={setFormStructure}
+            />
+          )}
+          {relatedQuestions &&
+            relatedQuestions!.map((question, index) => buildFormUI(question, index + 1, questionData))}
+        </ol>
         <EditorAdd
           parentId={parentQuestion?.['@id'] || ''} // empty string for root only
           position={position}
