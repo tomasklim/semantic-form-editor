@@ -20,6 +20,10 @@ class ETree {
   getNode(nodeId: string): ENode | undefined {
     return this.structure.get(nodeId);
   }
+
+  removeNode(nodeId: string): void {
+    this.structure.delete(nodeId);
+  }
 }
 
 export default ETree;

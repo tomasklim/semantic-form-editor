@@ -249,7 +249,13 @@ const EditorWizard: FC<Props> = ({ question, buildFormUI, formStructure, setForm
             onDrop={handleDrop}
           >
             <Accordion expanded={true}>
-              <WizardHeader question={q} addNewQuestion={addNewQuestion} movePage={movePage} />
+              <WizardHeader
+                question={q}
+                addNewQuestion={addNewQuestion}
+                movePage={movePage}
+                formStructure={formStructure}
+                setFormStructure={setFormStructure}
+              />
               <WizardContent
                 question={q}
                 setFormStructure={setFormStructure}

@@ -42,19 +42,33 @@ const Editor: FC<Props> = ({}) => {
         />
       );
     } else if (FormUtils.isSection(questionData)) {
-      item = <EditorItem questionData={questionData} />;
+      item = (
+        <EditorItem questionData={questionData} formStructure={formStructure!} setFormStructure={setFormStructure} />
+      );
     } else if (FormUtils.isTypeahead(questionData)) {
-      item = <EditorItem questionData={questionData} />;
+      item = (
+        <EditorItem questionData={questionData} formStructure={formStructure!} setFormStructure={setFormStructure} />
+      );
     } else if (FormUtils.isCalendar(questionData)) {
-      item = <EditorItem questionData={questionData} />;
+      item = (
+        <EditorItem questionData={questionData} formStructure={formStructure!} setFormStructure={setFormStructure} />
+      );
     } else if (FormUtils.isCheckbox(questionData)) {
-      item = <EditorItem questionData={questionData} />;
+      item = (
+        <EditorItem questionData={questionData} formStructure={formStructure!} setFormStructure={setFormStructure} />
+      );
     } else if (FormUtils.isMaskedInput(questionData)) {
-      item = <EditorItem questionData={questionData} />;
+      item = (
+        <EditorItem questionData={questionData} formStructure={formStructure!} setFormStructure={setFormStructure} />
+      );
     } else if (FormUtils.isTextarea(questionData, '')) {
-      item = <EditorItem questionData={questionData} />;
+      item = (
+        <EditorItem questionData={questionData} formStructure={formStructure!} setFormStructure={setFormStructure} />
+      );
     } else {
-      item = <EditorItem questionData={questionData} />;
+      item = (
+        <EditorItem questionData={questionData} formStructure={formStructure!} setFormStructure={setFormStructure} />
+      );
     }
 
     return (

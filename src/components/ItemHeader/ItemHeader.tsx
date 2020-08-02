@@ -1,16 +1,20 @@
-import React, { FC } from 'react';
+import React, { Dispatch, FC, SetStateAction } from 'react';
 import useStyles from './ItemHeader.styles';
 import { Constants } from 's-forms';
-import { DragHandle, MoreVert } from '@material-ui/icons';
+import { DragHandle } from '@material-ui/icons';
 import { CardHeader } from '@material-ui/core';
 import { ENodeData } from '../../model/ENode';
+import MenuQuestionItem from '../../MenuQuestionItem/MenuQuestionItem';
+import ETree from '../../model/ETree';
 
 type ItemHeaderProps = {
   container: React.MutableRefObject<HTMLLIElement | null>;
   nodeData: ENodeData;
+  formStructure: ETree;
+  setFormStructure: Dispatch<SetStateAction<ETree | undefined>>;
 };
 
-const ItemHeader: FC<ItemHeaderProps> = ({ container, nodeData }) => {
+const ItemHeader: FC<ItemHeaderProps> = ({ container, nodeData, formStructure, setFormStructure }) => {
   const classes = useStyles();
 
   const handleMouseEnter = () => {
@@ -37,7 +41,7 @@ const ItemHeader: FC<ItemHeaderProps> = ({ container, nodeData }) => {
             />
           </span>
           <span className={`${classes.cardHeaderItem} ${classes.cardHeaderItemRight}`}>
-            <MoreVert />
+            <MenuQuestionItem formStructure={formStructure} setFormStructure={setFormStructure} question={nodeData} />
           </span>
         </div>
       }

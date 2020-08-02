@@ -141,6 +141,14 @@ export const removeFromSubQuestions = (movingNodeParent: ENode, movingNode: ENod
   return removedNodeIndex;
 };
 
+export const removeFromFormStructure = (formStructure: ETree, node: ENode) => {
+  formStructure.removeNode(node.data['@id']);
+
+  node.data[Constants.HAS_SUBQUESTION]?.forEach((q) => {
+    removeFromFormStructure(formStructure, formStructure.getNode(q['@id'])!);
+  });
+};
+
 export const moveQuestionToSpecificPosition = (position: number, targetNode: ENode, movingNode: ENode) => {
   movingNode.parent = targetNode;
 
