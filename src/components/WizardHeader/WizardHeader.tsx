@@ -1,17 +1,19 @@
 import { AccordionSummary, Box, Typography } from '@material-ui/core';
 import { Constants } from 's-forms';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
-import { MoreVert, ArrowUpward, ArrowDownward } from '@material-ui/icons';
+import { ArrowDownward, ArrowUpward, MoreVert } from '@material-ui/icons';
 import React, { FC } from 'react';
 import useStyles from './WizardHeader.styles';
 import { ENodeData } from '../../model/ENode';
+import { DIRECTION } from '../../enums';
 
 type Props = {
   question: ENodeData;
   addNewQuestion: (targetId: string) => void;
+  movePage: (id: string, direction: DIRECTIOn) => void;
 };
 
-const WizardHeader: FC<Props> = ({ addNewQuestion, question }) => {
+const WizardHeader: FC<Props> = ({ addNewQuestion, question, movePage }) => {
   const classes = useStyles();
 
   return (
@@ -28,8 +30,8 @@ const WizardHeader: FC<Props> = ({ addNewQuestion, question }) => {
         </div>
         <span className={`${classes.wizardHeaderItem} ${classes.wizardHeaderCenter}`} />
         <span className={`${classes.wizardHeaderItem} ${classes.wizardHeaderRight}`}>
-          <ArrowUpward />
-          <ArrowDownward />
+          <ArrowUpward onClick={() => movePage(question['@id'], DIRECTION.UP)} />
+          <ArrowDownward onClick={() => movePage(question['@id'], DIRECTION.DOWN)} />
           <MoreVert />
         </span>
       </Box>
