@@ -1,19 +1,18 @@
-import React, { Dispatch, FC, SetStateAction, useRef, useState } from 'react';
+import React, { FC, useContext, useRef, useState } from 'react';
 import { MoreVert } from '@material-ui/icons';
 import { ClickAwayListener, Grow, MenuItem, MenuList, Paper, Popper } from '@material-ui/core';
-import ETree from '../model/ETree';
 import { ENodeData } from '../model/ENode';
 import { Constants } from 's-forms';
 import { removeFromFormStructure, removeFromSubQuestions, sortRelatedQuestions } from '../utils/formBuilder';
-import { cloneDeep } from 'lodash';
+import { FormStructureContext } from '../contexts/FormStructureContext';
 
 interface Props {
-  formStructure: ETree;
-  setFormStructure: Dispatch<SetStateAction<ETree | undefined>>;
   question: ENodeData;
 }
 
-const MenuQuestionItem: FC<Props> = ({ formStructure, setFormStructure, question }) => {
+const MenuQuestionItem: FC<Props> = ({ question }) => {
+  const { getClonedFormStructure, setFormStructure } = useContext(FormStructureContext);
+
   const [open, setOpen] = useState<boolean>(false);
   const anchorEl = useRef<HTMLDivElement | null>(null);
 
@@ -32,7 +31,7 @@ const MenuQuestionItem: FC<Props> = ({ formStructure, setFormStructure, question
   const handleDelete = (e: React.SyntheticEvent<EventTarget>) => {
     handleClose(e);
 
-    const clonedFormStructure = cloneDeep(formStructure);
+    const clonedFormStructure = getClonedFormStructure();
 
     const q = clonedFormStructure.getNode(question['@id']);
 

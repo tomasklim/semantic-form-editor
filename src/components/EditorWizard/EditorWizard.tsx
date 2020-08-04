@@ -1,4 +1,4 @@
-import React, { Dispatch, FC, SetStateAction } from 'react';
+import React, { FC, useContext } from 'react';
 import ENode, { ENodeData } from '../../model/ENode';
 import { Accordion, AccordionDetails, Button } from '@material-ui/core';
 import { Constants } from 's-forms';
@@ -10,21 +10,21 @@ import {
   removePrecedingQuestion,
   sortRelatedQuestions
 } from '../../utils/formBuilder';
-import ETree from '../../model/ETree';
-import { cloneDeep } from 'lodash';
 import WizardHeader from '@components/WizardHeader/WizardHeader';
 import WizardContent from '@components/WizardContent/WizardContent';
 import { DIRECTION } from '../../enums';
+import { FormStructureContext } from '../../contexts/FormStructureContext';
 
 type Props = {
   question: ENodeData;
   buildFormUI: (question: ENodeData, position: number, parentQuestion: ENodeData) => JSX.Element;
-  formStructure: ETree;
-  setFormStructure: Dispatch<SetStateAction<ETree | undefined>>;
 };
 
-const EditorWizard: FC<Props> = ({ question, buildFormUI, formStructure, setFormStructure }) => {
+const EditorWizard: FC<Props> = ({ question, buildFormUI }) => {
   const classes = useStyles();
+
+  const { getClonedFormStructure, setFormStructure } = useContext(FormStructureContext);
+
   const relatedQuestions = question[Constants.HAS_SUBQUESTION];
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
@@ -75,10 +75,10 @@ const EditorWizard: FC<Props> = ({ question, buildFormUI, formStructure, setForm
   };
 
   const moveNodeToPage = (movingNodeId: string, destinationPageId: string) => {
-    const newTree = cloneDeep(formStructure);
+    const clonedFormStructure = getClonedFormStructure();
 
-    const movingNode = newTree.structure.get(movingNodeId);
-    const destinationPage = newTree.structure.get(destinationPageId);
+    const movingNode = clonedFormStructure.structure.get(movingNodeId);
+    const destinationPage = clonedFormStructure.structure.get(destinationPageId);
 
     if (!movingNode?.data || !movingNode?.parent || !destinationPage?.data) {
       console.warn("Missing movingNode's data or parent, or destinationPage's data");
@@ -99,11 +99,11 @@ const EditorWizard: FC<Props> = ({ question, buildFormUI, formStructure, setForm
       destinationPage.data[Constants.HAS_SUBQUESTION]
     );
 
-    setFormStructure(newTree);
+    setFormStructure(clonedFormStructure);
   };
 
   const addNewQuestion = (targetId: string) => {
-    const newTree = cloneDeep(formStructure);
+    const clonedFormStructure = getClonedFormStructure();
 
     const id = Math.floor(Math.random() * 10000) + 'editorwizard';
 
@@ -116,7 +116,7 @@ const EditorWizard: FC<Props> = ({ question, buildFormUI, formStructure, setForm
       'http://onto.fel.cvut.cz/ontologies/documentation/has_related_question': []
     };
 
-    const targetNode = newTree.getNode(targetId);
+    const targetNode = clonedFormStructure.getNode(targetId);
 
     if (!targetNode) {
       console.error('Missing targetNode');
@@ -125,21 +125,21 @@ const EditorWizard: FC<Props> = ({ question, buildFormUI, formStructure, setForm
 
     const node = new ENode(targetNode, newQuestion);
 
-    newTree.addNode(newQuestion['@id'], node);
+    clonedFormStructure.addNode(newQuestion['@id'], node);
 
     moveQuestion(node, targetNode);
 
     targetNode.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(targetNode.data[Constants.HAS_SUBQUESTION]);
 
-    setFormStructure(newTree);
+    setFormStructure(clonedFormStructure);
   };
 
   const addNewPage = () => {
-    const newTree = cloneDeep(formStructure);
+    const clonedFormStructure = getClonedFormStructure();
 
     const id = Math.floor(Math.random() * 10000) + 'editorwizard-page';
 
-    const root = newTree.getRoot();
+    const root = clonedFormStructure.getRoot();
 
     if (!root) {
       console.error('Missing root');
@@ -167,17 +167,17 @@ const EditorWizard: FC<Props> = ({ question, buildFormUI, formStructure, setForm
 
     const page = new ENode(root, newPage);
 
-    newTree.addNode(newPage['@id'], page);
+    clonedFormStructure.addNode(newPage['@id'], page);
 
     moveQuestion(page, root);
 
     root.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(root.data[Constants.HAS_SUBQUESTION]);
 
-    setFormStructure(newTree);
+    setFormStructure(clonedFormStructure);
   };
 
   const movePage = (id: string, direction: DIRECTION) => {
-    const clonedFormStructure = cloneDeep(formStructure);
+    const clonedFormStructure = getClonedFormStructure();
 
     const root = clonedFormStructure.getRoot();
     const rootSubQuestions = root.data[Constants.HAS_SUBQUESTION];
@@ -249,19 +249,8 @@ const EditorWizard: FC<Props> = ({ question, buildFormUI, formStructure, setForm
             onDrop={handleDrop}
           >
             <Accordion expanded={true}>
-              <WizardHeader
-                question={q}
-                addNewQuestion={addNewQuestion}
-                movePage={movePage}
-                formStructure={formStructure}
-                setFormStructure={setFormStructure}
-              />
-              <WizardContent
-                question={q}
-                setFormStructure={setFormStructure}
-                formStructure={formStructure}
-                buildFormUI={buildFormUI}
-              />
+              <WizardHeader question={q} addNewQuestion={addNewQuestion} movePage={movePage} />
+              <WizardContent question={q} buildFormUI={buildFormUI} />
             </Accordion>
           </div>
         ))}

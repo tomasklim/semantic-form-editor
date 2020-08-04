@@ -1,27 +1,15 @@
-import React, { FC, useEffect, useState } from 'react';
-import { buildFormStructure } from '../../utils/formBuilder';
+import React, { FC, useContext } from 'react';
 import { ENodeData } from '../../model/ENode';
 import { Constants, FormUtils } from 's-forms';
-import ETree from '../../model/ETree';
 import EditorItem from '@components/EditorItem/EditorItem';
 import EditorWizard from '@components/EditorWizard/EditorWizard';
 import EditorAdd from '@components/EditorAdd/EditorAdd';
+import { FormStructureContext } from '../../contexts/FormStructureContext';
 
 type Props = {};
 
 const Editor: FC<Props> = ({}) => {
-  const [formStructure, setFormStructure] = useState<ETree>();
-
-  useEffect(() => {
-    async function getFormStructure() {
-      const form = require('../../utils/form.json');
-      const formStructure = await buildFormStructure(form);
-
-      setFormStructure(formStructure);
-    }
-
-    getFormStructure();
-  }, []);
+  const { formStructure } = useContext(FormStructureContext);
 
   const buildFormUI = (
     questionData: ENodeData,
@@ -32,43 +20,21 @@ const Editor: FC<Props> = ({}) => {
     let item = null;
 
     if (FormUtils.isForm(questionData)) {
-      return (
-        <EditorWizard
-          key={questionData['@id']}
-          question={questionData}
-          buildFormUI={buildFormUI}
-          formStructure={formStructure!}
-          setFormStructure={setFormStructure}
-        />
-      );
+      return <EditorWizard key={questionData['@id']} question={questionData} buildFormUI={buildFormUI} />;
     } else if (FormUtils.isSection(questionData)) {
-      item = (
-        <EditorItem questionData={questionData} formStructure={formStructure!} setFormStructure={setFormStructure} />
-      );
+      item = <EditorItem questionData={questionData} />;
     } else if (FormUtils.isTypeahead(questionData)) {
-      item = (
-        <EditorItem questionData={questionData} formStructure={formStructure!} setFormStructure={setFormStructure} />
-      );
+      item = <EditorItem questionData={questionData} />;
     } else if (FormUtils.isCalendar(questionData)) {
-      item = (
-        <EditorItem questionData={questionData} formStructure={formStructure!} setFormStructure={setFormStructure} />
-      );
+      item = <EditorItem questionData={questionData} />;
     } else if (FormUtils.isCheckbox(questionData)) {
-      item = (
-        <EditorItem questionData={questionData} formStructure={formStructure!} setFormStructure={setFormStructure} />
-      );
+      item = <EditorItem questionData={questionData} />;
     } else if (FormUtils.isMaskedInput(questionData)) {
-      item = (
-        <EditorItem questionData={questionData} formStructure={formStructure!} setFormStructure={setFormStructure} />
-      );
+      item = <EditorItem questionData={questionData} />;
     } else if (FormUtils.isTextarea(questionData, '')) {
-      item = (
-        <EditorItem questionData={questionData} formStructure={formStructure!} setFormStructure={setFormStructure} />
-      );
+      item = <EditorItem questionData={questionData} />;
     } else {
-      item = (
-        <EditorItem questionData={questionData} formStructure={formStructure!} setFormStructure={setFormStructure} />
-      );
+      item = <EditorItem questionData={questionData} />;
     }
 
     return (
@@ -76,12 +42,7 @@ const Editor: FC<Props> = ({}) => {
         {item}
         <ol id={questionData['@id']}>
           {relatedQuestions && relatedQuestions!.length > 0 && (
-            <EditorAdd
-              parentId={questionData['@id']}
-              position={0}
-              formStructure={formStructure!}
-              setFormStructure={setFormStructure}
-            />
+            <EditorAdd parentId={questionData['@id']} position={0} />
           )}
           {relatedQuestions &&
             relatedQuestions!.map((question, index) => buildFormUI(question, index + 1, questionData))}
@@ -89,16 +50,10 @@ const Editor: FC<Props> = ({}) => {
         <EditorAdd
           parentId={parentQuestion?.['@id'] || ''} // empty string for root only
           position={position}
-          formStructure={formStructure!}
-          setFormStructure={setFormStructure}
         />
       </React.Fragment>
     );
   };
-
-  if (!formStructure?.root?.data) {
-    return null;
-  }
 
   return buildFormUI(formStructure.root.data, 1, undefined);
 };

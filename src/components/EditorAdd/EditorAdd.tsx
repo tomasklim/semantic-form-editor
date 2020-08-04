@@ -1,4 +1,4 @@
-import React, { Dispatch, FC, SetStateAction } from 'react';
+import React, { FC, useContext } from 'react';
 import useStyles from './EditorAdd.styles';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import { Box } from '@material-ui/core';
@@ -10,20 +10,19 @@ import {
   removePrecedingQuestion,
   sortRelatedQuestions
 } from '../../utils/formBuilder';
-import ETree from '../../model/ETree';
-import { cloneDeep } from 'lodash';
 import { Constants } from 's-forms';
 import ENode from '../../model/ENode';
+import { FormStructureContext } from '../../contexts/FormStructureContext';
 
 type Props = {
   parentId: string;
   position: number;
-  formStructure: ETree;
-  setFormStructure: Dispatch<SetStateAction<ETree | undefined>>;
 };
 
-const EditorAdd: FC<Props> = ({ parentId, position, formStructure, setFormStructure }) => {
+const EditorAdd: FC<Props> = ({ parentId, position }) => {
   const classes = useStyles();
+
+  const { formStructure, getClonedFormStructure, setFormStructure } = useContext(FormStructureContext);
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -86,10 +85,10 @@ const EditorAdd: FC<Props> = ({ parentId, position, formStructure, setFormStruct
   };
 
   const moveNodes = (movingNodeId: string, targetNodeId: string) => {
-    const newTree = cloneDeep(formStructure);
+    const clonedFormStructure = getClonedFormStructure();
 
-    const movingNode = newTree.getNode(movingNodeId);
-    const targetNode = newTree.getNode(targetNodeId);
+    const movingNode = clonedFormStructure.getNode(movingNodeId);
+    const targetNode = clonedFormStructure.getNode(targetNodeId);
 
     if (!movingNode?.data || !movingNode?.parent || !targetNode?.data) {
       console.error("Missing movingNode' questionData or parent, or targetNode's questionData");
@@ -113,11 +112,11 @@ const EditorAdd: FC<Props> = ({ parentId, position, formStructure, setFormStruct
 
     targetNode.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(targetNode.data[Constants.HAS_SUBQUESTION]);
 
-    setFormStructure(newTree);
+    setFormStructure(clonedFormStructure);
   };
 
   const addNewQuestion = () => {
-    const newTree = cloneDeep(formStructure);
+    const clonedFormStructure = getClonedFormStructure();
 
     const id = Math.floor(Math.random() * 10000) + 'editoradd';
 
@@ -130,7 +129,7 @@ const EditorAdd: FC<Props> = ({ parentId, position, formStructure, setFormStruct
       'http://onto.fel.cvut.cz/ontologies/documentation/has_related_question': []
     };
 
-    const targetNode = newTree.getNode(parentId);
+    const targetNode = clonedFormStructure.getNode(parentId);
 
     if (!targetNode) {
       console.error('Missing targetNode');
@@ -139,13 +138,13 @@ const EditorAdd: FC<Props> = ({ parentId, position, formStructure, setFormStruct
 
     const node = new ENode(targetNode, newQuestion);
 
-    newTree.addNode(newQuestion['@id'], node);
+    clonedFormStructure.addNode(newQuestion['@id'], node);
 
     moveQuestionToSpecificPosition(position, targetNode, node);
 
     targetNode.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(targetNode.data[Constants.HAS_SUBQUESTION]);
 
-    setFormStructure(newTree);
+    setFormStructure(clonedFormStructure);
   };
 
   return (

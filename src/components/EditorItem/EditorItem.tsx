@@ -1,18 +1,15 @@
-import React, { Dispatch, FC, SetStateAction, useRef } from 'react';
+import React, { FC, useRef } from 'react';
 import { ENodeData } from '../../model/ENode';
 import useStyles from './EditorItem.styles';
 import { Card } from '@material-ui/core';
 import ItemHeader from '@components/ItemHeader/ItemHeader';
 import ItemContent from '@components/ItemContent/ItemContent';
-import ETree from '../../model/ETree';
 
 type Props = {
   questionData: ENodeData;
-  formStructure: ETree;
-  setFormStructure: Dispatch<SetStateAction<ETree | undefined>>;
 };
 
-const EditorItem: FC<Props> = ({ questionData, formStructure, setFormStructure }) => {
+const EditorItem: FC<Props> = ({ questionData }) => {
   const classes = useStyles();
   const itemContainer = useRef<HTMLLIElement | null>(null);
 
@@ -47,12 +44,7 @@ const EditorItem: FC<Props> = ({ questionData, formStructure, setFormStructure }
       className={classes.listItem}
     >
       <Card variant="outlined">
-        <ItemHeader
-          container={itemContainer}
-          nodeData={questionData}
-          formStructure={formStructure}
-          setFormStructure={setFormStructure}
-        />
+        <ItemHeader container={itemContainer} nodeData={questionData} />
         <ItemContent />
       </Card>
     </li>
