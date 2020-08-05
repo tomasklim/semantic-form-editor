@@ -119,7 +119,7 @@ export const removeBeingPrecedingQuestion = (movingNodeParent: ENode, movingNode
   movingNodeParent.data[Constants.HAS_SUBQUESTION]?.forEach((nodeData: ENodeData) => {
     if (
       nodeData[Constants.HAS_PRECEDING_QUESTION] &&
-      nodeData[Constants.HAS_PRECEDING_QUESTION]['@id'] === movingNode.data['@id']
+      nodeData[Constants.HAS_PRECEDING_QUESTION]!['@id'] === movingNode.data['@id']
     ) {
       delete nodeData[Constants.HAS_PRECEDING_QUESTION];
     }

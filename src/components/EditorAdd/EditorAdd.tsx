@@ -124,9 +124,9 @@ const EditorAdd: FC<Props> = ({ parentId, position }) => {
     const newQuestion = {
       '@id': id,
       '@type': 'http://onto.fel.cvut.cz/ontologies/documentation/question',
-      'http://onto.fel.cvut.cz/ontologies/form-layout/has-layout-class': ['new'],
-      'http://www.w3.org/2000/01/rdf-schema#label': id,
-      'http://onto.fel.cvut.cz/ontologies/documentation/has_related_question': []
+      [Constants.HAS_LAYOUT_CLASS]: ['new'],
+      [Constants.RDFS_LABEL]: id,
+      [Constants.HAS_SUBQUESTION]: []
     };
 
     const targetNode = clonedFormStructure.getNode(parentId);

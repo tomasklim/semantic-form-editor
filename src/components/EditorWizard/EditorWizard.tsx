@@ -111,9 +111,9 @@ const EditorWizard: FC<Props> = ({ question, buildFormUI }) => {
     const newQuestion = {
       '@id': id,
       '@type': 'http://onto.fel.cvut.cz/ontologies/documentation/question',
-      'http://onto.fel.cvut.cz/ontologies/form-layout/has-layout-class': ['new'],
-      'http://www.w3.org/2000/01/rdf-schema#label': id,
-      'http://onto.fel.cvut.cz/ontologies/documentation/has_related_question': []
+      [Constants.HAS_LAYOUT_CLASS]: ['new'],
+      [Constants.RDFS_LABEL]: id,
+      [Constants.HAS_SUBQUESTION]: []
     };
 
     const targetNode = clonedFormStructure.getNode(targetId);
@@ -155,10 +155,10 @@ const EditorWizard: FC<Props> = ({ question, buildFormUI }) => {
     const newPage = {
       '@id': id,
       '@type': 'http://onto.fel.cvut.cz/ontologies/documentation/question',
-      'http://onto.fel.cvut.cz/ontologies/form-layout/has-layout-class': ['section', 'wizard-step'],
-      'http://www.w3.org/2000/01/rdf-schema#label': id,
-      'http://onto.fel.cvut.cz/ontologies/documentation/has_related_question': [],
-      'http://onto.fel.cvut.cz/ontologies/form/has-preceding-question': precedingQuestion
+      [Constants.HAS_LAYOUT_CLASS]: ['section', 'wizard-step'],
+      [Constants.RDFS_LABEL]: id,
+      [Constants.HAS_SUBQUESTION]: [],
+      [Constants.HAS_PRECEDING_QUESTION]: precedingQuestion
         ? {
             '@id': precedingQuestion['@id']
           }
