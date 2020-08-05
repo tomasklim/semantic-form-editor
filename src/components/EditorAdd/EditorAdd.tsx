@@ -11,7 +11,7 @@ import {
   sortRelatedQuestions
 } from '../../utils/formBuilder';
 import { Constants } from 's-forms';
-import ENode from '../../model/ENode';
+import FormStructureNode from '../../model/FormStructureNode';
 import { FormStructureContext } from '../../contexts/FormStructureContext';
 
 type Props = {
@@ -136,7 +136,7 @@ const EditorAdd: FC<Props> = ({ parentId, position }) => {
       return;
     }
 
-    const node = new ENode(targetNode, newQuestion);
+    const node = new FormStructureNode(targetNode, newQuestion);
 
     clonedFormStructure.addNode(newQuestion['@id'], node);
 
@@ -148,20 +148,17 @@ const EditorAdd: FC<Props> = ({ parentId, position }) => {
   };
 
   return (
-    <Box
-      display={'flex'}
-      alignItems={'center'}
-      justifyContent={'center'}
+    <div
       className={classes.addLine}
+      data-droppable={true}
       onDragOver={handleDragOver}
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
-      data-droppable={true}
       onClick={addNewQuestion}
     >
       <AddCircleIcon fontSize={'large'} />
-    </Box>
+    </div>
   );
 };
 

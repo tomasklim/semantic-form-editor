@@ -1,8 +1,9 @@
 import { Constants, FormUtils, JsonLdFramingUtils, JsonLdObjectMap, JsonLdObjectUtils } from 's-forms';
 import * as jsonld from 'jsonld';
-import ETree from '../model/ETree';
-import ENode, { ENodeData } from '../model/ENode';
+import FormStructure from '../model/FormStructure';
+import FormStructureNode from '../model/FormStructureNode';
 import { EForm } from '../interfaces';
+import { FormStructureQuestion } from '../model/FormStructureQuestion';
 
 let mapping: Map<string, number> = new Map<string, number>();
 let formElements: EForm;
@@ -19,14 +20,14 @@ export const buildFormStructure = async (form: EForm) => {
     JsonLdObjectMap.putObject(key, id2ObjectMap[key]);
   });
 
-  formElements['@graph'].forEach((item: ENodeData, index: number) => {
+  formElements['@graph'].forEach((item: FormStructureQuestion, index: number) => {
     mapping.set(item['@id'], index);
   });
 
   const rootData = findFormRoot();
-  const rootNode = new ENode(null, rootData);
+  const rootNode = new FormStructureNode(null, rootData);
 
-  const tree = new ETree(rootNode);
+  const tree = new FormStructure(rootNode);
   tree.addNode(rootNode.data['@id'], rootNode);
 
   preOrderBuild(rootNode, tree);
@@ -35,16 +36,16 @@ export const buildFormStructure = async (form: EForm) => {
 };
 
 const findFormRoot = () => {
-  return formElements['@graph'].find((item: ENodeData) => FormUtils.isForm(item));
+  return formElements['@graph'].find((item: FormStructureQuestion) => FormUtils.isForm(item));
 };
 
-const preOrderBuild = (parentNode: ENode, tree: ETree) => {
+const preOrderBuild = (parentNode: FormStructureNode, tree: FormStructure) => {
   let relatedQuestions = parentNode.data[Constants.HAS_SUBQUESTION];
   if (relatedQuestions) {
     relatedQuestions = sortRelatedQuestions(relatedQuestions);
 
-    relatedQuestions.forEach((question: ENodeData) => {
-      const node = new ENode(parentNode, question);
+    relatedQuestions.forEach((question: FormStructureQuestion) => {
+      const node = new FormStructureNode(parentNode, question);
 
       tree.addNode(question['@id'], node);
 
@@ -55,7 +56,9 @@ const preOrderBuild = (parentNode: ENode, tree: ETree) => {
   return;
 };
 
-export const sortRelatedQuestions = (relatedQuestions: Array<ENodeData> | undefined): Array<ENodeData> => {
+export const sortRelatedQuestions = (
+  relatedQuestions: Array<FormStructureQuestion> | undefined
+): Array<FormStructureQuestion> => {
   if (!relatedQuestions) {
     return [];
   }
@@ -90,7 +93,7 @@ const unifyFormStructure = (form: EForm): EForm => {
   return form;
 };
 
-const transformSubQuestionsToArray = (element: ENodeData): Array<ENodeData> => {
+const transformSubQuestionsToArray = (element: FormStructureQuestion): Array<FormStructureQuestion> => {
   return [element];
 };
 
@@ -98,7 +101,7 @@ const transformHasLayoutClassToArray = (element: string): Array<string> => {
   return [element];
 };
 
-export const detectIsChildNode = (testedNode: ENode, exemplarNode: ENode): boolean => {
+export const detectIsChildNode = (testedNode: FormStructureNode, exemplarNode: FormStructureNode): boolean => {
   if (!exemplarNode.parent) {
     return false;
   }
@@ -108,15 +111,15 @@ export const detectIsChildNode = (testedNode: ENode, exemplarNode: ENode): boole
     : detectIsChildNode(testedNode, exemplarNode.parent);
 };
 
-export const removePrecedingQuestion = (node: ENode) => {
+export const removePrecedingQuestion = (node: FormStructureNode) => {
   if (node.data[Constants.HAS_PRECEDING_QUESTION]) {
     delete node.data[Constants.HAS_PRECEDING_QUESTION];
   }
 };
 
-export const removeBeingPrecedingQuestion = (movingNodeParent: ENode, movingNode: ENode) => {
+export const removeBeingPrecedingQuestion = (movingNodeParent: FormStructureNode, movingNode: FormStructureNode) => {
   // if some node has nodeToMove as a preceding node, it loses it
-  movingNodeParent.data[Constants.HAS_SUBQUESTION]?.forEach((nodeData: ENodeData) => {
+  movingNodeParent.data[Constants.HAS_SUBQUESTION]?.forEach((nodeData: FormStructureQuestion) => {
     if (
       nodeData[Constants.HAS_PRECEDING_QUESTION] &&
       nodeData[Constants.HAS_PRECEDING_QUESTION]!['@id'] === movingNode.data['@id']
@@ -126,11 +129,11 @@ export const removeBeingPrecedingQuestion = (movingNodeParent: ENode, movingNode
   });
 };
 
-export const removeFromSubQuestions = (movingNodeParent: ENode, movingNode: ENode): number => {
+export const removeFromSubQuestions = (movingNodeParent: FormStructureNode, movingNode: FormStructureNode): number => {
   let removedNodeIndex = -1;
 
   movingNodeParent.data[Constants.HAS_SUBQUESTION] = movingNodeParent.data[Constants.HAS_SUBQUESTION]?.filter(
-    (node: ENodeData, index: number) => {
+    (node: FormStructureQuestion, index: number) => {
       if (node['@id'] === movingNode.data['@id']) {
         removedNodeIndex = index;
       }
@@ -141,7 +144,7 @@ export const removeFromSubQuestions = (movingNodeParent: ENode, movingNode: ENod
   return removedNodeIndex;
 };
 
-export const removeFromFormStructure = (formStructure: ETree, node: ENode) => {
+export const removeFromFormStructure = (formStructure: FormStructure, node: FormStructureNode) => {
   formStructure.removeNode(node.data['@id']);
 
   node.data[Constants.HAS_SUBQUESTION]?.forEach((q) => {
@@ -149,7 +152,11 @@ export const removeFromFormStructure = (formStructure: ETree, node: ENode) => {
   });
 };
 
-export const moveQuestionToSpecificPosition = (position: number, targetNode: ENode, movingNode: ENode) => {
+export const moveQuestionToSpecificPosition = (
+  position: number,
+  targetNode: FormStructureNode,
+  movingNode: FormStructureNode
+) => {
   movingNode.parent = targetNode;
 
   if (position !== targetNode.data[Constants.HAS_SUBQUESTION]?.length) {
@@ -168,7 +175,7 @@ export const moveQuestionToSpecificPosition = (position: number, targetNode: ENo
   movingNode.parent = targetNode;
 };
 
-export const moveQuestion = (movingNode: ENode, destinationNode: ENode) => {
+export const moveQuestion = (movingNode: FormStructureNode, destinationNode: FormStructureNode) => {
   if (!destinationNode.data[Constants.HAS_SUBQUESTION]) {
     destinationNode.data[Constants.HAS_SUBQUESTION] = [];
   }

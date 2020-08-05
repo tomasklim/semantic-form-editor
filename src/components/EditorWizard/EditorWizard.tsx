@@ -1,5 +1,5 @@
 import React, { FC, useContext } from 'react';
-import ENode, { ENodeData } from '../../model/ENode';
+import FormStructureNode from '../../model/FormStructureNode';
 import { Accordion, AccordionDetails, Button } from '@material-ui/core';
 import { Constants } from 's-forms';
 import useStyles from './EditorWizard.styles';
@@ -14,10 +14,15 @@ import WizardHeader from '@components/WizardHeader/WizardHeader';
 import WizardContent from '@components/WizardContent/WizardContent';
 import { DIRECTION } from '../../enums';
 import { FormStructureContext } from '../../contexts/FormStructureContext';
+import { FormStructureQuestion } from '../../model/FormStructureQuestion';
 
 type Props = {
-  question: ENodeData;
-  buildFormUI: (question: ENodeData, position: number, parentQuestion: ENodeData) => JSX.Element;
+  question: FormStructureQuestion;
+  buildFormUI: (
+    question: FormStructureQuestion,
+    position: number,
+    parentQuestion: FormStructureQuestion
+  ) => JSX.Element;
 };
 
 const EditorWizard: FC<Props> = ({ question, buildFormUI }) => {
@@ -123,7 +128,7 @@ const EditorWizard: FC<Props> = ({ question, buildFormUI }) => {
       return;
     }
 
-    const node = new ENode(targetNode, newQuestion);
+    const node = new FormStructureNode(targetNode, newQuestion);
 
     clonedFormStructure.addNode(newQuestion['@id'], node);
 
@@ -146,7 +151,7 @@ const EditorWizard: FC<Props> = ({ question, buildFormUI }) => {
       return;
     }
 
-    const precedingQuestion: ENodeData | undefined =
+    const precedingQuestion: FormStructureQuestion | undefined =
       root.data[Constants.HAS_SUBQUESTION] && root.data[Constants.HAS_SUBQUESTION]?.length
         ? root.data[Constants.HAS_SUBQUESTION]![root.data[Constants.HAS_SUBQUESTION]!.length - 1]
         : undefined;
@@ -165,7 +170,7 @@ const EditorWizard: FC<Props> = ({ question, buildFormUI }) => {
         : ''
     };
 
-    const page = new ENode(root, newPage);
+    const page = new FormStructureNode(root, newPage);
 
     clonedFormStructure.addNode(newPage['@id'], page);
 
@@ -195,12 +200,12 @@ const EditorWizard: FC<Props> = ({ question, buildFormUI }) => {
     const movingPageIndex = rootSubQuestions.findIndex((q) => q['@id'] === id);
 
     if (direction === DIRECTION.UP && movingPageIndex !== 0) {
-      const precending: ENodeData = rootSubQuestions[movingPageIndex - 1];
+      const precending: FormStructureQuestion = rootSubQuestions[movingPageIndex - 1];
 
       movingPageData[Constants.HAS_PRECEDING_QUESTION] = precending[Constants.HAS_PRECEDING_QUESTION];
 
       if (movingPageIndex < rootSubQuestions.length - 1) {
-        const following: ENodeData = rootSubQuestions[movingPageIndex + 1];
+        const following: FormStructureQuestion = rootSubQuestions[movingPageIndex + 1];
 
         precending[Constants.HAS_PRECEDING_QUESTION] = following[Constants.HAS_PRECEDING_QUESTION];
 
@@ -211,10 +216,10 @@ const EditorWizard: FC<Props> = ({ question, buildFormUI }) => {
         };
       }
     } else if (direction === DIRECTION.DOWN && movingPageIndex !== rootSubQuestions.length - 1) {
-      const three: ENodeData = rootSubQuestions[movingPageIndex + 1];
+      const three: FormStructureQuestion = rootSubQuestions[movingPageIndex + 1];
 
       if (movingPageIndex + 2 < rootSubQuestions.length) {
-        const four: ENodeData = rootSubQuestions[movingPageIndex + 2]; //
+        const four: FormStructureQuestion = rootSubQuestions[movingPageIndex + 2]; //
         movingPageData[Constants.HAS_PRECEDING_QUESTION] = four[Constants.HAS_PRECEDING_QUESTION];
 
         four[Constants.HAS_PRECEDING_QUESTION] = three[Constants.HAS_PRECEDING_QUESTION];

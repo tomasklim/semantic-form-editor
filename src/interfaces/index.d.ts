@@ -1,6 +1,6 @@
-import { ENodeData } from '../model/ENode';
 import { JsonLdObj } from 'jsonld/jsonld-spec';
+import { FormStructureQuestion } from '../model/FormStructureQuestion';
 
 export interface EForm extends JsonLdObj {
-  '@graph': Array<ENodeData>;
+  '@graph': Array<FormStructureQuestion>;
 }

@@ -4,6 +4,12 @@ export default makeStyles(() => ({
   header: {
     cursor: 'default !important'
   },
+  wizardHeaderContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%'
+  },
   wizardHeaderItem: {
     width: '33%'
   },

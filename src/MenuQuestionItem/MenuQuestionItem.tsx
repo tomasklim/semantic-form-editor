@@ -1,13 +1,14 @@
 import React, { FC, useContext, useRef, useState } from 'react';
 import { MoreVert } from '@material-ui/icons';
 import { ClickAwayListener, Grow, MenuItem, MenuList, Paper, Popper } from '@material-ui/core';
-import ENode, { ENodeData } from '../model/ENode';
+import FormStructureNode from '../model/FormStructureNode';
 import { Constants, FormUtils } from 's-forms';
 import { removeFromFormStructure, removeFromSubQuestions, sortRelatedQuestions } from '../utils/formBuilder';
 import { FormStructureContext } from '../contexts/FormStructureContext';
+import { FormStructureQuestion } from '../model/FormStructureQuestion';
 
 interface Props {
-  question: ENodeData;
+  question: FormStructureQuestion;
 }
 
 const MenuQuestionItem: FC<Props> = ({ question }) => {
@@ -89,7 +90,7 @@ const MenuQuestionItem: FC<Props> = ({ question }) => {
 
     q.data[Constants.HAS_SUBQUESTION] = [newQuestion];
 
-    const node = new ENode(q, newQuestion);
+    const node = new FormStructureNode(q, newQuestion);
 
     clonedFormStructure.addNode(newQuestion['@id'], node);
 

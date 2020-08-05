@@ -3,12 +3,12 @@ import useStyles from './ItemHeader.styles';
 import { Constants } from 's-forms';
 import { DragHandle } from '@material-ui/icons';
 import { CardHeader } from '@material-ui/core';
-import { ENodeData } from '../../model/ENode';
 import MenuQuestionItem from '../../MenuQuestionItem/MenuQuestionItem';
+import { FormStructureQuestion } from '../../model/FormStructureQuestion';
 
 type ItemHeaderProps = {
   container: React.MutableRefObject<HTMLLIElement | null>;
-  nodeData: ENodeData;
+  nodeData: FormStructureQuestion;
 };
 
 const ItemHeader: FC<ItemHeaderProps> = ({ container, nodeData }) => {

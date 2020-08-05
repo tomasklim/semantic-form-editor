@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { cloneDeep } from 'lodash';
-import ETree from '../model/ETree';
+import FormStructure from '../model/FormStructure';
 import { buildFormStructure } from '../utils/formBuilder';
 
 interface FormStructureProviderProps {
@@ -8,9 +8,9 @@ interface FormStructureProviderProps {
 }
 
 interface FormStructureContextValues {
-  formStructure: ETree;
-  setFormStructure: Dispatch<SetStateAction<ETree>>;
-  getClonedFormStructure: () => ETree;
+  formStructure: FormStructure;
+  setFormStructure: Dispatch<SetStateAction<FormStructure>>;
+  getClonedFormStructure: () => FormStructure;
 }
 
 // @ts-ignore
@@ -18,7 +18,7 @@ const FormStructureContext = React.createContext<FormStructureContextValues>({})
 
 const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children }) => {
   // @ts-ignore
-  const [formStructure, setFormStructure] = useState<ETree>(null);
+  const [formStructure, setFormStructure] = useState<FormStructure>(null);
 
   useEffect(() => {
     async function getFormStructure() {
@@ -31,7 +31,7 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
     getFormStructure();
   }, []);
 
-  const getClonedFormStructure = (): ETree => {
+  const getClonedFormStructure = (): FormStructure => {
     return cloneDeep(formStructure)!;
   };
 

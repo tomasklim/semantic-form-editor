@@ -1,12 +1,12 @@
 import React, { FC, useRef } from 'react';
-import { ENodeData } from '../../model/ENode';
 import useStyles from './EditorItem.styles';
 import { Card } from '@material-ui/core';
 import ItemHeader from '@components/ItemHeader/ItemHeader';
 import ItemContent from '@components/ItemContent/ItemContent';
+import { FormStructureQuestion } from '../../model/FormStructureQuestion';
 
 type Props = {
-  questionData: ENodeData;
+  questionData: FormStructureQuestion;
 };
 
 const EditorItem: FC<Props> = ({ questionData }) => {

@@ -1,20 +1,20 @@
 import React, { FC, useContext } from 'react';
-import { ENodeData } from '../../model/ENode';
 import { Constants, FormUtils } from 's-forms';
 import EditorItem from '@components/EditorItem/EditorItem';
 import EditorWizard from '@components/EditorWizard/EditorWizard';
 import EditorAdd from '@components/EditorAdd/EditorAdd';
 import { FormStructureContext } from '../../contexts/FormStructureContext';
+import { FormStructureQuestion } from '../../model/FormStructureQuestion';
 
-type Props = {};
+interface EditorProps {}
 
-const Editor: FC<Props> = ({}) => {
+const Editor: FC<EditorProps> = ({}) => {
   const { formStructure } = useContext(FormStructureContext);
 
   const buildFormUI = (
-    questionData: ENodeData,
+    questionData: FormStructureQuestion,
     position: number,
-    parentQuestion: ENodeData | undefined
+    parentQuestion: FormStructureQuestion | undefined
   ): JSX.Element => {
     const relatedQuestions = questionData[Constants.HAS_SUBQUESTION];
     let item = null;
