@@ -10,7 +10,7 @@ const Footer: FC<Props> = ({}) => {
 
   return (
     <footer className={classes.footer}>
-      <Typography variant="body2" color="textSecondary">
+      <Typography variant="body2">
         <Link color="inherit" href="https://www.linkedin.com/in/tomáš-klíma-8a367b131/" target="_blank">
           Copyright © {new Date().getFullYear()} by Tomáš Klíma
         </Link>

@@ -1,18 +1,21 @@
 import React, { FC, useContext, useRef, useState } from 'react';
-import { MoreVert } from '@material-ui/icons';
+import { ArrowDownward, ArrowUpward, MoreVert } from '@material-ui/icons';
 import { ClickAwayListener, Grow, MenuItem, MenuList, Paper, Popper } from '@material-ui/core';
-import FormStructureNode from '../model/FormStructureNode';
-import { Constants, FormUtils } from 's-forms';
+import { Constants } from 's-forms';
 import { removeFromFormStructure, removeFromSubQuestions, sortRelatedQuestions } from '../utils/formBuilder';
 import { FormStructureContext } from '../contexts/FormStructureContext';
 import { FormStructureQuestion } from '../model/FormStructureQuestion';
+import AddIcon from '@material-ui/icons/Add';
+import { DIRECTION } from '../enums';
+import SquaredIconButton from '@components/SquaredIconButton/SquaredIconButton';
 
 interface Props {
   question: FormStructureQuestion;
+  movePage?: (id: string, direction: DIRECTION) => void;
 }
 
-const MenuQuestionItem: FC<Props> = ({ question }) => {
-  const { getClonedFormStructure, setFormStructure } = useContext(FormStructureContext);
+const MenuQuestionItem: FC<Props> = ({ question, movePage }) => {
+  const { getClonedFormStructure, setFormStructure, addNewFormStructureNode } = useContext(FormStructureContext);
 
   const [open, setOpen] = useState<boolean>(false);
   const anchorEl = useRef<HTMLDivElement | null>(null);
@@ -65,43 +68,25 @@ const MenuQuestionItem: FC<Props> = ({ question }) => {
     setFormStructure(clonedFormStructure);
   };
 
-  const handleAddSubQuestion = (e: React.SyntheticEvent<EventTarget>) => {
-    handleClose(e);
-
-    const clonedFormStructure = getClonedFormStructure();
-
-    const q = clonedFormStructure.getNode(question['@id']);
-
-    if (!q) {
-      console.warn('Question with id not found', question['@id']);
-      return;
-    }
-
-    const id = Math.floor(Math.random() * 10000) + 'subquestion';
-
-    // temporary
-    const newQuestion = {
-      '@id': id,
-      '@type': 'http://onto.fel.cvut.cz/ontologies/documentation/question',
-      [Constants.HAS_LAYOUT_CLASS]: ['new'],
-      [Constants.RDFS_LABEL]: id,
-      [Constants.HAS_SUBQUESTION]: []
-    };
-
-    q.data[Constants.HAS_SUBQUESTION] = [newQuestion];
-
-    const node = new FormStructureNode(q, newQuestion);
-
-    clonedFormStructure.addNode(newQuestion['@id'], node);
-
-    setFormStructure(clonedFormStructure);
-  };
-
   return (
     <span>
-      <span ref={anchorEl} onClick={handleToggle}>
-        <MoreVert onClick={handleToggle} />
-      </span>
+      {movePage && (
+        <>
+          <SquaredIconButton onClick={() => movePage(question['@id'], DIRECTION.UP)} title="Move page up">
+            <ArrowUpward />
+          </SquaredIconButton>
+          <SquaredIconButton onClick={() => movePage(question['@id'], DIRECTION.DOWN)} title="Move page down">
+            <ArrowDownward />
+          </SquaredIconButton>
+        </>
+      )}
+      <SquaredIconButton onClick={() => addNewFormStructureNode(question['@id'])} title="Add new subquestion">
+        <AddIcon />
+      </SquaredIconButton>
+      {/* @ts-ignore */}
+      <SquaredIconButton ref={anchorEl} onClick={handleToggle} title="Show more">
+        <MoreVert />
+      </SquaredIconButton>
       <Popper open={open} anchorEl={anchorEl.current} transition={true} disablePortal={true}>
         {({ TransitionProps }) => (
           <Grow {...TransitionProps}>
@@ -109,9 +94,6 @@ const MenuQuestionItem: FC<Props> = ({ question }) => {
               <ClickAwayListener onClickAway={handleClose}>
                 <MenuList>
                   <MenuItem onClick={handleDelete}>Delete</MenuItem>
-                  {!question[Constants.HAS_SUBQUESTION]?.length && !FormUtils.isWizardStep(question) && (
-                    <MenuItem onClick={handleAddSubQuestion}>Add SubQuestion</MenuItem>
-                  )}
                 </MenuList>
               </ClickAwayListener>
             </Paper>

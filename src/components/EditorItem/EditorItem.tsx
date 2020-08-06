@@ -7,9 +7,10 @@ import { FormStructureQuestion } from '../../model/FormStructureQuestion';
 
 type Props = {
   questionData: FormStructureQuestion;
+  position: number;
 };
 
-const EditorItem: FC<Props> = ({ questionData }) => {
+const EditorItem: FC<Props> = ({ questionData, position }) => {
   const classes = useStyles();
   const itemContainer = useRef<HTMLLIElement | null>(null);
 
@@ -43,8 +44,8 @@ const EditorItem: FC<Props> = ({ questionData }) => {
       onDragEnd={handleDragEnd}
       className={classes.listItem}
     >
-      <Card variant="outlined">
-        <ItemHeader container={itemContainer} nodeData={questionData} />
+      <Card variant="outlined" className={classes.card}>
+        <ItemHeader container={itemContainer} nodeData={questionData} position={position} />
         <ItemContent />
       </Card>
     </li>

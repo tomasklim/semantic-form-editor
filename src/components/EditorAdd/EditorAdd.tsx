@@ -1,7 +1,6 @@
 import React, { FC, useContext } from 'react';
 import useStyles from './EditorAdd.styles';
-import AddCircleIcon from '@material-ui/icons/AddCircle';
-import { Box } from '@material-ui/core';
+import AddIcon from '@material-ui/icons/Add';
 import {
   detectIsChildNode,
   moveQuestionToSpecificPosition,
@@ -11,7 +10,6 @@ import {
   sortRelatedQuestions
 } from '../../utils/formBuilder';
 import { Constants } from 's-forms';
-import FormStructureNode from '../../model/FormStructureNode';
 import { FormStructureContext } from '../../contexts/FormStructureContext';
 
 type Props = {
@@ -157,7 +155,7 @@ const EditorAdd: FC<Props> = ({ parentId, position }) => {
       onDrop={handleDrop}
       onClick={addNewQuestion}
     >
-      <AddCircleIcon fontSize={'large'} />
+      <AddIcon fontSize={'large'} />
     </div>
   );
 };

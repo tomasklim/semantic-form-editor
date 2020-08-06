@@ -5,10 +5,13 @@ import EditorWizard from '@components/EditorWizard/EditorWizard';
 import EditorAdd from '@components/EditorAdd/EditorAdd';
 import { FormStructureContext } from '../../contexts/FormStructureContext';
 import { FormStructureQuestion } from '../../model/FormStructureQuestion';
+import useStyles from './Editor.styles';
 
 interface EditorProps {}
 
 const Editor: FC<EditorProps> = ({}) => {
+  const classes = useStyles();
+
   const { formStructure } = useContext(FormStructureContext);
 
   const buildFormUI = (
@@ -22,25 +25,25 @@ const Editor: FC<EditorProps> = ({}) => {
     if (FormUtils.isForm(questionData)) {
       return <EditorWizard key={questionData['@id']} question={questionData} buildFormUI={buildFormUI} />;
     } else if (FormUtils.isSection(questionData)) {
-      item = <EditorItem questionData={questionData} />;
+      item = <EditorItem questionData={questionData} position={position} />;
     } else if (FormUtils.isTypeahead(questionData)) {
-      item = <EditorItem questionData={questionData} />;
+      item = <EditorItem questionData={questionData} position={position} />;
     } else if (FormUtils.isCalendar(questionData)) {
-      item = <EditorItem questionData={questionData} />;
+      item = <EditorItem questionData={questionData} position={position} />;
     } else if (FormUtils.isCheckbox(questionData)) {
-      item = <EditorItem questionData={questionData} />;
+      item = <EditorItem questionData={questionData} position={position} />;
     } else if (FormUtils.isMaskedInput(questionData)) {
-      item = <EditorItem questionData={questionData} />;
+      item = <EditorItem questionData={questionData} position={position} />;
     } else if (FormUtils.isTextarea(questionData, '')) {
-      item = <EditorItem questionData={questionData} />;
+      item = <EditorItem questionData={questionData} position={position} />;
     } else {
-      item = <EditorItem questionData={questionData} />;
+      item = <EditorItem questionData={questionData} position={position} />;
     }
 
     return (
       <React.Fragment key={questionData['@id']}>
         {item}
-        <ol id={questionData['@id']}>
+        <ol id={questionData['@id']} className={classes.ol}>
           {relatedQuestions && relatedQuestions!.length > 0 && (
             <EditorAdd parentId={questionData['@id']} position={0} />
           )}

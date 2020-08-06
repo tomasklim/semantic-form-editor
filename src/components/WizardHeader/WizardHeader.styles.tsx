@@ -1,8 +1,12 @@
 import { makeStyles } from '@material-ui/core/styles';
 
-export default makeStyles(() => ({
+export default makeStyles((theme) => ({
   header: {
-    cursor: 'default !important'
+    cursor: 'default !important',
+    borderBottom: '1px solid #ffffff0f',
+    '& > div': {
+      margin: theme.spacing(1.5, 0) + ' !important'
+    }
   },
   wizardHeaderContainer: {
     display: 'flex',

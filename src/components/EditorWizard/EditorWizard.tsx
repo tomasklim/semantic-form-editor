@@ -1,6 +1,6 @@
 import React, { FC, useContext } from 'react';
 import FormStructureNode from '../../model/FormStructureNode';
-import { Accordion, AccordionDetails, Button } from '@material-ui/core';
+import { Accordion, AccordionDetails } from '@material-ui/core';
 import { Constants } from 's-forms';
 import useStyles from './EditorWizard.styles';
 import {
@@ -15,6 +15,7 @@ import WizardContent from '@components/WizardContent/WizardContent';
 import { DIRECTION } from '../../enums';
 import { FormStructureContext } from '../../contexts/FormStructureContext';
 import { FormStructureQuestion } from '../../model/FormStructureQuestion';
+import AddIcon from '@material-ui/icons/Add';
 
 type Props = {
   question: FormStructureQuestion;
@@ -103,38 +104,6 @@ const EditorWizard: FC<Props> = ({ question, buildFormUI }) => {
     destinationPage.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(
       destinationPage.data[Constants.HAS_SUBQUESTION]
     );
-
-    setFormStructure(clonedFormStructure);
-  };
-
-  const addNewQuestion = (targetId: string) => {
-    const clonedFormStructure = getClonedFormStructure();
-
-    const id = Math.floor(Math.random() * 10000) + 'editorwizard';
-
-    // temporary
-    const newQuestion = {
-      '@id': id,
-      '@type': 'http://onto.fel.cvut.cz/ontologies/documentation/question',
-      [Constants.HAS_LAYOUT_CLASS]: ['new'],
-      [Constants.RDFS_LABEL]: id,
-      [Constants.HAS_SUBQUESTION]: []
-    };
-
-    const targetNode = clonedFormStructure.getNode(targetId);
-
-    if (!targetNode) {
-      console.error('Missing targetNode');
-      return;
-    }
-
-    const node = new FormStructureNode(targetNode, newQuestion);
-
-    clonedFormStructure.addNode(newQuestion['@id'], node);
-
-    moveQuestion(node, targetNode);
-
-    targetNode.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(targetNode.data[Constants.HAS_SUBQUESTION]);
 
     setFormStructure(clonedFormStructure);
   };
@@ -242,7 +211,7 @@ const EditorWizard: FC<Props> = ({ question, buildFormUI }) => {
   return (
     <React.Fragment>
       {relatedQuestions &&
-        relatedQuestions.map((q) => (
+        relatedQuestions.map((q, index) => (
           <div
             key={q['@id']}
             id={q['@id']}
@@ -253,18 +222,16 @@ const EditorWizard: FC<Props> = ({ question, buildFormUI }) => {
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
           >
-            <Accordion expanded={true}>
-              <WizardHeader question={q} addNewQuestion={addNewQuestion} movePage={movePage} />
+            <Accordion expanded={true} className={classes.accordion}>
+              <WizardHeader question={q} movePage={movePage} position={index + 1} />
               <WizardContent question={q} buildFormUI={buildFormUI} />
             </Accordion>
           </div>
         ))}
       <div className={classes.page}>
-        <Accordion expanded={true}>
+        <Accordion expanded={true} className={classes.accordion} onClick={addNewPage} title={'Add new page'}>
           <AccordionDetails className={classes.newPage}>
-            <Button variant="outlined" onClick={addNewPage}>
-              ADD NEW PAGE
-            </Button>
+            <AddIcon />
           </AccordionDetails>
         </Accordion>
       </div>
