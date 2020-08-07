@@ -1,8 +1,7 @@
 import React, { FC } from 'react';
-import useStyles from './ItemHeader.styles';
+import useStyles, { CustomisedCardHeader } from './ItemHeader.styles';
 import { Constants } from 's-forms';
 import { DragIndicator } from '@material-ui/icons';
-import { CardHeader } from '@material-ui/core';
 import MenuQuestionItem from '../../MenuQuestionItem/MenuQuestionItem';
 import { FormStructureQuestion } from '../../model/FormStructureQuestion';
 
@@ -24,8 +23,7 @@ const ItemHeader: FC<ItemHeaderProps> = ({ container, nodeData, position }) => {
   };
 
   return (
-    <CardHeader
-      className={classes.cardHeaderRoot}
+    <CustomisedCardHeader
       title={
         <div className={classes.cardHeader} onMouseEnter={addDraggable} onMouseLeave={removeDraggable}>
           <span className={classes.cardHeaderItemLeft}>

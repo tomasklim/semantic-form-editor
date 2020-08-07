@@ -1,4 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles';
+import { AccordionDetails } from '@material-ui/core';
+import { withStyles } from '@material-ui/styles';
 
 export default makeStyles((theme) => ({
   page: {
@@ -8,7 +10,14 @@ export default makeStyles((theme) => ({
   pageOver: {
     border: '2px dashed #5a81ea'
   },
-  newPage: {
+  accordion: {
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.primary.contrastText
+  }
+}));
+
+export const CustomisedAccordionDetails = withStyles((theme) => ({
+  root: {
     display: 'flex',
     justifyContent: 'center',
     padding: theme.spacing(2),
@@ -20,9 +29,5 @@ export default makeStyles((theme) => ({
       backgroundColor: theme.palette.primary.dark + '50',
       color: '#A2B6EE'
     }
-  },
-  accordion: {
-    backgroundColor: theme.palette.primary.main,
-    color: theme.palette.primary.contrastText
   }
-}));
+}))(AccordionDetails);

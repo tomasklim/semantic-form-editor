@@ -1,6 +1,5 @@
 import React, { FC, useRef } from 'react';
-import useStyles from './EditorItem.styles';
-import { Card } from '@material-ui/core';
+import useStyles, { CustomisedCard } from './EditorItem.styles';
 import ItemHeader from '@components/ItemHeader/ItemHeader';
 import ItemContent from '@components/ItemContent/ItemContent';
 import { FormStructureQuestion } from '../../model/FormStructureQuestion';
@@ -44,10 +43,10 @@ const EditorItem: FC<Props> = ({ questionData, position }) => {
       onDragEnd={handleDragEnd}
       className={classes.listItem}
     >
-      <Card variant="outlined" className={classes.card}>
+      <CustomisedCard variant="outlined">
         <ItemHeader container={itemContainer} nodeData={questionData} position={position} />
         <ItemContent />
-      </Card>
+      </CustomisedCard>
     </li>
   );
 };

@@ -1,8 +1,8 @@
 import React, { FC, useContext } from 'react';
 import FormStructureNode from '../../model/FormStructureNode';
-import { Accordion, AccordionDetails } from '@material-ui/core';
+import useStyles, { CustomisedAccordionDetails } from './EditorWizard.styles';
+import { Accordion } from '@material-ui/core';
 import { Constants } from 's-forms';
-import useStyles from './EditorWizard.styles';
 import {
   moveQuestion,
   removeBeingPrecedingQuestion,
@@ -230,9 +230,9 @@ const EditorWizard: FC<Props> = ({ question, buildFormUI }) => {
         ))}
       <div className={classes.page}>
         <Accordion expanded={true} className={classes.accordion} onClick={addNewPage} title={'Add new page'}>
-          <AccordionDetails className={classes.newPage}>
+          <CustomisedAccordionDetails>
             <AddIcon />
-          </AccordionDetails>
+          </CustomisedAccordionDetails>
         </Accordion>
       </div>
     </React.Fragment>

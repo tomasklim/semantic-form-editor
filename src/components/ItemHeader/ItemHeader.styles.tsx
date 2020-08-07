@@ -1,14 +1,8 @@
 import { makeStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/styles';
+import { CardHeader } from '@material-ui/core';
 
 export default makeStyles((theme) => ({
-  cardHeaderRoot: {
-    borderBottom: '1px solid #ffffff0f',
-    padding: theme.spacing(1, 1, 1, 1),
-    cursor: 'grab',
-    '&:active': {
-      cursor: 'grabbing'
-    }
-  },
   cardHeader: {
     fontSize: '1rem',
     display: 'flex',
@@ -29,3 +23,14 @@ export default makeStyles((theme) => ({
     marginRight: theme.spacing(1)
   }
 }));
+
+export const CustomisedCardHeader = withStyles((theme) => ({
+  root: {
+    borderBottom: '1px solid #ffffff0f',
+    padding: theme.spacing(1, 1, 1, 1),
+    cursor: 'grab',
+    '&:active': {
+      cursor: 'grabbing'
+    }
+  }
+}))(CardHeader);
