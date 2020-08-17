@@ -1,33 +1,34 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { AccordionDetails } from '@material-ui/core';
-import { withStyles } from '@material-ui/styles';
+import { ITheme } from '../../interfaces';
 
-export default makeStyles((theme) => ({
+export default makeStyles((theme: ITheme) => ({
   page: {
     border: '2px solid transparent',
     margin: theme.spacing(1, 2)
   },
   pageOver: {
-    border: '2px dashed #5a81ea'
+    border: '2px dashed ' + theme.palette.custom.main
   },
   accordion: {
-    backgroundColor: theme.palette.primary.main,
-    color: theme.palette.primary.contrastText
+    backgroundColor: theme.palette.custom[800],
+    color: theme.palette.custom.contrastText
   }
 }));
 
-export const CustomisedAccordionDetails = withStyles((theme) => ({
+// @ts-ignore
+export const CustomisedAccordionDetails = withStyles((theme: ITheme) => ({
   root: {
     display: 'flex',
     justifyContent: 'center',
     padding: theme.spacing(2),
-    color: '#5a81ea',
-    backgroundColor: theme.palette.primary.main + '99',
+    color: theme.palette.custom.main,
+    backgroundColor: theme.palette.custom[900] + '99',
     cursor: 'pointer',
 
     '&:hover': {
-      backgroundColor: theme.palette.primary.dark + '50',
-      color: '#A2B6EE'
+      backgroundColor: theme.palette.custom[900] + '50',
+      color: theme.palette.custom.light
     }
   }
 }))(AccordionDetails);

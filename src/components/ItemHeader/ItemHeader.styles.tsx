@@ -1,8 +1,8 @@
-import { makeStyles } from '@material-ui/core/styles';
-import { withStyles } from '@material-ui/styles';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { CardHeader } from '@material-ui/core';
+import { ITheme } from '../../interfaces';
 
-export default makeStyles((theme) => ({
+export default makeStyles((theme: ITheme) => ({
   cardHeader: {
     fontSize: '1rem',
     display: 'flex',
@@ -13,20 +13,21 @@ export default makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     '& svg': {
-      color: '#5a81ea',
+      color: theme.palette.custom.main,
       marginRight: theme.spacing(1)
     }
   },
   cardHeaderItemRight: { textAlign: 'right' },
   cardHeaderDrag: {
-    color: '#5a81ea',
+    color: theme.palette.custom.main,
     marginRight: theme.spacing(1)
   }
 }));
 
-export const CustomisedCardHeader = withStyles((theme) => ({
+// @ts-ignore
+export const CustomisedCardHeader = withStyles((theme: ITheme) => ({
   root: {
-    borderBottom: '1px solid #ffffff0f',
+    borderBottom: '1px solid ' + theme.palette.custom.contrastText + '0f',
     padding: theme.spacing(1, 1, 1, 1),
     cursor: 'grab',
     '&:active': {

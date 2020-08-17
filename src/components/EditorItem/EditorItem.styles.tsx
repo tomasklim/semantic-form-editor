@@ -1,21 +1,21 @@
-import { makeStyles } from '@material-ui/core/styles';
-import { withStyles } from '@material-ui/styles';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { Card } from '@material-ui/core';
+import { ITheme } from '../../interfaces';
 
-export default makeStyles(() => ({
+export default makeStyles((theme: ITheme) => ({
   listItem: {
     width: '100%',
     border: '2px solid transparent',
     '&:hover': {
-      border: '2px dashed #5a81ea'
+      border: '2px dashed ' + theme.palette.custom.main
     }
   }
 }));
 
-export const CustomisedCard = withStyles((theme) => ({
+// @ts-ignore
+export const CustomisedCard = withStyles((theme: ITheme) => ({
   root: {
-    // @ts-ignore
-    backgroundColor: theme.palette.primary[100],
-    color: theme.palette.primary.contrastText
+    backgroundColor: theme.palette.custom[600],
+    color: theme.palette.custom.contrastText
   }
 }))(Card);

@@ -1,6 +1,7 @@
 import { makeStyles } from '@material-ui/core/styles';
+import { ITheme } from '../../interfaces';
 
-export default makeStyles((theme) => ({
+export default makeStyles((theme: ITheme) => ({
   body: {
     flexDirection: 'column',
     cursor: 'pointer',

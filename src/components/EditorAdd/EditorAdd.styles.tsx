@@ -1,6 +1,7 @@
 import { makeStyles } from '@material-ui/core/styles';
+import { ITheme } from '../../interfaces';
 
-export default makeStyles(() => ({
+export default makeStyles((theme: ITheme) => ({
   addLine: {
     display: 'flex',
     alignItems: 'center',
@@ -12,13 +13,13 @@ export default makeStyles(() => ({
       transitionDelay: '0',
       transitionDuration: '0.2s',
       transitionProperty: 'transform',
-      color: '#5a81ea'
+      color: theme.palette.custom.main
     },
     transitionDelay: '0.1s',
     transitionDuration: '0.5s',
     transitionProperty: 'height',
     '&:hover': {
-      border: '2px dashed #5a81ea',
+      border: '2px dashed ' + theme.palette.custom.main,
       height: '40px',
       transitionDelay: '0.5s',
       '& svg': {
@@ -29,7 +30,7 @@ export default makeStyles(() => ({
     }
   }, // remove duplicate
   overAdd: {
-    border: '2px dashed #5a81ea',
+    border: '2px dashed ' + theme.palette.custom.main,
     height: '40px',
     transitionDelay: '0.5s',
     '& svg': {

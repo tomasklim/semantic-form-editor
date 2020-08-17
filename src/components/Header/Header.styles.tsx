@@ -1,6 +1,7 @@
 import { makeStyles } from '@material-ui/core/styles';
+import { ITheme } from '../../interfaces';
 
-export default makeStyles((theme) => ({
+export default makeStyles((theme: ITheme) => ({
   header: {
     height: '50px',
     display: 'flex',
@@ -8,12 +9,11 @@ export default makeStyles((theme) => ({
     justifyContent: 'center',
     padding: theme.spacing(0, 2),
     margin: theme.spacing(0, 0, 1),
-    // @ts-ignore
-    borderBottom: '1px solid ' + theme.palette.primary[200],
+    borderBottom: '1px solid ' + theme.palette.custom[500],
 
     '& nav': {
       '& a': {
-        color: theme.palette.primary.contrastText,
+        color: theme.palette.custom.contrastText,
         textDecoration: 'none',
         fontSize: '15px',
         fontFamily: 'Roboto',
@@ -22,7 +22,7 @@ export default makeStyles((theme) => ({
         display: 'flex',
 
         '&:hover': {
-          color: '#5a81ea'
+          color: theme.palette.custom.main
         },
 
         '& svg': {

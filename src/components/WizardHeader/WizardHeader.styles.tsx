@@ -1,9 +1,10 @@
 import { makeStyles } from '@material-ui/core/styles';
+import { ITheme } from '../../interfaces';
 
-export default makeStyles((theme) => ({
+export default makeStyles((theme: ITheme) => ({
   header: {
     cursor: 'default !important',
-    borderBottom: '1px solid #ffffff0f',
+    borderBottom: '1px solid ' + theme.palette.custom.contrastText + '0f',
     '& > div': {
       margin: theme.spacing(1.5, 0) + ' !important'
     }
