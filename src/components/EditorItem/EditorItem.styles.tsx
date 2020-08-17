@@ -15,7 +15,6 @@ export default makeStyles((theme: ITheme) => ({
 // @ts-ignore
 export const CustomisedCard = withStyles((theme: ITheme) => ({
   root: {
-    backgroundColor: theme.palette.custom[600],
     color: theme.palette.custom.contrastText
   }
 }))(Card);
