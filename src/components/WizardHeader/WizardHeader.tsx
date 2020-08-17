@@ -5,6 +5,7 @@ import useStyles from './WizardHeader.styles';
 import { DIRECTION } from '../../enums';
 import MenuQuestionItem from '../../MenuQuestionItem/MenuQuestionItem';
 import { FormStructureQuestion } from '../../model/FormStructureQuestion';
+import HeaderIndicator from '@components/HeaderIndicator/HeaderIndicator';
 
 type Props = {
   question: FormStructureQuestion;
@@ -25,8 +26,9 @@ const WizardHeader: FC<Props> = ({ question, movePage, position }) => {
           <Typography>
             {position}
             {'. '}
-            {question[Constants.RDFS_LABEL] || question['@id']} {question[Constants.HAS_PRECEDING_QUESTION] && '^'}
+            {question[Constants.RDFS_LABEL] || question['@id']}
           </Typography>
+          <HeaderIndicator question={question} />
         </div>
         <span className={`${classes.wizardHeaderItem} ${classes.wizardHeaderCenter}`} />
         <span className={`${classes.wizardHeaderItem} ${classes.wizardHeaderRight}`}>

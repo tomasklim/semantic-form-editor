@@ -4,6 +4,7 @@ import { Constants } from 's-forms';
 import { DragIndicator } from '@material-ui/icons';
 import MenuQuestionItem from '../../MenuQuestionItem/MenuQuestionItem';
 import { FormStructureQuestion } from '../../model/FormStructureQuestion';
+import HeaderIndicator from '@components/HeaderIndicator/HeaderIndicator';
 
 type ItemHeaderProps = {
   container: React.MutableRefObject<HTMLLIElement | null>;
@@ -31,8 +32,9 @@ const ItemHeader: FC<ItemHeaderProps> = ({ container, nodeData, position }) => {
             <span>
               {position}
               {'. '}
-              {nodeData[Constants.RDFS_LABEL] || nodeData['@id']} {nodeData[Constants.HAS_PRECEDING_QUESTION] && '^'}
+              {nodeData[Constants.RDFS_LABEL] || nodeData['@id']}
             </span>
+            <HeaderIndicator question={nodeData} />
           </span>
           <span className={classes.cardHeaderItemRight} onMouseEnter={removeDraggable} onMouseLeave={addDraggable}>
             <MenuQuestionItem question={nodeData} />

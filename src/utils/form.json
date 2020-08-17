@@ -106,7 +106,7 @@
       "has-layout-class": "checkbox",
       "has-question-origin": "@id",
       "requires-answer": true,
-      "label": "Information of the outcome available?*"
+      "label": "Information of the outcome available?"
     },
     {
       "@id": "rdfs:checkbox-show-q",
@@ -143,14 +143,14 @@
       "has-preceding-question": "rdfs:label-q",
       "has-question-origin": "@id",
       "requires-answer": true,
-      "label": "Date of birth (month/year)*"
+      "label": "Date of birth (month/year)"
     },
     {
       "@id": "rdfs:id-q",
       "@type": "doc:question",
       "has-question-origin": "@id",
       "requires-answer": true,
-      "label": "First name*"
+      "label": "First name"
     },
     {
       "@id": "rdfs:label-q",
@@ -159,7 +159,7 @@
       "has-question-origin": "rdfs:label",
       "requires-answer": true,
       "description": "If middle name, put it here.",
-      "label": "Last name*"
+      "label": "Last name"
     },
     {
       "@id": "x:form-1-default-q",

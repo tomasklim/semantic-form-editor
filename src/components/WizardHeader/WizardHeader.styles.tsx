@@ -19,7 +19,8 @@ export default makeStyles((theme: ITheme) => ({
     width: '33%'
   },
   wizardHeaderLeft: {
-    display: 'flex'
+    display: 'flex',
+    alignItems: 'center'
   },
   wizardHeaderCenter: {
     textAlign: 'center'
