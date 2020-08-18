@@ -6,7 +6,7 @@ export default makeStyles((theme: ITheme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    height: '15px',
+    height: '25px',
     margin: '2px 3px',
     '& svg': {
       transform: 'scale(0)',
@@ -14,29 +14,14 @@ export default makeStyles((theme: ITheme) => ({
       transitionDuration: '0.2s',
       transitionProperty: 'transform',
       color: theme.palette.custom.main
-    },
-    transitionDelay: '0.1s',
+    }
+  },
+  '@global .addLineHover': {
+    border: '2px dashed ' + theme.palette.custom.main
+  },
+  '@global .addLineHover svg': {
+    transitionDelay: '0.3s',
     transitionDuration: '0.5s',
-    transitionProperty: 'height',
-    '&:hover': {
-      border: '2px dashed ' + theme.palette.custom.main,
-      height: '40px',
-      transitionDelay: '0.5s',
-      '& svg': {
-        transitionDelay: '0.5s',
-        transitionDuration: '0.5s',
-        transform: 'scale(1)'
-      }
-    }
-  }, // remove duplicate
-  overAdd: {
-    border: '2px dashed ' + theme.palette.custom.main,
-    height: '40px',
-    transitionDelay: '0.5s',
-    '& svg': {
-      transitionDelay: '0.5s',
-      transitionDuration: '0.5s',
-      transform: 'scale(1)'
-    }
+    transform: 'scale(0.7) !important'
   }
 }));

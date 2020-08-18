@@ -1,4 +1,4 @@
-import React, { FC, useContext } from 'react';
+import React, { FC, useContext, useRef } from 'react';
 import useStyles from './EditorAdd.styles';
 import AddIcon from '@material-ui/icons/Add';
 import {
@@ -21,8 +21,18 @@ type Props = {
 
 const EditorAdd: FC<Props> = ({ parentId, position }) => {
   const classes = useStyles();
+  const addContainer = useRef<HTMLDivElement | null>(null);
 
   const { formStructure, getClonedFormStructure, setFormStructure } = useContext(FormStructureContext);
+
+  // fix drag and drop bug https://stackoverflow.com/questions/17946886/hover-sticks-to-element-on-drag-and-drop
+  const handleMouseEnter = () => {
+    addContainer.current?.classList.add('addLineHover');
+  };
+
+  const handleMouseLeave = () => {
+    addContainer.current?.classList.remove('addLineHover');
+  };
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -40,7 +50,7 @@ const EditorAdd: FC<Props> = ({ parentId, position }) => {
         return;
       }
 
-      (e.target as HTMLDivElement).classList.add(classes.overAdd);
+      (e.target as HTMLDivElement).classList.add('addLineHover');
 
       e.dataTransfer.dropEffect = 'move';
     }
@@ -48,7 +58,7 @@ const EditorAdd: FC<Props> = ({ parentId, position }) => {
 
   const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
     if ((e.target as HTMLDivElement).classList.contains(classes.addLine)) {
-      (e.target as HTMLDivElement).classList.remove(classes.overAdd);
+      (e.target as HTMLDivElement).classList.remove('addLineHover');
     }
   };
 
@@ -61,7 +71,7 @@ const EditorAdd: FC<Props> = ({ parentId, position }) => {
         .forEach((element) => ((element as HTMLDivElement | HTMLLIElement).style.pointerEvents = 'all'));
 
       [].forEach.call(document.querySelectorAll('[data-droppable=true]'), (el: HTMLDivElement) => {
-        el.classList.remove(classes.overAdd);
+        el.classList.remove('addLineHover');
       });
 
       const movingNodeId = e.dataTransfer.types.slice(-1)[0];
@@ -115,6 +125,8 @@ const EditorAdd: FC<Props> = ({ parentId, position }) => {
     setFormStructure(clonedFormStructure);
 
     highlightQuestion(movingNodeId);
+
+    window.scrollBy(0, 40);
   };
 
   const addNewQuestion = () => {
@@ -149,12 +161,17 @@ const EditorAdd: FC<Props> = ({ parentId, position }) => {
     setFormStructure(clonedFormStructure);
 
     highlightQuestion(id);
+
+    window.scrollBy(0, 40);
   };
 
   return (
     <div
       className={classes.addLine}
+      ref={addContainer}
       data-droppable={true}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       onDragOver={handleDragOver}
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}

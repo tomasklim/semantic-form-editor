@@ -13,6 +13,15 @@ const EditorItem: FC<Props> = ({ questionData, position }) => {
   const classes = useStyles();
   const itemContainer = useRef<HTMLLIElement | null>(null);
 
+  // fix drag and drop bug https://stackoverflow.com/questions/17946886/hover-sticks-to-element-on-drag-and-drop
+  const handleMouseEnter = () => {
+    itemContainer.current?.classList.add('listItemHover');
+  };
+
+  const handleMouseLeave = () => {
+    itemContainer.current?.classList.remove('listItemHover');
+  };
+
   const handleDragStart = (e: React.DragEvent<HTMLLIElement>) => {
     (e.target as HTMLLIElement).style.opacity = '0.4';
 
@@ -41,6 +50,8 @@ const EditorItem: FC<Props> = ({ questionData, position }) => {
       ref={itemContainer}
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       className={classes.listItem}
     >
       <CustomisedCard variant="outlined">

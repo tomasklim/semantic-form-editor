@@ -189,9 +189,12 @@ export const highlightQuestion = (movingNodeId: string) => {
 
   setTimeout(() => {
     document.getElementById(movingNodeId)?.classList.add('highlightQuestion');
+
+    document.querySelector('.listItemHover')?.classList.remove('listItemHover');
+    document.querySelector('.listItemHover')?.classList.remove('addLineHover');
   }, 100);
 
   setTimeout(() => {
     document.getElementById(movingNodeId)?.classList.remove('highlightQuestion');
-  }, 2000);
+  }, 3000);
 };

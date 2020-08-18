@@ -5,7 +5,7 @@ export default makeStyles((theme: ITheme) => ({
   body: {
     flexDirection: 'column',
     cursor: 'pointer',
-    padding: theme.spacing(1.5, 2)
+    padding: theme.spacing(1, 2)
   },
   ol: {
     listStyle: 'none',
@@ -30,6 +30,6 @@ export default makeStyles((theme: ITheme) => ({
   emptyPage: {
     fontStyle: 'italic',
     opacity: 0.6,
-    marginLeft: '0.5rem'
+    margin: theme.spacing(1.5, 1, 1.5)
   }
 }));

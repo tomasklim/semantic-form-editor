@@ -5,10 +5,10 @@ import { ITheme } from '../../interfaces';
 export default makeStyles((theme: ITheme) => ({
   listItem: {
     width: '100%',
-    border: '2px solid transparent',
-    '&:hover': {
-      border: '2px dashed ' + theme.palette.custom.main
-    }
+    border: '2px solid transparent'
+  },
+  '@global .listItemHover': {
+    border: '2px dashed ' + theme.palette.custom.main
   }
 }));
 
