@@ -6,7 +6,8 @@ export default makeStyles(() => ({
     display: 'flex',
     marginLeft: '1rem',
     '& div': {
-      width: '14px'
+      width: '14px',
+      cursor: 'default'
     }
   },
   required: {
