@@ -1,42 +1,41 @@
-import { Constants, FormUtils, JsonLdFramingUtils, JsonLdObjectMap, JsonLdObjectUtils } from 's-forms';
+import { Constants, FormUtils, JsonLdFramingUtils, JsonLdObjectUtils } from 's-forms';
 import * as jsonld from 'jsonld';
 import FormStructure from '../model/FormStructure';
 import FormStructureNode from '../model/FormStructureNode';
 import { EForm } from '../interfaces';
 import { FormStructureQuestion } from '../model/FormStructureQuestion';
-
-let mapping: Map<string, number> = new Map<string, number>();
-let formElements: EForm;
+import { Context, JsonLdObj } from 'jsonld/jsonld-spec';
 
 export const buildFormStructure = async (form: EForm) => {
   unifyFormStructure(form);
 
-  // @ts-ignore
-  formElements = await jsonld.flatten(form, {});
+  const flattenedForm: JsonLdObj = await jsonld.flatten(form, {});
 
-  const id2ObjectMap = JsonLdFramingUtils.modifyStructure(formElements);
+  const expandedFormStructure = JsonLdFramingUtils.expandStructure(flattenedForm) as Array<FormStructureQuestion>;
 
-  Object.keys(id2ObjectMap).map((key) => {
-    JsonLdObjectMap.putObject(key, id2ObjectMap[key]);
-  });
-
-  formElements['@graph'].forEach((item: FormStructureQuestion, index: number) => {
-    mapping.set(item['@id'], index);
-  });
-
-  const rootData = findFormRoot();
+  const rootData = findFormRoot(expandedFormStructure);
   const rootNode = new FormStructureNode(null, rootData);
 
-  const tree = new FormStructure(rootNode);
-  tree.addNode(rootNode.data['@id'], rootNode);
+  const formStructure = new FormStructure(rootNode);
+  formStructure.addNode(rootNode.data['@id'], rootNode);
 
-  preOrderBuild(rootNode, tree);
+  preOrderBuild(rootNode, formStructure);
 
-  return tree;
+  return formStructure;
 };
 
-const findFormRoot = () => {
-  return formElements['@graph'].find((item: FormStructureQuestion) => FormUtils.isForm(item));
+export const exportForm = async (formStructure: FormStructure, formContext: Context) => {
+  const rootData = formStructure.root.data;
+
+  const compressedStructure = JsonLdFramingUtils.compressStructure(rootData) as Array<FormStructureQuestion>;
+
+  const exportedForm = await jsonld.compact(compressedStructure, formContext);
+
+  console.log(JSON.stringify(exportedForm));
+};
+
+const findFormRoot = (structure: Array<FormStructureQuestion>): FormStructureQuestion | undefined => {
+  return Object.values(structure).find((item: FormStructureQuestion) => FormUtils.isForm(item));
 };
 
 const preOrderBuild = (parentNode: FormStructureNode, tree: FormStructure) => {

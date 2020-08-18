@@ -4,6 +4,7 @@ import FormStructure from '../model/FormStructure';
 import { buildFormStructure, highlightQuestion, moveQuestion, sortRelatedQuestions } from '../utils/formBuilder';
 import { Constants } from 's-forms';
 import FormStructureNode from '../model/FormStructureNode';
+import { JsonLdObj } from 'jsonld/jsonld-spec';
 
 interface FormStructureProviderProps {
   children: React.ReactNode;
@@ -14,6 +15,7 @@ interface FormStructureContextValues {
   formStructure: FormStructure;
   setFormStructure: Dispatch<SetStateAction<FormStructure>>;
   getClonedFormStructure: () => FormStructure;
+  formContext: JsonLdObj;
 }
 
 // @ts-ignore
@@ -22,6 +24,8 @@ const FormStructureContext = React.createContext<FormStructureContextValues>({})
 const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children }) => {
   // @ts-ignore
   const [formStructure, setFormStructure] = useState<FormStructure>(null);
+  // @ts-ignore
+  const [formContext, setFormContext] = useState<JsonLdObj>(null);
 
   useEffect(() => {
     async function getFormStructure() {
@@ -29,6 +33,7 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
       const formStructure = await buildFormStructure(form);
 
       setFormStructure(formStructure);
+      setFormContext(form['@context']);
     }
 
     getFormStructure();
@@ -77,9 +82,10 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
       addNewFormStructureNode,
       getClonedFormStructure,
       setFormStructure,
-      formStructure
+      formStructure,
+      formContext
     }),
-    [formStructure]
+    [formStructure, formContext]
   );
 
   if (!formStructure) {

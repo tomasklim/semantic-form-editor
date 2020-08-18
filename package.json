@@ -28,7 +28,7 @@
     "next": "^9.5.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "s-forms": "https://kbss.felk.cvut.cz/dist/s-forms-0.2.0.tgz"
+    "s-forms": "../s-forms-0.2.1.tgz"
   },
   "devDependencies": {
     "@types/enzyme": "^3.10.5",

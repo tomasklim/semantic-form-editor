@@ -5,6 +5,7 @@ import { Theme, ThemeOptions } from '@material-ui/core';
 
 export interface EForm extends JsonLdObj {
   '@graph': Array<FormStructureQuestion>;
+  '@context': JsonLdObj;
 }
 
 interface IPalette extends Palette {

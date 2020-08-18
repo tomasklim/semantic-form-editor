@@ -6,13 +6,14 @@ import EditorAdd from '@components/EditorAdd/EditorAdd';
 import { FormStructureContext } from '../../contexts/FormStructureContext';
 import { FormStructureQuestion } from '../../model/FormStructureQuestion';
 import useStyles from './Editor.styles';
+import { exportForm } from '../../utils/formBuilder';
 
 interface EditorProps {}
 
 const Editor: FC<EditorProps> = ({}) => {
   const classes = useStyles();
 
-  const { formStructure } = useContext(FormStructureContext);
+  const { formStructure, formContext } = useContext(FormStructureContext);
 
   const buildFormUI = (
     questionData: FormStructureQuestion,
@@ -58,7 +59,12 @@ const Editor: FC<EditorProps> = ({}) => {
     );
   };
 
-  return buildFormUI(formStructure.root.data, 1, undefined);
+  return (
+    <>
+      {buildFormUI(formStructure.root.data, 1, undefined)}
+      <button onClick={() => exportForm(formStructure, formContext)}>EXPORT</button>
+    </>
+  );
 };
 
 export default Editor;
