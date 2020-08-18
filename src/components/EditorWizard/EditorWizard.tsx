@@ -4,6 +4,7 @@ import useStyles, { CustomisedAccordionDetails } from './EditorWizard.styles';
 import { Accordion } from '@material-ui/core';
 import { Constants } from 's-forms';
 import {
+  highlightQuestion,
   moveQuestion,
   removeBeingPrecedingQuestion,
   removeFromSubQuestions,
@@ -106,6 +107,8 @@ const EditorWizard: FC<Props> = ({ question, buildFormUI }) => {
     );
 
     setFormStructure(clonedFormStructure);
+
+    highlightQuestion(movingNodeId);
   };
 
   const addNewPage = () => {
@@ -148,6 +151,8 @@ const EditorWizard: FC<Props> = ({ question, buildFormUI }) => {
     root.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(root.data[Constants.HAS_SUBQUESTION]);
 
     setFormStructure(clonedFormStructure);
+
+    highlightQuestion(id);
   };
 
   const movePage = (id: string, direction: DIRECTION) => {
@@ -206,6 +211,8 @@ const EditorWizard: FC<Props> = ({ question, buildFormUI }) => {
     root.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(rootSubQuestions);
 
     setFormStructure(clonedFormStructure);
+
+    highlightQuestion(id);
   };
 
   return (

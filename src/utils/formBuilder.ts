@@ -183,3 +183,15 @@ export const moveQuestion = (movingNode: FormStructureNode, destinationNode: For
   destinationNode.data[Constants.HAS_SUBQUESTION]!.push(movingNode.data);
   movingNode.parent = destinationNode;
 };
+
+export const highlightQuestion = (movingNodeId: string) => {
+  document.getElementById(movingNodeId)?.classList.add('highlightQuestion');
+
+  setTimeout(() => {
+    document.getElementById(movingNodeId)?.classList.add('highlightQuestion');
+  }, 100);
+
+  setTimeout(() => {
+    document.getElementById(movingNodeId)?.classList.remove('highlightQuestion');
+  }, 2000);
+};

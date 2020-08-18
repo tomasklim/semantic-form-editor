@@ -3,6 +3,7 @@ import useStyles from './EditorAdd.styles';
 import AddIcon from '@material-ui/icons/Add';
 import {
   detectIsChildNode,
+  highlightQuestion,
   moveQuestionToSpecificPosition,
   removeBeingPrecedingQuestion,
   removeFromSubQuestions,
@@ -112,6 +113,8 @@ const EditorAdd: FC<Props> = ({ parentId, position }) => {
     targetNode.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(targetNode.data[Constants.HAS_SUBQUESTION]);
 
     setFormStructure(clonedFormStructure);
+
+    highlightQuestion(movingNodeId);
   };
 
   const addNewQuestion = () => {
@@ -144,6 +147,8 @@ const EditorAdd: FC<Props> = ({ parentId, position }) => {
     targetNode.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(targetNode.data[Constants.HAS_SUBQUESTION]);
 
     setFormStructure(clonedFormStructure);
+
+    highlightQuestion(id);
   };
 
   return (

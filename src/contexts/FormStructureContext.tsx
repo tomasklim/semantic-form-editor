@@ -1,7 +1,7 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { cloneDeep } from 'lodash';
 import FormStructure from '../model/FormStructure';
-import { buildFormStructure, moveQuestion, sortRelatedQuestions } from '../utils/formBuilder';
+import { buildFormStructure, highlightQuestion, moveQuestion, sortRelatedQuestions } from '../utils/formBuilder';
 import { Constants } from 's-forms';
 import FormStructureNode from '../model/FormStructureNode';
 
@@ -68,6 +68,8 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
     targetNode.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(targetNode.data[Constants.HAS_SUBQUESTION]);
 
     setFormStructure(clonedFormStructure);
+
+    highlightQuestion(id);
   };
 
   const values = React.useMemo<FormStructureContextValues>(
