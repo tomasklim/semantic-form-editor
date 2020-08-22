@@ -1,68 +1,49 @@
-import React, { FC, useContext } from 'react';
-import { Constants, FormUtils } from 's-forms';
-import EditorItem from '@components/EditorItem/EditorItem';
-import EditorWizard from '@components/EditorWizard/EditorWizard';
-import EditorAdd from '@components/EditorAdd/EditorAdd';
-import { FormStructureContext } from '../../contexts/FormStructureContext';
-import { FormStructureQuestion } from '../../model/FormStructureQuestion';
-import useStyles from './Editor.styles';
-import { exportForm } from '../../utils/formBuilder';
+import React, { FC } from 'react';
+import useStyles, {
+  CustomisedConnector,
+  CustomisedStepIcon,
+  CustomisedStepLabel,
+  CustomisedStepper
+} from './Editor.styles';
+import { Step } from '@material-ui/core';
+import EditorCustomize from '@components/EditorCustomize/EditorCustomize';
+import EditorPreview from '@components/EditorPreview/EditorPreview';
 
 interface EditorProps {}
 
 const Editor: FC<EditorProps> = ({}) => {
   const classes = useStyles();
 
-  const { formStructure, formContext } = useContext(FormStructureContext);
+  const [activeStep, setActiveStep] = React.useState(1);
+  const steps = ['New / Import', 'Customize', 'Preview', 'Export'];
 
-  const buildFormUI = (
-    questionData: FormStructureQuestion,
-    position: number,
-    parentQuestion: FormStructureQuestion | undefined
-  ): JSX.Element => {
-    const relatedQuestions = questionData[Constants.HAS_SUBQUESTION];
-    let item = null;
-
-    if (FormUtils.isForm(questionData)) {
-      return <EditorWizard key={questionData['@id']} question={questionData} buildFormUI={buildFormUI} />;
-    } else if (FormUtils.isSection(questionData)) {
-      item = <EditorItem questionData={questionData} position={position} />;
-    } else if (FormUtils.isTypeahead(questionData)) {
-      item = <EditorItem questionData={questionData} position={position} />;
-    } else if (FormUtils.isCalendar(questionData)) {
-      item = <EditorItem questionData={questionData} position={position} />;
-    } else if (FormUtils.isCheckbox(questionData)) {
-      item = <EditorItem questionData={questionData} position={position} />;
-    } else if (FormUtils.isMaskedInput(questionData)) {
-      item = <EditorItem questionData={questionData} position={position} />;
-    } else if (FormUtils.isTextarea(questionData, '')) {
-      item = <EditorItem questionData={questionData} position={position} />;
-    } else {
-      item = <EditorItem questionData={questionData} position={position} />;
+  const getStepContent = () => {
+    switch (activeStep) {
+      case 0:
+        return <div></div>;
+      case 1:
+        return <EditorCustomize />;
+      case 2:
+        return <EditorPreview />;
+      case 3:
+        return <div></div>;
+      default:
+        return <div></div>;
     }
-
-    return (
-      <React.Fragment key={questionData['@id']}>
-        {item}
-        <ol id={questionData['@id']} className={classes.ol}>
-          {relatedQuestions && relatedQuestions!.length > 0 && (
-            <EditorAdd parentId={questionData['@id']} position={0} />
-          )}
-          {relatedQuestions &&
-            relatedQuestions!.map((question, index) => buildFormUI(question, index + 1, questionData))}
-        </ol>
-        <EditorAdd
-          parentId={parentQuestion?.['@id'] || ''} // empty string for root only
-          position={position}
-        />
-      </React.Fragment>
-    );
   };
 
   return (
     <>
-      {buildFormUI(formStructure.root.data, 1, undefined)}
-      <button onClick={() => exportForm(formStructure, formContext)}>EXPORT</button>
+      <div className={classes.stepperBar}>
+        <CustomisedStepper activeStep={activeStep} connector={<CustomisedConnector />}>
+          {steps.map((label, index) => (
+            <Step key={label} onClick={() => setActiveStep(index)}>
+              <CustomisedStepLabel StepIconComponent={CustomisedStepIcon}>{label}</CustomisedStepLabel>
+            </Step>
+          ))}
+        </CustomisedStepper>
+      </div>
+      {getStepContent()}
     </>
   );
 };

@@ -4,8 +4,10 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider } from '@material-ui/core/styles';
 import theme from '@components/theme';
 import { useEffect } from 'react';
+import 's-forms/css/s-forms.min.css';
+import 'react-datepicker/dist/react-datepicker.css';
 
-const AdminApp: NextPage<AppProps> = ({ Component, pageProps }) => {
+const EditorApp: NextPage<AppProps> = ({ Component, pageProps }) => {
   useEffect(() => {
     const jssStyles = document.querySelector('#jss-server-side');
     if (jssStyles?.parentElement) {
@@ -21,4 +23,4 @@ const AdminApp: NextPage<AppProps> = ({ Component, pageProps }) => {
   );
 };
 
-export default AdminApp;
+export default EditorApp;

@@ -31,7 +31,7 @@ export const exportForm = async (formStructure: FormStructure, formContext: Cont
 
   const exportedForm = await jsonld.compact(compressedStructure, formContext);
 
-  console.log(JSON.stringify(exportedForm));
+  return exportedForm;
 };
 
 const findFormRoot = (structure: Array<FormStructureQuestion>): FormStructureQuestion | undefined => {

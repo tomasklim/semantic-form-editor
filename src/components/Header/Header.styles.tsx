@@ -3,13 +3,11 @@ import { ITheme } from '../../interfaces';
 
 export default makeStyles((theme: ITheme) => ({
   header: {
-    height: '50px',
+    height: '60px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     padding: theme.spacing(0, 2),
-    margin: theme.spacing(0, 0, 1),
-    borderBottom: '1px solid ' + theme.palette.custom[500],
 
     '& nav': {
       '& a': {
