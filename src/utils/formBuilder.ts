@@ -83,9 +83,9 @@ const unifyFormStructure = (form: EForm): EForm => {
       node[Constants.HAS_SUBQUESTION] = transformSubQuestionsToArray(node[Constants.HAS_SUBQUESTION]);
     }
 
-    if (node[Constants.HAS_LAYOUT_CLASS] && !Array.isArray(node[Constants.HAS_LAYOUT_CLASS])) {
+    if (node[Constants.LAYOUT_CLASS] && !Array.isArray(node[Constants.LAYOUT_CLASS])) {
       // @ts-ignore
-      node[Constants.HAS_LAYOUT_CLASS] = transformHasLayoutClassToArray(node[Constants.HAS_LAYOUT_CLASS]);
+      node[Constants.LAYOUT_CLASS] = transformHasLayoutClassToArray(node[Constants.LAYOUT_CLASS]);
     }
   });
 

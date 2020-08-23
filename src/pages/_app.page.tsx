@@ -6,6 +6,7 @@ import theme from '@components/theme';
 import { useEffect } from 'react';
 import 's-forms/css/s-forms.min.css';
 import 'react-datepicker/dist/react-datepicker.css';
+import 'jsoneditor/dist/jsoneditor.css';
 
 const EditorApp: NextPage<AppProps> = ({ Component, pageProps }) => {
   useEffect(() => {

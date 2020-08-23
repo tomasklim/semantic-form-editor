@@ -138,7 +138,7 @@ const EditorAdd: FC<Props> = ({ parentId, position }) => {
     const newQuestion = {
       '@id': id,
       '@type': 'http://onto.fel.cvut.cz/ontologies/documentation/question',
-      [Constants.HAS_LAYOUT_CLASS]: ['new'],
+      [Constants.LAYOUT_CLASS]: ['new'],
       [Constants.RDFS_LABEL]: id,
       [Constants.HAS_SUBQUESTION]: []
     };

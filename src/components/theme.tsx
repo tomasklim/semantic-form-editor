@@ -16,10 +16,16 @@ const theme = createMuiTheme({
       900: '#19202e',
       main: '#5a81ea',
       light: '#a2b6ee',
+      dark: '#3C6AE4',
       contrastText: '#ffffff'
     }
   },
-  spacing: 8
+  spacing: 8,
+  props: {
+    MuiButtonBase: {
+      disableRipple: true
+    }
+  }
 } as IThemeOptions);
 
 export default theme;

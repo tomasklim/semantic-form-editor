@@ -132,7 +132,7 @@ const EditorWizard: FC<Props> = ({ question, buildFormUI }) => {
     const newPage = {
       '@id': id,
       '@type': 'http://onto.fel.cvut.cz/ontologies/documentation/question',
-      [Constants.HAS_LAYOUT_CLASS]: ['section', 'wizard-step'],
+      [Constants.LAYOUT_CLASS]: ['section', 'wizard-step'],
       [Constants.RDFS_LABEL]: id,
       [Constants.HAS_SUBQUESTION]: [],
       [Constants.HAS_PRECEDING_QUESTION]: precedingQuestion

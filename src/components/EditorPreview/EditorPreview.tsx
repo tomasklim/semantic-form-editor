@@ -1,5 +1,4 @@
 import { FC, useContext, useEffect, useState } from 'react';
-import useStyles from '@components/EditorCustomize/EditorCustomize.styles';
 import { FormStructureContext } from '../../contexts/FormStructureContext';
 import SForms from 's-forms';
 import { exportForm } from '../../utils/formBuilder';
@@ -7,8 +6,6 @@ import { exportForm } from '../../utils/formBuilder';
 interface EditorPreviewProps {}
 
 const EditorPreview: FC<EditorPreviewProps> = ({}) => {
-  const classes = useStyles();
-
   const { formContext, getClonedFormStructure } = useContext(FormStructureContext);
 
   const [form, setForm] = useState<any>(null);
@@ -38,7 +35,15 @@ const EditorPreview: FC<EditorPreviewProps> = ({}) => {
     return null;
   }
 
-  return <SForms form={form} options={options} fetchTypeAheadValues={() => {}} enableForwardSkip={true} />;
+  return (
+    <SForms
+      form={form}
+      options={options}
+      // @ts-ignore
+      fetchTypeAheadValues={() => {}}
+      enableForwardSkip={true}
+    />
+  );
 };
 
 export default EditorPreview;

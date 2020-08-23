@@ -8,19 +8,20 @@ import useStyles, {
 import { Step } from '@material-ui/core';
 import EditorCustomize from '@components/EditorCustomize/EditorCustomize';
 import EditorPreview from '@components/EditorPreview/EditorPreview';
+import EditorNew from '@components/EditorNew/EditorNew';
 
 interface EditorProps {}
 
 const Editor: FC<EditorProps> = ({}) => {
   const classes = useStyles();
 
-  const [activeStep, setActiveStep] = React.useState(1);
+  const [activeStep, setActiveStep] = React.useState(0);
   const steps = ['New / Import', 'Customize', 'Preview', 'Export'];
 
   const getStepContent = () => {
     switch (activeStep) {
       case 0:
-        return <div></div>;
+        return <EditorNew nextStep={() => setActiveStep(1)} />;
       case 1:
         return <EditorCustomize />;
       case 2:

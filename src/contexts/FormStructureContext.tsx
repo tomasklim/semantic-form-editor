@@ -1,7 +1,7 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 import { cloneDeep } from 'lodash';
 import FormStructure from '../model/FormStructure';
-import { buildFormStructure, highlightQuestion, moveQuestion, sortRelatedQuestions } from '../utils/formBuilder';
+import { highlightQuestion, moveQuestion, sortRelatedQuestions } from '../utils/formBuilder';
 import { Constants } from 's-forms';
 import FormStructureNode from '../model/FormStructureNode';
 import { JsonLdObj } from 'jsonld/jsonld-spec';
@@ -14,6 +14,7 @@ interface FormStructureContextValues {
   addNewFormStructureNode: (targetId: string) => void;
   formStructure: FormStructure;
   setFormStructure: Dispatch<SetStateAction<FormStructure>>;
+  setFormContext: Dispatch<SetStateAction<JsonLdObj>>;
   getClonedFormStructure: () => FormStructure;
   formContext: JsonLdObj;
 }
@@ -26,18 +27,6 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
   const [formStructure, setFormStructure] = useState<FormStructure>(null);
   // @ts-ignore
   const [formContext, setFormContext] = useState<JsonLdObj>(null);
-
-  useEffect(() => {
-    async function getFormStructure() {
-      const form = require('../utils/form.json');
-      const formStructure = await buildFormStructure(form);
-
-      setFormStructure(formStructure);
-      setFormContext(form['@context']);
-    }
-
-    getFormStructure();
-  }, []);
 
   const getClonedFormStructure = (): FormStructure => {
     return cloneDeep(formStructure)!;
@@ -52,7 +41,7 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
     const newQuestion = {
       '@id': id,
       '@type': 'http://onto.fel.cvut.cz/ontologies/documentation/question',
-      [Constants.HAS_LAYOUT_CLASS]: ['new'],
+      [Constants.LAYOUT_CLASS]: ['new'],
       [Constants.RDFS_LABEL]: id,
       [Constants.HAS_SUBQUESTION]: []
     };
@@ -82,15 +71,12 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
       addNewFormStructureNode,
       getClonedFormStructure,
       setFormStructure,
+      setFormContext,
       formStructure,
       formContext
     }),
     [formStructure, formContext]
   );
-
-  if (!formStructure) {
-    return null;
-  }
 
   return <FormStructureContext.Provider value={values}>{children}</FormStructureContext.Provider>;
 };
