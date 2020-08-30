@@ -5,7 +5,7 @@ import { Button } from '@material-ui/core';
 export default makeStyles((theme: ITheme) => ({
   container: {
     display: 'flex',
-    flex: 0.5,
+    flex: 0.9,
     margin: theme.spacing(0, 2),
     '@global .jsoneditor': {
       height: 'initial',

@@ -6,6 +6,12 @@ export default makeStyles((theme: ITheme) => ({
   stepperBar: {
     backgroundColor: theme.palette.custom[600],
     marginBottom: theme.spacing(2)
+  },
+  unlockedStep: {
+    '& span': {
+      cursor: 'pointer',
+      fontWeight: 500
+    }
   }
 }));
 

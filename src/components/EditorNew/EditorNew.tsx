@@ -15,7 +15,7 @@ const EditorNew: FC<EditorNewProps> = ({ nextStep }) => {
   const [jsonEditorInstance, setJsonEditorInstance] = useState<JSONEditor | null>(null);
   const jsonEditorContainer = useRef<any>(null);
 
-  const { setFormStructure, setFormContext } = useContext(FormStructureContext);
+  const { setFormStructure, setFormContext, formFile, setFormFile } = useContext(FormStructureContext);
 
   useEffect(() => {
     const options = {
@@ -26,6 +26,10 @@ const EditorNew: FC<EditorNewProps> = ({ nextStep }) => {
     if (!jsonEditorContainer.current.firstChild) {
       const jsonEditor = new JSONEditor(jsonEditorContainer.current, options);
       setJsonEditorInstance(jsonEditor);
+
+      if (formFile) {
+        jsonEditor.set(formFile);
+      }
     }
   }, []);
 
@@ -74,6 +78,7 @@ const EditorNew: FC<EditorNewProps> = ({ nextStep }) => {
 
     setFormStructure(formStructure);
     setFormContext(form['@context']);
+    setFormFile(form);
 
     nextStep();
   };
@@ -82,7 +87,7 @@ const EditorNew: FC<EditorNewProps> = ({ nextStep }) => {
   return (
     <>
       <div className={classes.newFormButtons}>
-        <CustomisedOutlineButton variant="outlined" onClick={initialiseNewForm}>
+        <CustomisedOutlineButton variant="outlined" onClick={initialiseNewForm} size="large">
           New form
         </CustomisedOutlineButton>
         <span>or</span>
@@ -96,12 +101,12 @@ const EditorNew: FC<EditorNewProps> = ({ nextStep }) => {
         />
         <label htmlFor="icon-button-file">
           {/* @ts-ignore */}
-          <CustomisedOutlineButton variant="outlined" component="span">
+          <CustomisedOutlineButton variant="outlined" component="span" size="large">
             Import existing form
           </CustomisedOutlineButton>
         </label>
         <span>or</span>
-        <span className={classes.italic}>Paste your form data below</span>
+        <span className={classes.italic}>Paste your JSON-LD form below</span>
       </div>
       <div className={classes.container} ref={jsonEditorContainer} />
       <div className={classes.continueButtons}>
@@ -111,7 +116,7 @@ const EditorNew: FC<EditorNewProps> = ({ nextStep }) => {
           size="large"
           disabled={continueButtonDisabled}
         >
-          Continue to next step
+          Save and continue to next step
         </CustomisedButton>
       </div>
     </>

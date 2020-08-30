@@ -13,6 +13,8 @@ interface FormStructureProviderProps {
 interface FormStructureContextValues {
   addNewFormStructureNode: (targetId: string) => void;
   formStructure: FormStructure;
+  formFile: JsonLdObj;
+  setFormFile: Dispatch<SetStateAction<FormStructure>>;
   setFormStructure: Dispatch<SetStateAction<FormStructure>>;
   setFormContext: Dispatch<SetStateAction<JsonLdObj>>;
   getClonedFormStructure: () => FormStructure;
@@ -27,6 +29,8 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
   const [formStructure, setFormStructure] = useState<FormStructure>(null);
   // @ts-ignore
   const [formContext, setFormContext] = useState<JsonLdObj>(null);
+  // @ts-ignore
+  const [formFile, setFormFile] = useState<JsonLdObj>(null);
 
   const getClonedFormStructure = (): FormStructure => {
     return cloneDeep(formStructure)!;
@@ -73,9 +77,11 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
       setFormStructure,
       setFormContext,
       formStructure,
-      formContext
+      formContext,
+      formFile,
+      setFormFile
     }),
-    [formStructure, formContext]
+    [formFile, formStructure, formContext]
   );
 
   return <FormStructureContext.Provider value={values}>{children}</FormStructureContext.Provider>;

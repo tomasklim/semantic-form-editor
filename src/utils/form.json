@@ -186,8 +186,8 @@
       "@type": "doc:question",
       "has_related_question": [
         "rdfs:id-q",
-        "rdfs:date-q",
-        "rdfs:label-q"
+        "rdfs:label-q",
+        "rdfs:date-q"
       ],
       "has-layout-class": [
         "section",
