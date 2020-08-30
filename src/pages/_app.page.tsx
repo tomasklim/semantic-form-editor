@@ -1,5 +1,6 @@
 import { AppProps } from 'next/app';
 import { NextPage } from 'next';
+import { SnackbarProvider } from 'notistack';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider } from '@material-ui/core/styles';
 import theme from '@components/theme';
@@ -18,8 +19,15 @@ const EditorApp: NextPage<AppProps> = ({ Component, pageProps }) => {
 
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Component {...pageProps} />
+      <SnackbarProvider
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right'
+        }}
+      >
+        <CssBaseline />
+        <Component {...pageProps} />
+      </SnackbarProvider>
     </ThemeProvider>
   );
 };

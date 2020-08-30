@@ -3,6 +3,7 @@ import JSONEditor, { JSONEditorMode } from 'jsoneditor';
 import useStyles, { CustomisedButton, CustomisedOutlineButton } from './EditorNew.styles';
 import { FormStructureContext } from '../../contexts/FormStructureContext';
 import { buildFormStructure } from '../../utils/formBuilder';
+import { useSnackbar } from 'notistack';
 
 interface EditorNewProps {
   nextStep: () => void;
@@ -10,6 +11,7 @@ interface EditorNewProps {
 
 const EditorNew: FC<EditorNewProps> = ({ nextStep }) => {
   const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
 
   const [continueButtonDisabled, setContinueButtonDisabled] = useState(true);
   const [jsonEditorInstance, setJsonEditorInstance] = useState<JSONEditor | null>(null);
@@ -71,8 +73,43 @@ const EditorNew: FC<EditorNewProps> = ({ nextStep }) => {
     reader.readAsText(file);
   };
 
+  const isFormValid = (form: any) => {
+    if (!form['@context'] || !Object.keys(form['@context']).length) {
+      enqueueSnackbar('Your JSON-LD form is missing the necessary property @context!', {
+        variant: 'error'
+      });
+      return false;
+    }
+    if (!form['@graph'] || !Array.isArray(form['@graph']) || !form['@graph'].length) {
+      enqueueSnackbar('Your JSON-LD form is missing the necessary property @graph!', {
+        variant: 'error'
+      });
+      return false;
+    }
+    if (!Object.values(form['@graph']).some((item) => item['has-layout-class'] === 'form')) {
+      enqueueSnackbar('Your JSON-LD form is missing the necessary root question with layout-class form!', {
+        variant: 'error'
+      });
+      return false;
+    }
+    return true;
+  };
+
   const handleContinueToNextStep = async () => {
-    const form = jsonEditorInstance?.get();
+    let form;
+    try {
+      form = jsonEditorInstance?.get();
+    } catch (err) {
+      enqueueSnackbar('There is a syntax error in your JSON-LD form!', {
+        variant: 'error'
+      });
+      setContinueButtonDisabled(true);
+      return;
+    }
+
+    if (!isFormValid(form)) {
+      return;
+    }
 
     const formStructure = await buildFormStructure(form);
 
