@@ -1,6 +1,6 @@
-import useStyles from './HeaderIndicator.styles';
+import useStyles from './ItemPropsIndicator.styles';
 import { Badge, Tooltip } from '@material-ui/core';
-import { FormStructureQuestion } from '../../model/FormStructureQuestion';
+import { FormStructureQuestion } from '@model/FormStructureQuestion';
 import { FC } from 'react';
 import { Constants } from 's-forms';
 
@@ -8,7 +8,7 @@ type Props = {
   question: FormStructureQuestion;
 };
 
-const HeaderIndicator: FC<Props> = ({ question }) => {
+const ItemPropsIndicator: FC<Props> = ({ question }) => {
   const classes = useStyles();
 
   return (
@@ -31,4 +31,4 @@ const HeaderIndicator: FC<Props> = ({ question }) => {
   );
 };
 
-export default HeaderIndicator;
+export default ItemPropsIndicator;

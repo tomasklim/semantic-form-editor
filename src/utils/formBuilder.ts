@@ -1,12 +1,12 @@
 import { Constants, FormUtils, JsonLdFramingUtils, JsonLdObjectUtils } from 's-forms';
 import * as jsonld from 'jsonld';
-import FormStructure from '../model/FormStructure';
-import FormStructureNode from '../model/FormStructureNode';
-import { EForm } from '../interfaces';
-import { FormStructureQuestion } from '../model/FormStructureQuestion';
+import FormStructure from '@model/FormStructure';
+import FormStructureNode from '@model/FormStructureNode';
+import { FormStructureQuestion } from '@model/FormStructureQuestion';
 import { Context, JsonLdObj } from 'jsonld/jsonld-spec';
+import { ExpandedForm } from '@model/ExpandedForm';
 
-export const buildFormStructure = async (form: EForm) => {
+export const buildFormStructure = async (form: ExpandedForm) => {
   unifyFormStructure(form);
 
   const flattenedForm: JsonLdObj = await jsonld.flatten(form, {});
@@ -76,7 +76,7 @@ export const sortRelatedQuestions = (
   return topologicalSortedRelatedQuestions;
 };
 
-const unifyFormStructure = (form: EForm): EForm => {
+const unifyFormStructure = (form: ExpandedForm): ExpandedForm => {
   form['@graph'].forEach((node) => {
     if (node[Constants.HAS_SUBQUESTION] && !Array.isArray(node[Constants.HAS_SUBQUESTION])) {
       // @ts-ignore

@@ -1,6 +1,6 @@
 import React, { FC, useContext } from 'react';
-import FormStructureNode from '../../model/FormStructureNode';
-import useStyles, { CustomisedAccordionDetails } from './EditorWizard.styles';
+import FormStructureNode from '@model/FormStructureNode';
+import useStyles, { CustomisedAccordionDetails } from './PageItem.styles';
 import { Accordion } from '@material-ui/core';
 import { Constants } from 's-forms';
 import {
@@ -10,12 +10,12 @@ import {
   removeFromSubQuestions,
   removePrecedingQuestion,
   sortRelatedQuestions
-} from '../../utils/formBuilder';
-import WizardHeader from '@components/WizardHeader/WizardHeader';
-import WizardContent from '@components/WizardContent/WizardContent';
-import { DIRECTION } from '../../enums';
-import { FormStructureContext } from '../../contexts/FormStructureContext';
-import { FormStructureQuestion } from '../../model/FormStructureQuestion';
+} from '@utils/formBuilder';
+import PageItemHeader from '@components/PageItemHeader/PageItemHeader';
+import PageContent from '@components/PageItemContent/PageItemContent';
+import { DIRECTION } from '@enums/index';
+import { FormStructureContext } from '@contexts/FormStructureContext';
+import { FormStructureQuestion } from '@model/FormStructureQuestion';
 import AddIcon from '@material-ui/icons/Add';
 
 type Props = {
@@ -27,7 +27,7 @@ type Props = {
   ) => JSX.Element;
 };
 
-const EditorWizard: FC<Props> = ({ question, buildFormUI }) => {
+const PageItem: FC<Props> = ({ question, buildFormUI }) => {
   const classes = useStyles();
 
   const { getClonedFormStructure, setFormStructure } = useContext(FormStructureContext);
@@ -230,8 +230,8 @@ const EditorWizard: FC<Props> = ({ question, buildFormUI }) => {
             onDrop={handleDrop}
           >
             <Accordion expanded={true} className={classes.accordion}>
-              <WizardHeader question={q} movePage={movePage} position={index + 1} />
-              <WizardContent question={q} buildFormUI={buildFormUI} />
+              <PageItemHeader question={q} movePage={movePage} position={index + 1} />
+              <PageContent question={q} buildFormUI={buildFormUI} />
             </Accordion>
           </div>
         ))}
@@ -246,4 +246,4 @@ const EditorWizard: FC<Props> = ({ question, buildFormUI }) => {
   );
 };
 
-export default EditorWizard;
+export default PageItem;

@@ -1,9 +1,10 @@
 import React, { FC, useContext, useEffect, useRef, useState } from 'react';
-import useStyles, { CustomisedOutlineButton } from './EditorExport.styles';
+import useStyles from './EditorExport.styles';
 import JSONEditor, { JSONEditorMode } from 'jsoneditor';
-import { exportForm } from '../../utils/formBuilder';
-import { FormStructureContext } from '../../contexts/FormStructureContext';
-import { CustomisedButton } from '@components/EditorNew/EditorNew.styles';
+import { exportForm } from '@utils/formBuilder';
+import { FormStructureContext } from '@contexts/FormStructureContext';
+import { CustomisedOutlineButton } from '@styles/CustomisedOutlineButton';
+import { CustomisedButton } from '@styles/CustomisedButton';
 
 interface EditorExportProps {
   resetEditor: () => void;
@@ -64,7 +65,7 @@ const EditorExport: FC<EditorExportProps> = ({ resetEditor }) => {
 
   return (
     <>
-      <div className={classes.newFormButtons}>
+      <div className={classes.getExportedFormButtons}>
         <CustomisedOutlineButton variant="outlined" size="large" onClick={downloadExportedForm}>
           Download
         </CustomisedOutlineButton>
@@ -76,7 +77,7 @@ const EditorExport: FC<EditorExportProps> = ({ resetEditor }) => {
         <span className={classes.italic}>Copy your JSON-LD from form below</span>
       </div>
       <div className={classes.container} ref={jsonEditorContainer} />
-      <div className={classes.continueButtons}>
+      <div className={classes.buildNewFormButtonContainer}>
         <CustomisedButton variant="contained" size="large" onClick={resetEditor}>
           Build a new form
         </CustomisedButton>

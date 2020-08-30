@@ -2,19 +2,19 @@ import React, { FC, useContext, useRef, useState } from 'react';
 import { ArrowDownward, ArrowUpward, MoreVert } from '@material-ui/icons';
 import { ClickAwayListener, Grow, MenuItem, MenuList, Paper, Popper } from '@material-ui/core';
 import { Constants } from 's-forms';
-import { removeFromFormStructure, removeFromSubQuestions, sortRelatedQuestions } from '../utils/formBuilder';
-import { FormStructureContext } from '../contexts/FormStructureContext';
-import { FormStructureQuestion } from '../model/FormStructureQuestion';
+import { removeFromFormStructure, removeFromSubQuestions, sortRelatedQuestions } from '@utils/formBuilder';
+import { FormStructureContext } from '@contexts/FormStructureContext';
+import { FormStructureQuestion } from '@model/FormStructureQuestion';
 import AddIcon from '@material-ui/icons/Add';
-import { DIRECTION } from '../enums';
-import SquaredIconButton from '@components/SquaredIconButton/SquaredIconButton';
+import { DIRECTION } from '@enums/index';
+import SquaredIconButton from '@styles/SquaredIconButton';
 
 interface Props {
   question: FormStructureQuestion;
   movePage?: (id: string, direction: DIRECTION) => void;
 }
 
-const MenuQuestionItem: FC<Props> = ({ question, movePage }) => {
+const ItemMenu: FC<Props> = ({ question, movePage }) => {
   const { getClonedFormStructure, setFormStructure, addNewFormStructureNode } = useContext(FormStructureContext);
 
   const [open, setOpen] = useState<boolean>(false);
@@ -104,4 +104,4 @@ const MenuQuestionItem: FC<Props> = ({ question, movePage }) => {
   );
 };
 
-export default MenuQuestionItem;
+export default ItemMenu;

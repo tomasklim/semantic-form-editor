@@ -1,9 +1,11 @@
 import { ChangeEvent, FC, useContext, useEffect, useRef, useState } from 'react';
 import JSONEditor, { JSONEditorMode } from 'jsoneditor';
-import useStyles, { CustomisedButton, CustomisedOutlineButton } from './EditorNew.styles';
-import { FormStructureContext } from '../../contexts/FormStructureContext';
-import { buildFormStructure } from '../../utils/formBuilder';
+import useStyles from './EditorNew.styles';
+import { FormStructureContext } from '@contexts/FormStructureContext';
+import { buildFormStructure } from '@utils/formBuilder';
 import { useSnackbar } from 'notistack';
+import { CustomisedButton } from '@styles/CustomisedButton';
+import { CustomisedOutlineButton } from '@styles/CustomisedOutlineButton';
 
 interface EditorNewProps {
   nextStep: () => void;
@@ -40,7 +42,7 @@ const EditorNew: FC<EditorNewProps> = ({ nextStep }) => {
   };
 
   const initialiseNewForm = () => {
-    const newForm = require('../../utils/newForm.json');
+    const newForm = require('@utils/newForm.json');
     jsonEditorInstance?.set(newForm);
     setContinueButtonDisabled(false);
   };

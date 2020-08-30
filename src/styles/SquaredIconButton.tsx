@@ -1,5 +1,5 @@
 import { IconButton, withStyles } from '@material-ui/core';
-import { ITheme } from '../../interfaces';
+import { ITheme } from '@interfaces/index';
 
 // @ts-ignore
 const SquaredIconButton = withStyles((theme: ITheme) => ({
@@ -12,6 +12,9 @@ const SquaredIconButton = withStyles((theme: ITheme) => ({
     '&:hover': {
       backgroundColor: theme.palette.custom[900] + '4d',
       color: theme.palette.custom.light
+    },
+    '&:focus': {
+      outline: 'none'
     }
   }
 }))(IconButton);

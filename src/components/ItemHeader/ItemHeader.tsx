@@ -2,9 +2,9 @@ import React, { FC } from 'react';
 import useStyles, { CustomisedCardHeader } from './ItemHeader.styles';
 import { Constants } from 's-forms';
 import { DragIndicator } from '@material-ui/icons';
-import MenuQuestionItem from '../../MenuQuestionItem/MenuQuestionItem';
-import { FormStructureQuestion } from '../../model/FormStructureQuestion';
-import HeaderIndicator from '@components/HeaderIndicator/HeaderIndicator';
+import ItemMenu from '@components/ItemMenu/ItemMenu';
+import { FormStructureQuestion } from '@model/FormStructureQuestion';
+import ItemPropsIndicator from '@components/ItemPropsIndicator/ItemPropsIndicator';
 
 type ItemHeaderProps = {
   container: React.MutableRefObject<HTMLLIElement | null>;
@@ -34,10 +34,10 @@ const ItemHeader: FC<ItemHeaderProps> = ({ container, nodeData, position }) => {
               {'. '}
               {nodeData[Constants.RDFS_LABEL] || nodeData['@id']}
             </span>
-            <HeaderIndicator question={nodeData} />
+            <ItemPropsIndicator question={nodeData} />
           </span>
           <span className={classes.cardHeaderItemRight} onMouseEnter={removeDraggable} onMouseLeave={addDraggable}>
-            <MenuQuestionItem question={nodeData} />
+            <ItemMenu question={nodeData} />
           </span>
         </div>
       }

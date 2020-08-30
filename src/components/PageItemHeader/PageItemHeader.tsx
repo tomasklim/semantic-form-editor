@@ -1,11 +1,11 @@
 import { AccordionSummary, Typography } from '@material-ui/core';
 import { Constants } from 's-forms';
 import React, { FC } from 'react';
-import useStyles from './WizardHeader.styles';
-import { DIRECTION } from '../../enums';
-import MenuQuestionItem from '../../MenuQuestionItem/MenuQuestionItem';
-import { FormStructureQuestion } from '../../model/FormStructureQuestion';
-import HeaderIndicator from '@components/HeaderIndicator/HeaderIndicator';
+import useStyles from './PageItemHeader.styles';
+import { DIRECTION } from '@enums/index';
+import ItemMenu from '@components/ItemMenu/ItemMenu';
+import { FormStructureQuestion } from '@model/FormStructureQuestion';
+import ItemPropsIndicator from '@components/ItemPropsIndicator/ItemPropsIndicator';
 
 type Props = {
   question: FormStructureQuestion;
@@ -13,7 +13,7 @@ type Props = {
   position: number;
 };
 
-const WizardHeader: FC<Props> = ({ question, movePage, position }) => {
+const PageItemHeader: FC<Props> = ({ question, movePage, position }) => {
   const classes = useStyles();
 
   return (
@@ -28,15 +28,15 @@ const WizardHeader: FC<Props> = ({ question, movePage, position }) => {
             {'. '}
             {question[Constants.RDFS_LABEL] || question['@id']}
           </Typography>
-          <HeaderIndicator question={question} />
+          <ItemPropsIndicator question={question} />
         </div>
         <span className={`${classes.wizardHeaderItem} ${classes.wizardHeaderCenter}`} />
         <span className={`${classes.wizardHeaderItem} ${classes.wizardHeaderRight}`}>
-          <MenuQuestionItem question={question} movePage={movePage} />
+          <ItemMenu question={question} movePage={movePage} />
         </span>
       </div>
     </AccordionSummary>
   );
 };
 
-export default WizardHeader;
+export default PageItemHeader;

@@ -1,6 +1,6 @@
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { Card } from '@material-ui/core';
-import { ITheme } from '../../interfaces';
+import { ITheme } from '@interfaces/index';
 
 export default makeStyles((theme: ITheme) => ({
   listItem: {

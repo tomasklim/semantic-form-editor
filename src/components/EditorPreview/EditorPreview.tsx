@@ -1,11 +1,14 @@
 import { FC, useContext, useEffect, useState } from 'react';
-import { FormStructureContext } from '../../contexts/FormStructureContext';
+import { FormStructureContext } from '@contexts/FormStructureContext';
 import SForms from 's-forms';
-import { exportForm } from '../../utils/formBuilder';
+import { exportForm } from '@utils/formBuilder';
+import useStyles from './EditorPreview.styles';
 
 interface EditorPreviewProps {}
 
 const EditorPreview: FC<EditorPreviewProps> = ({}) => {
+  const classes = useStyles();
+
   const { formContext, getClonedFormStructure } = useContext(FormStructureContext);
 
   const [form, setForm] = useState<any>(null);
@@ -37,12 +40,14 @@ const EditorPreview: FC<EditorPreviewProps> = ({}) => {
   }
 
   return (
-    <SForms
-      form={form}
-      options={options}
-      // @ts-ignore
-      fetchTypeAheadValues={() => {}}
-    />
+    <div className={classes.container}>
+      <SForms
+        form={form}
+        options={options}
+        // @ts-ignore
+        fetchTypeAheadValues={() => {}}
+      />
+    </div>
   );
 };
 

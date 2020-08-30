@@ -9,10 +9,10 @@ import {
   removeFromSubQuestions,
   removePrecedingQuestion,
   sortRelatedQuestions
-} from '../../utils/formBuilder';
+} from '@utils/formBuilder';
 import { Constants } from 's-forms';
-import { FormStructureContext } from '../../contexts/FormStructureContext';
-import FormStructureNode from '../../model/FormStructureNode';
+import { FormStructureContext } from '@contexts/FormStructureContext';
+import FormStructureNode from '@model/FormStructureNode';
 
 type Props = {
   parentId: string;

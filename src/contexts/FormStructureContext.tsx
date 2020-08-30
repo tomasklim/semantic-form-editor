@@ -1,9 +1,9 @@
 import React, { Dispatch, SetStateAction, useState } from 'react';
 import { cloneDeep } from 'lodash';
-import FormStructure from '../model/FormStructure';
-import { highlightQuestion, moveQuestion, sortRelatedQuestions } from '../utils/formBuilder';
+import FormStructure from '@model/FormStructure';
+import { highlightQuestion, moveQuestion, sortRelatedQuestions } from '@utils/formBuilder';
 import { Constants } from 's-forms';
-import FormStructureNode from '../model/FormStructureNode';
+import FormStructureNode from '@model/FormStructureNode';
 import { JsonLdObj } from 'jsonld/jsonld-spec';
 
 interface FormStructureProviderProps {

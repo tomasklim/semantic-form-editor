@@ -1,5 +1,5 @@
 import { createMuiTheme } from '@material-ui/core/styles';
-import { IThemeOptions } from '../interfaces';
+import { IThemeOptions } from '@interfaces/index';
 
 const theme = createMuiTheme({
   palette: {

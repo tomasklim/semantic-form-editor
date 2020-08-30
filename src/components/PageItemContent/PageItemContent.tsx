@@ -2,8 +2,8 @@ import { Constants } from 's-forms';
 import EditorAdd from '@components/EditorAdd/EditorAdd';
 import { AccordionDetails } from '@material-ui/core';
 import React, { FC } from 'react';
-import useStyles from './WizardContent.styles';
-import { FormStructureQuestion } from '../../model/FormStructureQuestion';
+import useStyles from './PageItemContent.styles';
+import { FormStructureQuestion } from '@model/FormStructureQuestion';
 
 interface Props {
   question: FormStructureQuestion;
@@ -14,7 +14,7 @@ interface Props {
   ) => JSX.Element;
 }
 
-const WizardContent: FC<Props> = ({ question, buildFormUI }) => {
+const PageItemContent: FC<Props> = ({ question, buildFormUI }) => {
   const classes = useStyles();
 
   return (
@@ -28,4 +28,4 @@ const WizardContent: FC<Props> = ({ question, buildFormUI }) => {
   );
 };
 
-export default WizardContent;
+export default PageItemContent;

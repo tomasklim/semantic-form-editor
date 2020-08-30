@@ -1,15 +1,15 @@
 import React, { FC, useRef } from 'react';
-import useStyles, { CustomisedCard } from './EditorItem.styles';
+import useStyles, { CustomisedCard } from './Item.styles';
 import ItemHeader from '@components/ItemHeader/ItemHeader';
 import ItemContent from '@components/ItemContent/ItemContent';
-import { FormStructureQuestion } from '../../model/FormStructureQuestion';
+import { FormStructureQuestion } from '@model/FormStructureQuestion';
 
 type Props = {
   questionData: FormStructureQuestion;
   position: number;
 };
 
-const EditorItem: FC<Props> = ({ questionData, position }) => {
+const Item: FC<Props> = ({ questionData, position }) => {
   const classes = useStyles();
   const itemContainer = useRef<HTMLLIElement | null>(null);
 
@@ -62,4 +62,4 @@ const EditorItem: FC<Props> = ({ questionData, position }) => {
   );
 };
 
-export default EditorItem;
+export default Item;

@@ -1,5 +1,5 @@
 import { makeStyles, withStyles } from '@material-ui/core/styles';
-import { ITheme } from '../../interfaces';
+import { ITheme } from '@interfaces/index';
 import { StepConnector, StepIcon, StepLabel, Stepper } from '@material-ui/core';
 
 export default makeStyles((theme: ITheme) => ({

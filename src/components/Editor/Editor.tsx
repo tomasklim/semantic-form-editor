@@ -11,7 +11,7 @@ import EditorCustomize from '@components/EditorCustomize/EditorCustomize';
 import EditorPreview from '@components/EditorPreview/EditorPreview';
 import EditorNew from '@components/EditorNew/EditorNew';
 import EditorExport from '@components/EditorExport/EditorExport';
-import { FormStructureContext } from '../../contexts/FormStructureContext';
+import { FormStructureContext } from '@contexts/FormStructureContext';
 
 interface EditorProps {}
 

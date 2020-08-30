@@ -1,7 +1,7 @@
 import React from 'react';
 import Head from 'next/head';
-import Header from '../Header/Header';
-import Footer from '../Footer/Footer';
+import Header from '@components/structure/Header/Header';
+import Footer from '@components/structure/Footer/Footer';
 import useStyles from './Layout.styles';
 
 type Props = {

@@ -1,10 +1,10 @@
 import React, { FC, useContext } from 'react';
 import { Constants, FormUtils } from 's-forms';
-import EditorItem from '@components/EditorItem/EditorItem';
-import EditorWizard from '@components/EditorWizard/EditorWizard';
+import Item from '@components/Item/Item';
+import PageItem from '@components/PageItem/PageItem';
 import EditorAdd from '@components/EditorAdd/EditorAdd';
-import { FormStructureContext } from '../../contexts/FormStructureContext';
-import { FormStructureQuestion } from '../../model/FormStructureQuestion';
+import { FormStructureContext } from '@contexts/FormStructureContext';
+import { FormStructureQuestion } from '@model/FormStructureQuestion';
 import useStyles from './EditorCustomize.styles';
 
 interface EditorCustomizeProps {}
@@ -23,21 +23,21 @@ const EditorCustomize: FC<EditorCustomizeProps> = ({}) => {
     let item = null;
 
     if (FormUtils.isForm(questionData)) {
-      return <EditorWizard key={questionData['@id']} question={questionData} buildFormUI={buildFormUI} />;
+      return <PageItem key={questionData['@id']} question={questionData} buildFormUI={buildFormUI} />;
     } else if (FormUtils.isSection(questionData)) {
-      item = <EditorItem questionData={questionData} position={position} />;
+      item = <Item questionData={questionData} position={position} />;
     } else if (FormUtils.isTypeahead(questionData)) {
-      item = <EditorItem questionData={questionData} position={position} />;
+      item = <Item questionData={questionData} position={position} />;
     } else if (FormUtils.isCalendar(questionData)) {
-      item = <EditorItem questionData={questionData} position={position} />;
+      item = <Item questionData={questionData} position={position} />;
     } else if (FormUtils.isCheckbox(questionData)) {
-      item = <EditorItem questionData={questionData} position={position} />;
+      item = <Item questionData={questionData} position={position} />;
     } else if (FormUtils.isMaskedInput(questionData)) {
-      item = <EditorItem questionData={questionData} position={position} />;
+      item = <Item questionData={questionData} position={position} />;
     } else if (FormUtils.isTextarea(questionData, '')) {
-      item = <EditorItem questionData={questionData} position={position} />;
+      item = <Item questionData={questionData} position={position} />;
     } else {
-      item = <EditorItem questionData={questionData} position={position} />;
+      item = <Item questionData={questionData} position={position} />;
     }
 
     return (

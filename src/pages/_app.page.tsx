@@ -3,7 +3,7 @@ import { NextPage } from 'next';
 import { SnackbarProvider } from 'notistack';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider } from '@material-ui/core/styles';
-import theme from '@components/theme';
+import theme from '@styles/theme';
 import { useEffect } from 'react';
 import 's-forms/css/s-forms.min.css';
 import 'react-datepicker/dist/react-datepicker.css';
