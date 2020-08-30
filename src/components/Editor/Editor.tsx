@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useContext } from 'react';
 import classnames from 'classnames';
 import useStyles, {
   CustomisedConnector,
@@ -10,11 +10,15 @@ import { Step } from '@material-ui/core';
 import EditorCustomize from '@components/EditorCustomize/EditorCustomize';
 import EditorPreview from '@components/EditorPreview/EditorPreview';
 import EditorNew from '@components/EditorNew/EditorNew';
+import EditorExport from '@components/EditorExport/EditorExport';
+import { FormStructureContext } from '../../contexts/FormStructureContext';
 
 interface EditorProps {}
 
 const Editor: FC<EditorProps> = ({}) => {
   const classes = useStyles();
+
+  const { setFormFile } = useContext(FormStructureContext);
 
   const [activeStep, setActiveStep] = React.useState(0);
   const steps = ['New / Import', 'Customize', 'Preview', 'Export'];
@@ -29,7 +33,7 @@ const Editor: FC<EditorProps> = ({}) => {
       case 2:
         return <EditorPreview />;
       case 3:
-        return <div />;
+        return <EditorExport resetEditor={resetEditor} />;
     }
   };
 
@@ -42,6 +46,13 @@ const Editor: FC<EditorProps> = ({}) => {
   const moveToCustomiseStep = () => {
     setActiveStep(1);
     unlockSteps(true);
+  };
+
+  const resetEditor = () => {
+    unlockSteps(false);
+    setActiveStep(0);
+    // @ts-ignore
+    setFormFile(null);
   };
 
   return (
