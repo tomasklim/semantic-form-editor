@@ -28,7 +28,8 @@ const EditorPreview: FC<EditorPreviewProps> = ({}) => {
     },
     modalView: false,
     horizontalWizardNav: true,
-    wizardStepButtons: false
+    wizardStepButtons: false,
+    enableForwardSkip: true
   };
 
   if (!form) {
@@ -41,7 +42,6 @@ const EditorPreview: FC<EditorPreviewProps> = ({}) => {
       options={options}
       // @ts-ignore
       fetchTypeAheadValues={() => {}}
-      enableForwardSkip={true}
     />
   );
 };
