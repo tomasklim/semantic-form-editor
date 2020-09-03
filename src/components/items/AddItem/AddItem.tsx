@@ -20,7 +20,7 @@ type Props = {
   position: number;
 };
 
-const ItemAdd: FC<Props> = ({ parentId, position }) => {
+const AddItem: FC<Props> = ({ parentId, position }) => {
   const classes = useStyles();
   const addContainer = useRef<HTMLDivElement | null>(null);
 
@@ -182,4 +182,4 @@ const ItemAdd: FC<Props> = ({ parentId, position }) => {
   );
 };
 
-export default ItemAdd;
+export default AddItem;

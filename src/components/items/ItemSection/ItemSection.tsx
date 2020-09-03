@@ -1,9 +1,9 @@
 import React, { FC, useContext, useRef } from 'react';
 import useStyles, { CustomisedCard } from './ItemSection.styles';
-import ItemHeader from '@components/ItemHeader/ItemHeader';
+import ItemHeader from '@components/items/ItemHeader/ItemHeader';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
 import { Constants } from 's-forms';
-import EditorAdd from '@components/EditorAdd/EditorAdd';
+import ItemAdd from '@components/items/AddItem/AddItem';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import { CustomisedCardContent } from '@styles/CustomisedCardContent';
 import { enableNotDraggableAndDroppable, handleDragEnd, handleDragStart } from '@utils/itemDragHelpers';
@@ -108,7 +108,7 @@ const ItemSection: FC<Props> = ({ questionData, position, buildFormUI }) => {
         <CustomisedCardContent className={classes.cardContent} id={questionData['@id']} onMouseOver={handleMouseOver}>
           <ol id={questionData['@id']} className={classes.ol}>
             {questionData[Constants.HAS_SUBQUESTION]!.length > 0 && (
-              <EditorAdd parentId={questionData['@id']} position={0} />
+              <ItemAdd parentId={questionData['@id']} position={0} />
             )}
             {questionData[Constants.HAS_SUBQUESTION]!.map((q, index) => buildFormUI(q, index + 1, questionData))}
             {!questionData[Constants.HAS_SUBQUESTION]!.length && (

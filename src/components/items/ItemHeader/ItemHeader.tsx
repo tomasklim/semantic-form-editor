@@ -2,9 +2,9 @@ import React, { FC } from 'react';
 import useStyles, { CustomisedCardHeader } from './ItemHeader.styles';
 import { Constants } from 's-forms';
 import { DragIndicator } from '@material-ui/icons';
-import ItemMenu from '@components/ItemMenu/ItemMenu';
+import ItemMenu from '@components/items/ItemMenu/ItemMenu';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
-import ItemPropsIndicator from '@components/ItemPropsIndicator/ItemPropsIndicator';
+import ItemPropsIndicator from '@components/items/ItemPropsIndicator/ItemPropsIndicator';
 
 type ItemHeaderProps = {
   container: React.MutableRefObject<HTMLLIElement | null>;

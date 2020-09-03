@@ -1,7 +1,7 @@
 import React, { FC, useRef } from 'react';
 import useStyles, { CustomisedCard } from './Item.styles';
-import ItemHeader from '@components/ItemHeader/ItemHeader';
-import ItemContent from '@components/ItemContent/ItemContent';
+import ItemHeader from '@components/items/ItemHeader/ItemHeader';
+import ItemContent from '@components/items/ItemContent/ItemContent';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
 import { handleDragEnd, handleDragStart } from '@utils/itemDragHelpers';
 
