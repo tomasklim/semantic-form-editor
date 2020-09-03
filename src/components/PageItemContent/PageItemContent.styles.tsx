@@ -11,13 +11,13 @@ export default makeStyles((theme: ITheme) => ({
     listStyle: 'none',
     paddingLeft: 0,
     margin: 0,
-    '& li div': {
+    '& li > div': {
       backgroundColor: theme.palette.custom[600]
     },
-    '& ol li div': {
+    '& ol li > div': {
       backgroundColor: theme.palette.custom[500]
     },
-    '& ol ol li div': {
+    '& ol ol li > div': {
       backgroundColor: theme.palette.custom[400]
     },
     '& ol ol ol li div': {

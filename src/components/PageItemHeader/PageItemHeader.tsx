@@ -3,9 +3,9 @@ import { Constants } from 's-forms';
 import React, { FC } from 'react';
 import useStyles from './PageItemHeader.styles';
 import { DIRECTION } from '@enums/index';
-import ItemMenu from '@components/ItemMenu/ItemMenu';
+import ItemMenu from '@components/items/ItemMenu/ItemMenu';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
-import ItemPropsIndicator from '@components/ItemPropsIndicator/ItemPropsIndicator';
+import ItemPropsIndicator from '@components/items/ItemPropsIndicator/ItemPropsIndicator';
 
 type Props = {
   question: FormStructureQuestion;

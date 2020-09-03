@@ -1,5 +1,5 @@
 import { Constants } from 's-forms';
-import EditorAdd from '@components/EditorAdd/EditorAdd';
+import ItemAdd from '@components/items/AddItem/AddItem';
 import { AccordionDetails } from '@material-ui/core';
 import React, { FC } from 'react';
 import useStyles from './PageItemContent.styles';
@@ -20,7 +20,7 @@ const PageItemContent: FC<Props> = ({ question, buildFormUI }) => {
   return (
     <AccordionDetails className={classes.body}>
       <ol id={question['@id']} className={classes.ol}>
-        {question[Constants.HAS_SUBQUESTION]!.length > 0 && <EditorAdd parentId={question['@id']} position={0} />}
+        {question[Constants.HAS_SUBQUESTION]!.length > 0 && <ItemAdd parentId={question['@id']} position={0} />}
         {question[Constants.HAS_SUBQUESTION]!.map((q, index) => buildFormUI(q, index + 1, question))}
         {!question[Constants.HAS_SUBQUESTION]!.length && <div className={classes.emptyPage}>Empty page...</div>}
       </ol>

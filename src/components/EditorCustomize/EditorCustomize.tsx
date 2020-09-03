@@ -1,11 +1,12 @@
 import React, { FC, useContext } from 'react';
 import { Constants, FormUtils } from 's-forms';
-import Item from '@components/Item/Item';
+import Item from '@components/items/Item/Item';
 import PageItem from '@components/PageItem/PageItem';
-import EditorAdd from '@components/EditorAdd/EditorAdd';
+import ItemAdd from '@components/items/AddItem/AddItem';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
 import useStyles from './EditorCustomize.styles';
+import ItemSection from '@components/items/ItemSection/ItemSection';
 
 interface EditorCustomizeProps {}
 
@@ -24,8 +25,6 @@ const EditorCustomize: FC<EditorCustomizeProps> = ({}) => {
 
     if (FormUtils.isForm(questionData)) {
       return <PageItem key={questionData['@id']} question={questionData} buildFormUI={buildFormUI} />;
-    } else if (FormUtils.isSection(questionData)) {
-      item = <Item questionData={questionData} position={position} />;
     } else if (FormUtils.isTypeahead(questionData)) {
       item = <Item questionData={questionData} position={position} />;
     } else if (FormUtils.isCalendar(questionData)) {
@@ -36,6 +35,13 @@ const EditorCustomize: FC<EditorCustomizeProps> = ({}) => {
       item = <Item questionData={questionData} position={position} />;
     } else if (FormUtils.isTextarea(questionData, '')) {
       item = <Item questionData={questionData} position={position} />;
+    } else if (FormUtils.isSection(questionData)) {
+      return (
+        <React.Fragment key={questionData['@id']}>
+          <ItemSection questionData={questionData} buildFormUI={buildFormUI} position={position} />
+          <ItemAdd parentId={parentQuestion?.['@id'] || ''} position={position} />
+        </React.Fragment>
+      );
     } else {
       item = <Item questionData={questionData} position={position} />;
     }
@@ -44,13 +50,11 @@ const EditorCustomize: FC<EditorCustomizeProps> = ({}) => {
       <React.Fragment key={questionData['@id']}>
         {item}
         <ol id={questionData['@id']} className={classes.ol}>
-          {relatedQuestions && relatedQuestions!.length > 0 && (
-            <EditorAdd parentId={questionData['@id']} position={0} />
-          )}
+          {relatedQuestions && relatedQuestions!.length > 0 && <ItemAdd parentId={questionData['@id']} position={0} />}
           {relatedQuestions &&
             relatedQuestions!.map((question, index) => buildFormUI(question, index + 1, questionData))}
         </ol>
-        <EditorAdd
+        <ItemAdd
           parentId={parentQuestion?.['@id'] || ''} // empty string for root only
           position={position}
         />

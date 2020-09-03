@@ -3,12 +3,25 @@ import { Card } from '@material-ui/core';
 import { ITheme } from '@interfaces/index';
 
 export default makeStyles((theme: ITheme) => ({
-  listItem: {
+  listItemSection: {
     width: '100%',
     border: '2px solid transparent'
   },
-  '@global .listItemHover': {
+  listItemSectionOver: {
     border: '2px dashed ' + theme.palette.custom.main
+  },
+  ol: {
+    listStyle: 'none',
+    paddingLeft: '0'
+  },
+  emptySection: {
+    fontStyle: 'italic',
+    opacity: 0.6,
+    margin: theme.spacing(0),
+    padding: theme.spacing(2)
+  },
+  cardContent: {
+    padding: theme.spacing(1, 2)
   }
 }));
 

@@ -3,20 +3,14 @@ import FormStructureNode from '@model/FormStructureNode';
 import useStyles, { CustomisedAccordionDetails } from './PageItem.styles';
 import { Accordion } from '@material-ui/core';
 import { Constants } from 's-forms';
-import {
-  highlightQuestion,
-  moveQuestion,
-  removeBeingPrecedingQuestion,
-  removeFromSubQuestions,
-  removePrecedingQuestion,
-  sortRelatedQuestions
-} from '@utils/formBuilder';
+import { highlightQuestion, moveQuestion, sortRelatedQuestions } from '@utils/formBuilder';
 import PageItemHeader from '@components/PageItemHeader/PageItemHeader';
 import PageContent from '@components/PageItemContent/PageItemContent';
 import { DIRECTION } from '@enums/index';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
 import AddIcon from '@material-ui/icons/Add';
+import { enableNotDraggableAndDroppable } from '@utils/itemDragHelpers';
 
 type Props = {
   question: FormStructureQuestion;
@@ -30,7 +24,7 @@ type Props = {
 const PageItem: FC<Props> = ({ question, buildFormUI }) => {
   const classes = useStyles();
 
-  const { getClonedFormStructure, setFormStructure } = useContext(FormStructureContext);
+  const { getClonedFormStructure, setFormStructure, moveNodeUnderNode } = useContext(FormStructureContext);
 
   const relatedQuestions = question[Constants.HAS_SUBQUESTION];
 
@@ -59,9 +53,7 @@ const PageItem: FC<Props> = ({ question, buildFormUI }) => {
 
       (e.target as HTMLDivElement).style.opacity = '1';
 
-      document
-        .querySelectorAll('*:not([data-droppable=true]):not([draggable=true])')
-        .forEach((el) => ((el as HTMLDivElement).style.pointerEvents = 'all'));
+      enableNotDraggableAndDroppable();
 
       [].forEach.call(document.getElementsByClassName(classes.page), (page: HTMLDivElement) => {
         page.classList.remove(classes.pageOver);
@@ -77,38 +69,8 @@ const PageItem: FC<Props> = ({ question, buildFormUI }) => {
         return;
       }
 
-      moveNodeToPage(movingNodeId, destinationPageId);
+      moveNodeUnderNode(movingNodeId, destinationPageId);
     }
-  };
-
-  const moveNodeToPage = (movingNodeId: string, destinationPageId: string) => {
-    const clonedFormStructure = getClonedFormStructure();
-
-    const movingNode = clonedFormStructure.structure.get(movingNodeId);
-    const destinationPage = clonedFormStructure.structure.get(destinationPageId);
-
-    if (!movingNode?.data || !movingNode?.parent || !destinationPage?.data) {
-      console.warn("Missing movingNode's data or parent, or destinationPage's data");
-      return;
-    }
-
-    const movingNodeParent = movingNode.parent;
-
-    removePrecedingQuestion(movingNode);
-
-    removeBeingPrecedingQuestion(movingNodeParent, movingNode);
-
-    removeFromSubQuestions(movingNodeParent, movingNode);
-
-    moveQuestion(movingNode, destinationPage);
-
-    destinationPage.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(
-      destinationPage.data[Constants.HAS_SUBQUESTION]
-    );
-
-    setFormStructure(clonedFormStructure);
-
-    highlightQuestion(movingNodeId);
   };
 
   const addNewPage = () => {

@@ -1,7 +1,14 @@
 import React, { Dispatch, SetStateAction, useState } from 'react';
 import { cloneDeep } from 'lodash';
 import FormStructure from '@model/FormStructure';
-import { highlightQuestion, moveQuestion, sortRelatedQuestions } from '@utils/formBuilder';
+import {
+  highlightQuestion,
+  moveQuestion,
+  removeBeingPrecedingQuestion,
+  removeFromSubQuestions,
+  removePrecedingQuestion,
+  sortRelatedQuestions
+} from '@utils/formBuilder';
 import { Constants } from 's-forms';
 import FormStructureNode from '@model/FormStructureNode';
 import { JsonLdObj } from 'jsonld/jsonld-spec';
@@ -12,6 +19,7 @@ interface FormStructureProviderProps {
 
 interface FormStructureContextValues {
   addNewFormStructureNode: (targetId: string) => void;
+  moveNodeUnderNode: (movingNodeId: string, destinationPageId: string) => void;
   formStructure: FormStructure;
   formFile: JsonLdObj;
   setFormFile: Dispatch<SetStateAction<FormStructure>>;
@@ -70,9 +78,40 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
     highlightQuestion(id);
   };
 
+  const moveNodeUnderNode = (movingNodeId: string, destinationPageId: string) => {
+    const clonedFormStructure = getClonedFormStructure();
+
+    const movingNode = clonedFormStructure.structure.get(movingNodeId);
+    const destinationPage = clonedFormStructure.structure.get(destinationPageId);
+
+    if (!movingNode?.data || !movingNode?.parent || !destinationPage?.data) {
+      console.warn("Missing movingNode's data or parent, or destination's data");
+      return;
+    }
+
+    const movingNodeParent = movingNode.parent;
+
+    removePrecedingQuestion(movingNode);
+
+    removeBeingPrecedingQuestion(movingNodeParent, movingNode);
+
+    removeFromSubQuestions(movingNodeParent, movingNode);
+
+    moveQuestion(movingNode, destinationPage);
+
+    destinationPage.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(
+      destinationPage.data[Constants.HAS_SUBQUESTION]
+    );
+
+    setFormStructure(clonedFormStructure);
+
+    highlightQuestion(movingNodeId);
+  };
+
   const values = React.useMemo<FormStructureContextValues>(
     () => ({
       addNewFormStructureNode,
+      moveNodeUnderNode,
       getClonedFormStructure,
       setFormStructure,
       setFormContext,

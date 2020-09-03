@@ -25,6 +25,14 @@ const theme = createMuiTheme({
     MuiButtonBase: {
       disableRipple: true
     }
+  },
+  overrides: {
+    MuiList: {
+      padding: {
+        paddingTop: 0,
+        paddingBottom: 0
+      }
+    }
   }
 } as IThemeOptions);
 

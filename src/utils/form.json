@@ -164,7 +164,7 @@
     {
       "@id": "x:form-1-default-q",
       "@type": "doc:question",
-      "has_related_question": "rdfs:checkbox-q",
+      "has_related_question": ["rdfs:checkbox-q", "rdfs:friendship"],
       "has-layout-class": [
         "section",
         "wizard-step"
@@ -194,7 +194,6 @@
         "wizard-step"
       ],
       "has-preceding-question": "x:form-1-default-q",
-      "is-relevant-if": "_:b0",
       "label": "Personal information"
     },
     {
@@ -208,6 +207,27 @@
       "has-preceding-question": "x:form-2-default-q",
       "is-relevant-if": "_:b0",
       "label": "Treatment"
+    },
+    {
+      "@id": "rdfs:friendship",
+      "has_related_question": [
+        "rdfs:friend-1",
+        "rdfs:friend-2"
+      ],
+      "has-layout-class": "section",
+      "label": "Friendship"
+    },
+    {
+      "@id": "rdfs:friend-1",
+      "@type": "doc:question",
+      "has-question-origin": "rdfs:label",
+      "label": "Friend 1"
+    },
+    {
+      "@id": "rdfs:friend-2",
+      "@type": "doc:question",
+      "has-question-origin": "rdfs:label",
+      "label": "Friend 2"
     }
   ]
 }

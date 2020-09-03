@@ -1,13 +1,13 @@
 import React, { FC } from 'react';
 import useStyles from './ItemContent.styles';
-import { CardContent } from '@material-ui/core';
+import { CustomisedCardContent } from '@styles/CustomisedCardContent';
 
 type Props = {};
 
 const ItemContent: FC<Props> = ({}) => {
   const classes = useStyles();
 
-  return <CardContent className={classes.itemContent}>Content</CardContent>;
+  return <CustomisedCardContent className={classes.itemContent}>Content</CustomisedCardContent>;
 };
 
 export default ItemContent;

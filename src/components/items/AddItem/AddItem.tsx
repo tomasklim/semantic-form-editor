@@ -1,5 +1,5 @@
 import React, { FC, useContext, useRef } from 'react';
-import useStyles from './EditorAdd.styles';
+import useStyles from './AddItem.styles';
 import AddIcon from '@material-ui/icons/Add';
 import {
   detectIsChildNode,
@@ -13,13 +13,14 @@ import {
 import { Constants } from 's-forms';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import FormStructureNode from '@model/FormStructureNode';
+import { enableNotDraggableAndDroppable } from '@utils/itemDragHelpers';
 
 type Props = {
   parentId: string;
   position: number;
 };
 
-const EditorAdd: FC<Props> = ({ parentId, position }) => {
+const ItemAdd: FC<Props> = ({ parentId, position }) => {
   const classes = useStyles();
   const addContainer = useRef<HTMLDivElement | null>(null);
 
@@ -66,9 +67,7 @@ const EditorAdd: FC<Props> = ({ parentId, position }) => {
     if ((e.target as HTMLDivElement).classList.contains(classes.addLine)) {
       e.preventDefault();
 
-      document
-        .querySelectorAll('*:not([data-droppable=true]):not([draggable=true])')
-        .forEach((element) => ((element as HTMLDivElement | HTMLLIElement).style.pointerEvents = 'all'));
+      enableNotDraggableAndDroppable();
 
       [].forEach.call(document.querySelectorAll('[data-droppable=true]'), (el: HTMLDivElement) => {
         el.classList.remove('addLineHover');
@@ -132,7 +131,7 @@ const EditorAdd: FC<Props> = ({ parentId, position }) => {
   const addNewQuestion = () => {
     const clonedFormStructure = getClonedFormStructure();
 
-    const id = Math.floor(Math.random() * 10000) + 'editoradd';
+    const id = Math.floor(Math.random() * 10000) + 'AddItem';
 
     // temporary
     const newQuestion = {
@@ -183,4 +182,4 @@ const EditorAdd: FC<Props> = ({ parentId, position }) => {
   );
 };
 
-export default EditorAdd;
+export default ItemAdd;
