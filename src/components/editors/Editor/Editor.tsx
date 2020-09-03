@@ -7,10 +7,10 @@ import useStyles, {
   CustomisedStepper
 } from './Editor.styles';
 import { Step } from '@material-ui/core';
-import EditorCustomize from '@components/EditorCustomize/EditorCustomize';
-import EditorPreview from '@components/EditorPreview/EditorPreview';
-import EditorNew from '@components/EditorNew/EditorNew';
-import EditorExport from '@components/EditorExport/EditorExport';
+import EditorCustomize from '@components/editors/EditorCustomize/EditorCustomize';
+import EditorPreview from '@components/editors/EditorPreview/EditorPreview';
+import EditorNew from '@components/editors/EditorNew/EditorNew';
+import EditorExport from '@components/editors/EditorExport/EditorExport';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 
 interface EditorProps {}

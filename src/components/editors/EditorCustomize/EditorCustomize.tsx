@@ -1,7 +1,7 @@
 import React, { FC, useContext } from 'react';
 import { Constants, FormUtils } from 's-forms';
 import Item from '@components/items/Item/Item';
-import PageItem from '@components/PageItem/PageItem';
+import PageItem from '@components/pages/PageItem/PageItem';
 import ItemAdd from '@components/items/AddItem/AddItem';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
