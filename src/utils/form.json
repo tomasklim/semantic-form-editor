@@ -124,7 +124,6 @@
       "@id": "rdfs:collapsed-q",
       "@type": "doc:question",
       "has-layout-class": [
-        "collapsed",
         "type-ahead"
       ],
       "has-possible-values-query": "http://localhost:18080/rdf4j-server/repositories/fss-study-dev-formgen?default-graph-uri=http://vfn.cz/ontologies/study-model/data&query=PREFIX%20rdfs%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0APREFIX%20form%3A%20%3Chttp%3A%2F%2Fonto.fel.cvut.cz%2Fontologies%2Fform%2F%3E%20%0APREFIX%20stm%3A%20%3Chttp%3A%2F%2Fvfn.cz%2Fontologies%2Fstudy-model%2F%3E%20%0A%0ACONSTRUCT%20%7B%0A%20%20%20%20%20%3Fvalue%20rdfs%3Alabel%20%3Flabel%20%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20rdfs%3Acomment%20%3Fexplanation%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20form%3Ahas-preceding-value%20%3FvaluePreceding%20.%20%0A%7D%0AWHERE%20%7B%0A%20%20%20%20%20%20%3Fvalue%20a%20stm%3Asurgery-types%20.%0A%20%20%20%20%20%20%3Fvalue%20rdfs%3Alabel%20%3Flabel%20%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20rdfs%3Acomment%20%3Fexplanation%20.%0A%20%20%20%20%20%20OPTIONAL%20%7B%20%3Fvalue%20form%3Ahas-preceding-value%20%3FvaluePreceding%20.%20%7D%0A%7D",
@@ -164,7 +163,7 @@
     {
       "@id": "x:form-1-default-q",
       "@type": "doc:question",
-      "has_related_question": ["rdfs:checkbox-q", "rdfs:friendship"],
+      "has_related_question": ["rdfs:checkbox-q", "rdfs:friendship", "rdfs:dates"],
       "has-layout-class": [
         "section",
         "wizard-step"
@@ -220,14 +219,58 @@
     {
       "@id": "rdfs:friend-1",
       "@type": "doc:question",
+      "has-layout-class": [
+        "textarea"
+      ],
       "has-question-origin": "rdfs:label",
       "label": "Friend 1"
     },
     {
       "@id": "rdfs:friend-2",
       "@type": "doc:question",
+      "has-layout-class": "masked-input",
       "has-question-origin": "rdfs:label",
       "label": "Friend 2"
+    },
+    {
+      "@id": "rdfs:datetime",
+      "@type": "doc:question",
+      "label": "Date and time",
+      "has-layout-class": [
+        "section",
+        "answerable",
+        "datetime"
+      ]
+    },
+    {
+      "@id": "rdfs:time",
+      "@type": "doc:question",
+      "label": "Time",
+      "has-layout-class": [
+        "section",
+        "answerable",
+        "time"
+      ]
+    },
+    {
+      "@id": "rdfs:date",
+      "@type": "doc:question",
+      "label": "Date",
+      "has-layout-class": [
+        "section",
+        "answerable",
+        "date"
+      ]
+    },
+    {
+      "@id": "rdfs:dates",
+      "has_related_question": [
+        "rdfs:date",
+        "rdfs:time",
+        "rdfs:datetime"
+      ],
+      "has-layout-class": "section",
+      "label": "Dates"
     }
   ]
 }

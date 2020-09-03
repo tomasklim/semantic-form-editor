@@ -35,7 +35,7 @@ const Item: FC<Props> = ({ questionData, position }) => {
     >
       <CustomisedCard variant="outlined">
         <ItemHeader container={itemContainer} nodeData={questionData} position={position} />
-        <ItemContent />
+        <ItemContent questionData={questionData} />
       </CustomisedCard>
     </li>
   );

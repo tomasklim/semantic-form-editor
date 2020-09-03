@@ -43,6 +43,7 @@ const EditorCustomize: FC<EditorCustomizeProps> = ({}) => {
         </React.Fragment>
       );
     } else {
+      // simple text field
       item = <Item questionData={questionData} position={position} />;
     }
 
