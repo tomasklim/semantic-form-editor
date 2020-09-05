@@ -257,8 +257,6 @@
       "@type": "doc:question",
       "label": "Date",
       "has-layout-class": [
-        "section",
-        "answerable",
         "date"
       ]
     },

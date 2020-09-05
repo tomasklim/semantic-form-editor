@@ -23,5 +23,13 @@ export default makeStyles((theme: ITheme) => ({
     transitionDelay: '0.3s',
     transitionDuration: '0.5s',
     transform: 'scale(0.7) !important'
+  },
+  highlightAddLine: {
+    border: '2px solid ' + theme.palette.custom.main,
+    '& svg': {
+      transitionDelay: '0.3s',
+      transitionDuration: '0.5s',
+      transform: 'scale(0.7) !important'
+    }
   }
 }));

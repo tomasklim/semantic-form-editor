@@ -12,6 +12,7 @@ import EditorPreview from '@components/editors/EditorPreview/EditorPreview';
 import EditorNew from '@components/editors/EditorNew/EditorNew';
 import EditorExport from '@components/editors/EditorExport/EditorExport';
 import { FormStructureContext } from '@contexts/FormStructureContext';
+import { CustomiseItemProvider } from '@contexts/CustomiseItemContext';
 
 interface EditorProps {}
 
@@ -29,7 +30,11 @@ const Editor: FC<EditorProps> = ({}) => {
       case 0:
         return <EditorNew nextStep={moveToCustomiseStep} />;
       case 1:
-        return <EditorCustomize />;
+        return (
+          <CustomiseItemProvider>
+            <EditorCustomize />
+          </CustomiseItemProvider>
+        );
       case 2:
         return <EditorPreview />;
       case 3:

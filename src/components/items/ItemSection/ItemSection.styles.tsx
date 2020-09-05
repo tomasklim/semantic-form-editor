@@ -18,7 +18,7 @@ export default makeStyles((theme: ITheme) => ({
     fontStyle: 'italic',
     opacity: 0.6,
     margin: theme.spacing(0),
-    padding: theme.spacing(2)
+    padding: theme.spacing(1, 0, 0.5)
   },
   cardContent: {
     padding: theme.spacing(1, 2)

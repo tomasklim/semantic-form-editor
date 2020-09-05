@@ -4,7 +4,7 @@ export interface FormStructureQuestion {
   '@id': string;
   '@type': string;
   [Constants.RDFS_LABEL]: string;
-  [Constants.LAYOUT_CLASS]: Array<string> | string;
+  [Constants.LAYOUT_CLASS]?: Array<string> | string;
   [Constants.HAS_PRECEDING_QUESTION]?: { '@id': string };
   [Constants.HAS_SUBQUESTION]?: Array<FormStructureQuestion> | undefined;
   [Constants.IS_RELEVANT_IF]?: string;

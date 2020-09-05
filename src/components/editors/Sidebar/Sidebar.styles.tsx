@@ -16,10 +16,17 @@ export default makeStyles((theme: ITheme) => ({
     marginTop: '10px',
     borderLeft: 0,
     padding: theme.spacing(1.75, 2),
-    backgroundColor: theme.palette.custom[800],
+    // backgroundColor: theme.palette.custom[800],
     color: 'white'
   },
   drawerContainer: {
     overflow: 'auto'
+  },
+  newItemDataContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    '& > *': {
+      margin: theme.spacing(1, 0)
+    }
   }
 }));

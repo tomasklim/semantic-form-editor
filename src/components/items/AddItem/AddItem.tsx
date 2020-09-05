@@ -14,6 +14,9 @@ import { Constants } from 's-forms';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import FormStructureNode from '@model/FormStructureNode';
 import { enableNotDraggableAndDroppable } from '@utils/itemDragHelpers';
+import { CustomiseItemContext, OnSaveCallback } from '@contexts/CustomiseItemContext';
+import { FormStructureQuestion } from '@model/FormStructureQuestion';
+import FormStructure from '@model/FormStructure';
 
 type Props = {
   parentId: string;
@@ -25,6 +28,7 @@ const AddItem: FC<Props> = ({ parentId, position }) => {
   const addContainer = useRef<HTMLDivElement | null>(null);
 
   const { formStructure, getClonedFormStructure, setFormStructure } = useContext(FormStructureContext);
+  const { customiseItemData } = useContext(CustomiseItemContext);
 
   // fix drag and drop bug https://stackoverflow.com/questions/17946886/hover-sticks-to-element-on-drag-and-drop
   const handleMouseEnter = () => {
@@ -128,19 +132,8 @@ const AddItem: FC<Props> = ({ parentId, position }) => {
     window.scrollBy(0, 40);
   };
 
-  const addNewQuestion = () => {
+  const handleAddNewQuestion = () => {
     const clonedFormStructure = getClonedFormStructure();
-
-    const id = Math.floor(Math.random() * 10000) + 'AddItem';
-
-    // temporary
-    const newQuestion = {
-      '@id': id,
-      '@type': 'http://onto.fel.cvut.cz/ontologies/documentation/question',
-      [Constants.LAYOUT_CLASS]: ['new'],
-      [Constants.RDFS_LABEL]: id,
-      [Constants.HAS_SUBQUESTION]: []
-    };
 
     const targetNode = clonedFormStructure.getNode(parentId);
 
@@ -148,6 +141,29 @@ const AddItem: FC<Props> = ({ parentId, position }) => {
       console.error('Missing targetNode');
       return;
     }
+
+    addContainer.current?.classList.add(classes.highlightAddLine);
+
+    // temporary
+    const newQ = {
+      '@id': '',
+      '@type': 'http://onto.fel.cvut.cz/ontologies/documentation/question',
+      [Constants.LAYOUT_CLASS]: [],
+      [Constants.HAS_SUBQUESTION]: []
+    };
+
+    customiseItemData(
+      newQ,
+      (): OnSaveCallback => (itemData) => addNewQuestionToSpecificPosition(itemData, targetNode, clonedFormStructure)
+    );
+  };
+
+  const addNewQuestionToSpecificPosition = (
+    newQuestion: FormStructureQuestion,
+    targetNode: FormStructureNode,
+    clonedFormStructure: FormStructure
+  ): void => {
+    addContainer.current?.classList.remove(classes.highlightAddLine);
 
     const node = new FormStructureNode(targetNode, newQuestion);
 
@@ -159,9 +175,7 @@ const AddItem: FC<Props> = ({ parentId, position }) => {
 
     setFormStructure(clonedFormStructure);
 
-    highlightQuestion(id);
-
-    window.scrollBy(0, 40);
+    highlightQuestion(newQuestion['@id']);
   };
 
   return (
@@ -175,7 +189,7 @@ const AddItem: FC<Props> = ({ parentId, position }) => {
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
-      onClick={addNewQuestion}
+      onClick={handleAddNewQuestion}
     >
       <AddIcon fontSize={'large'} />
     </div>
