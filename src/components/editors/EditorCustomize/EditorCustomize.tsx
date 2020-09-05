@@ -7,6 +7,7 @@ import { FormStructureContext } from '@contexts/FormStructureContext';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
 import useStyles from './EditorCustomize.styles';
 import ItemSection from '@components/items/ItemSection/ItemSection';
+import Sidebar from '@components/editors/Sidebar/Sidebar';
 
 interface EditorCustomizeProps {}
 
@@ -63,7 +64,12 @@ const EditorCustomize: FC<EditorCustomizeProps> = ({}) => {
     );
   };
 
-  return <>{buildFormUI(formStructure.root.data, 1, undefined)}</>;
+  return (
+    <div>
+      <div className={classes.content}>{buildFormUI(formStructure.root.data, 1, undefined)}</div>
+      <Sidebar />
+    </div>
+  );
 };
 
 export default EditorCustomize;

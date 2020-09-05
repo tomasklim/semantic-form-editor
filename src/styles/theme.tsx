@@ -33,6 +33,9 @@ const theme = createMuiTheme({
         paddingBottom: 0
       }
     }
+  },
+  custom: {
+    sidebarWidth: '400px'
   }
 } as IThemeOptions);
 

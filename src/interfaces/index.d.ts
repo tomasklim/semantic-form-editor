@@ -6,7 +6,9 @@ interface IPalette extends Palette {
 }
 interface ITheme extends Theme {
   palette: IPalette;
+  custom: any;
 }
 interface IThemeOptions extends ThemeOptions {
   palette: IPalette;
+  custom: any;
 }
