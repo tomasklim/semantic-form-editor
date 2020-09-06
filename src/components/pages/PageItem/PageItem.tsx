@@ -80,8 +80,6 @@ const PageItem: FC<Props> = ({ question, buildFormUI }) => {
   const addNewPage = () => {
     const clonedFormStructure = getClonedFormStructure();
 
-    const id = Math.floor(Math.random() * 10000) + 'editorwizard-page';
-
     const root = clonedFormStructure.getRoot();
 
     if (!root) {
@@ -93,8 +91,6 @@ const PageItem: FC<Props> = ({ question, buildFormUI }) => {
       root.data[Constants.HAS_SUBQUESTION] && root.data[Constants.HAS_SUBQUESTION]?.length
         ? root.data[Constants.HAS_SUBQUESTION]![root.data[Constants.HAS_SUBQUESTION]!.length - 1]
         : undefined;
-
-    newPageContainer.current?.classList.add(classes.newPageHighlight);
 
     const newPage = {
       ...NEW_PAGE_ITEM,
@@ -108,7 +104,8 @@ const PageItem: FC<Props> = ({ question, buildFormUI }) => {
     customiseItemData(
       newPage,
       (): OnSaveCallback => (itemData) => addNewNode(itemData, root, clonedFormStructure),
-      () => () => newPageContainer.current?.classList.remove(classes.newPageHighlight)
+      () => () => newPageContainer.current?.classList.remove(classes.newPageHighlight),
+      () => newPageContainer.current?.classList.add(classes.newPageHighlight)
     );
   };
 

@@ -55,12 +55,11 @@ const ItemMenu: FC<Props> = ({ question, movePage }) => {
       return;
     }
 
-    addButton.current?.classList.add(classes.addButtonHighlight);
-
     customiseItemData(
       NEW_ITEM,
       (): OnSaveCallback => (itemData) => addNewNode(itemData, targetNode, clonedFormStructure),
-      () => () => addButton.current?.classList.remove(classes.addButtonHighlight)
+      () => () => addButton.current?.classList.remove(classes.addButtonHighlight),
+      () => addButton.current?.classList.add(classes.addButtonHighlight)
     );
   };
 

@@ -5,7 +5,11 @@ import { ITheme } from '@interfaces/index';
 export default makeStyles((theme: ITheme) => ({
   page: {
     border: '2px solid transparent',
-    margin: theme.spacing(1, 2)
+    margin: theme.spacing(1, 2),
+    borderRadius: '2px',
+    '& .MuiPaper-elevation1': {
+      boxShadow: 'none'
+    }
   },
   pageOver: {
     border: '2px dashed ' + theme.palette.custom.main

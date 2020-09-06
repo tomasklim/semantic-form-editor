@@ -143,12 +143,11 @@ const AddItem: FC<Props> = ({ parentId, position }) => {
       return;
     }
 
-    addContainer.current?.classList.add(classes.highlightAddLine);
-
     customiseItemData(
       NEW_ITEM,
       (): OnSaveCallback => (itemData) => addNewQuestionToSpecificPosition(itemData, targetNode, clonedFormStructure),
-      () => () => addContainer.current?.classList.remove(classes.highlightAddLine)
+      () => () => addContainer.current?.classList.remove(classes.highlightAddLine),
+      () => addContainer.current?.classList.add(classes.highlightAddLine)
     );
   };
 

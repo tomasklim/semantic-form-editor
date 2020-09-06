@@ -48,7 +48,7 @@ const Sidebar = () => {
   const onSave = () => {
     const newItem = { ...itemData };
 
-    onSaveCallback(newItem);
+    onSaveCallback && onSaveCallback(newItem);
     reset();
   };
 

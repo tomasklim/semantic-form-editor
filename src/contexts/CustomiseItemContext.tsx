@@ -16,7 +16,8 @@ export type OnSaveCallback = (itemData: FormStructureQuestion) => void;
 type CustomiseItemData = (
   itemData: FormStructureQuestion,
   onSave: (itemData: FormStructureQuestion) => void,
-  onCancel: () => void
+  onCancel?: () => void,
+  onInit?: () => void
 ) => void;
 
 // @ts-ignore
@@ -32,9 +33,10 @@ const CustomiseItemProvider: React.FC<CustomiseItemProviderProps> = ({ children 
   // @ts-ignore
   const [onCancelCallback, setOnCancelCallback] = useState<(() => void) | null>(null);
 
-  const customiseItemData: CustomiseItemData = (itemData, onSave, onCancel) => {
+  const customiseItemData: CustomiseItemData = (formStructureQuestion, onSave, onCancel, onInit) => {
     onCancelCallback && onCancelCallback();
-    setItemData(itemData);
+    onInit && onInit();
+    setItemData(formStructureQuestion);
     setOnSaveCallback(onSave);
     setOnCancelCallback(onCancel);
   };
