@@ -15,7 +15,8 @@ interface CustomiseItemContextValues {
 export type OnSaveCallback = (itemData: FormStructureQuestion) => void;
 type CustomiseItemData = (
   itemData: FormStructureQuestion,
-  onSaveCallback: (itemData: FormStructureQuestion) => void
+  onSave: (itemData: FormStructureQuestion) => void,
+  onCancel: () => void
 ) => void;
 
 // @ts-ignore
@@ -28,14 +29,21 @@ const CustomiseItemProvider: React.FC<CustomiseItemProviderProps> = ({ children 
   // @ts-ignore
   const [onSaveCallback, setOnSaveCallback] = useState<OnSaveCallback | null>(null);
 
-  const customiseItemData: CustomiseItemData = (itemData, onSaveCallback) => {
+  // @ts-ignore
+  const [onCancelCallback, setOnCancelCallback] = useState<(() => void) | null>(null);
+
+  const customiseItemData: CustomiseItemData = (itemData, onSave, onCancel) => {
+    onCancelCallback && onCancelCallback();
     setItemData(itemData);
-    setOnSaveCallback(onSaveCallback);
+    setOnSaveCallback(onSave);
+    setOnCancelCallback(onCancel);
   };
 
   const reset = () => {
     setOnSaveCallback(null);
     setItemData(null);
+    onCancelCallback && onCancelCallback();
+    setOnCancelCallback(null);
   };
 
   const values = React.useMemo<CustomiseItemContextValues>(

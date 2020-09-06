@@ -1,4 +1,4 @@
-import React, { FC, useContext } from 'react';
+import React, { FC, useContext, useRef } from 'react';
 import FormStructureNode from '@model/FormStructureNode';
 import useStyles, { CustomisedAccordionDetails } from './PageItem.styles';
 import { Accordion } from '@material-ui/core';
@@ -11,6 +11,8 @@ import { FormStructureContext } from '@contexts/FormStructureContext';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
 import AddIcon from '@material-ui/icons/Add';
 import { enableNotDraggableAndDroppable } from '@utils/itemDragHelpers';
+import { CustomiseItemContext, OnSaveCallback } from '@contexts/CustomiseItemContext';
+import { NEW_PAGE_ITEM } from '../../../constants';
 
 type Props = {
   question: FormStructureQuestion;
@@ -23,8 +25,10 @@ type Props = {
 
 const PageItem: FC<Props> = ({ question, buildFormUI }) => {
   const classes = useStyles();
+  const newPageContainer = useRef<HTMLDivElement | null>(null);
 
-  const { getClonedFormStructure, setFormStructure, moveNodeUnderNode } = useContext(FormStructureContext);
+  const { getClonedFormStructure, setFormStructure, moveNodeUnderNode, addNewNode } = useContext(FormStructureContext);
+  const { customiseItemData } = useContext(CustomiseItemContext);
 
   const relatedQuestions = question[Constants.HAS_SUBQUESTION];
 
@@ -90,31 +94,22 @@ const PageItem: FC<Props> = ({ question, buildFormUI }) => {
         ? root.data[Constants.HAS_SUBQUESTION]![root.data[Constants.HAS_SUBQUESTION]!.length - 1]
         : undefined;
 
-    // temporary
+    newPageContainer.current?.classList.add(classes.newPageHighlight);
+
     const newPage = {
-      '@id': id,
-      '@type': 'http://onto.fel.cvut.cz/ontologies/documentation/question',
-      [Constants.LAYOUT_CLASS]: ['section', 'wizard-step'],
-      [Constants.RDFS_LABEL]: id,
-      [Constants.HAS_SUBQUESTION]: [],
+      ...NEW_PAGE_ITEM,
       [Constants.HAS_PRECEDING_QUESTION]: precedingQuestion
         ? {
             '@id': precedingQuestion['@id']
           }
-        : ''
+        : undefined
     };
 
-    const page = new FormStructureNode(root, newPage);
-
-    clonedFormStructure.addNode(newPage['@id'], page);
-
-    moveQuestion(page, root);
-
-    root.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(root.data[Constants.HAS_SUBQUESTION]);
-
-    setFormStructure(clonedFormStructure);
-
-    highlightQuestion(id);
+    customiseItemData(
+      newPage,
+      (): OnSaveCallback => (itemData) => addNewNode(itemData, root, clonedFormStructure),
+      () => () => newPageContainer.current?.classList.remove(classes.newPageHighlight)
+    );
   };
 
   const movePage = (id: string, direction: DIRECTION) => {
@@ -197,7 +192,7 @@ const PageItem: FC<Props> = ({ question, buildFormUI }) => {
             </Accordion>
           </div>
         ))}
-      <div className={classes.page}>
+      <div className={classes.page} ref={newPageContainer}>
         <Accordion expanded={true} className={classes.accordion} onClick={addNewPage} title={'Add new page'}>
           <CustomisedAccordionDetails>
             <AddIcon />

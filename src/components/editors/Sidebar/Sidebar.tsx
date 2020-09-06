@@ -2,7 +2,7 @@ import { Button, Drawer, FormControl, InputLabel, MenuItem, Select, TextField } 
 import useStyles from './Sidebar.styles';
 import React, { useContext, useEffect, useState } from 'react';
 import { CustomiseItemContext } from '@contexts/CustomiseItemContext';
-import { Constants } from 's-forms';
+import { Constants, FormUtils } from 's-forms';
 
 // Header + Stepper
 const INITIAL_TOP = 60 + 88;
@@ -52,6 +52,10 @@ const Sidebar = () => {
     reset();
   };
 
+  const onCancel = () => {
+    reset();
+  };
+
   return (
     <Drawer
       className={classes.drawer}
@@ -74,27 +78,32 @@ const Sidebar = () => {
             value={itemData[Constants.RDFS_LABEL] || ''}
             onChange={handleChange}
           />
-          <FormControl variant="outlined">
-            <InputLabel id="demo-simple-select-outlined-label">Layout type</InputLabel>
-            <Select
-              labelId="demo-simple-select-outlined-label"
-              name="layout"
-              value={itemData[Constants.LAYOUT_CLASS][0] || ''}
-              onChange={handleChange}
-              label="Layout type"
-            >
-              <MenuItem value={'type-ahead'}>Typeahead</MenuItem>
-              <MenuItem value={'textarea'}>Textarea</MenuItem>
-              <MenuItem value={'textfield'}>Text Input</MenuItem>
-              <MenuItem value={'section'}>Section</MenuItem>
-              <MenuItem value={'date'}>Date</MenuItem>
-              <MenuItem value={'time'}>Time</MenuItem>
-              <MenuItem value={'datetime'}>Datetime</MenuItem>
-              <MenuItem value={'masked-input'}>Masked Input</MenuItem>
-              <MenuItem value={'checkbox'}>Checkbox</MenuItem>
-            </Select>
-          </FormControl>
-          <Button onClick={onSave}>Save</Button>
+          {!FormUtils.isWizardStep(itemData) && (
+            <FormControl variant="outlined">
+              <InputLabel id="demo-simple-select-outlined-label">Layout type</InputLabel>
+              <Select
+                labelId="demo-simple-select-outlined-label"
+                name="layout"
+                value={itemData[Constants.LAYOUT_CLASS][0] || ''}
+                onChange={handleChange}
+                label="Layout type"
+              >
+                <MenuItem value={'type-ahead'}>Typeahead</MenuItem>
+                <MenuItem value={'textarea'}>Textarea</MenuItem>
+                <MenuItem value={'textfield'}>Text Input</MenuItem>
+                <MenuItem value={'section'}>Section</MenuItem>
+                <MenuItem value={'date'}>Date</MenuItem>
+                <MenuItem value={'time'}>Time</MenuItem>
+                <MenuItem value={'datetime'}>Datetime</MenuItem>
+                <MenuItem value={'masked-input'}>Masked Input</MenuItem>
+                <MenuItem value={'checkbox'}>Checkbox</MenuItem>
+              </Select>
+            </FormControl>
+          )}
+          <div>
+            <Button onClick={onSave}>Save</Button>
+            <Button onClick={onCancel}>Cancel</Button>
+          </div>
         </form>
       )}
     </Drawer>

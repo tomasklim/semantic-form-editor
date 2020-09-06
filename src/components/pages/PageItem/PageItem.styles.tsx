@@ -13,6 +13,9 @@ export default makeStyles((theme: ITheme) => ({
   accordion: {
     backgroundColor: theme.palette.custom[800],
     color: theme.palette.custom.contrastText
+  },
+  newPageHighlight: {
+    border: '2px solid ' + theme.palette.custom.main
   }
 }));
 

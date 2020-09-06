@@ -17,6 +17,7 @@ import { enableNotDraggableAndDroppable } from '@utils/itemDragHelpers';
 import { CustomiseItemContext, OnSaveCallback } from '@contexts/CustomiseItemContext';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
 import FormStructure from '@model/FormStructure';
+import { NEW_ITEM } from '../../../constants';
 
 type Props = {
   parentId: string;
@@ -144,17 +145,10 @@ const AddItem: FC<Props> = ({ parentId, position }) => {
 
     addContainer.current?.classList.add(classes.highlightAddLine);
 
-    // temporary
-    const newQ = {
-      '@id': '',
-      '@type': 'http://onto.fel.cvut.cz/ontologies/documentation/question',
-      [Constants.LAYOUT_CLASS]: [],
-      [Constants.HAS_SUBQUESTION]: []
-    };
-
     customiseItemData(
-      newQ,
-      (): OnSaveCallback => (itemData) => addNewQuestionToSpecificPosition(itemData, targetNode, clonedFormStructure)
+      NEW_ITEM,
+      (): OnSaveCallback => (itemData) => addNewQuestionToSpecificPosition(itemData, targetNode, clonedFormStructure),
+      () => () => addContainer.current?.classList.remove(classes.highlightAddLine)
     );
   };
 

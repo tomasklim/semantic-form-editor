@@ -2,12 +2,21 @@ import React, { FC, useContext, useRef, useState } from 'react';
 import { ArrowDownward, ArrowUpward, MoreVert } from '@material-ui/icons';
 import { ClickAwayListener, Grow, MenuItem, MenuList, Paper, Popper } from '@material-ui/core';
 import { Constants } from 's-forms';
-import { removeFromFormStructure, removeFromSubQuestions, sortRelatedQuestions } from '@utils/formBuilder';
+import {
+  highlightQuestion,
+  moveQuestion,
+  removeFromFormStructure,
+  removeFromSubQuestions,
+  sortRelatedQuestions
+} from '@utils/formBuilder';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
 import AddIcon from '@material-ui/icons/Add';
 import { DIRECTION } from '@enums/index';
 import SquaredIconButton from '@styles/SquaredIconButton';
+import { CustomiseItemContext, OnSaveCallback } from '@contexts/CustomiseItemContext';
+import useStyles from './ItemMenu.styles';
+import { NEW_ITEM } from '../../../constants';
 
 interface Props {
   question: FormStructureQuestion;
@@ -15,10 +24,14 @@ interface Props {
 }
 
 const ItemMenu: FC<Props> = ({ question, movePage }) => {
-  const { getClonedFormStructure, setFormStructure, addNewFormStructureNode } = useContext(FormStructureContext);
+  const classes = useStyles();
+
+  const { getClonedFormStructure, setFormStructure, addNewNode } = useContext(FormStructureContext);
+  const { customiseItemData } = useContext(CustomiseItemContext);
 
   const [open, setOpen] = useState<boolean>(false);
   const anchorEl = useRef<HTMLDivElement | null>(null);
+  const addButton = useRef<HTMLButtonElement | null>(null);
 
   const handleToggle = () => {
     setOpen(!open);
@@ -30,6 +43,25 @@ const ItemMenu: FC<Props> = ({ question, movePage }) => {
     }
 
     setOpen(false);
+  };
+
+  const addNewItem = (targetId: string) => {
+    const clonedFormStructure = getClonedFormStructure();
+
+    const targetNode = clonedFormStructure.getNode(targetId);
+
+    if (!targetNode) {
+      console.error('Missing targetNode');
+      return;
+    }
+
+    addButton.current?.classList.add(classes.addButtonHighlight);
+
+    customiseItemData(
+      NEW_ITEM,
+      (): OnSaveCallback => (itemData) => addNewNode(itemData, targetNode, clonedFormStructure),
+      () => () => addButton.current?.classList.remove(classes.addButtonHighlight)
+    );
   };
 
   const handleDelete = (e: React.SyntheticEvent<EventTarget>) => {
@@ -80,7 +112,7 @@ const ItemMenu: FC<Props> = ({ question, movePage }) => {
           </SquaredIconButton>
         </>
       )}
-      <SquaredIconButton onClick={() => addNewFormStructureNode(question['@id'])} title="Add new subquestion">
+      <SquaredIconButton ref={addButton} onClick={() => addNewItem(question['@id'])} title="Add new subquestion">
         <AddIcon />
       </SquaredIconButton>
       {/* @ts-ignore */}
