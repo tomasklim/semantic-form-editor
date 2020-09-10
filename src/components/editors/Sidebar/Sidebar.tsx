@@ -3,6 +3,8 @@ import useStyles from './Sidebar.styles';
 import React, { useContext, useEffect, useState } from 'react';
 import { CustomiseItemContext } from '@contexts/CustomiseItemContext';
 import { Constants, FormUtils } from 's-forms';
+import { toKebabCase } from '@utils/formBuilder';
+import { FormStructureContext } from '@contexts/FormStructureContext';
 
 // Header + Stepper
 const INITIAL_TOP = 60 + 88;
@@ -11,6 +13,8 @@ const Sidebar = () => {
   const classes = useStyles();
 
   const [drawerTop, setDrawerTop] = useState<number>(INITIAL_TOP);
+  const { formStructure } = useContext(FormStructureContext);
+  const { onSaveCallback, itemData, reset, setItemData, isNew } = useContext(CustomiseItemContext);
 
   // sidebar top position
   useEffect(() => {
@@ -24,8 +28,6 @@ const Sidebar = () => {
     });
   }, []);
 
-  const { onSaveCallback, itemData, reset, setItemData } = useContext(CustomiseItemContext);
-
   const handleChange = (event: React.ChangeEvent | React.ChangeEvent<{ value: unknown }>) => {
     const target = event.target as HTMLInputElement | HTMLSelectElement;
     // @ts-ignore
@@ -33,10 +35,17 @@ const Sidebar = () => {
     const name = target.name;
 
     if (name === 'label') {
+      let id = itemData['@id'];
+      if (isNew) {
+        do {
+          id = toKebabCase(value + '-' + Math.floor(Math.random() * 10000));
+        } while (formStructure.getNode(id));
+      }
+
       setItemData({
         ...itemData,
         [Constants.RDFS_LABEL]: value,
-        '@id': value + Math.floor(Math.random() * 10000)
+        '@id': id
       });
     }
 

@@ -3,7 +3,8 @@ import { ITheme } from '@interfaces/index';
 
 export default makeStyles((theme: ITheme) => ({
   content: {
-    marginRight: theme.custom.sidebarWidth
+    marginRight: theme.custom.sidebarWidth,
+    '& *': { userSelect: 'none' }
   },
   ol: {
     listStyle: 'none',

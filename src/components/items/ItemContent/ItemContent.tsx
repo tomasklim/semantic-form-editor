@@ -20,7 +20,7 @@ const ItemContent: FC<ItemContentProps> = ({ questionData }) => {
     content = (
       <CustomisedFormControl variant="outlined">
         <InputLabel id="demo-simple-select-outlined-label">Typeahead</InputLabel>
-        <Select labelId="demo-simple-select-outlined-label" label="Age" />
+        <Select labelId="demo-simple-select-outlined-label" label="Age" value={''} />
       </CustomisedFormControl>
     );
   } else if (FormUtils.isCalendar(questionData)) {

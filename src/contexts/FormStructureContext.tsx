@@ -28,6 +28,7 @@ interface FormStructureContextValues {
   setFormContext: Dispatch<SetStateAction<JsonLdObj>>;
   getClonedFormStructure: () => FormStructure;
   formContext: JsonLdObj;
+  updateNode: Function;
 }
 
 type AddNewFormStructureNode = (
@@ -95,11 +96,25 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
     highlightQuestion(movingNodeId);
   };
 
+  const updateNode = (itemData: FormStructureQuestion) => {
+    const clonedFormStructure = getClonedFormStructure();
+
+    const node = clonedFormStructure.structure.get(itemData['@id']);
+
+    if (node) {
+      node.data[Constants.RDFS_LABEL] = itemData[Constants.RDFS_LABEL];
+      node.data[Constants.LAYOUT_CLASS] = itemData[Constants.LAYOUT_CLASS];
+    }
+
+    setFormStructure(clonedFormStructure);
+  };
+
   const values = React.useMemo<FormStructureContextValues>(
     () => ({
       addNewNode,
       moveNodeUnderNode,
       getClonedFormStructure,
+      updateNode,
       setFormStructure,
       setFormContext,
       formStructure,

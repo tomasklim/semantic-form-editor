@@ -1,9 +1,11 @@
-import React, { FC, useRef } from 'react';
+import React, { FC, useContext, useRef } from 'react';
 import useStyles, { CustomisedCard } from './Item.styles';
 import ItemHeader from '@components/items/ItemHeader/ItemHeader';
 import ItemContent from '@components/items/ItemContent/ItemContent';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
 import { handleDragEnd, handleDragStart } from '@utils/itemDragHelpers';
+import { CustomiseItemContext } from '@contexts/CustomiseItemContext';
+import { FormStructureContext } from '@contexts/FormStructureContext';
 
 type Props = {
   questionData: FormStructureQuestion;
@@ -14,6 +16,9 @@ const Item: FC<Props> = ({ questionData, position }) => {
   const classes = useStyles();
   const itemContainer = useRef<HTMLLIElement | null>(null);
 
+  const { customiseItemData } = useContext(CustomiseItemContext);
+  const { updateNode } = useContext(FormStructureContext);
+
   // fix drag and drop bug https://stackoverflow.com/questions/17946886/hover-sticks-to-element-on-drag-and-drop
   const handleMouseEnter = () => {
     itemContainer.current?.classList.add('listItemHover');
@@ -21,6 +26,17 @@ const Item: FC<Props> = ({ questionData, position }) => {
 
   const handleMouseLeave = () => {
     itemContainer.current?.classList.remove('listItemHover');
+  };
+
+  const onClickHandler = (e: React.MouseEvent) => {
+    e.stopPropagation();
+
+    customiseItemData({
+      itemData: questionData,
+      onSave: () => (itemData: FormStructureQuestion) => {
+        updateNode(itemData);
+      }
+    });
   };
 
   return (
@@ -31,6 +47,7 @@ const Item: FC<Props> = ({ questionData, position }) => {
       onDragEnd={handleDragEnd}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      onClick={onClickHandler}
       className={classes.listItem}
     >
       <CustomisedCard variant="outlined">

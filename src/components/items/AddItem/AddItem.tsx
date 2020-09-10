@@ -133,7 +133,9 @@ const AddItem: FC<Props> = ({ parentId, position }) => {
     window.scrollBy(0, 40);
   };
 
-  const handleAddNewQuestion = () => {
+  const handleAddNewQuestion = (e: React.MouseEvent) => {
+    e.stopPropagation();
+
     const clonedFormStructure = getClonedFormStructure();
 
     const targetNode = clonedFormStructure.getNode(parentId);
@@ -143,12 +145,14 @@ const AddItem: FC<Props> = ({ parentId, position }) => {
       return;
     }
 
-    customiseItemData(
-      NEW_ITEM,
-      (): OnSaveCallback => (itemData) => addNewQuestionToSpecificPosition(itemData, targetNode, clonedFormStructure),
-      () => () => addContainer.current?.classList.remove(classes.highlightAddLine),
-      () => addContainer.current?.classList.add(classes.highlightAddLine)
-    );
+    customiseItemData({
+      itemData: NEW_ITEM,
+      onSave: (): OnSaveCallback => (itemData) =>
+        addNewQuestionToSpecificPosition(itemData, targetNode, clonedFormStructure),
+      onCancel: () => () => addContainer.current?.classList.remove(classes.highlightAddLine),
+      onInit: () => addContainer.current?.classList.add(classes.highlightAddLine),
+      isNew: true
+    });
   };
 
   const addNewQuestionToSpecificPosition = (

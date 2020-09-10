@@ -5,7 +5,7 @@ import { FormControl } from '@material-ui/core';
 // @ts-ignore
 export const CustomisedFormControl = withStyles((theme: ITheme) => ({
   root: {
-    '& *': {
+    '&, & *': {
       pointerEvents: 'none  !important'
     },
     '& .MuiInputLabel-root': {

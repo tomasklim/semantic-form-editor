@@ -7,6 +7,7 @@ import ItemAdd from '@components/items/AddItem/AddItem';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import { CustomisedCardContent } from '@styles/CustomisedCardContent';
 import { enableNotDraggableAndDroppable, handleDragEnd, handleDragStart } from '@utils/itemDragHelpers';
+import { CustomiseItemContext } from '@contexts/CustomiseItemContext';
 
 type Props = {
   questionData: FormStructureQuestion;
@@ -22,7 +23,19 @@ const ItemSection: FC<Props> = ({ questionData, position, buildFormUI }) => {
   const classes = useStyles();
   const itemContainer = useRef<HTMLLIElement | null>(null);
 
-  const { moveNodeUnderNode } = useContext(FormStructureContext);
+  const { moveNodeUnderNode, updateNode } = useContext(FormStructureContext);
+  const { customiseItemData } = useContext(CustomiseItemContext);
+
+  const onClickHandler = (e: React.MouseEvent) => {
+    e.stopPropagation();
+
+    customiseItemData({
+      itemData: questionData,
+      onSave: () => (itemData: FormStructureQuestion) => {
+        updateNode(itemData);
+      }
+    });
+  };
 
   // fix drag and drop bug https://stackoverflow.com/questions/17946886/hover-sticks-to-element-on-drag-and-drop
   const handleMouseEnter = () => {
@@ -77,6 +90,11 @@ const ItemSection: FC<Props> = ({ questionData, position, buildFormUI }) => {
       const destinationPageId = (e.target as HTMLDivElement).id;
       const movingNodeId = e.dataTransfer.types.slice(-1)[0];
 
+      if (destinationPageId === movingNodeId) {
+        console.warn('Cannot move item under the same item!');
+        return;
+      }
+
       e.dataTransfer.clearData();
 
       if (!destinationPageId || !movingNodeId) {
@@ -102,6 +120,7 @@ const ItemSection: FC<Props> = ({ questionData, position, buildFormUI }) => {
       onMouseLeave={handleMouseLeave}
       className={classes.listItemSection}
       data-droppable={true}
+      onClick={onClickHandler}
     >
       <CustomisedCard variant="outlined">
         <ItemHeader container={itemContainer} nodeData={questionData} position={position} />

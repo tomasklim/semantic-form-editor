@@ -16,14 +16,11 @@ export default makeStyles((theme: ITheme) => ({
     width: '100%'
   },
   wizardHeaderItem: {
-    width: '33%'
+    width: '50%'
   },
   wizardHeaderLeft: {
     display: 'flex',
     alignItems: 'center'
-  },
-  wizardHeaderCenter: {
-    textAlign: 'center'
   },
   wizardHeaderRight: {
     textAlign: 'right'

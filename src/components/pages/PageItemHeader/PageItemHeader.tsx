@@ -9,7 +9,7 @@ import ItemPropsIndicator from '@components/items/ItemPropsIndicator/ItemPropsIn
 
 type Props = {
   question: FormStructureQuestion;
-  movePage: (id: string, direction: DIRECTION) => void;
+  movePage: (e: React.MouseEvent, id: string, direction: DIRECTION) => void;
   position: number;
 };
 
@@ -30,7 +30,6 @@ const PageItemHeader: FC<Props> = ({ question, movePage, position }) => {
           </Typography>
           <ItemPropsIndicator question={question} />
         </div>
-        <span className={`${classes.wizardHeaderItem} ${classes.wizardHeaderCenter}`} />
         <span className={`${classes.wizardHeaderItem} ${classes.wizardHeaderRight}`}>
           <ItemMenu question={question} movePage={movePage} />
         </span>

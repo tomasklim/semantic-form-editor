@@ -5,7 +5,7 @@ import { FormControlLabel } from '@material-ui/core';
 // @ts-ignore
 export const CustomisedFormControlLabel = withStyles((theme: ITheme) => ({
   root: {
-    '& *': {
+    '&, & *': {
       pointerEvents: 'none  !important'
     },
     '& .MuiIconButton-label': {

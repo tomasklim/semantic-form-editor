@@ -10,15 +10,23 @@ interface CustomiseItemContextValues {
   onSaveCallback: OnSaveCallback | null;
   itemData: FormStructureQuestion | null;
   setItemData: Dispatch<SetStateAction<FormStructureQuestion | null>>;
+  isNew: boolean;
 }
 
 export type OnSaveCallback = (itemData: FormStructureQuestion) => void;
-type CustomiseItemData = (
-  itemData: FormStructureQuestion,
-  onSave: (itemData: FormStructureQuestion) => void,
-  onCancel?: () => void,
-  onInit?: () => void
-) => void;
+type CustomiseItemData = ({
+  itemData,
+  onSave,
+  onCancel,
+  onInit,
+  isNew
+}: {
+  itemData: FormStructureQuestion;
+  onSave?: (itemData: FormStructureQuestion) => void;
+  onCancel?: () => void;
+  onInit?: () => void;
+  isNew: boolean;
+}) => void;
 
 // @ts-ignore
 const CustomiseItemContext = React.createContext<CustomiseContextValues>({});
@@ -33,12 +41,15 @@ const CustomiseItemProvider: React.FC<CustomiseItemProviderProps> = ({ children 
   // @ts-ignore
   const [onCancelCallback, setOnCancelCallback] = useState<(() => void) | null>(null);
 
-  const customiseItemData: CustomiseItemData = (formStructureQuestion, onSave, onCancel, onInit) => {
+  const [isNew, setIsNew] = useState<boolean>(false);
+
+  const customiseItemData: CustomiseItemData = ({ itemData, onSave, onCancel, onInit, isNew }) => {
     onCancelCallback && onCancelCallback();
     onInit && onInit();
-    setItemData(formStructureQuestion);
-    setOnSaveCallback(onSave);
-    setOnCancelCallback(onCancel);
+    setItemData(itemData);
+    onSave && setOnSaveCallback(onSave);
+    onCancel && setOnCancelCallback(onCancel);
+    isNew && setIsNew(isNew);
   };
 
   const reset = () => {
@@ -46,6 +57,7 @@ const CustomiseItemProvider: React.FC<CustomiseItemProviderProps> = ({ children 
     setItemData(null);
     onCancelCallback && onCancelCallback();
     setOnCancelCallback(null);
+    setIsNew(false);
   };
 
   const values = React.useMemo<CustomiseItemContextValues>(
@@ -54,9 +66,10 @@ const CustomiseItemProvider: React.FC<CustomiseItemProviderProps> = ({ children 
       setItemData,
       onSaveCallback,
       itemData,
-      reset
+      reset,
+      isNew
     }),
-    [itemData, onSaveCallback]
+    [itemData, onSaveCallback, isNew]
   );
 
   return <CustomiseItemContext.Provider value={values}>{children}</CustomiseItemContext.Provider>;

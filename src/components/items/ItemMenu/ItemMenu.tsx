@@ -2,13 +2,7 @@ import React, { FC, useContext, useRef, useState } from 'react';
 import { ArrowDownward, ArrowUpward, MoreVert } from '@material-ui/icons';
 import { ClickAwayListener, Grow, MenuItem, MenuList, Paper, Popper } from '@material-ui/core';
 import { Constants } from 's-forms';
-import {
-  highlightQuestion,
-  moveQuestion,
-  removeFromFormStructure,
-  removeFromSubQuestions,
-  sortRelatedQuestions
-} from '@utils/formBuilder';
+import { removeFromFormStructure, removeFromSubQuestions, sortRelatedQuestions } from '@utils/formBuilder';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
 import AddIcon from '@material-ui/icons/Add';
@@ -20,7 +14,7 @@ import { NEW_ITEM } from '../../../constants';
 
 interface Props {
   question: FormStructureQuestion;
-  movePage?: (id: string, direction: DIRECTION) => void;
+  movePage?: (e: React.MouseEvent, id: string, direction: DIRECTION) => void;
 }
 
 const ItemMenu: FC<Props> = ({ question, movePage }) => {
@@ -33,7 +27,8 @@ const ItemMenu: FC<Props> = ({ question, movePage }) => {
   const anchorEl = useRef<HTMLDivElement | null>(null);
   const addButton = useRef<HTMLButtonElement | null>(null);
 
-  const handleToggle = () => {
+  const handleToggle = (e: React.MouseEvent) => {
+    e.stopPropagation();
     setOpen(!open);
   };
 
@@ -45,22 +40,26 @@ const ItemMenu: FC<Props> = ({ question, movePage }) => {
     setOpen(false);
   };
 
-  const addNewItem = (targetId: string) => {
+  const addNewItem = (e: React.MouseEvent) => {
+    e.stopPropagation();
+
     const clonedFormStructure = getClonedFormStructure();
 
-    const targetNode = clonedFormStructure.getNode(targetId);
+    const targetNode = clonedFormStructure.getNode(question['@id']);
 
     if (!targetNode) {
       console.error('Missing targetNode');
       return;
     }
 
-    customiseItemData(
-      NEW_ITEM,
-      (): OnSaveCallback => (itemData) => addNewNode(itemData, targetNode, clonedFormStructure),
-      () => () => addButton.current?.classList.remove(classes.addButtonHighlight),
-      () => addButton.current?.classList.add(classes.addButtonHighlight)
-    );
+    customiseItemData({
+      itemData: NEW_ITEM,
+      onSave: (): OnSaveCallback => (itemData) => addNewNode(itemData, targetNode, clonedFormStructure),
+
+      onCancel: () => () => addButton.current?.classList.remove(classes.addButtonHighlight),
+      onInit: () => addButton.current?.classList.add(classes.addButtonHighlight),
+      isNew: true
+    });
   };
 
   const handleDelete = (e: React.SyntheticEvent<EventTarget>) => {
@@ -103,15 +102,15 @@ const ItemMenu: FC<Props> = ({ question, movePage }) => {
     <span>
       {movePage && (
         <>
-          <SquaredIconButton onClick={() => movePage(question['@id'], DIRECTION.UP)} title="Move page up">
+          <SquaredIconButton onClick={(e) => movePage(e, question['@id'], DIRECTION.UP)} title="Move page up">
             <ArrowUpward />
           </SquaredIconButton>
-          <SquaredIconButton onClick={() => movePage(question['@id'], DIRECTION.DOWN)} title="Move page down">
+          <SquaredIconButton onClick={(e) => movePage(e, question['@id'], DIRECTION.DOWN)} title="Move page down">
             <ArrowDownward />
           </SquaredIconButton>
         </>
       )}
-      <SquaredIconButton ref={addButton} onClick={() => addNewItem(question['@id'])} title="Add new subquestion">
+      <SquaredIconButton ref={addButton} onClick={addNewItem} title="Add new subquestion">
         <AddIcon />
       </SquaredIconButton>
       {/* @ts-ignore */}

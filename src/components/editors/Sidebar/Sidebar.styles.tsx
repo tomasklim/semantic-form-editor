@@ -5,7 +5,11 @@ export default makeStyles((theme: ITheme) => ({
   drawer: {
     width: theme.custom.sidebarWidth,
     position: 'fixed',
-    right: 0
+    right: 0,
+    // TODO
+    '& .MuiOutlinedInput-notchedOutline': {
+      pointerEvents: 'none !important'
+    }
   },
   drawerPaper: {
     width: 'inherit',

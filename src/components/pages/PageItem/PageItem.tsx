@@ -1,9 +1,8 @@
 import React, { FC, useContext, useRef } from 'react';
-import FormStructureNode from '@model/FormStructureNode';
 import useStyles, { CustomisedAccordionDetails } from './PageItem.styles';
 import { Accordion } from '@material-ui/core';
 import { Constants } from 's-forms';
-import { highlightQuestion, moveQuestion, sortRelatedQuestions } from '@utils/formBuilder';
+import { highlightQuestion, sortRelatedQuestions } from '@utils/formBuilder';
 import PageItemHeader from '@components/pages/PageItemHeader/PageItemHeader';
 import PageContent from '@components/pages/PageItemContent/PageItemContent';
 import { DIRECTION } from '@enums/index';
@@ -27,7 +26,9 @@ const PageItem: FC<Props> = ({ question, buildFormUI }) => {
   const classes = useStyles();
   const newPageContainer = useRef<HTMLDivElement | null>(null);
 
-  const { getClonedFormStructure, setFormStructure, moveNodeUnderNode, addNewNode } = useContext(FormStructureContext);
+  const { getClonedFormStructure, setFormStructure, moveNodeUnderNode, addNewNode, updateNode } = useContext(
+    FormStructureContext
+  );
   const { customiseItemData } = useContext(CustomiseItemContext);
 
   const relatedQuestions = question[Constants.HAS_SUBQUESTION];
@@ -77,7 +78,9 @@ const PageItem: FC<Props> = ({ question, buildFormUI }) => {
     }
   };
 
-  const addNewPage = () => {
+  const addNewPage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+
     const clonedFormStructure = getClonedFormStructure();
 
     const root = clonedFormStructure.getRoot();
@@ -101,15 +104,18 @@ const PageItem: FC<Props> = ({ question, buildFormUI }) => {
         : undefined
     };
 
-    customiseItemData(
-      newPage,
-      (): OnSaveCallback => (itemData) => addNewNode(itemData, root, clonedFormStructure),
-      () => () => newPageContainer.current?.classList.remove(classes.newPageHighlight),
-      () => newPageContainer.current?.classList.add(classes.newPageHighlight)
-    );
+    customiseItemData({
+      itemData: newPage,
+      onSave: (): OnSaveCallback => (itemData) => addNewNode(itemData, root, clonedFormStructure),
+      onCancel: () => () => newPageContainer.current?.classList.remove(classes.newPageHighlight),
+      onInit: () => newPageContainer.current?.classList.add(classes.newPageHighlight),
+      isNew: true
+    });
   };
 
-  const movePage = (id: string, direction: DIRECTION) => {
+  const movePage = (e: React.MouseEvent, id: string, direction: DIRECTION) => {
+    e.stopPropagation();
+
     const clonedFormStructure = getClonedFormStructure();
 
     const root = clonedFormStructure.getRoot();
@@ -169,6 +175,17 @@ const PageItem: FC<Props> = ({ question, buildFormUI }) => {
     highlightQuestion(id);
   };
 
+  const onClickHandler = (e: React.MouseEvent, questionData: FormStructureQuestion) => {
+    e.stopPropagation();
+
+    customiseItemData({
+      itemData: questionData,
+      onSave: () => (itemData: FormStructureQuestion) => {
+        updateNode(itemData);
+      }
+    });
+  };
+
   return (
     <React.Fragment>
       {relatedQuestions &&
@@ -182,6 +199,7 @@ const PageItem: FC<Props> = ({ question, buildFormUI }) => {
             onDragEnter={handleDragEnter}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
+            onClick={(e) => onClickHandler(e, q)}
           >
             <Accordion expanded={true} className={classes.accordion}>
               <PageItemHeader question={q} movePage={movePage} position={index + 1} />

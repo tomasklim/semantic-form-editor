@@ -7,7 +7,8 @@ export default makeStyles((theme: ITheme) => ({
     fontSize: '1rem',
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    padding: theme.spacing(1)
   },
   cardHeaderItemLeft: {
     display: 'flex',
@@ -28,7 +29,7 @@ export default makeStyles((theme: ITheme) => ({
 export const CustomisedCardHeader = withStyles((theme: ITheme) => ({
   root: {
     borderBottom: '1px solid ' + theme.palette.custom.contrastText + '0f',
-    padding: theme.spacing(1, 1, 1, 1),
+    padding: theme.spacing(0),
     cursor: 'grab',
     '&:active': {
       cursor: 'grabbing'
