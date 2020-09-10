@@ -17,10 +17,7 @@ const PageItemHeader: FC<Props> = ({ question, movePage, position }) => {
   const classes = useStyles();
 
   return (
-    <AccordionSummary
-      className={classes.header}
-      // expandIcon={<ExpandMoreIcon />}
-    >
+    <AccordionSummary className={classes.header}>
       <div className={classes.wizardHeaderContainer}>
         <div className={`${classes.wizardHeaderItem} ${classes.wizardHeaderLeft}`}>
           <Typography>

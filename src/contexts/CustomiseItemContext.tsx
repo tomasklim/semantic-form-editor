@@ -9,11 +9,13 @@ interface CustomiseItemContextValues {
   customiseItemData: CustomiseItemData;
   onSaveCallback: OnSaveCallback | null;
   itemData: FormStructureQuestion | null;
+  reset: () => void;
   setItemData: Dispatch<SetStateAction<FormStructureQuestion | null>>;
   isNew: boolean;
 }
 
 export type OnSaveCallback = (itemData: FormStructureQuestion) => void;
+
 type CustomiseItemData = ({
   itemData,
   onSave,
@@ -25,11 +27,11 @@ type CustomiseItemData = ({
   onSave?: (itemData: FormStructureQuestion) => void;
   onCancel?: () => void;
   onInit?: () => void;
-  isNew: boolean;
+  isNew?: boolean;
 }) => void;
 
 // @ts-ignore
-const CustomiseItemContext = React.createContext<CustomiseContextValues>({});
+const CustomiseItemContext = React.createContext<CustomiseItemContextValues>({});
 
 const CustomiseItemProvider: React.FC<CustomiseItemProviderProps> = ({ children }) => {
   // @ts-ignore
@@ -46,16 +48,18 @@ const CustomiseItemProvider: React.FC<CustomiseItemProviderProps> = ({ children 
   const customiseItemData: CustomiseItemData = ({ itemData, onSave, onCancel, onInit, isNew }) => {
     onCancelCallback && onCancelCallback();
     onInit && onInit();
-    setItemData(itemData);
     onSave && setOnSaveCallback(onSave);
     onCancel && setOnCancelCallback(onCancel);
     isNew && setIsNew(isNew);
+
+    setItemData(itemData);
   };
 
   const reset = () => {
+    onCancelCallback && onCancelCallback();
+
     setOnSaveCallback(null);
     setItemData(null);
-    onCancelCallback && onCancelCallback();
     setOnCancelCallback(null);
     setIsNew(false);
   };

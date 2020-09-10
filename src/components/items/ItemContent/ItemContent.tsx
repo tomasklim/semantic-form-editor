@@ -18,27 +18,27 @@ const ItemContent: FC<ItemContentProps> = ({ questionData }) => {
   let content;
   if (FormUtils.isTypeahead(questionData)) {
     content = (
-      <CustomisedFormControl variant="outlined">
+      <CustomisedFormControl variant="outlined" data-disabled="true">
         <InputLabel id="demo-simple-select-outlined-label">Typeahead</InputLabel>
         <Select labelId="demo-simple-select-outlined-label" label="Age" value={''} />
       </CustomisedFormControl>
     );
   } else if (FormUtils.isCalendar(questionData)) {
     if (FormUtils.isDateTime(questionData)) {
-      content = <CustomisedTextField type="datetime-local" variant="outlined" />;
+      content = <CustomisedTextField type="datetime-local" variant="outlined" data-disabled="true" />;
     } else if (FormUtils.isDate(questionData)) {
-      content = <CustomisedTextField type="date" variant="outlined" />;
+      content = <CustomisedTextField type="date" variant="outlined" data-disabled="true" />;
     } else if (FormUtils.isTime(questionData)) {
-      content = <CustomisedTextField type="time" variant="outlined" />;
+      content = <CustomisedTextField type="time" variant="outlined" data-disabled="true" />;
     }
   } else if (FormUtils.isCheckbox(questionData)) {
-    content = <CustomisedFormControlLabel control={<Checkbox />} label="Checkbox" />;
+    content = <CustomisedFormControlLabel control={<Checkbox />} label="Checkbox" data-disabled="true" />;
   } else if (FormUtils.isMaskedInput(questionData)) {
-    content = <CustomisedTextField variant="outlined" value="Masked Input" />;
+    content = <CustomisedTextField variant="outlined" value="Masked Input" data-disabled="true" />;
   } else if (FormUtils.isTextarea(questionData, '')) {
-    content = <CustomisedTextField multiline variant="outlined" rows={2} value="Textarea" />;
+    content = <CustomisedTextField multiline variant="outlined" rows={2} value="Textarea" data-disabled="true" />;
   } else {
-    content = <CustomisedTextField variant="outlined" value="Text Input" />;
+    content = <CustomisedTextField variant="outlined" value="Text Input" data-disabled="true" />;
   }
 
   return <CustomisedCardContent className={classes.itemContent}>{content}</CustomisedCardContent>;

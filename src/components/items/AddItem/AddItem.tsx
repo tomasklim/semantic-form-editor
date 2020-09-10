@@ -8,12 +8,12 @@ import {
   removeBeingPrecedingQuestion,
   removeFromSubQuestions,
   removePrecedingQuestion,
-  sortRelatedQuestions
-} from '@utils/formBuilder';
+  sortRelatedQuestions,
+  enableNotDraggableAndDroppable
+} from '@utils/index';
 import { Constants } from 's-forms';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import FormStructureNode from '@model/FormStructureNode';
-import { enableNotDraggableAndDroppable } from '@utils/itemDragHelpers';
 import { CustomiseItemContext, OnSaveCallback } from '@contexts/CustomiseItemContext';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
 import FormStructure from '@model/FormStructure';

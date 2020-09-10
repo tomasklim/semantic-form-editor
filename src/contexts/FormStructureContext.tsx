@@ -1,5 +1,7 @@
 import React, { Dispatch, SetStateAction, useState } from 'react';
 import { cloneDeep } from 'lodash';
+import { Constants } from 's-forms';
+import { JsonLdObj } from 'jsonld/jsonld-spec';
 import FormStructure from '@model/FormStructure';
 import {
   highlightQuestion,
@@ -8,9 +10,7 @@ import {
   removeFromSubQuestions,
   removePrecedingQuestion,
   sortRelatedQuestions
-} from '@utils/formBuilder';
-import { Constants } from 's-forms';
-import { JsonLdObj } from 'jsonld/jsonld-spec';
+} from '@utils/index';
 import FormStructureNode from '@model/FormStructureNode';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
 
@@ -101,10 +101,13 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
 
     const node = clonedFormStructure.structure.get(itemData['@id']);
 
-    if (node) {
-      node.data[Constants.RDFS_LABEL] = itemData[Constants.RDFS_LABEL];
-      node.data[Constants.LAYOUT_CLASS] = itemData[Constants.LAYOUT_CLASS];
+    if (!node) {
+      console.warn('Not existing node id', clonedFormStructure, itemData);
+      return;
     }
+
+    node.data[Constants.RDFS_LABEL] = itemData[Constants.RDFS_LABEL];
+    node.data[Constants.LAYOUT_CLASS] = itemData[Constants.LAYOUT_CLASS];
 
     setFormStructure(clonedFormStructure);
   };

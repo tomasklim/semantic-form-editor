@@ -2,7 +2,7 @@ import React, { FC, useContext, useRef, useState } from 'react';
 import { ArrowDownward, ArrowUpward, MoreVert } from '@material-ui/icons';
 import { ClickAwayListener, Grow, MenuItem, MenuList, Paper, Popper } from '@material-ui/core';
 import { Constants } from 's-forms';
-import { removeFromFormStructure, removeFromSubQuestions, sortRelatedQuestions } from '@utils/formBuilder';
+import { removeFromFormStructure, removeFromSubQuestions, sortRelatedQuestions } from '@utils/index';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
 import AddIcon from '@material-ui/icons/Add';

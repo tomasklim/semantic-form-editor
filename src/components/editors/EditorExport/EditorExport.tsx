@@ -1,7 +1,7 @@
 import React, { FC, useContext, useEffect, useRef, useState } from 'react';
 import useStyles from './EditorExport.styles';
 import JSONEditor, { JSONEditorMode } from 'jsoneditor';
-import { exportForm } from '@utils/formBuilder';
+import { exportForm } from '@utils/index';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import { CustomisedOutlineButton } from '@styles/CustomisedOutlineButton';
 import { CustomisedButton } from '@styles/CustomisedButton';

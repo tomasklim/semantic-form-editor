@@ -3,8 +3,8 @@ import useStyles from './Sidebar.styles';
 import React, { useContext, useEffect, useState } from 'react';
 import { CustomiseItemContext } from '@contexts/CustomiseItemContext';
 import { Constants, FormUtils } from 's-forms';
-import { toKebabCase } from '@utils/formBuilder';
 import { FormStructureContext } from '@contexts/FormStructureContext';
+import { getId } from '@utils/itemHelpers';
 
 // Header + Stepper
 const INITIAL_TOP = 60 + 88;
@@ -35,27 +35,27 @@ const Sidebar = () => {
     const name = target.name;
 
     if (name === 'label') {
-      let id = itemData['@id'];
+      let id = itemData!['@id'];
       if (isNew) {
         do {
-          id = toKebabCase(value + '-' + Math.floor(Math.random() * 10000));
+          id = getId(value);
         } while (formStructure.getNode(id));
       }
 
       setItemData({
-        ...itemData,
+        ...itemData!,
         [Constants.RDFS_LABEL]: value,
         '@id': id
       });
     }
 
     if (name === 'layout') {
-      setItemData({ ...itemData, [Constants.LAYOUT_CLASS]: [value] });
+      setItemData({ ...itemData!, [Constants.LAYOUT_CLASS]: [value] });
     }
   };
 
   const onSave = () => {
-    const newItem = { ...itemData };
+    const newItem = { ...itemData! };
 
     onSaveCallback && onSaveCallback(newItem);
     reset();
@@ -93,7 +93,7 @@ const Sidebar = () => {
               <Select
                 labelId="demo-simple-select-outlined-label"
                 name="layout"
-                value={itemData[Constants.LAYOUT_CLASS][0] || ''}
+                value={itemData[Constants.LAYOUT_CLASS]![0] || ''}
                 onChange={handleChange}
                 label="Layout type"
               >

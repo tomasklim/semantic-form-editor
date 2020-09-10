@@ -2,7 +2,7 @@ import { ChangeEvent, FC, useContext, useEffect, useRef, useState } from 'react'
 import JSONEditor, { JSONEditorMode } from 'jsoneditor';
 import useStyles from './EditorNew.styles';
 import { FormStructureContext } from '@contexts/FormStructureContext';
-import { buildFormStructure } from '@utils/formBuilder';
+import { buildFormStructure } from '@utils/index';
 import { useSnackbar } from 'notistack';
 import { CustomisedButton } from '@styles/CustomisedButton';
 import { CustomisedOutlineButton } from '@styles/CustomisedOutlineButton';

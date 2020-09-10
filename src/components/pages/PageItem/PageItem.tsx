@@ -2,14 +2,13 @@ import React, { FC, useContext, useRef } from 'react';
 import useStyles, { CustomisedAccordionDetails } from './PageItem.styles';
 import { Accordion } from '@material-ui/core';
 import { Constants } from 's-forms';
-import { highlightQuestion, sortRelatedQuestions } from '@utils/formBuilder';
+import { highlightQuestion, sortRelatedQuestions, enableNotDraggableAndDroppable } from '@utils/index';
 import PageItemHeader from '@components/pages/PageItemHeader/PageItemHeader';
 import PageContent from '@components/pages/PageItemContent/PageItemContent';
 import { DIRECTION } from '@enums/index';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
 import AddIcon from '@material-ui/icons/Add';
-import { enableNotDraggableAndDroppable } from '@utils/itemDragHelpers';
 import { CustomiseItemContext, OnSaveCallback } from '@contexts/CustomiseItemContext';
 import { NEW_PAGE_ITEM } from '../../../constants';
 

@@ -5,9 +5,6 @@ import { TextField } from '@material-ui/core';
 // @ts-ignore
 export const CustomisedTextField = withStyles((theme: ITheme) => ({
   root: {
-    '&, & *': {
-      pointerEvents: 'none  !important'
-    },
     '& .MuiInputBase-root input': {
       color: 'white'
     },

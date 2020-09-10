@@ -1,7 +1,7 @@
 import { FC, useContext, useEffect, useState } from 'react';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import SForms from 's-forms';
-import { exportForm } from '@utils/formBuilder';
+import { exportForm } from '@utils/index';
 import useStyles from './EditorPreview.styles';
 
 interface EditorPreviewProps {}

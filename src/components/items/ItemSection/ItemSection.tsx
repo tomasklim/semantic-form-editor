@@ -6,7 +6,7 @@ import { Constants } from 's-forms';
 import ItemAdd from '@components/items/AddItem/AddItem';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import { CustomisedCardContent } from '@styles/CustomisedCardContent';
-import { enableNotDraggableAndDroppable, handleDragEnd, handleDragStart } from '@utils/itemDragHelpers';
+import { enableNotDraggableAndDroppable, handleDragEnd, handleDragStart } from '@utils/index';
 import { CustomiseItemContext } from '@contexts/CustomiseItemContext';
 
 type Props = {
