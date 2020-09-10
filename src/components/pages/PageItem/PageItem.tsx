@@ -1,4 +1,4 @@
-import React, { FC, useContext, useRef } from 'react';
+import React, { FC, useContext, useRef, useState } from 'react';
 import useStyles, { CustomisedAccordionDetails } from './PageItem.styles';
 import { Accordion } from '@material-ui/core';
 import { Constants } from 's-forms';
@@ -10,9 +10,10 @@ import { FormStructureContext } from '@contexts/FormStructureContext';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
 import AddIcon from '@material-ui/icons/Add';
 import { CustomiseItemContext, OnSaveCallback } from '@contexts/CustomiseItemContext';
-import { NEW_PAGE_ITEM } from '../../../constants';
 
-type Props = {
+type PageItemProps = {
+  empty: boolean;
+  index: number;
   question: FormStructureQuestion;
   buildFormUI: (
     question: FormStructureQuestion,
@@ -21,16 +22,16 @@ type Props = {
   ) => JSX.Element;
 };
 
-const PageItem: FC<Props> = ({ question, buildFormUI }) => {
+const PageItem: FC<PageItemProps> = ({ question, buildFormUI, index, empty }) => {
   const classes = useStyles();
-  const newPageContainer = useRef<HTMLDivElement | null>(null);
+  const pageContainer = useRef<HTMLDivElement | null>(null);
+
+  const [expanded, setExpanded] = useState<boolean>(true);
 
   const { getClonedFormStructure, setFormStructure, moveNodeUnderNode, addNewNode, updateNode } = useContext(
     FormStructureContext
   );
   const { customiseItemData } = useContext(CustomiseItemContext);
-
-  const relatedQuestions = question[Constants.HAS_SUBQUESTION];
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -69,7 +70,7 @@ const PageItem: FC<Props> = ({ question, buildFormUI }) => {
       e.dataTransfer.clearData();
 
       if (!destinationPageId || !movingNodeId) {
-        console.warn('Missing destinationPageId or movingNodeId');
+        console.warn('Missing destinationPageId or movingNodeId', destinationPageId, movingNodeId);
         return;
       }
 
@@ -85,7 +86,7 @@ const PageItem: FC<Props> = ({ question, buildFormUI }) => {
     const root = clonedFormStructure.getRoot();
 
     if (!root) {
-      console.error('Missing root');
+      console.error('Missing root', clonedFormStructure);
       return;
     }
 
@@ -95,7 +96,7 @@ const PageItem: FC<Props> = ({ question, buildFormUI }) => {
         : undefined;
 
     const newPage = {
-      ...NEW_PAGE_ITEM,
+      ...question,
       [Constants.HAS_PRECEDING_QUESTION]: precedingQuestion
         ? {
             '@id': precedingQuestion['@id']
@@ -106,8 +107,8 @@ const PageItem: FC<Props> = ({ question, buildFormUI }) => {
     customiseItemData({
       itemData: newPage,
       onSave: (): OnSaveCallback => (itemData) => addNewNode(itemData, root, clonedFormStructure),
-      onCancel: () => () => newPageContainer.current?.classList.remove(classes.newPageHighlight),
-      onInit: () => newPageContainer.current?.classList.add(classes.newPageHighlight),
+      onCancel: () => () => pageContainer.current?.classList.remove(classes.newPageHighlight),
+      onInit: () => pageContainer.current?.classList.add(classes.newPageHighlight),
       isNew: true
     });
   };
@@ -123,7 +124,7 @@ const PageItem: FC<Props> = ({ question, buildFormUI }) => {
     const movingPage = clonedFormStructure.getNode(id);
 
     if (!movingPage || !rootSubQuestions) {
-      console.warn('Missing movingPage or rootSubQuestions');
+      console.warn('Missing movingPage or rootSubQuestions', movingPage, rootSubQuestions);
       return;
     }
 
@@ -174,50 +175,60 @@ const PageItem: FC<Props> = ({ question, buildFormUI }) => {
     highlightQuestion(id);
   };
 
-  const onClickHandler = (e: React.MouseEvent, questionData: FormStructureQuestion) => {
+  const onClickHandler = (e: React.MouseEvent) => {
     e.stopPropagation();
 
-    const element = document.getElementById(questionData['@id']);
-
     customiseItemData({
-      itemData: questionData,
+      itemData: question,
       onSave: () => (itemData: FormStructureQuestion) => {
         updateNode(itemData);
       },
-      onCancel: () => () => element?.classList.remove(classes.newPageHighlight),
-      onInit: () => element?.classList.add(classes.newPageHighlight)
+      onCancel: () => () => pageContainer.current?.classList.remove(classes.newPageHighlight),
+      onInit: () => pageContainer.current?.classList.add(classes.newPageHighlight)
     });
   };
 
-  return (
-    <React.Fragment>
-      {relatedQuestions &&
-        relatedQuestions.map((q, index) => (
-          <div
-            key={q['@id']}
-            id={q['@id']}
-            className={classes.page}
-            data-droppable={true}
-            onDragOver={handleDragOver}
-            onDragEnter={handleDragEnter}
-            onDragLeave={handleDragLeave}
-            onDrop={handleDrop}
-            onClick={(e) => onClickHandler(e, q)}
-          >
-            <Accordion expanded={true} className={classes.accordion}>
-              <PageItemHeader question={q} movePage={movePage} position={index + 1} />
-              <PageContent question={q} buildFormUI={buildFormUI} />
-            </Accordion>
-          </div>
-        ))}
-      <div className={classes.page} ref={newPageContainer}>
-        <Accordion expanded={true} className={classes.accordion} onClick={addNewPage} title={'Add new page'}>
+  const expandPage = (e: React.MouseEvent): void => {
+    e.stopPropagation();
+    setExpanded(!expanded);
+  };
+
+  if (empty) {
+    return (
+      <div className={classes.page} ref={pageContainer}>
+        <Accordion expanded={expanded} className={classes.accordion} onClick={addNewPage} title={'Add new page'}>
           <CustomisedAccordionDetails>
             <AddIcon />
           </CustomisedAccordionDetails>
         </Accordion>
       </div>
-    </React.Fragment>
+    );
+  }
+
+  return (
+    <div
+      key={question['@id']}
+      id={question['@id']}
+      ref={pageContainer}
+      className={classes.page}
+      data-droppable={true}
+      onDragOver={handleDragOver}
+      onDragEnter={handleDragEnter}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
+      onClick={onClickHandler}
+    >
+      <Accordion expanded={expanded} className={classes.accordion}>
+        <PageItemHeader
+          question={question}
+          movePage={movePage}
+          position={index + 1}
+          expandPage={expandPage}
+          expanded={expanded}
+        />
+        <PageContent question={question} buildFormUI={buildFormUI} />
+      </Accordion>
+    </div>
   );
 };
 

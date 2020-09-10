@@ -117,7 +117,7 @@ const ItemMenu: FC<Props> = ({ question, movePage }) => {
       <SquaredIconButton ref={anchorEl} onClick={handleToggle} title="Show more">
         <MoreVert />
       </SquaredIconButton>
-      <Popper open={open} anchorEl={anchorEl.current} transition={true} disablePortal={true}>
+      <Popper open={open} anchorEl={anchorEl.current} transition={true} disablePortal={true} className={classes.menu}>
         {({ TransitionProps }) => (
           <Grow {...TransitionProps}>
             <Paper>

@@ -3,7 +3,7 @@ import { ITheme } from '@interfaces/index';
 
 export default makeStyles((theme: ITheme) => ({
   header: {
-    cursor: 'default !important',
+    cursor: 'pointer',
     borderBottom: '1px solid ' + theme.palette.custom.contrastText + '0f',
     '& > div': {
       margin: theme.spacing(1.5, 0) + ' !important'

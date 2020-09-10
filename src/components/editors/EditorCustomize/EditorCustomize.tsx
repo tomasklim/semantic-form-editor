@@ -1,13 +1,13 @@
 import React, { FC, useContext } from 'react';
 import { Constants, FormUtils } from 's-forms';
 import Item from '@components/items/Item/Item';
-import PageItem from '@components/pages/PageItem/PageItem';
 import ItemAdd from '@components/items/AddItem/AddItem';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
 import useStyles from './EditorCustomize.styles';
 import ItemSection from '@components/items/ItemSection/ItemSection';
 import Sidebar from '@components/editors/Sidebar/Sidebar';
+import Pages from '@components/pages/Pages/Pages';
 
 interface EditorCustomizeProps {}
 
@@ -25,7 +25,7 @@ const EditorCustomize: FC<EditorCustomizeProps> = ({}) => {
     let item = null;
 
     if (FormUtils.isForm(questionData)) {
-      return <PageItem key={questionData['@id']} question={questionData} buildFormUI={buildFormUI} />;
+      return <Pages key={questionData['@id']} question={questionData} buildFormUI={buildFormUI} />;
     } else if (FormUtils.isTypeahead(questionData)) {
       item = <Item questionData={questionData} position={position} />;
     } else if (FormUtils.isCalendar(questionData)) {
