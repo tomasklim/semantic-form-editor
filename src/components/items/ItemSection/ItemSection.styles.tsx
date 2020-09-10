@@ -10,6 +10,9 @@ export default makeStyles((theme: ITheme) => ({
   listItemSectionOver: {
     border: '2px dashed ' + theme.palette.custom.main
   },
+  listItemSectionHighlight: {
+    border: '2px solid ' + theme.palette.custom.main
+  },
   ol: {
     listStyle: 'none',
     paddingLeft: '0'

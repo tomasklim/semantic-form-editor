@@ -33,7 +33,9 @@ const ItemSection: FC<Props> = ({ questionData, position, buildFormUI }) => {
       itemData: questionData,
       onSave: () => (itemData: FormStructureQuestion) => {
         updateNode(itemData);
-      }
+      },
+      onInit: () => itemContainer.current?.classList.add(classes.listItemSectionHighlight),
+      onCancel: () => () => itemContainer.current?.classList.remove(classes.listItemSectionHighlight)
     });
   };
 

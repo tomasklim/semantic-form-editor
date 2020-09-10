@@ -35,7 +35,9 @@ const Item: FC<Props> = ({ questionData, position }) => {
       itemData: questionData,
       onSave: () => (itemData: FormStructureQuestion) => {
         updateNode(itemData);
-      }
+      },
+      onInit: () => itemContainer.current?.classList.add(classes.listItemHighlight),
+      onCancel: () => () => itemContainer.current?.classList.remove(classes.listItemHighlight)
     });
   };
 

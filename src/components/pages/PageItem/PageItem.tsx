@@ -178,11 +178,15 @@ const PageItem: FC<Props> = ({ question, buildFormUI }) => {
   const onClickHandler = (e: React.MouseEvent, questionData: FormStructureQuestion) => {
     e.stopPropagation();
 
+    const element = document.getElementById(questionData['@id']);
+
     customiseItemData({
       itemData: questionData,
       onSave: () => (itemData: FormStructureQuestion) => {
         updateNode(itemData);
-      }
+      },
+      onCancel: () => () => element?.classList.remove(classes.newPageHighlight),
+      onInit: () => element?.classList.add(classes.newPageHighlight)
     });
   };
 
