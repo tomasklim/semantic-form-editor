@@ -11,14 +11,14 @@ export default makeStyles((theme: ITheme) => ({
       boxShadow: 'none'
     }
   },
-  pageOver: {
+  pageDragOver: {
     border: '2px dashed ' + theme.palette.custom.main
   },
   accordion: {
     backgroundColor: theme.palette.custom[800],
     color: theme.palette.custom.contrastText
   },
-  newPageHighlight: {
+  pageHighlight: {
     border: '2px solid ' + theme.palette.custom.main
   }
 }));

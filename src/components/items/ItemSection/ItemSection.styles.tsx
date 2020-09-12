@@ -1,11 +1,14 @@
 import { makeStyles, withStyles } from '@material-ui/core/styles';
-import { Card } from '@material-ui/core';
+import { AccordionDetails } from '@material-ui/core';
 import { ITheme } from '@interfaces/index';
 
 export default makeStyles((theme: ITheme) => ({
   listItemSection: {
     width: '100%',
-    border: '2px solid transparent'
+    border: '2px solid transparent',
+    '& .MuiAccordion-root': {
+      color: theme.palette.custom.contrastText
+    }
   },
   listItemSectionOver: {
     border: '2px dashed ' + theme.palette.custom.main
@@ -29,8 +32,12 @@ export default makeStyles((theme: ITheme) => ({
 }));
 
 // @ts-ignore
-export const CustomisedCard = withStyles((theme: ITheme) => ({
+export const CustomisedAccordionDetails = withStyles((theme: ITheme) => ({
   root: {
-    color: theme.palette.custom.contrastText
+    borderTop: '1px solid ' + theme.palette.custom.contrastText + '0f',
+    padding: theme.spacing(2),
+    '&:last-child': {
+      paddingBottom: theme.spacing(2)
+    }
   }
-}))(Card);
+}))(AccordionDetails);

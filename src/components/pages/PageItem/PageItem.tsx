@@ -41,14 +41,14 @@ const PageItem: FC<PageItemProps> = ({ question, buildFormUI, index, empty }) =>
 
   const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
     if ((e.target as HTMLDivElement).classList.contains(classes.page)) {
-      (e.target as HTMLDivElement).classList.add(classes.pageOver);
+      (e.target as HTMLDivElement).classList.add(classes.pageDragOver);
       e.dataTransfer.dropEffect = 'move';
     }
   };
 
   const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
     if ((e.target as HTMLDivElement).classList.contains(classes.page)) {
-      (e.target as HTMLDivElement).classList.remove(classes.pageOver);
+      (e.target as HTMLDivElement).classList.remove(classes.pageDragOver);
     }
   };
 
@@ -61,7 +61,7 @@ const PageItem: FC<PageItemProps> = ({ question, buildFormUI, index, empty }) =>
       enableNotDraggableAndDroppable();
 
       [].forEach.call(document.getElementsByClassName(classes.page), (page: HTMLDivElement) => {
-        page.classList.remove(classes.pageOver);
+        page.classList.remove(classes.pageDragOver);
       });
 
       const destinationPageId = (e.target as HTMLDivElement).id;
@@ -107,8 +107,8 @@ const PageItem: FC<PageItemProps> = ({ question, buildFormUI, index, empty }) =>
     customiseItemData({
       itemData: newPage,
       onSave: (): OnSaveCallback => (itemData) => addNewNode(itemData, root, clonedFormStructure),
-      onCancel: () => () => pageContainer.current?.classList.remove(classes.newPageHighlight),
-      onInit: () => pageContainer.current?.classList.add(classes.newPageHighlight),
+      onCancel,
+      onInit,
       isNew: true
     });
   };
@@ -183,10 +183,14 @@ const PageItem: FC<PageItemProps> = ({ question, buildFormUI, index, empty }) =>
       onSave: () => (itemData: FormStructureQuestion) => {
         updateNode(itemData);
       },
-      onCancel: () => () => pageContainer.current?.classList.remove(classes.newPageHighlight),
-      onInit: () => pageContainer.current?.classList.add(classes.newPageHighlight)
+      onCancel,
+      onInit
     });
   };
+
+  const onCancel = () => () => pageContainer.current?.classList.remove(classes.pageHighlight);
+
+  const onInit = () => pageContainer.current?.classList.add(classes.pageHighlight);
 
   const expandPage = (e: React.MouseEvent): void => {
     e.stopPropagation();

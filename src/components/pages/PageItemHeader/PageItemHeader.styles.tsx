@@ -4,7 +4,6 @@ import { ITheme } from '@interfaces/index';
 export default makeStyles((theme: ITheme) => ({
   header: {
     cursor: 'pointer',
-    borderBottom: '1px solid ' + theme.palette.custom.contrastText + '0f',
     '& > div': {
       margin: theme.spacing(1.5, 0) + ' !important'
     }
@@ -24,5 +23,11 @@ export default makeStyles((theme: ITheme) => ({
   },
   wizardHeaderRight: {
     textAlign: 'right'
+  },
+  expandablePage: {
+    marginRight: '0.3rem',
+    '&:hover': {
+      color: theme.palette.custom.main
+    }
   }
 }));

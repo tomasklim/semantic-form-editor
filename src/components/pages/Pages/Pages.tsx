@@ -19,10 +19,16 @@ const Pages: FC<PagesProps> = ({ question, buildFormUI }) => {
   return (
     <React.Fragment>
       {relatedQuestions &&
-        relatedQuestions.map((q, index) => (
-          <PageItem key={q['@id']} empty={false} index={index} question={q} buildFormUI={buildFormUI} />
+        relatedQuestions.map((questionData, index) => (
+          <PageItem
+            key={questionData['@id']}
+            empty={false}
+            index={index}
+            question={questionData}
+            buildFormUI={buildFormUI}
+          />
         ))}
-      <PageItem key={'empty'} empty={true} index={0} question={NEW_PAGE_ITEM} buildFormUI={buildFormUI} />
+      <PageItem key={'empty-page'} empty={true} index={0} question={NEW_PAGE_ITEM} buildFormUI={buildFormUI} />
     </React.Fragment>
   );
 };

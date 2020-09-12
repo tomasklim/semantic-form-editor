@@ -23,7 +23,9 @@ const PageItemHeader: FC<Props> = ({ question, movePage, position, expandPage, e
     <AccordionSummary className={classes.header}>
       <div className={classes.wizardHeaderContainer}>
         <div className={`${classes.wizardHeaderItem} ${classes.wizardHeaderLeft}`}>
-          {expanded ? <ExpandLess onClick={expandPage} /> : <ExpandMore onClick={expandPage} />}
+          <div className={classes.expandablePage}>
+            {expanded ? <ExpandLess onClick={expandPage} /> : <ExpandMore onClick={expandPage} />}
+          </div>
           <Typography>
             {position}
             {'. '}

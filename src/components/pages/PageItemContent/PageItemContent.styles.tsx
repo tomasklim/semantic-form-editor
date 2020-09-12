@@ -3,6 +3,7 @@ import { ITheme } from '@interfaces/index';
 
 export default makeStyles((theme: ITheme) => ({
   body: {
+    borderTop: '1px solid ' + theme.palette.custom.contrastText + '0f',
     flexDirection: 'column',
     cursor: 'pointer',
     padding: theme.spacing(1, 2)

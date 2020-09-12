@@ -5,6 +5,7 @@ import { CardContent } from '@material-ui/core';
 // @ts-ignore
 export const CustomisedCardContent = withStyles((theme: ITheme) => ({
   root: {
+    borderTop: '1px solid ' + theme.palette.custom.contrastText + '0f',
     padding: theme.spacing(2),
     '&:last-child': {
       paddingBottom: theme.spacing(2)
