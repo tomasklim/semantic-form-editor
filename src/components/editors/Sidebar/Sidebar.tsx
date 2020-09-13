@@ -17,6 +17,7 @@ const Sidebar = () => {
   const sidebarContainer = useRef<HTMLDivElement | null>(null);
 
   const [drawerTop, setDrawerTop] = useState<number>(INITIAL_TOP);
+
   const { formStructure } = useContext(FormStructureContext);
   const { onSaveCallback, itemData, reset, setItemData, isNew } = useContext(CustomiseItemContext);
 
@@ -52,7 +53,7 @@ const Sidebar = () => {
     const value = target.type === 'checkbox' ? target.checked : target.value;
     const name = target.name;
 
-    if (name === Constants.RDFS_LABEL) {
+    if (name === ((Constants.RDFS_LABEL as unknown) as string)) {
       let id = itemData!['@id'];
       if (isNew) {
         do {
@@ -65,10 +66,10 @@ const Sidebar = () => {
         [Constants.RDFS_LABEL]: value,
         '@id': id
       });
-    } else if (name === Constants.LAYOUT_CLASS) {
+    } else if (name === ((Constants.LAYOUT_CLASS as unknown) as string)) {
       setItemData({ ...itemData!, [Constants.LAYOUT_CLASS]: [value] });
     } else if (name === Constants.LAYOUT.COLLAPSED) {
-      const layoutClass = itemData[Constants.LAYOUT_CLASS];
+      const layoutClass = itemData![Constants.LAYOUT_CLASS]!;
 
       if (layoutClass.includes(Constants.LAYOUT.COLLAPSED)) {
         layoutClass.splice(layoutClass.indexOf(Constants.LAYOUT.COLLAPSED), 1);
@@ -110,7 +111,7 @@ const Sidebar = () => {
         <form className={classes.newItemDataContainer}>
           <TextField name="@id" label="Identification" variant="outlined" value={itemData['@id'] || ' '} disabled />
           <TextField
-            name={Constants.RDFS_LABEL}
+            name={(Constants.RDFS_LABEL as unknown) as string}
             label="Label"
             variant="outlined"
             value={itemData[Constants.RDFS_LABEL] || ''}
@@ -122,7 +123,6 @@ const Sidebar = () => {
               <InputLabel htmlFor="layout-type">Layout type</InputLabel>
               <Select
                 native
-                // @ts-ignore
                 label="Layout type"
                 value={itemData[Constants.LAYOUT_CLASS]![0] || ''}
                 onChange={handleChange}
@@ -147,7 +147,7 @@ const Sidebar = () => {
           <FormControlLabel
             control={
               <Checkbox
-                name={Constants.REQUIRES_ANSWER}
+                name={(Constants.REQUIRES_ANSWER as unknown) as string}
                 onChange={handleChange}
                 checked={itemData[Constants.REQUIRES_ANSWER] || false}
               />
@@ -171,12 +171,13 @@ const Sidebar = () => {
             <CustomisedButton onClick={onSave} size={'large'} className={classes.saveButton}>
               Save
             </CustomisedButton>
-            <CustomisedLinkButton onClick={onCancel} size={'large'} className={''}>
+            <CustomisedLinkButton onClick={onCancel} size={'large'}>
               Cancel
             </CustomisedLinkButton>
           </div>
         </form>
       )}
+
       {!itemData && <div className={classes.emptySidebar}>Hint: Did you know...?</div>}
     </Drawer>
   );
