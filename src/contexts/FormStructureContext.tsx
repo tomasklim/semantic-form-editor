@@ -108,6 +108,7 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
 
     node.data[Constants.RDFS_LABEL] = itemData[Constants.RDFS_LABEL];
     node.data[Constants.LAYOUT_CLASS] = itemData[Constants.LAYOUT_CLASS];
+    node.data[Constants.REQUIRES_ANSWER] = itemData[Constants.REQUIRES_ANSWER];
 
     setFormStructure(clonedFormStructure);
   };

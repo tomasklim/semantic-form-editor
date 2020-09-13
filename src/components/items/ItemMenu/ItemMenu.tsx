@@ -62,6 +62,7 @@ const ItemMenu: FC<Props> = ({ question, movePage }) => {
   };
 
   const handleDelete = (e: React.SyntheticEvent<EventTarget>) => {
+    e.stopPropagation();
     handleClose(e);
 
     const clonedFormStructure = getClonedFormStructure();

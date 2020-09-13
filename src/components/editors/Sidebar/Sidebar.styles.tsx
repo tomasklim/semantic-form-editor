@@ -48,7 +48,20 @@ export default makeStyles((theme: ITheme) => ({
     '& .MuiOutlinedInput-notchedOutline': {
       borderColor: '#ffffffa6 !important'
     },
+    '&. MuiFormControlLabel-root': {
+      width: 'fit-content'
+    },
     '& .MuiSelect-icon': {
+      color: '#ffffffcc'
+    },
+    '& .MuiIconButton-root': {
+      padding: '9px 9px 9px 0'
+    },
+    '& .MuiCheckbox-root': { color: '#ffffffcc' },
+    '& .MuiCheckbox-colorSecondary:hover, & .MuiCheckbox-colorSecondary.Mui-checked:hover, & .MuiIconButton-root:hover': {
+      backgroundColor: 'transparent'
+    },
+    '& .MuiCheckbox-colorSecondary.Mui-checked': {
       color: '#ffffffcc'
     }
   },

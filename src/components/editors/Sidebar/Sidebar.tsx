@@ -1,4 +1,4 @@
-import { Drawer, FormControl, InputLabel, Select, TextField } from '@material-ui/core';
+import { Checkbox, Drawer, FormControl, FormControlLabel, InputLabel, Select, TextField } from '@material-ui/core';
 import useStyles from './Sidebar.styles';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { CustomiseItemContext } from '@contexts/CustomiseItemContext';
@@ -52,7 +52,7 @@ const Sidebar = () => {
     const value = target.type === 'checkbox' ? target.checked : target.value;
     const name = target.name;
 
-    if (name === 'label') {
+    if (name === Constants.RDFS_LABEL) {
       let id = itemData!['@id'];
       if (isNew) {
         do {
@@ -65,10 +65,20 @@ const Sidebar = () => {
         [Constants.RDFS_LABEL]: value,
         '@id': id
       });
-    }
-
-    if (name === 'layout') {
+    } else if (name === Constants.LAYOUT_CLASS) {
       setItemData({ ...itemData!, [Constants.LAYOUT_CLASS]: [value] });
+    } else if (name === Constants.LAYOUT.COLLAPSED) {
+      const layoutClass = itemData[Constants.LAYOUT_CLASS];
+
+      if (layoutClass.includes(Constants.LAYOUT.COLLAPSED)) {
+        layoutClass.splice(layoutClass.indexOf(Constants.LAYOUT.COLLAPSED), 1);
+      } else {
+        layoutClass.push(Constants.LAYOUT.COLLAPSED);
+      }
+
+      setItemData({ ...itemData!, [Constants.LAYOUT_CLASS]: layoutClass });
+    } else {
+      setItemData({ ...itemData!, [name]: value });
     }
   };
 
@@ -98,9 +108,9 @@ const Sidebar = () => {
     >
       {itemData && (
         <form className={classes.newItemDataContainer}>
-          <TextField name="id" label="Identification" variant="outlined" value={itemData['@id'] || ' '} disabled />
+          <TextField name="@id" label="Identification" variant="outlined" value={itemData['@id'] || ' '} disabled />
           <TextField
-            name="label"
+            name={Constants.RDFS_LABEL}
             label="Label"
             variant="outlined"
             value={itemData[Constants.RDFS_LABEL] || ''}
@@ -112,12 +122,12 @@ const Sidebar = () => {
               <InputLabel htmlFor="layout-type">Layout type</InputLabel>
               <Select
                 native
-                name="layout"
+                // @ts-ignore
                 label="Layout type"
                 value={itemData[Constants.LAYOUT_CLASS]![0] || ''}
                 onChange={handleChange}
                 inputProps={{
-                  name: 'layout',
+                  name: Constants.LAYOUT_CLASS,
                   id: 'layout-type'
                 }}
               >
@@ -134,6 +144,29 @@ const Sidebar = () => {
               </Select>
             </FormControl>
           )}
+          <FormControlLabel
+            control={
+              <Checkbox
+                name={Constants.REQUIRES_ANSWER}
+                onChange={handleChange}
+                checked={itemData[Constants.REQUIRES_ANSWER] || false}
+              />
+            }
+            label="Required"
+          />
+          {!FormUtils.isWizardStep(itemData) && FormUtils.isSection(itemData) && (
+            <FormControlLabel
+              control={
+                <Checkbox
+                  name={Constants.LAYOUT.COLLAPSED}
+                  onChange={handleChange}
+                  checked={itemData[Constants.LAYOUT_CLASS]?.includes(Constants.LAYOUT.COLLAPSED)}
+                />
+              }
+              label="Collapsed"
+            />
+          )}
+
           <div className={classes.sidebarButtons}>
             <CustomisedButton onClick={onSave} size={'large'} className={classes.saveButton}>
               Save
