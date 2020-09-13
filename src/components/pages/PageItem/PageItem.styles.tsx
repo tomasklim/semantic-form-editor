@@ -11,6 +11,9 @@ export default makeStyles((theme: ITheme) => ({
       boxShadow: 'none'
     }
   },
+  pageHover: {
+    border: '2px dashed ' + theme.palette.custom.main
+  },
   pageDragOver: {
     border: '2px dashed ' + theme.palette.custom.main
   },

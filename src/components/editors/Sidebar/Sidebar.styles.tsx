@@ -55,5 +55,12 @@ export default makeStyles((theme: ITheme) => ({
   sidebarButtons: {
     display: 'flex',
     justifyContent: 'center'
+  },
+  saveButton: {
+    width: '90px'
+  },
+  emptySidebar: {
+    fontStyle: 'italic',
+    color: '#ffffffcc'
   }
 }));

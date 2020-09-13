@@ -1,6 +1,6 @@
-import { Drawer, FormControl, InputLabel, MenuItem, Select, TextField } from '@material-ui/core';
+import { Drawer, FormControl, InputLabel, Select, TextField } from '@material-ui/core';
 import useStyles from './Sidebar.styles';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { CustomiseItemContext } from '@contexts/CustomiseItemContext';
 import { Constants, FormUtils } from 's-forms';
 import { FormStructureContext } from '@contexts/FormStructureContext';
@@ -13,6 +13,8 @@ const INITIAL_TOP = 60 + 88;
 
 const Sidebar = () => {
   const classes = useStyles();
+
+  const sidebarContainer = useRef<HTMLDivElement | null>(null);
 
   const [drawerTop, setDrawerTop] = useState<number>(INITIAL_TOP);
   const { formStructure } = useContext(FormStructureContext);
@@ -29,6 +31,20 @@ const Sidebar = () => {
       }
     });
   }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      // @ts-ignore
+      if (!sidebarContainer.current?.contains(e.target)) {
+        reset();
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [sidebarContainer, reset]);
 
   const handleChange = (event: React.ChangeEvent | React.ChangeEvent<{ value: unknown }>) => {
     const target = event.target as HTMLInputElement | HTMLSelectElement;
@@ -78,6 +94,7 @@ const Sidebar = () => {
       style={{
         top: `${drawerTop}px`
       }}
+      ref={sidebarContainer}
     >
       {itemData && (
         <form className={classes.newItemDataContainer}>
@@ -92,28 +109,33 @@ const Sidebar = () => {
           />
           {!FormUtils.isWizardStep(itemData) && (
             <FormControl variant="outlined">
-              <InputLabel id="demo-simple-select-outlined-label">Layout type</InputLabel>
+              <InputLabel htmlFor="layout-type">Layout type</InputLabel>
               <Select
-                labelId="demo-simple-select-outlined-label"
+                native
                 name="layout"
+                label="Layout type"
                 value={itemData[Constants.LAYOUT_CLASS]![0] || ''}
                 onChange={handleChange}
-                label="Layout type"
+                inputProps={{
+                  name: 'layout',
+                  id: 'layout-type'
+                }}
               >
-                <MenuItem value={'type-ahead'}>Typeahead</MenuItem>
-                <MenuItem value={'textarea'}>Textarea</MenuItem>
-                <MenuItem value={'textfield'}>Text Input</MenuItem>
-                <MenuItem value={'section'}>Section</MenuItem>
-                <MenuItem value={'date'}>Date</MenuItem>
-                <MenuItem value={'time'}>Time</MenuItem>
-                <MenuItem value={'datetime'}>Datetime</MenuItem>
-                <MenuItem value={'masked-input'}>Masked Input</MenuItem>
-                <MenuItem value={'checkbox'}>Checkbox</MenuItem>
+                <option aria-label="None" value="" />
+                <option value={'type-ahead'}>Typeahead</option>
+                <option value={'textarea'}>Textarea</option>
+                <option value={'textfield'}>Text Input</option>
+                <option value={'section'}>Section</option>
+                <option value={'date'}>Date</option>
+                <option value={'time'}>Time</option>
+                <option value={'datetime'}>Datetime</option>
+                <option value={'masked-input'}>Masked Input</option>
+                <option value={'checkbox'}>Checkbox</option>
               </Select>
             </FormControl>
           )}
           <div className={classes.sidebarButtons}>
-            <CustomisedButton onClick={onSave} size={'large'}>
+            <CustomisedButton onClick={onSave} size={'large'} className={classes.saveButton}>
               Save
             </CustomisedButton>
             <CustomisedLinkButton onClick={onCancel} size={'large'} className={''}>
@@ -122,6 +144,7 @@ const Sidebar = () => {
           </div>
         </form>
       )}
+      {!itemData && <div className={classes.emptySidebar}>Hint: Did you know...?</div>}
     </Drawer>
   );
 };

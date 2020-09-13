@@ -14,7 +14,7 @@ export default makeStyles((theme: ITheme) => ({
     border: '2px dashed ' + theme.palette.custom.main
   },
   listItemSectionHighlight: {
-    border: '2px solid ' + theme.palette.custom.main
+    border: '2px solid ' + theme.palette.custom.main + '!important'
   },
   ol: {
     listStyle: 'none',

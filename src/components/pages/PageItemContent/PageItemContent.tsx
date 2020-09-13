@@ -12,14 +12,15 @@ interface Props {
     position: number,
     parentQuestion: FormStructureQuestion
   ) => JSX.Element;
+  handleMouseOver: any;
 }
 
-const PageItemContent: FC<Props> = ({ question, buildFormUI }) => {
+const PageItemContent: FC<Props> = ({ question, buildFormUI, handleMouseOver }) => {
   const classes = useStyles();
 
   return (
-    <AccordionDetails className={classes.body}>
-      <ol id={question['@id']} className={classes.ol}>
+    <AccordionDetails id={question['@id']} className={classes.body} onMouseOver={handleMouseOver}>
+      <ol className={classes.ol}>
         {question[Constants.HAS_SUBQUESTION]!.length > 0 && <ItemAdd parentId={question['@id']} position={0} />}
         {question[Constants.HAS_SUBQUESTION]!.map((q, index) => buildFormUI(q, index + 1, question))}
         {!question[Constants.HAS_SUBQUESTION]!.length && <div className={classes.emptyPage}>Empty page...</div>}

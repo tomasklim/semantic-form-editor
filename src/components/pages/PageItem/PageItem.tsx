@@ -33,6 +33,24 @@ const PageItem: FC<PageItemProps> = ({ question, buildFormUI, index, empty }) =>
   );
   const { customiseItemData } = useContext(CustomiseItemContext);
 
+  const handleMouseEnter = () => {
+    pageContainer.current?.classList.add(classes.pageHover);
+  };
+
+  const handleMouseLeave = () => {
+    pageContainer.current?.classList.remove(classes.pageHover);
+  };
+
+  const handleMouseOver = (e: React.MouseEvent<HTMLDivElement>) => {
+    const correct = (e.target as HTMLDivElement).id === question['@id'];
+
+    if (correct && !pageContainer.current?.classList.contains(classes.pageHover)) {
+      pageContainer.current?.classList.add(classes.pageHover);
+    } else if (!correct && pageContainer.current?.classList.contains(classes.pageHover)) {
+      pageContainer.current?.classList.remove(classes.pageHover);
+    }
+  };
+
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
 
@@ -221,6 +239,8 @@ const PageItem: FC<PageItemProps> = ({ question, buildFormUI, index, empty }) =>
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
       onClick={onClickHandler}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       <Accordion expanded={expanded} className={classes.accordion}>
         <PageItemHeader
@@ -230,7 +250,7 @@ const PageItem: FC<PageItemProps> = ({ question, buildFormUI, index, empty }) =>
           expandPage={expandPage}
           expanded={expanded}
         />
-        <PageContent question={question} buildFormUI={buildFormUI} />
+        <PageContent question={question} buildFormUI={buildFormUI} handleMouseOver={handleMouseOver} />
       </Accordion>
     </div>
   );
