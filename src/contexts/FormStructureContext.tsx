@@ -1,20 +1,41 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 import { cloneDeep } from 'lodash';
-import FormStructure from '../model/FormStructure';
-import { buildFormStructure, highlightQuestion, moveQuestion, sortRelatedQuestions } from '../utils/formBuilder';
 import { Constants } from 's-forms';
-import FormStructureNode from '../model/FormStructureNode';
+import { JsonLdObj } from 'jsonld/jsonld-spec';
+import FormStructure from '@model/FormStructure';
+import {
+  highlightQuestion,
+  moveQuestion,
+  removeBeingPrecedingQuestion,
+  removeFromSubQuestions,
+  removePrecedingQuestion,
+  sortRelatedQuestions
+} from '@utils/index';
+import FormStructureNode from '@model/FormStructureNode';
+import { FormStructureQuestion } from '@model/FormStructureQuestion';
 
 interface FormStructureProviderProps {
   children: React.ReactNode;
 }
 
 interface FormStructureContextValues {
-  addNewFormStructureNode: (targetId: string) => void;
+  addNewNode: AddNewFormStructureNode;
+  moveNodeUnderNode: (movingNodeId: string, destinationPageId: string) => void;
   formStructure: FormStructure;
+  formFile: JsonLdObj;
+  setFormFile: Dispatch<SetStateAction<FormStructure>>;
   setFormStructure: Dispatch<SetStateAction<FormStructure>>;
+  setFormContext: Dispatch<SetStateAction<JsonLdObj>>;
   getClonedFormStructure: () => FormStructure;
+  formContext: JsonLdObj;
+  updateNode: Function;
 }
+
+type AddNewFormStructureNode = (
+  newItemData: FormStructureQuestion,
+  targetNode: FormStructureNode,
+  clonedFormStructure: FormStructure
+) => void;
 
 // @ts-ignore
 const FormStructureContext = React.createContext<FormStructureContextValues>({});
@@ -22,46 +43,19 @@ const FormStructureContext = React.createContext<FormStructureContextValues>({})
 const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children }) => {
   // @ts-ignore
   const [formStructure, setFormStructure] = useState<FormStructure>(null);
-
-  useEffect(() => {
-    async function getFormStructure() {
-      const form = require('../utils/form.json');
-      const formStructure = await buildFormStructure(form);
-
-      setFormStructure(formStructure);
-    }
-
-    getFormStructure();
-  }, []);
+  // @ts-ignore
+  const [formContext, setFormContext] = useState<JsonLdObj>(null);
+  // @ts-ignore
+  const [formFile, setFormFile] = useState<JsonLdObj>(null);
 
   const getClonedFormStructure = (): FormStructure => {
     return cloneDeep(formStructure)!;
   };
 
-  const addNewFormStructureNode = (targetId: string) => {
-    const clonedFormStructure = getClonedFormStructure();
+  const addNewNode: AddNewFormStructureNode = (newItemData, targetNode, clonedFormStructure) => {
+    const node = new FormStructureNode(targetNode, newItemData);
 
-    const id = Math.floor(Math.random() * 10000) + 'formstructure';
-
-    // temporary
-    const newQuestion = {
-      '@id': id,
-      '@type': 'http://onto.fel.cvut.cz/ontologies/documentation/question',
-      [Constants.HAS_LAYOUT_CLASS]: ['new'],
-      [Constants.RDFS_LABEL]: id,
-      [Constants.HAS_SUBQUESTION]: []
-    };
-
-    const targetNode = clonedFormStructure.getNode(targetId);
-
-    if (!targetNode) {
-      console.error('Missing targetNode');
-      return;
-    }
-
-    const node = new FormStructureNode(targetNode, newQuestion);
-
-    clonedFormStructure.addNode(newQuestion['@id'], node);
+    clonedFormStructure.addNode(newItemData['@id'], node);
 
     moveQuestion(node, targetNode);
 
@@ -69,22 +63,71 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
 
     setFormStructure(clonedFormStructure);
 
-    highlightQuestion(id);
+    highlightQuestion(newItemData['@id']);
+  };
+
+  const moveNodeUnderNode = (movingNodeId: string, destinationPageId: string) => {
+    const clonedFormStructure = getClonedFormStructure();
+
+    const movingNode = clonedFormStructure.structure.get(movingNodeId);
+    const destinationPage = clonedFormStructure.structure.get(destinationPageId);
+
+    if (!movingNode?.data || !movingNode?.parent || !destinationPage?.data) {
+      console.warn("Missing movingNode's data or parent, or destination's data");
+      return;
+    }
+
+    const movingNodeParent = movingNode.parent;
+
+    removePrecedingQuestion(movingNode);
+
+    removeBeingPrecedingQuestion(movingNodeParent, movingNode);
+
+    removeFromSubQuestions(movingNodeParent, movingNode);
+
+    moveQuestion(movingNode, destinationPage);
+
+    destinationPage.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(
+      destinationPage.data[Constants.HAS_SUBQUESTION]
+    );
+
+    setFormStructure(clonedFormStructure);
+
+    highlightQuestion(movingNodeId);
+  };
+
+  const updateNode = (itemData: FormStructureQuestion) => {
+    const clonedFormStructure = getClonedFormStructure();
+
+    const node = clonedFormStructure.structure.get(itemData['@id']);
+
+    if (!node) {
+      console.warn('Not existing node id', clonedFormStructure, itemData);
+      return;
+    }
+
+    node.data[Constants.RDFS_LABEL] = itemData[Constants.RDFS_LABEL];
+    node.data[Constants.LAYOUT_CLASS] = itemData[Constants.LAYOUT_CLASS];
+    node.data[Constants.REQUIRES_ANSWER] = itemData[Constants.REQUIRES_ANSWER];
+
+    setFormStructure(clonedFormStructure);
   };
 
   const values = React.useMemo<FormStructureContextValues>(
     () => ({
-      addNewFormStructureNode,
+      addNewNode,
+      moveNodeUnderNode,
       getClonedFormStructure,
+      updateNode,
       setFormStructure,
-      formStructure
+      setFormContext,
+      formStructure,
+      formContext,
+      formFile,
+      setFormFile
     }),
-    [formStructure]
+    [formFile, formStructure, formContext]
   );
-
-  if (!formStructure) {
-    return null;
-  }
 
   return <FormStructureContext.Provider value={values}>{children}</FormStructureContext.Provider>;
 };
