@@ -3,7 +3,7 @@ import useStyles, { CustomisedCard } from './Item.styles';
 import ItemHeader from '@components/items/ItemHeader/ItemHeader';
 import ItemContent from '@components/items/ItemContent/ItemContent';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
-import { handleDragEnd, handleDragStart } from '@utils/index';
+import { handleDragEnd, handleDragStart, highlightQuestion } from '@utils/index';
 import { CustomiseItemContext } from '@contexts/CustomiseItemContext';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 
@@ -35,6 +35,7 @@ const Item: FC<Props> = ({ questionData, position }) => {
       itemData: questionData,
       onSave: () => (itemData: FormStructureQuestion) => {
         updateNode(itemData);
+        highlightQuestion(itemData['@id']);
       },
       onInit: () => itemContainer.current?.classList.add(classes.listItemHighlight),
       onCancel: () => () => itemContainer.current?.classList.remove(classes.listItemHighlight)

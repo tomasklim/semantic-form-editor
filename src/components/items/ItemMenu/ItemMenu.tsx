@@ -55,7 +55,6 @@ const ItemMenu: FC<Props> = ({ question, movePage }) => {
     customiseItemData({
       itemData: NEW_ITEM,
       onSave: (): OnSaveCallback => (itemData) => addNewNode(itemData, targetNode, clonedFormStructure),
-
       onCancel: () => () => addButton.current?.classList.remove(classes.addButtonHighlight),
       onInit: () => addButton.current?.classList.add(classes.addButtonHighlight),
       isNew: true

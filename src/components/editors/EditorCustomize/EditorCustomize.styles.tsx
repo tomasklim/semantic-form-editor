@@ -12,7 +12,7 @@ export default makeStyles((theme: ITheme) => ({
     paddingLeft: '30px'
   },
   '@global .highlightQuestion': {
-    border: '2px solid #5a81ea !important'
+    border: '2px dotted ' + theme.palette.custom.main + '!important'
   },
   '@global [data-disabled="true"]': {
     pointerEvents: 'none  !important'

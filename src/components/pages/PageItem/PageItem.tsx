@@ -10,6 +10,7 @@ import { FormStructureContext } from '@contexts/FormStructureContext';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
 import AddIcon from '@material-ui/icons/Add';
 import { CustomiseItemContext, OnSaveCallback } from '@contexts/CustomiseItemContext';
+import classNames from 'classnames';
 
 type PageItemProps = {
   empty: boolean;
@@ -200,6 +201,7 @@ const PageItem: FC<PageItemProps> = ({ question, buildFormUI, index, empty }) =>
       itemData: question,
       onSave: () => (itemData: FormStructureQuestion) => {
         updateNode(itemData);
+        highlightQuestion(itemData['@id']);
       },
       onCancel,
       onInit
@@ -217,7 +219,7 @@ const PageItem: FC<PageItemProps> = ({ question, buildFormUI, index, empty }) =>
 
   if (empty) {
     return (
-      <div className={classes.page} ref={pageContainer}>
+      <div className={classNames(classes.page, classes.pageEmpty)} ref={pageContainer}>
         <Accordion expanded={expanded} className={classes.accordion} onClick={addNewPage} title={'Add new page'}>
           <CustomisedAccordionDetails>
             <AddIcon />

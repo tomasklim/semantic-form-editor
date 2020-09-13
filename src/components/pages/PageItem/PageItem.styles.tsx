@@ -11,6 +11,11 @@ export default makeStyles((theme: ITheme) => ({
       boxShadow: 'none'
     }
   },
+  pageEmpty: {
+    '&:hover': {
+      border: '2px dashed ' + theme.palette.custom.main
+    }
+  },
   pageHover: {
     border: '2px dashed ' + theme.palette.custom.main
   },
@@ -22,7 +27,7 @@ export default makeStyles((theme: ITheme) => ({
     color: theme.palette.custom.contrastText
   },
   pageHighlight: {
-    border: '2px solid ' + theme.palette.custom.main
+    border: '2px solid ' + theme.palette.custom.main + '!important'
   }
 }));
 

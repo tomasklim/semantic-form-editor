@@ -5,7 +5,7 @@ import { FormStructureQuestion } from '@model/FormStructureQuestion';
 import { Constants } from 's-forms';
 import ItemAdd from '@components/items/AddItem/AddItem';
 import { FormStructureContext } from '@contexts/FormStructureContext';
-import { enableNotDraggableAndDroppable, handleDragEnd, handleDragStart } from '@utils/index';
+import { enableNotDraggableAndDroppable, handleDragEnd, handleDragStart, highlightQuestion } from '@utils/index';
 import { CustomiseItemContext } from '@contexts/CustomiseItemContext';
 import { Accordion } from '@material-ui/core';
 
@@ -104,6 +104,7 @@ const ItemSection: FC<Props> = ({ questionData, position, buildFormUI }) => {
       itemData: questionData,
       onSave: () => (itemData: FormStructureQuestion) => {
         updateNode(itemData);
+        highlightQuestion(itemData['@id']);
       },
       onInit: () => itemContainer.current?.classList.add(classes.listItemSectionHighlight),
       onCancel: () => () => itemContainer.current?.classList.remove(classes.listItemSectionHighlight)
@@ -154,7 +155,9 @@ const ItemSection: FC<Props> = ({ questionData, position, buildFormUI }) => {
               buildFormUI(question, index + 1, questionData)
             )}
             {!questionData[Constants.HAS_SUBQUESTION]!.length && (
-              <div className={classes.emptySection}>Empty section...</div>
+              <div id={questionData['@id']} className={classes.emptySection}>
+                Empty section...
+              </div>
             )}
           </ol>
         </CustomisedAccordionDetails>
