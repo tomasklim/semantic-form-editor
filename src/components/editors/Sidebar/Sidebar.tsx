@@ -1,10 +1,12 @@
-import { Button, Drawer, FormControl, InputLabel, MenuItem, Select, TextField } from '@material-ui/core';
+import { Drawer, FormControl, InputLabel, MenuItem, Select, TextField } from '@material-ui/core';
 import useStyles from './Sidebar.styles';
 import React, { useContext, useEffect, useState } from 'react';
 import { CustomiseItemContext } from '@contexts/CustomiseItemContext';
 import { Constants, FormUtils } from 's-forms';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import { getId } from '@utils/itemHelpers';
+import { CustomisedButton } from '@styles/CustomisedButton';
+import { CustomisedLinkButton } from '@styles/CustomisedLinkButton';
 
 // Header + Stepper
 const INITIAL_TOP = 60 + 88;
@@ -79,13 +81,14 @@ const Sidebar = () => {
     >
       {itemData && (
         <form className={classes.newItemDataContainer}>
-          <TextField name="id" label="Identification" variant="outlined" value={itemData['@id'] || ''} disabled />
+          <TextField name="id" label="Identification" variant="outlined" value={itemData['@id'] || ' '} disabled />
           <TextField
             name="label"
             label="Label"
             variant="outlined"
             value={itemData[Constants.RDFS_LABEL] || ''}
             onChange={handleChange}
+            autoComplete={'off'}
           />
           {!FormUtils.isWizardStep(itemData) && (
             <FormControl variant="outlined">
@@ -109,9 +112,13 @@ const Sidebar = () => {
               </Select>
             </FormControl>
           )}
-          <div>
-            <Button onClick={onSave}>Save</Button>
-            <Button onClick={onCancel}>Cancel</Button>
+          <div className={classes.sidebarButtons}>
+            <CustomisedButton onClick={onSave} size={'large'}>
+              Save
+            </CustomisedButton>
+            <CustomisedLinkButton onClick={onCancel} size={'large'} className={''}>
+              Cancel
+            </CustomisedLinkButton>
           </div>
         </form>
       )}

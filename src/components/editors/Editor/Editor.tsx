@@ -1,12 +1,12 @@
 import React, { FC, useContext } from 'react';
 import classnames from 'classnames';
+import { Step } from '@material-ui/core';
 import useStyles, {
   CustomisedConnector,
   CustomisedStepIcon,
   CustomisedStepLabel,
   CustomisedStepper
 } from './Editor.styles';
-import { Step } from '@material-ui/core';
 import EditorCustomize from '@components/editors/EditorCustomize/EditorCustomize';
 import EditorPreview from '@components/editors/EditorPreview/EditorPreview';
 import EditorNew from '@components/editors/EditorNew/EditorNew';
@@ -21,8 +21,9 @@ const Editor: FC<EditorProps> = ({}) => {
 
   const { setFormFile } = useContext(FormStructureContext);
 
-  const [activeStep, setActiveStep] = React.useState(0);
   const steps = ['New / Import', 'Customize', 'Preview', 'Export'];
+
+  const [activeStep, setActiveStep] = React.useState(0);
   const [unlockedSteps, unlockSteps] = React.useState(false);
 
   const getStepContent = () => {

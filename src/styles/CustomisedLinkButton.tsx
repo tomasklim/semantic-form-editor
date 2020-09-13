@@ -3,14 +3,14 @@ import { ITheme } from '../interfaces';
 import { Button } from '@material-ui/core';
 
 // @ts-ignore
-export const CustomisedOutlineButton = withStyles((theme: ITheme) => ({
+export const CustomisedLinkButton = withStyles((theme: ITheme) => ({
   root: {
-    color: theme.palette.custom.main,
+    color: 'white',
     borderColor: theme.palette.custom.main,
     textTransform: 'uppercase',
     '&:hover': {
-      backgroundColor: theme.palette.custom.main,
-      color: 'white'
+      backgroundColor: 'transparent',
+      color: theme.palette.custom.main
     },
     '&:focus': {
       outline: 'none'

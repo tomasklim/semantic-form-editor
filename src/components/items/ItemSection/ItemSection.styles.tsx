@@ -18,7 +18,8 @@ export default makeStyles((theme: ITheme) => ({
   },
   ol: {
     listStyle: 'none',
-    paddingLeft: '0'
+    paddingLeft: '0',
+    width: '100%'
   },
   emptySection: {
     fontStyle: 'italic',
@@ -35,7 +36,7 @@ export default makeStyles((theme: ITheme) => ({
 export const CustomisedAccordionDetails = withStyles((theme: ITheme) => ({
   root: {
     borderTop: '1px solid ' + theme.palette.custom.contrastText + '0f',
-    padding: theme.spacing(2),
+    padding: theme.spacing(1, 2),
     '&:last-child': {
       paddingBottom: theme.spacing(2)
     }

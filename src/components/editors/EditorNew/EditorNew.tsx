@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, useContext, useEffect, useRef, useState } from 'react';
+import React, { ChangeEvent, FC, useContext, useEffect, useRef, useState } from 'react';
 import JSONEditor, { JSONEditorMode } from 'jsoneditor';
 import useStyles from './EditorNew.styles';
 import { FormStructureContext } from '@contexts/FormStructureContext';
@@ -126,7 +126,12 @@ const EditorNew: FC<EditorNewProps> = ({ nextStep }) => {
   return (
     <>
       <div className={classes.newFormButtons}>
-        <CustomisedOutlineButton variant="outlined" onClick={initialiseNewForm} size="large">
+        <CustomisedOutlineButton
+          variant="outlined"
+          onClick={initialiseNewForm}
+          size="large"
+          className={classes.buttonWidth}
+        >
           New form
         </CustomisedOutlineButton>
         <span>or</span>
@@ -140,7 +145,7 @@ const EditorNew: FC<EditorNewProps> = ({ nextStep }) => {
         />
         <label htmlFor="icon-button-file">
           {/* @ts-ignore */}
-          <CustomisedOutlineButton variant="outlined" component="span" size="large">
+          <CustomisedOutlineButton variant="outlined" component="span" size="large" className={classes.buttonWidth}>
             Import existing form
           </CustomisedOutlineButton>
         </label>
@@ -150,6 +155,7 @@ const EditorNew: FC<EditorNewProps> = ({ nextStep }) => {
       <div className={classes.container} ref={jsonEditorContainer} />
       <div className={classes.continueButtons}>
         <CustomisedButton
+          className={classes.buttonWidth}
           variant="contained"
           onClick={handleContinueToNextStep}
           size="large"

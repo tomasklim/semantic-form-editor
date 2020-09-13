@@ -60,5 +60,8 @@ export default makeStyles((theme: ITheme) => ({
     '& span': {
       margin: theme.spacing(0.5)
     }
+  },
+  buttonWidth: {
+    minWidth: '250px'
   }
 }));

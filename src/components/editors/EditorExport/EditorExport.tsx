@@ -66,11 +66,21 @@ const EditorExport: FC<EditorExportProps> = ({ resetEditor }) => {
   return (
     <>
       <div className={classes.getExportedFormButtons}>
-        <CustomisedOutlineButton variant="outlined" size="large" onClick={downloadExportedForm}>
+        <CustomisedOutlineButton
+          variant="outlined"
+          size="large"
+          onClick={downloadExportedForm}
+          className={classes.buttonWidth}
+        >
           Download
         </CustomisedOutlineButton>
         <span>or</span>
-        <CustomisedOutlineButton variant="outlined" size="large" onClick={copyToClipboard}>
+        <CustomisedOutlineButton
+          variant="outlined"
+          size="large"
+          onClick={copyToClipboard}
+          className={classes.buttonWidth}
+        >
           Copy to clipboard
         </CustomisedOutlineButton>
         <span>or</span>
@@ -78,7 +88,7 @@ const EditorExport: FC<EditorExportProps> = ({ resetEditor }) => {
       </div>
       <div className={classes.container} ref={jsonEditorContainer} />
       <div className={classes.buildNewFormButtonContainer}>
-        <CustomisedButton variant="contained" size="large" onClick={resetEditor}>
+        <CustomisedButton variant="contained" size="large" onClick={resetEditor} className={classes.buttonWidth}>
           Build a new form
         </CustomisedButton>
       </div>

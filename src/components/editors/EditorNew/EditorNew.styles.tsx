@@ -63,5 +63,8 @@ export default makeStyles((theme: ITheme) => ({
   },
   uploadFileInput: {
     display: 'none'
+  },
+  buttonWidth: {
+    minWidth: '250px'
   }
 }));

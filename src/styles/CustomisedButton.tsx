@@ -8,7 +8,6 @@ export const CustomisedButton = withStyles((theme: ITheme) => ({
     color: 'white',
     backgroundColor: theme.palette.custom.main,
     borderColor: theme.palette.custom.main,
-    minWidth: '250px',
     textTransform: 'uppercase',
     '&:hover': {
       backgroundColor: 'white',
