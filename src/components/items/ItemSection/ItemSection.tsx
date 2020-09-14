@@ -3,7 +3,7 @@ import useStyles, { CustomisedAccordionDetails } from './ItemSection.styles';
 import ItemHeader from '@components/items/ItemHeader/ItemHeader';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
 import { Constants } from 's-forms';
-import ItemAdd from '@components/items/AddItem/AddItem';
+import ItemAdd from '@components/items/ItemAdd/ItemAdd';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import { enableNotDraggableAndDroppable, handleDragEnd, handleDragStart, highlightQuestion } from '@utils/index';
 import { CustomiseItemContext } from '@contexts/CustomiseItemContext';
@@ -117,6 +117,8 @@ const ItemSection: FC<Props> = ({ questionData, position, buildFormUI }) => {
     setExpanded(!expanded);
   };
 
+  const relatedQuestions = questionData[Constants.HAS_SUBQUESTION];
+
   return (
     <li
       id={questionData['@id']}
@@ -148,13 +150,9 @@ const ItemSection: FC<Props> = ({ questionData, position, buildFormUI }) => {
           onMouseOver={handleMouseOver}
         >
           <ol id={questionData['@id']} className={classes.ol}>
-            {questionData[Constants.HAS_SUBQUESTION]!.length > 0 && (
-              <ItemAdd parentId={questionData['@id']} position={0} />
-            )}
-            {questionData[Constants.HAS_SUBQUESTION]!.map((question, index) =>
-              buildFormUI(question, index + 1, questionData)
-            )}
-            {!questionData[Constants.HAS_SUBQUESTION]!.length && (
+            {relatedQuestions!.length > 0 && <ItemAdd parentId={questionData['@id']} position={0} />}
+            {relatedQuestions!.map((question, index) => buildFormUI(question, index + 1, questionData))}
+            {!relatedQuestions!.length && (
               <div id={questionData['@id']} className={classes.emptySection}>
                 Empty section...
               </div>
