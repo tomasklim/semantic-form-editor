@@ -1,12 +1,11 @@
 import React, { FC, useContext, useRef, useState } from 'react';
-import { ArrowDownward, ArrowUpward, MoreVert } from '@material-ui/icons';
+import { MoreVert } from '@material-ui/icons';
 import { ClickAwayListener, Grow, MenuItem, MenuList, Paper, Popper } from '@material-ui/core';
 import { Constants } from 's-forms';
 import { removeFromFormStructure, removeFromSubQuestions, sortRelatedQuestions } from '@utils/index';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
 import AddIcon from '@material-ui/icons/Add';
-import { DIRECTION } from '@enums/index';
 import SquaredIconButton from '@styles/SquaredIconButton';
 import { CustomiseItemContext, OnSaveCallback } from '@contexts/CustomiseItemContext';
 import useStyles from './ItemMenu.styles';
@@ -14,10 +13,9 @@ import { NEW_ITEM } from '../../../constants';
 
 interface Props {
   question: FormStructureQuestion;
-  movePage?: (e: React.MouseEvent, id: string, direction: DIRECTION) => void;
 }
 
-const ItemMenu: FC<Props> = ({ question, movePage }) => {
+const ItemMenu: FC<Props> = ({ question }) => {
   const classes = useStyles();
 
   const { getClonedFormStructure, setFormStructure, addNewNode } = useContext(FormStructureContext);
@@ -100,16 +98,6 @@ const ItemMenu: FC<Props> = ({ question, movePage }) => {
 
   return (
     <span>
-      {movePage && (
-        <>
-          <SquaredIconButton onClick={(e) => movePage(e, question['@id'], DIRECTION.UP)} title="Move page up">
-            <ArrowUpward />
-          </SquaredIconButton>
-          <SquaredIconButton onClick={(e) => movePage(e, question['@id'], DIRECTION.DOWN)} title="Move page down">
-            <ArrowDownward />
-          </SquaredIconButton>
-        </>
-      )}
       <SquaredIconButton ref={addButton} onClick={addNewItem} title="Add new subquestion">
         <AddIcon />
       </SquaredIconButton>

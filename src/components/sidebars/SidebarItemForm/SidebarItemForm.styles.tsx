@@ -33,11 +33,11 @@ export default makeStyles((theme: ITheme) => ({
       color: '#ffffffcc'
     },
     '& .MuiIconButton-root': {
-      padding: '9px 9px 9px 0'
+      marginLeft: '-9px'
     },
     '& .MuiCheckbox-root': { color: '#ffffffcc' },
     '& .MuiCheckbox-colorSecondary:hover, & .MuiCheckbox-colorSecondary.Mui-checked:hover, & .MuiIconButton-root:hover': {
-      backgroundColor: 'transparent'
+      backgroundColor: theme.palette.custom.main + '2b'
     },
     '& .MuiCheckbox-colorSecondary.Mui-checked': {
       color: '#ffffffcc'

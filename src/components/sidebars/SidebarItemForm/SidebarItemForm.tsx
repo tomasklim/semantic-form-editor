@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { FormEvent, useContext } from 'react';
 import { Checkbox, FormControl, FormControlLabel, InputLabel, Select, TextField } from '@material-ui/core';
 import { Constants, FormUtils } from 's-forms';
 import { CustomisedButton } from '@styles/CustomisedButton';
@@ -53,7 +53,8 @@ const SidebarItemForm: React.FC<SidebarItemFormProps> = ({}) => {
     }
   };
 
-  const onSave = () => {
+  const onSave = (e: FormEvent) => {
+    e.preventDefault();
     const newItem = { ...itemData! };
 
     onSaveCallback && onSaveCallback(newItem);
@@ -67,7 +68,7 @@ const SidebarItemForm: React.FC<SidebarItemFormProps> = ({}) => {
   return (
     <>
       {itemData && (
-        <form className={classes.newItemDataContainer}>
+        <form className={classes.newItemDataContainer} onSubmit={onSave}>
           <TextField name="@id" label="Identification" variant="outlined" value={itemData['@id'] || ' '} disabled />
           <TextField
             name={(Constants.RDFS_LABEL as unknown) as string}
@@ -76,6 +77,8 @@ const SidebarItemForm: React.FC<SidebarItemFormProps> = ({}) => {
             value={itemData[Constants.RDFS_LABEL] || ''}
             onChange={handleChange}
             autoComplete={'off'}
+            autoFocus
+            required
           />
           {!FormUtils.isWizardStep(itemData) && (
             <FormControl variant="outlined">
@@ -127,7 +130,7 @@ const SidebarItemForm: React.FC<SidebarItemFormProps> = ({}) => {
           )}
 
           <div className={classes.sidebarButtons}>
-            <CustomisedButton onClick={onSave} size={'large'} className={classes.saveButton}>
+            <CustomisedButton type="submit" size={'large'} className={classes.saveButton}>
               Save
             </CustomisedButton>
             <CustomisedLinkButton onClick={onCancel} size={'large'}>

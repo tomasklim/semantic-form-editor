@@ -21,7 +21,6 @@
     "paths": {
       "@components/*": ["./src/components/*"],
       "@contexts/*": ["./src/contexts/*"],
-      "@enums/*": ["./src/enums/*"],
       "@interfaces/*": ["./src/interfaces/*"],
       "@model/*": ["./src/model/*"],
       "@pages/*": ["./src/pages/*"],
