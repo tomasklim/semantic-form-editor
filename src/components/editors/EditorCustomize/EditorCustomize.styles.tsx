@@ -5,7 +5,7 @@ import { ITheme } from '@interfaces/index';
 export default makeStyles((theme: ITheme) => ({
   content: {
     marginRight: theme.custom.sidebarWidth,
-    padding: theme.spacing(1, 2),
+    padding: theme.spacing(0, 2, 1),
     '& *': { userSelect: 'none' },
     listStyle: 'none',
     margin: 0,
@@ -40,5 +40,8 @@ export default makeStyles((theme: ITheme) => ({
   },
   '@global [data-disabled="true"] *': {
     pointerEvents: 'none  !important'
+  },
+  '@global .listItemHover': {
+    border: '2px dashed ' + theme.palette.custom.main + ' !important'
   }
 }));

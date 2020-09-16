@@ -1,51 +1,21 @@
-import { Checkbox, Drawer, FormControl, FormControlLabel, InputLabel, Select, TextField } from '@material-ui/core';
-import useStyles from './Sidebar.styles';
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import { CustomiseItemContext } from '@contexts/CustomiseItemContext';
+import React, { useContext } from 'react';
+import { Checkbox, FormControl, FormControlLabel, InputLabel, Select, TextField } from '@material-ui/core';
 import { Constants, FormUtils } from 's-forms';
-import { FormStructureContext } from '@contexts/FormStructureContext';
-import { getId } from '@utils/itemHelpers';
 import { CustomisedButton } from '@styles/CustomisedButton';
 import { CustomisedLinkButton } from '@styles/CustomisedLinkButton';
+import useStyles from './SidebarItemForm.styles';
+import { getId } from '@utils/itemHelpers';
+import { FormStructureContext } from '@contexts/FormStructureContext';
+import { CustomiseItemContext } from '@contexts/CustomiseItemContext';
 
-// Header + Stepper
-const INITIAL_TOP = 60 + 88;
+interface SidebarItemFormProps {}
 
-const Sidebar = () => {
+const SidebarItemForm: React.FC<SidebarItemFormProps> = ({}) => {
   const classes = useStyles();
 
-  const sidebarContainer = useRef<HTMLDivElement | null>(null);
-
-  const [drawerTop, setDrawerTop] = useState<number>(INITIAL_TOP);
-
   const { formStructure } = useContext(FormStructureContext);
+
   const { onSaveCallback, itemData, reset, setItemData, isNew } = useContext(CustomiseItemContext);
-
-  // sidebar top position
-  useEffect(() => {
-    document.addEventListener('scroll', () => {
-      const scrollTop = document.documentElement.scrollTop;
-
-      if (scrollTop >= 0) {
-        const drawerTop = INITIAL_TOP - scrollTop;
-        setDrawerTop(drawerTop > 0 ? drawerTop : 0);
-      }
-    });
-  }, []);
-
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      // @ts-ignore
-      if (!sidebarContainer.current?.contains(e.target)) {
-        reset();
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [sidebarContainer, reset]);
 
   const handleChange = (event: React.ChangeEvent | React.ChangeEvent<{ value: unknown }>) => {
     const target = event.target as HTMLInputElement | HTMLSelectElement;
@@ -95,18 +65,7 @@ const Sidebar = () => {
   };
 
   return (
-    <Drawer
-      className={classes.drawer}
-      variant="permanent"
-      anchor="right"
-      classes={{
-        paper: classes.drawerPaper
-      }}
-      style={{
-        top: `${drawerTop}px`
-      }}
-      ref={sidebarContainer}
-    >
+    <>
       {itemData && (
         <form className={classes.newItemDataContainer}>
           <TextField name="@id" label="Identification" variant="outlined" value={itemData['@id'] || ' '} disabled />
@@ -177,10 +136,9 @@ const Sidebar = () => {
           </div>
         </form>
       )}
-
-      {!itemData && <div className={classes.emptySidebar}>Hint: Did you know...?</div>}
-    </Drawer>
+      {!itemData && <div className={classes.newItemDataContainer}>TODO: Hint: Did you know...?</div>}
+    </>
   );
 };
 
-export default Sidebar;
+export default SidebarItemForm;

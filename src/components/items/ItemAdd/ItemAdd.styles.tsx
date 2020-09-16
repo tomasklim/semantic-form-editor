@@ -31,5 +31,8 @@ export default makeStyles((theme: ITheme) => ({
       transitionDuration: '0.5s',
       transform: 'scale(0.7) !important'
     }
+  },
+  marginTop: {
+    marginTop: '-5px'
   }
 }));

@@ -10,7 +10,7 @@ type ItemFormEmptyProps = {};
 
 const ItemFormEmpty: FC<ItemFormEmptyProps> = ({}) => {
   const classes = useStyles();
-  const pageContainer = useRef<HTMLDivElement | null>(null);
+  const itemFormEmptyContainer = useRef<HTMLDivElement | null>(null);
 
   const { getClonedFormStructure, addNewNode } = useContext(FormStructureContext);
   const { customiseItemData } = useContext(CustomiseItemContext);
@@ -30,14 +30,14 @@ const ItemFormEmpty: FC<ItemFormEmptyProps> = ({}) => {
     customiseItemData({
       itemData: NEW_WIZARD_ITEM,
       onSave: (): OnSaveCallback => (itemData) => addNewNode(itemData, root, clonedFormStructure),
-      onCancel: () => () => pageContainer.current?.classList.remove(classes.pageHighlight),
-      onInit: () => pageContainer.current?.classList.add(classes.pageHighlight),
+      onCancel: () => () => itemFormEmptyContainer.current?.classList.remove(classes.pageHighlight),
+      onInit: () => itemFormEmptyContainer.current?.classList.add(classes.pageHighlight),
       isNew: true
     });
   };
 
   return (
-    <div className={classes.page}>
+    <div className={classes.page} ref={itemFormEmptyContainer}>
       <Accordion expanded={true} className={classes.accordion} onClick={addNewPage} title={'Add new page'}>
         <CustomisedAccordionDetails>
           <AddIcon />

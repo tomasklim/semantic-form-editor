@@ -6,7 +6,7 @@ import { FormStructureContext } from '@contexts/FormStructureContext';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
 import useStyles from './EditorCustomize.styles';
 import ItemSection from '@components/items/ItemSection/ItemSection';
-import Sidebar from '@components/editors/Sidebar/Sidebar';
+import Sidebar from '@components/sidebars/Sidebar/Sidebar';
 import ItemFormEmpty from '@components/items/ItemFormEmpty/ItemFormEmpty';
 
 interface EditorCustomizeProps {}

@@ -18,6 +18,7 @@ import { CustomiseItemContext, OnSaveCallback } from '@contexts/CustomiseItemCon
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
 import FormStructure from '@model/FormStructure';
 import { NEW_ITEM, NEW_WIZARD_ITEM } from '../../../constants';
+import classNames from 'classnames';
 
 type Props = {
   parentId: string;
@@ -54,6 +55,17 @@ const ItemAdd: FC<Props> = ({ parentId, position, wizard = false }) => {
 
       // if target element is child of moving element => no highlight
       if (movingNode && targetNode && detectIsChildNode(movingNode, targetNode)) {
+        return;
+      }
+
+      // if moving node is non-section element => no highlight on wizard adds
+      if (
+        wizard &&
+        movingNode &&
+        targetNode &&
+        !FormUtils.isSection(movingNode.data) &&
+        !FormUtils.isWizardStep(movingNode.data)
+      ) {
         return;
       }
 
@@ -191,7 +203,7 @@ const ItemAdd: FC<Props> = ({ parentId, position, wizard = false }) => {
 
   return (
     <div
-      className={classes.addLine}
+      className={classNames(classes.addLine, { [classes.marginTop]: wizard && position === 0 })}
       ref={addContainer}
       data-droppable={true}
       onMouseEnter={handleMouseEnter}

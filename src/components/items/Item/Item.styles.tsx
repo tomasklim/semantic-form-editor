@@ -7,9 +7,6 @@ export default makeStyles((theme: ITheme) => ({
     width: '100%',
     border: '2px solid transparent'
   },
-  '@global .listItemHover': {
-    border: '2px dashed ' + theme.palette.custom.main + ' !important'
-  },
   listItemHighlight: {
     border: '2px solid ' + theme.palette.custom.main + ' !important'
   }
