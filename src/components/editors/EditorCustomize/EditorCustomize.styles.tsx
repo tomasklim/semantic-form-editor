@@ -5,7 +5,31 @@ import { ITheme } from '@interfaces/index';
 export default makeStyles((theme: ITheme) => ({
   content: {
     marginRight: theme.custom.sidebarWidth,
-    '& *': { userSelect: 'none' }
+    padding: theme.spacing(0, 2, 1),
+    '& *': { userSelect: 'none' },
+    listStyle: 'none',
+    margin: 0,
+    '& li > div': {
+      backgroundColor: theme.palette.custom[800]
+    },
+    '& ol li > div': {
+      backgroundColor: theme.palette.custom[700]
+    },
+    '& ol ol li > div': {
+      backgroundColor: theme.palette.custom[500]
+    },
+    '& ol ol ol li div': {
+      backgroundColor: theme.palette.custom[400]
+    },
+    '& ol ol ol ol li div': {
+      backgroundColor: theme.palette.custom[300]
+    },
+    '& ol ol ol ol ol li div': {
+      backgroundColor: theme.palette.custom[200]
+    },
+    '& ol ol ol ol ol ol li div': {
+      backgroundColor: theme.palette.custom[100]
+    }
   },
   ol: {
     listStyle: 'none',
@@ -19,5 +43,8 @@ export default makeStyles((theme: ITheme) => ({
   },
   '@global [data-disabled="true"] *': {
     pointerEvents: 'none  !important'
+  },
+  '@global .listItemHover': {
+    border: '2px dashed ' + theme.palette.custom.main + ' !important'
   }
 }));

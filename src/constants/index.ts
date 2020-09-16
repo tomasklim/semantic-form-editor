@@ -7,7 +7,7 @@ export const NEW_ITEM = {
   [Constants.HAS_SUBQUESTION]: []
 };
 
-export const NEW_PAGE_ITEM = {
+export const NEW_WIZARD_ITEM = {
   '@id': '',
   '@type': 'http://onto.fel.cvut.cz/ontologies/documentation/question',
   [Constants.LAYOUT_CLASS]: ['section', 'wizard-step'],

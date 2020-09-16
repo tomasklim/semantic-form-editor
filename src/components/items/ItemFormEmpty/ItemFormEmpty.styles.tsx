@@ -4,23 +4,15 @@ import { ITheme } from '@interfaces/index';
 
 export default makeStyles((theme: ITheme) => ({
   page: {
+    marginTop: '22px',
     border: '2px solid transparent',
-    margin: theme.spacing(1, 2),
     borderRadius: '2px',
     '& .MuiPaper-elevation1': {
       boxShadow: 'none'
-    }
-  },
-  pageEmpty: {
+    },
     '&:hover': {
       border: '2px dashed ' + theme.palette.custom.main
     }
-  },
-  pageHover: {
-    border: '2px dashed ' + theme.palette.custom.main
-  },
-  pageDragOver: {
-    border: '2px dashed ' + theme.palette.custom.main
   },
   accordion: {
     backgroundColor: theme.palette.custom[800],
@@ -38,12 +30,8 @@ export const CustomisedAccordionDetails = withStyles((theme: ITheme) => ({
     justifyContent: 'center',
     padding: theme.spacing(2),
     color: theme.palette.custom.main,
-    backgroundColor: theme.palette.custom[900] + '99',
+    backgroundColor: theme.palette.custom[800],
     cursor: 'pointer',
-
-    '&:hover': {
-      backgroundColor: theme.palette.custom[900] + '50',
-      color: theme.palette.custom.light
-    }
+    borderRadius: '4px'
   }
 }))(AccordionDetails);

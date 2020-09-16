@@ -1,30 +1,32 @@
 import React, { FC, useContext, useRef } from 'react';
-import useStyles from './AddItem.styles';
+import useStyles from './ItemAdd.styles';
 import AddIcon from '@material-ui/icons/Add';
 import {
   detectIsChildNode,
+  enableNotDraggableAndDroppable,
   highlightQuestion,
   moveQuestionToSpecificPosition,
   removeBeingPrecedingQuestion,
   removeFromSubQuestions,
   removePrecedingQuestion,
-  sortRelatedQuestions,
-  enableNotDraggableAndDroppable
+  sortRelatedQuestions
 } from '@utils/index';
-import { Constants } from 's-forms';
+import { Constants, FormUtils } from 's-forms';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import FormStructureNode from '@model/FormStructureNode';
 import { CustomiseItemContext, OnSaveCallback } from '@contexts/CustomiseItemContext';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
 import FormStructure from '@model/FormStructure';
-import { NEW_ITEM } from '../../../constants';
+import { NEW_ITEM, NEW_WIZARD_ITEM } from '../../../constants';
+import classNames from 'classnames';
 
 type Props = {
   parentId: string;
   position: number;
+  wizard?: boolean;
 };
 
-const AddItem: FC<Props> = ({ parentId, position }) => {
+const ItemAdd: FC<Props> = ({ parentId, position, wizard = false }) => {
   const classes = useStyles();
   const addContainer = useRef<HTMLDivElement | null>(null);
 
@@ -53,6 +55,17 @@ const AddItem: FC<Props> = ({ parentId, position }) => {
 
       // if target element is child of moving element => no highlight
       if (movingNode && targetNode && detectIsChildNode(movingNode, targetNode)) {
+        return;
+      }
+
+      // if moving node is non-section element => no highlight on wizard adds
+      if (
+        wizard &&
+        movingNode &&
+        targetNode &&
+        !FormUtils.isSection(movingNode.data) &&
+        !FormUtils.isWizardStep(movingNode.data)
+      ) {
         return;
       }
 
@@ -109,6 +122,19 @@ const AddItem: FC<Props> = ({ parentId, position }) => {
       return;
     }
 
+    if (!FormUtils.isSection(movingNode.data) && !FormUtils.isWizardStep(movingNode.data)) {
+      console.error('Cannot move non-wizardstep or non-section under form.');
+      return;
+    }
+
+    const layoutClass = movingNode.data[Constants.LAYOUT_CLASS];
+
+    if (wizard && !layoutClass.includes(Constants.LAYOUT.WIZARD_STEP)) {
+      layoutClass.push(Constants.LAYOUT.WIZARD_STEP);
+    } else if (!wizard && layoutClass.includes(Constants.LAYOUT.WIZARD_STEP)) {
+      layoutClass.splice(layoutClass.indexOf(Constants.LAYOUT.WIZARD_STEP), 1);
+    }
+
     const movingNodeParent = movingNode.parent;
 
     removePrecedingQuestion(movingNode);
@@ -146,7 +172,7 @@ const AddItem: FC<Props> = ({ parentId, position }) => {
     }
 
     customiseItemData({
-      itemData: NEW_ITEM,
+      itemData: wizard ? NEW_WIZARD_ITEM : NEW_ITEM,
       onSave: (): OnSaveCallback => (itemData) =>
         addNewQuestionToSpecificPosition(itemData, targetNode, clonedFormStructure),
       onCancel: () => () => addContainer.current?.classList.remove(classes.highlightAddLine),
@@ -177,7 +203,7 @@ const AddItem: FC<Props> = ({ parentId, position }) => {
 
   return (
     <div
-      className={classes.addLine}
+      className={classNames(classes.addLine, { [classes.marginTop]: wizard && position === 0 })}
       ref={addContainer}
       data-droppable={true}
       onMouseEnter={handleMouseEnter}
@@ -193,4 +219,4 @@ const AddItem: FC<Props> = ({ parentId, position }) => {
   );
 };
 
-export default AddItem;
+export default ItemAdd;

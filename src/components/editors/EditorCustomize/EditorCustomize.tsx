@@ -1,13 +1,13 @@
 import React, { FC, useContext } from 'react';
 import { Constants, FormUtils } from 's-forms';
 import Item from '@components/items/Item/Item';
-import ItemAdd from '@components/items/AddItem/AddItem';
+import ItemAdd from '@components/items/ItemAdd/ItemAdd';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
 import useStyles from './EditorCustomize.styles';
 import ItemSection from '@components/items/ItemSection/ItemSection';
-import Sidebar from '@components/editors/Sidebar/Sidebar';
-import Pages from '@components/pages/Pages/Pages';
+import Sidebar from '@components/sidebars/Sidebar/Sidebar';
+import ItemFormEmpty from '@components/items/ItemFormEmpty/ItemFormEmpty';
 
 interface EditorCustomizeProps {}
 
@@ -25,7 +25,23 @@ const EditorCustomize: FC<EditorCustomizeProps> = ({}) => {
     let item = null;
 
     if (FormUtils.isForm(questionData)) {
-      return <Pages key={questionData['@id']} question={questionData} buildFormUI={buildFormUI} />;
+      const relatedQuestions = questionData[Constants.HAS_SUBQUESTION];
+
+      if (!relatedQuestions || !relatedQuestions.length) {
+        return <ItemFormEmpty key={'empty-page'} />;
+      }
+
+      return (
+        <React.Fragment>
+          <ItemAdd parentId={questionData['@id']} position={0} wizard={true} />
+          {relatedQuestions.map((question, index) => (
+            <React.Fragment key={question['@id']}>
+              <ItemSection questionData={question} buildFormUI={buildFormUI} position={index + 1} />
+              <ItemAdd parentId={questionData['@id']} position={index + 1} wizard={true} />
+            </React.Fragment>
+          ))}
+        </React.Fragment>
+      );
     } else if (FormUtils.isTypeahead(questionData)) {
       item = <Item questionData={questionData} position={position} />;
     } else if (FormUtils.isCalendar(questionData)) {
@@ -51,11 +67,12 @@ const EditorCustomize: FC<EditorCustomizeProps> = ({}) => {
     return (
       <React.Fragment key={questionData['@id']}>
         {item}
-        <ol id={questionData['@id']} className={classes.ol}>
-          {relatedQuestions && relatedQuestions!.length > 0 && <ItemAdd parentId={questionData['@id']} position={0} />}
-          {relatedQuestions &&
-            relatedQuestions!.map((question, index) => buildFormUI(question, index + 1, questionData))}
-        </ol>
+        {relatedQuestions && (
+          <ol id={questionData['@id']} className={classes.ol}>
+            {relatedQuestions!.length > 0 && <ItemAdd parentId={questionData['@id']} position={0} />}
+            {relatedQuestions!.map((question, index) => buildFormUI(question, index + 1, questionData))}
+          </ol>
+        )}
         <ItemAdd
           parentId={parentQuestion?.['@id'] || ''} // empty string for root only
           position={position}
@@ -66,7 +83,7 @@ const EditorCustomize: FC<EditorCustomizeProps> = ({}) => {
 
   return (
     <div>
-      <div className={classes.content}>{buildFormUI(formStructure.root.data, 1, undefined)}</div>
+      <ol className={classes.content}>{buildFormUI(formStructure.root.data, 1, undefined)}</ol>
       <Sidebar />
     </div>
   );
