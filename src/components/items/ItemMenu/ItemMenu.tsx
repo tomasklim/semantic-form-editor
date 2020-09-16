@@ -98,7 +98,7 @@ const ItemMenu: FC<Props> = ({ question }) => {
 
   return (
     <span>
-      <SquaredIconButton ref={addButton} onClick={addNewItem} title="Add new subquestion">
+      <SquaredIconButton ref={addButton} onClick={addNewItem} title="Add new related question unordered">
         <AddIcon />
       </SquaredIconButton>
       {/* @ts-ignore */}
@@ -111,7 +111,7 @@ const ItemMenu: FC<Props> = ({ question }) => {
             <Paper>
               <ClickAwayListener onClickAway={handleClose}>
                 <MenuList>
-                  <MenuItem onClick={handleDelete}>Delete</MenuItem>
+                  <MenuItem onClick={handleDelete}>Delete question</MenuItem>
                 </MenuList>
               </ClickAwayListener>
             </Paper>

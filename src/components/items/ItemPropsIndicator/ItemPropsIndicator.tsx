@@ -22,7 +22,7 @@ const ItemPropsIndicator: FC<Props> = ({ question }) => {
       )}
       {question[Constants.HAS_PRECEDING_QUESTION] && (
         <div>
-          <Tooltip title="Preceding question" arrow>
+          <Tooltip title="Has preceding question" arrow>
             <Badge variant="dot" className={classes.preceding} />
           </Tooltip>
         </div>

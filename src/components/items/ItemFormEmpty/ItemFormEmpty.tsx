@@ -38,7 +38,7 @@ const ItemFormEmpty: FC<ItemFormEmptyProps> = ({}) => {
 
   return (
     <div className={classes.page} ref={itemFormEmptyContainer}>
-      <Accordion expanded={true} className={classes.accordion} onClick={addNewPage} title={'Add new page'}>
+      <Accordion expanded={true} className={classes.accordion} onClick={addNewPage} title={'Add new wizard step'}>
         <CustomisedAccordionDetails>
           <AddIcon />
         </CustomisedAccordionDetails>

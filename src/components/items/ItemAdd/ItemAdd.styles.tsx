@@ -8,6 +8,7 @@ export default makeStyles((theme: ITheme) => ({
     justifyContent: 'center',
     height: '25px',
     margin: '2px 3px',
+    cursor: 'pointer',
     '& svg': {
       transform: 'scale(0)',
       transitionDelay: '0',

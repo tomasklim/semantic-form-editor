@@ -39,7 +39,7 @@ const ItemHeader: FC<ItemHeaderProps> = ({
         <div className={classes.cardHeader} onMouseEnter={addDraggable} onMouseLeave={removeDraggable}>
           <span className={classes.cardHeaderItemLeft}>
             {expandable && (
-              <div className={classes.expandableSection}>
+              <div className={classes.expandableSection} title={expanded ? 'Collapse section' : 'Expand section'}>
                 {expanded ? <ExpandLess onClick={expandItemSection} /> : <ExpandMore onClick={expandItemSection} />}
               </div>
             )}

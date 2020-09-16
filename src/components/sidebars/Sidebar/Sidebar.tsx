@@ -83,12 +83,13 @@ const Sidebar = () => {
     >
       <CustomisedOutlineButton
         onClick={addNewPage}
+        title={'Add new wizard step'}
         ref={addButton}
         className={classes.addPageButton}
         startIcon={<AddIcon />}
         variant="outlined"
       >
-        Add new page
+        Add new wizard step
       </CustomisedOutlineButton>
 
       <SidebarItemForm />

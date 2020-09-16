@@ -213,6 +213,7 @@ const ItemAdd: FC<Props> = ({ parentId, position, wizard = false }) => {
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
       onClick={handleAddNewQuestion}
+      title={wizard ? 'Add new wizard step on certain position' : 'Add new related question on certain position'}
     >
       <AddIcon fontSize={'large'} />
     </div>
