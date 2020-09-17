@@ -86,8 +86,6 @@ const ItemSection: FC<Props> = ({ questionData, position, buildFormUI }) => {
         return;
       }
 
-      e.dataTransfer.clearData();
-
       if (!destinationPageId || !movingNodeId) {
         console.warn('Missing destinationPageId or movingNodeId');
         return;

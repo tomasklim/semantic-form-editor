@@ -92,7 +92,6 @@ const ItemAdd: FC<Props> = ({ parentId, position, wizard = false }) => {
       });
 
       const movingNodeId = e.dataTransfer.types.slice(-1)[0];
-      e.dataTransfer.clearData();
 
       const movingNode = formStructure.getNode(movingNodeId);
       const targetNode = formStructure.getNode(parentId);
@@ -122,7 +121,7 @@ const ItemAdd: FC<Props> = ({ parentId, position, wizard = false }) => {
       return;
     }
 
-    if (!FormUtils.isSection(movingNode.data) && !FormUtils.isWizardStep(movingNode.data)) {
+    if (wizard && !FormUtils.isSection(movingNode.data) && !FormUtils.isWizardStep(movingNode.data)) {
       console.error('Cannot move non-wizardstep or non-section under form.');
       return;
     }

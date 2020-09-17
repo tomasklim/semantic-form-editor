@@ -32,6 +32,10 @@ export default makeStyles((theme: ITheme) => ({
     '& .MuiSelect-icon': {
       color: '#ffffffcc'
     },
+    '& .MuiSelect-root option': {
+      color: 'initial',
+      backgroundColor: 'initial'
+    },
     '& .MuiIconButton-root': {
       marginLeft: '-9px'
     },

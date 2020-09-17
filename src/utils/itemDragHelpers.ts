@@ -7,6 +7,8 @@ export const handleDragStart = (e: React.DragEvent<HTMLLIElement>) => {
 
   enableDraggableAndDroppable();
 
+  e.dataTransfer.clearData();
+
   e.dataTransfer.setData((e.target as HTMLLIElement).id, '');
 };
 
