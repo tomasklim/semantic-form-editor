@@ -77,6 +77,12 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
       return;
     }
 
+    const layoutClass = movingNode.data[Constants.LAYOUT_CLASS];
+
+    if (layoutClass.includes(Constants.LAYOUT.WIZARD_STEP)) {
+      layoutClass.splice(layoutClass.indexOf(Constants.LAYOUT.WIZARD_STEP), 1);
+    }
+
     const movingNodeParent = movingNode.parent;
 
     removePrecedingQuestion(movingNode);
