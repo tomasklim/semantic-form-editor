@@ -3,7 +3,7 @@ import { Badge, Tooltip } from '@material-ui/core';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
 import React, { FC } from 'react';
 import { Constants } from 's-forms';
-import { ExpandMore, StarBorder } from '@material-ui/icons';
+import { ExpandMore } from '@material-ui/icons';
 import VerticalAlignTopIcon from '@material-ui/icons/VerticalAlignTop';
 import { highlightQuestion } from '@utils/itemHelpers';
 
@@ -24,7 +24,7 @@ const ItemPropsIndicator: FC<Props> = ({ question }) => {
       {question[Constants.REQUIRES_ANSWER] && (
         <div>
           <Tooltip title="Required" arrow>
-            <Badge badgeContent={<StarBorder fontSize="small" />} className={classes.required} />
+            <Badge badgeContent="*" className={classes.required} />
           </Tooltip>
         </div>
       )}
@@ -39,6 +39,13 @@ const ItemPropsIndicator: FC<Props> = ({ question }) => {
         <div>
           <Tooltip title="Collapsable" arrow>
             <Badge badgeContent={<ExpandMore fontSize="small" />} className={classes.collapsable} />
+          </Tooltip>
+        </div>
+      )}
+      {question[Constants.HELP_DESCRIPTION] && (
+        <div>
+          <Tooltip title="Help description" arrow>
+            <Badge badgeContent="?" className={classes.helpDescription} />
           </Tooltip>
         </div>
       )}

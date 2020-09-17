@@ -128,6 +128,15 @@ const SidebarItemForm: React.FC<SidebarItemFormProps> = ({}) => {
               label="Collapsed"
             />
           )}
+          <TextField
+            name={(Constants.HELP_DESCRIPTION as unknown) as string}
+            label="Help description"
+            variant="outlined"
+            value={itemData[Constants.HELP_DESCRIPTION] || ''}
+            onChange={handleChange}
+            autoComplete={'off'}
+            multiline
+          />
 
           <div className={classes.sidebarButtons}>
             <CustomisedButton type="submit" size={'large'} className={classes.saveButton}>

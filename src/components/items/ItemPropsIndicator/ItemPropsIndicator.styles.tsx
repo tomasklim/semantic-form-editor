@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles';
-import { green, red, purple } from '@material-ui/core/colors';
+import { green, red, purple, brown } from '@material-ui/core/colors';
 
 export default makeStyles(() => ({
   headerIndicators: {
@@ -21,12 +21,12 @@ export default makeStyles(() => ({
   },
   required: {
     '& span': {
-      backgroundColor: red[300]
+      backgroundColor: red[500]
     }
   },
   preceding: {
     '& span': {
-      backgroundColor: purple[300],
+      backgroundColor: purple[500],
       cursor: 'pointer',
       '& .MuiSvgIcon-fontSizeSmall': {
         fontSize: '0.75rem'
@@ -35,7 +35,12 @@ export default makeStyles(() => ({
   },
   collapsable: {
     '& span': {
-      backgroundColor: green[300]
+      backgroundColor: green[500]
+    }
+  },
+  helpDescription: {
+    '& span': {
+      backgroundColor: brown[900]
     }
   }
 }));
