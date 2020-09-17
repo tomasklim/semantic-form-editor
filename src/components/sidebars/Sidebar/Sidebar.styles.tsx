@@ -26,18 +26,5 @@ export default makeStyles((theme: ITheme) => ({
   emptySidebar: {
     fontStyle: 'italic',
     color: '#ffffffcc'
-  },
-  addPageButton: {
-    marginBottom: theme.spacing(1.5),
-    '&.MuiButton-outlined': {
-      width: 'fit-content',
-      border: '2px solid ' + theme.palette.custom.main
-    }
-  },
-  buttonHighlight: {
-    '&.MuiButton-outlined': {
-      backgroundColor: theme.palette.custom.main,
-      color: 'white'
-    }
   }
 }));

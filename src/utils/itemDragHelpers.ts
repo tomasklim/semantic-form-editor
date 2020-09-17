@@ -1,6 +1,8 @@
 import React from 'react';
 
 export const handleDragStart = (e: React.DragEvent<HTMLLIElement>) => {
+  e.stopPropagation();
+
   (e.target as HTMLLIElement).style.opacity = '0.4';
 
   disableNotDraggableAndDroppable();
@@ -13,6 +15,8 @@ export const handleDragStart = (e: React.DragEvent<HTMLLIElement>) => {
 };
 
 export const handleDragEnd = (e: React.DragEvent<HTMLLIElement>) => {
+  e.stopPropagation();
+
   (e.target as HTMLLIElement).style.opacity = '1';
 
   document.querySelectorAll('*').forEach((el) => ((el as HTMLDivElement | HTMLLIElement).style.pointerEvents = 'all'));

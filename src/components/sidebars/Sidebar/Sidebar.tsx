@@ -1,12 +1,9 @@
 import { Drawer } from '@material-ui/core';
 import useStyles from './Sidebar.styles';
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { CustomiseItemContext, OnSaveCallback } from '@contexts/CustomiseItemContext';
-import { FormStructureContext } from '@contexts/FormStructureContext';
-import AddIcon from '@material-ui/icons/Add';
-import { NEW_WIZARD_ITEM } from '../../../constants';
-import { CustomisedOutlineButton } from '@styles/CustomisedOutlineButton';
+import { CustomiseItemContext } from '@contexts/CustomiseItemContext';
 import SidebarItemForm from '@components/sidebars/SidebarItemForm/SidebarItemForm';
+import SidebarWizardStep from '@components/sidebars/SidebarWizardStep/SidebarWizardStep';
 
 // Header + Stepper
 const INITIAL_TOP = 60 + 88;
@@ -15,13 +12,10 @@ const Sidebar = () => {
   const classes = useStyles();
 
   const sidebarContainer = useRef<HTMLDivElement | null>(null);
-  const addButton = useRef<HTMLButtonElement | null>(null);
 
   const [drawerTop, setDrawerTop] = useState<number>(INITIAL_TOP);
 
-  const { getClonedFormStructure, addNewNode } = useContext(FormStructureContext);
-
-  const { customiseItemData, reset } = useContext(CustomiseItemContext);
+  const { reset } = useContext(CustomiseItemContext);
 
   // sidebar top position
   useEffect(() => {
@@ -49,25 +43,6 @@ const Sidebar = () => {
     };
   }, [sidebarContainer, reset]);
 
-  const addNewPage = () => {
-    const clonedFormStructure = getClonedFormStructure();
-
-    const root = clonedFormStructure.getRoot();
-
-    if (!root) {
-      console.error('Missing root', clonedFormStructure);
-      return;
-    }
-
-    customiseItemData({
-      itemData: NEW_WIZARD_ITEM,
-      onSave: (): OnSaveCallback => (itemData) => addNewNode(itemData, root, clonedFormStructure),
-      onCancel: () => () => addButton.current?.classList.remove(classes.buttonHighlight),
-      onInit: () => addButton.current?.classList.add(classes.buttonHighlight),
-      isNew: true
-    });
-  };
-
   return (
     <Drawer
       className={classes.drawer}
@@ -81,16 +56,7 @@ const Sidebar = () => {
       }}
       ref={sidebarContainer}
     >
-      <CustomisedOutlineButton
-        onClick={addNewPage}
-        title={'Add new wizard step'}
-        ref={addButton}
-        className={classes.addPageButton}
-        startIcon={<AddIcon />}
-        variant="outlined"
-      >
-        Add new wizard step
-      </CustomisedOutlineButton>
+      <SidebarWizardStep />
 
       <SidebarItemForm />
     </Drawer>

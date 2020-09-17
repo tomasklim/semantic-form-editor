@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction, useState } from 'react';
 import { cloneDeep } from 'lodash';
-import { Constants } from 's-forms';
+import { Constants, FormUtils } from 's-forms';
 import { JsonLdObj } from 'jsonld/jsonld-spec';
 import FormStructure from '@model/FormStructure';
 import {
@@ -20,7 +20,7 @@ interface FormStructureProviderProps {
 
 interface FormStructureContextValues {
   addNewNode: AddNewFormStructureNode;
-  moveNodeUnderNode: (movingNodeId: string, destinationPageId: string) => void;
+  moveNodeUnderNode: (movingNodeId: string, destinationPageId: string, wizard?: boolean) => void;
   formStructure: FormStructure;
   formFile: JsonLdObj;
   setFormFile: Dispatch<SetStateAction<FormStructure>>;
@@ -66,20 +66,33 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
     highlightQuestion(newItemData['@id']);
   };
 
-  const moveNodeUnderNode = (movingNodeId: string, destinationPageId: string) => {
+  const moveNodeUnderNode = (movingNodeId: string, destinationPageId: string, wizard: boolean = false) => {
     const clonedFormStructure = getClonedFormStructure();
 
     const movingNode = clonedFormStructure.structure.get(movingNodeId);
-    const destinationPage = clonedFormStructure.structure.get(destinationPageId);
+    const destinationPage = clonedFormStructure.structure.get(destinationPageId); // TODO rename
 
     if (!movingNode?.data || !movingNode?.parent || !destinationPage?.data) {
       console.warn("Missing movingNode's data or parent, or destination's data");
       return;
     }
 
+    // if moving node is non-section element => no highlight on wizard adds
+    if (
+      wizard &&
+      movingNode &&
+      destinationPage &&
+      !FormUtils.isSection(movingNode.data) &&
+      !FormUtils.isWizardStep(movingNode.data)
+    ) {
+      return;
+    }
+
     const layoutClass = movingNode.data[Constants.LAYOUT_CLASS];
 
-    if (layoutClass.includes(Constants.LAYOUT.WIZARD_STEP)) {
+    if (wizard && !layoutClass.includes(Constants.LAYOUT.WIZARD_STEP)) {
+      layoutClass.push(Constants.LAYOUT.WIZARD_STEP);
+    } else if (!wizard && layoutClass.includes(Constants.LAYOUT.WIZARD_STEP)) {
       layoutClass.splice(layoutClass.indexOf(Constants.LAYOUT.WIZARD_STEP), 1);
     }
 

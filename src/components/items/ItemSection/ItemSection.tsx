@@ -91,6 +91,8 @@ const ItemSection: FC<Props> = ({ questionData, position, buildFormUI }) => {
         return;
       }
 
+      document.getElementById('unordered-wizard-step-drop-area')!.style.display = 'none';
+
       moveNodeUnderNode(movingNodeId, destinationPageId);
     }
   };
@@ -115,14 +117,26 @@ const ItemSection: FC<Props> = ({ questionData, position, buildFormUI }) => {
     setExpanded(!expanded);
   };
 
+  const onDragStart = (e: React.DragEvent<HTMLLIElement>) => {
+    document.getElementById('unordered-wizard-step-drop-area')!.style.display = 'block';
+
+    handleDragStart(e);
+  };
+
+  const onDragEnd = (e: React.DragEvent<HTMLLIElement>) => {
+    document.getElementById('unordered-wizard-step-drop-area')!.style.display = 'none';
+
+    handleDragEnd(e);
+  };
+
   const relatedQuestions = questionData[Constants.HAS_SUBQUESTION];
 
   return (
     <li
       id={questionData['@id']}
       ref={itemContainer}
-      onDragStart={handleDragStart}
-      onDragEnd={handleDragEnd}
+      onDragStart={onDragStart}
+      onDragEnd={onDragEnd}
       onDragOver={handleDragOver}
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}
