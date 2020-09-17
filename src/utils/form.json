@@ -163,7 +163,11 @@
     {
       "@id": "x:form-1-default-q",
       "@type": "doc:question",
-      "has_related_question": ["rdfs:checkbox-q", "rdfs:friendship", "rdfs:dates"],
+      "has_related_question": [
+        "rdfs:checkbox-q",
+        "rdfs:friendship",
+        "rdfs:dates"
+      ],
       "has-layout-class": [
         "section",
         "wizard-step"

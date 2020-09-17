@@ -1,13 +1,22 @@
 import { makeStyles } from '@material-ui/core/styles';
-import { red, yellow } from '@material-ui/core/colors';
+import { green, red, purple } from '@material-ui/core/colors';
 
 export default makeStyles(() => ({
   headerIndicators: {
     display: 'flex',
     marginLeft: '1rem',
+    cursor: 'grab',
     '& div': {
-      width: '14px',
-      cursor: 'default'
+      width: '18px',
+      height: '24px'
+    },
+    '& .MuiBadge-badge': {
+      padding: 0,
+      height: '14px',
+      minWidth: '14px'
+    },
+    '& .MuiSvgIcon-fontSizeSmall': {
+      fontSize: '0.85rem'
     }
   },
   required: {
@@ -17,7 +26,16 @@ export default makeStyles(() => ({
   },
   preceding: {
     '& span': {
-      backgroundColor: yellow[300]
+      backgroundColor: purple[300],
+      cursor: 'pointer',
+      '& .MuiSvgIcon-fontSizeSmall': {
+        fontSize: '0.75rem'
+      }
+    }
+  },
+  collapsable: {
+    '& span': {
+      backgroundColor: green[300]
     }
   }
 }));

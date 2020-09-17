@@ -19,8 +19,8 @@ const ItemContent: FC<ItemContentProps> = ({ questionData }) => {
   if (FormUtils.isTypeahead(questionData)) {
     content = (
       <CustomisedFormControl variant="outlined" data-disabled="true">
-        <InputLabel id="demo-simple-select-outlined-label">Typeahead</InputLabel>
-        <Select labelId="demo-simple-select-outlined-label" label="Age" value={''} />
+        <InputLabel id="typeahead">Typeahead</InputLabel>
+        <Select labelId="typeahead" value={''} />
       </CustomisedFormControl>
     );
   } else if (FormUtils.isCalendar(questionData)) {
