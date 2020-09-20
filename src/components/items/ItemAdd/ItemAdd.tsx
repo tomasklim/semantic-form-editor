@@ -5,13 +5,14 @@ import {
   detectIsChildNode,
   enableNotDraggableAndDroppable,
   highlightQuestion,
+  isSectionOrWizardStep,
   moveQuestionToSpecificPosition,
   removeBeingPrecedingQuestion,
   removeFromSubQuestions,
   removePrecedingQuestion,
   sortRelatedQuestions
 } from '@utils/index';
-import { Constants, FormUtils } from 's-forms';
+import { Constants } from 's-forms';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import FormStructureNode from '@model/FormStructureNode';
 import { CustomiseItemContext, OnSaveCallback } from '@contexts/CustomiseItemContext';
@@ -59,13 +60,7 @@ const ItemAdd: FC<Props> = ({ parentId, position, wizard = false }) => {
       }
 
       // if moving node is non-section element => no highlight on wizard adds
-      if (
-        wizard &&
-        movingNode &&
-        targetNode &&
-        !FormUtils.isSection(movingNode.data) &&
-        !FormUtils.isWizardStep(movingNode.data)
-      ) {
+      if (wizard && !isSectionOrWizardStep(movingNode)) {
         return;
       }
 
@@ -121,8 +116,9 @@ const ItemAdd: FC<Props> = ({ parentId, position, wizard = false }) => {
       return;
     }
 
-    if (wizard && !FormUtils.isSection(movingNode.data) && !FormUtils.isWizardStep(movingNode.data)) {
+    if (wizard && !isSectionOrWizardStep(movingNode)) {
       console.error('Cannot move non-wizardstep or non-section under form.');
+
       return;
     }
 
@@ -156,6 +152,7 @@ const ItemAdd: FC<Props> = ({ parentId, position, wizard = false }) => {
     highlightQuestion(movingNodeId);
 
     window.scrollBy(0, 40);
+    document.getElementById('unordered-wizard-step-drop-area')!.style.display = 'none';
   };
 
   const handleAddNewQuestion = (e: React.MouseEvent) => {

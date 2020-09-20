@@ -1,4 +1,6 @@
 import React from 'react';
+import { FormUtils } from 's-forms';
+import FormStructureNode from '@model/FormStructureNode';
 
 export const handleDragStart = (e: React.DragEvent<HTMLLIElement>) => {
   e.stopPropagation();
@@ -38,4 +40,8 @@ export const enableDraggableAndDroppable = () => {
   document
     .querySelectorAll('[data-droppable=true],[draggable=true]')
     .forEach((el) => ((el as HTMLDivElement | HTMLLIElement).style.pointerEvents = 'all'));
+};
+
+export const isSectionOrWizardStep = (movingNode: FormStructureNode | undefined) => {
+  return movingNode && (FormUtils.isSection(movingNode.data) || FormUtils.isWizardStep(movingNode.data));
 };
