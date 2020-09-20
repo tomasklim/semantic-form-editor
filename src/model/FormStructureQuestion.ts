@@ -14,4 +14,5 @@ export interface FormStructureQuestion {
   [Constants.HAS_POSSIBLE_VALUES_QUERY]?: string;
   [Constants.ACCEPTS_ANSWER_VALUE]?: boolean;
   [Constants.HAS_TESTED_QUESTION]?: boolean;
+  [Constants.RDFS_COMMENT]?: string;
 }

@@ -5,6 +5,7 @@ import React, { FC } from 'react';
 import { Constants } from 's-forms';
 import { ExpandMore } from '@material-ui/icons';
 import VerticalAlignTopIcon from '@material-ui/icons/VerticalAlignTop';
+import CommentIcon from '@material-ui/icons/Comment';
 import { highlightQuestion } from '@utils/itemHelpers';
 
 type Props = {
@@ -46,6 +47,13 @@ const ItemPropsIndicator: FC<Props> = ({ question }) => {
         <div>
           <Tooltip title="Help description" arrow>
             <Badge badgeContent="?" className={classes.helpDescription} />
+          </Tooltip>
+        </div>
+      )}
+      {question[Constants.RDFS_COMMENT] && (
+        <div>
+          <Tooltip title={question[Constants.RDFS_COMMENT] || ''} arrow>
+            <Badge badgeContent={<CommentIcon fontSize="small" />} className={classes.comment} />
           </Tooltip>
         </div>
       )}

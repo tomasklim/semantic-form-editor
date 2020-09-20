@@ -272,7 +272,8 @@
         "rdfs:datetime"
       ],
       "has-layout-class": "section",
-      "label": "Dates"
+      "label": "Dates",
+      "comment": "This is comment, it is not clever"
     }
   ]
 }

@@ -42,5 +42,13 @@ export default makeStyles(() => ({
     '& span': {
       backgroundColor: brown[900]
     }
+  },
+  comment: {
+    '& span': {
+      backgroundColor: green[900],
+      '& .MuiSvgIcon-fontSizeSmall': {
+        fontSize: '0.65rem'
+      }
+    }
   }
 }));
