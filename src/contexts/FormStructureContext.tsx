@@ -1,10 +1,11 @@
 import React, { Dispatch, SetStateAction, useState } from 'react';
 import { cloneDeep } from 'lodash';
-import { Constants, FormUtils } from 's-forms';
+import { Constants } from 's-forms';
 import { JsonLdObj } from 'jsonld/jsonld-spec';
 import FormStructure from '@model/FormStructure';
 import {
   highlightQuestion,
+  isSectionOrWizardStep,
   moveQuestion,
   removeBeingPrecedingQuestion,
   removeFromSubQuestions,
@@ -20,7 +21,7 @@ interface FormStructureProviderProps {
 
 interface FormStructureContextValues {
   addNewNode: AddNewFormStructureNode;
-  moveNodeUnderNode: (movingNodeId: string, destinationPageId: string, wizard?: boolean) => void;
+  moveNodeUnderNode: (movingNodeId: string, destinationNodeId: string, wizard?: boolean) => void;
   formStructure: FormStructure;
   formFile: JsonLdObj;
   setFormFile: Dispatch<SetStateAction<FormStructure>>;
@@ -66,25 +67,19 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
     highlightQuestion(newItemData['@id']);
   };
 
-  const moveNodeUnderNode = (movingNodeId: string, destinationPageId: string, wizard: boolean = false) => {
+  const moveNodeUnderNode = (movingNodeId: string, destinationNodeId: string, wizard: boolean = false) => {
     const clonedFormStructure = getClonedFormStructure();
 
     const movingNode = clonedFormStructure.structure.get(movingNodeId);
-    const destinationPage = clonedFormStructure.structure.get(destinationPageId); // TODO rename
+    const destinationNode = clonedFormStructure.structure.get(destinationNodeId);
 
-    if (!movingNode?.data || !movingNode?.parent || !destinationPage?.data) {
+    if (!movingNode?.data || !movingNode?.parent || !destinationNode?.data) {
       console.warn("Missing movingNode's data or parent, or destination's data");
       return;
     }
 
     // if moving node is non-section element => no highlight on wizard adds
-    if (
-      wizard &&
-      movingNode &&
-      destinationPage &&
-      !FormUtils.isSection(movingNode.data) &&
-      !FormUtils.isWizardStep(movingNode.data)
-    ) {
+    if (wizard && !isSectionOrWizardStep(movingNode)) {
       return;
     }
 
@@ -104,10 +99,10 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
 
     removeFromSubQuestions(movingNodeParent, movingNode);
 
-    moveQuestion(movingNode, destinationPage);
+    moveQuestion(movingNode, destinationNode);
 
-    destinationPage.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(
-      destinationPage.data[Constants.HAS_SUBQUESTION]
+    destinationNode.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(
+      destinationNode.data[Constants.HAS_SUBQUESTION]
     );
 
     setFormStructure(clonedFormStructure);

@@ -5,8 +5,7 @@ import { NEW_WIZARD_ITEM } from '../../../constants';
 import { CustomiseItemContext, OnSaveCallback } from '@contexts/CustomiseItemContext';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import useStyles from './SidebarWizardStep.styles';
-import { enableNotDraggableAndDroppable } from '@utils/itemDragHelpers';
-import { FormUtils } from 's-forms';
+import { enableNotDraggableAndDroppable, isSectionOrWizardStep } from '@utils/itemDragHelpers';
 
 const SidebarWizardStep = ({}) => {
   const classes = useStyles();
@@ -68,15 +67,8 @@ const SidebarWizardStep = ({}) => {
   const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
     if ((e.target as HTMLDivElement).classList.contains(classes.unorderedDropArea)) {
       const movingNode = formStructure.getNode(e.dataTransfer.types.slice(-1)[0]);
-      const targetNode = formStructure.getRoot();
 
-      // TODO make function
-      if (
-        movingNode &&
-        targetNode &&
-        !FormUtils.isSection(movingNode.data) &&
-        !FormUtils.isWizardStep(movingNode.data)
-      ) {
+      if (!isSectionOrWizardStep(movingNode)) {
         return;
       }
 
@@ -114,7 +106,7 @@ const SidebarWizardStep = ({}) => {
         onDragLeave={handleDragLeave}
         className={classes.unorderedDropArea}
       >
-        TODO: Drop here for unordered wizard step
+        Drop here for unordered wizard step
       </div>
     </>
   );
