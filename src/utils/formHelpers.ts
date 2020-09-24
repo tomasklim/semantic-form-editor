@@ -7,9 +7,10 @@ import { Context, JsonLdObj } from 'jsonld/jsonld-spec';
 import { ExpandedForm } from '@model/ExpandedForm';
 
 export const buildFormStructure = async (form: ExpandedForm) => {
-  unifyFormStructure(form);
-
   const flattenedForm: JsonLdObj = await jsonld.flatten(form, {});
+
+  // @ts-ignore
+  unifyFormStructure(flattenedForm);
 
   const expandedFormStructure = JsonLdFramingUtils.expandStructure(flattenedForm) as Array<FormStructureQuestion>;
 
