@@ -100,3 +100,33 @@ const transformSubQuestionsToArray = (element: FormStructureQuestion): Array<For
 const transformHasLayoutClassToArray = (element: string): Array<string> => {
   return [element];
 };
+
+export const getJsonAttValue = (question: FormStructureQuestion, attribute: symbol) => {
+  if (!question) {
+    return null;
+  }
+
+  // @ts-ignore
+  const att = question[attribute];
+
+  if (!att) {
+    return null;
+  }
+
+  if (typeof att === 'string') {
+    return att;
+  }
+
+  if (att['@value']) {
+    return att['@value'];
+  }
+
+  return null;
+};
+
+export const createJsonAttValue = (value: string | boolean, dataType: string) => {
+  return {
+    '@type': dataType,
+    '@value': value
+  };
+};

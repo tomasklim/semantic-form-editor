@@ -7,8 +7,35 @@ import useStyles from './SidebarItemForm.styles';
 import { getId } from '@utils/itemHelpers';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import { CustomiseItemContext } from '@contexts/CustomiseItemContext';
+import { createJsonAttValue, getJsonAttValue } from '@utils/formHelpers';
 
 interface SidebarItemFormProps {}
+
+const TEXT_FIELD = 'text';
+
+const layoutTypeOptions = [
+  { value: Constants.LAYOUT.QUESTION_SECTION, title: 'Section' },
+  { value: TEXT_FIELD, title: 'Text Input' },
+  { value: Constants.LAYOUT.QUESTION_TYPEAHEAD, title: 'Typeahead' },
+  { value: Constants.LAYOUT.TEXTAREA, title: 'Textarea' },
+  { value: Constants.LAYOUT.DATE, title: 'Date' },
+  { value: Constants.LAYOUT.TIME, title: 'Time' },
+  { value: Constants.LAYOUT.DATETIME, title: 'Datetime' },
+  { value: Constants.LAYOUT.MASKED_INPUT, title: 'Masked Input' },
+  { value: Constants.LAYOUT.CHECKBOX, title: 'Checkbox' }
+];
+
+// no section
+const layoutTypeFields = [
+  TEXT_FIELD,
+  Constants.LAYOUT.QUESTION_TYPEAHEAD,
+  Constants.LAYOUT.TEXTAREA,
+  Constants.LAYOUT.DATE,
+  Constants.LAYOUT.TIME,
+  Constants.LAYOUT.DATETIME,
+  Constants.LAYOUT.MASKED_INPUT,
+  Constants.LAYOUT.CHECKBOX
+];
 
 const SidebarItemForm: React.FC<SidebarItemFormProps> = ({}) => {
   const classes = useStyles();
@@ -48,6 +75,10 @@ const SidebarItemForm: React.FC<SidebarItemFormProps> = ({}) => {
       }
 
       setItemData({ ...itemData!, [Constants.LAYOUT_CLASS]: layoutClass });
+    } else if (name === ((Constants.REQUIRES_ANSWER as unknown) as string)) {
+      const requiresAttribute = createJsonAttValue(value, Constants.XSD.BOOLEAN);
+
+      setItemData({ ...itemData!, [name]: requiresAttribute });
     } else {
       setItemData({ ...itemData!, [name]: value });
     }
@@ -64,6 +95,37 @@ const SidebarItemForm: React.FC<SidebarItemFormProps> = ({}) => {
   const onCancel = () => {
     reset();
   };
+
+  const findLayoutTypeOfQuestion = () => {
+    let layoutClasses = itemData && itemData[Constants.LAYOUT_CLASS];
+
+    if (isNew && layoutClasses && !layoutClasses.length) {
+      return '';
+    }
+
+    if (!layoutClasses || !layoutClasses.length) {
+      return TEXT_FIELD;
+    }
+
+    if (FormUtils.isWizardStep(itemData)) {
+      return Constants.LAYOUT.WIZARD_STEP;
+    }
+
+    if (layoutClasses.length === 1 && layoutClasses[0] === Constants.LAYOUT.QUESTION_SECTION) {
+      return Constants.LAYOUT.QUESTION_SECTION;
+    }
+
+    const layoutType = layoutClasses.filter((layoutClass) => layoutTypeFields.includes(layoutClass));
+
+    if (layoutType.length !== 1) {
+      console.warn(`Question with id: ${itemData?.['@id']} does not have any defined layout type!`);
+      return TEXT_FIELD;
+    }
+
+    return layoutType[0];
+  };
+
+  const layoutType = findLayoutTypeOfQuestion();
 
   return (
     <>
@@ -86,7 +148,7 @@ const SidebarItemForm: React.FC<SidebarItemFormProps> = ({}) => {
               <Select
                 native
                 label="Layout type"
-                value={itemData[Constants.LAYOUT_CLASS]![0] || ''}
+                value={layoutType || ''}
                 onChange={handleChange}
                 inputProps={{
                   name: Constants.LAYOUT_CLASS,
@@ -94,15 +156,11 @@ const SidebarItemForm: React.FC<SidebarItemFormProps> = ({}) => {
                 }}
               >
                 <option aria-label="None" value="" />
-                <option value={'type-ahead'}>Typeahead</option>
-                <option value={'textarea'}>Textarea</option>
-                <option value={'textfield'}>Text Input</option>
-                <option value={'section'}>Section</option>
-                <option value={'date'}>Date</option>
-                <option value={'time'}>Time</option>
-                <option value={'datetime'}>Datetime</option>
-                <option value={'masked-input'}>Masked Input</option>
-                <option value={'checkbox'}>Checkbox</option>
+                {layoutTypeOptions.map((layoutType) => (
+                  <option key={layoutType.value} value={layoutType.value}>
+                    {layoutType.title}
+                  </option>
+                ))}
               </Select>
             </FormControl>
           )}
@@ -111,7 +169,7 @@ const SidebarItemForm: React.FC<SidebarItemFormProps> = ({}) => {
               <Checkbox
                 name={(Constants.REQUIRES_ANSWER as unknown) as string}
                 onChange={handleChange}
-                checked={itemData[Constants.REQUIRES_ANSWER] || false}
+                checked={getJsonAttValue(itemData, Constants.REQUIRES_ANSWER) || false}
               />
             }
             label="Required"
