@@ -10,6 +10,7 @@ import SquaredIconButton from '@styles/SquaredIconButton';
 import { CustomiseItemContext, OnSaveCallback } from '@contexts/CustomiseItemContext';
 import useStyles from './ItemMenu.styles';
 import { NEW_ITEM } from '../../../constants';
+import { EditorContext } from '@contexts/EditorContext';
 
 interface Props {
   question: FormStructureQuestion;
@@ -20,6 +21,7 @@ const ItemMenu: FC<Props> = ({ question }) => {
 
   const { getClonedFormStructure, setFormStructure, addNewNode } = useContext(FormStructureContext);
   const { customiseItemData } = useContext(CustomiseItemContext);
+  const { SFormsConfig, setSFormsConfig, activeStep, setActiveStep } = useContext(EditorContext);
 
   const [open, setOpen] = useState<boolean>(false);
   const anchorEl = useRef<HTMLDivElement | null>(null);
@@ -96,6 +98,13 @@ const ItemMenu: FC<Props> = ({ question }) => {
     setFormStructure(clonedFormStructure);
   };
 
+  const handleViewInPreview = (e: React.SyntheticEvent<EventTarget>) => {
+    e.stopPropagation();
+
+    setSFormsConfig({ ...SFormsConfig, startingQuestionId: question['@id'] });
+    setActiveStep(activeStep + 1);
+  };
+
   return (
     <span>
       <SquaredIconButton ref={addButton} onClick={addNewItem} title="Add new related question unordered">
@@ -111,6 +120,7 @@ const ItemMenu: FC<Props> = ({ question }) => {
             <Paper>
               <ClickAwayListener onClickAway={handleClose}>
                 <MenuList>
+                  <MenuItem onClick={handleViewInPreview}>View in preview</MenuItem>
                   <MenuItem onClick={handleDelete}>Delete question</MenuItem>
                 </MenuList>
               </ClickAwayListener>

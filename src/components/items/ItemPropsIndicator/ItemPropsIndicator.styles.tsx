@@ -46,6 +46,7 @@ export default makeStyles(() => ({
   comment: {
     '& span': {
       backgroundColor: green[900],
+      cursor: 'pointer',
       '& .MuiSvgIcon-fontSizeSmall': {
         fontSize: '0.65rem'
       }

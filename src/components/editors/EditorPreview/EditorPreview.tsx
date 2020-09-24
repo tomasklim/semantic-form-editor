@@ -3,6 +3,7 @@ import { FormStructureContext } from '@contexts/FormStructureContext';
 import SForms from 's-forms';
 import { exportForm } from '@utils/index';
 import useStyles from './EditorPreview.styles';
+import { EditorContext } from '@contexts/EditorContext';
 
 interface EditorPreviewProps {}
 
@@ -10,6 +11,7 @@ const EditorPreview: FC<EditorPreviewProps> = ({}) => {
   const classes = useStyles();
 
   const { formContext, getClonedFormStructure } = useContext(FormStructureContext);
+  const { SFormsConfig } = useContext(EditorContext);
 
   const [form, setForm] = useState<any>(null);
 
@@ -32,7 +34,8 @@ const EditorPreview: FC<EditorPreviewProps> = ({}) => {
     modalView: false,
     horizontalWizardNav: true,
     wizardStepButtons: false,
-    enableForwardSkip: true
+    enableForwardSkip: true,
+    startingQuestionId: SFormsConfig.startingQuestionId
   };
 
   if (!form) {

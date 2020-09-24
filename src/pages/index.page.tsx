@@ -2,6 +2,7 @@ import React from 'react';
 import Layout from '@components/structure/Layout/Layout';
 import dynamic from 'next/dynamic';
 import Loader from '@components/mix/Loader/Loader';
+import { EditorProvider } from '@contexts/EditorContext';
 
 const Editor = dynamic(() => import('@components/editors/Editor/Editor'), {
   ssr: false,
@@ -20,7 +21,9 @@ const FormStructureProvider = dynamic(
 const IndexPage: React.FC = () => (
   <Layout title="Home">
     <FormStructureProvider>
-      <Editor />
+      <EditorProvider>
+        <Editor />
+      </EditorProvider>
     </FormStructureProvider>
   </Layout>
 );

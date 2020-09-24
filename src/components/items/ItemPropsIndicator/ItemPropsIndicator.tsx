@@ -1,12 +1,13 @@
 import useStyles from './ItemPropsIndicator.styles';
 import { Badge, Tooltip } from '@material-ui/core';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
-import React, { FC } from 'react';
+import React, { FC, useContext } from 'react';
 import { Constants } from 's-forms';
 import { ExpandMore } from '@material-ui/icons';
 import VerticalAlignTopIcon from '@material-ui/icons/VerticalAlignTop';
 import CommentIcon from '@material-ui/icons/Comment';
 import { highlightQuestion } from '@utils/itemHelpers';
+import { EditorContext } from '@contexts/EditorContext';
 
 type Props = {
   question: FormStructureQuestion;
@@ -15,9 +16,17 @@ type Props = {
 const ItemPropsIndicator: FC<Props> = ({ question }) => {
   const classes = useStyles();
 
+  const { SFormsConfig, setSFormsConfig, activeStep, setActiveStep } = useContext(EditorContext);
+
   const handlePrecedingQuestionBadgeClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     highlightQuestion(question[Constants.HAS_PRECEDING_QUESTION]!['@id']);
+  };
+
+  const handleViewInPreview = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setSFormsConfig({ ...SFormsConfig, startingQuestionId: question['@id'] });
+    setActiveStep(activeStep + 1);
   };
 
   return (
@@ -38,7 +47,7 @@ const ItemPropsIndicator: FC<Props> = ({ question }) => {
       )}
       {question[Constants.LAYOUT_CLASS] && question[Constants.LAYOUT_CLASS].includes(Constants.LAYOUT.COLLAPSED) && (
         <div>
-          <Tooltip title="Collapsable" arrow>
+          <Tooltip title="Collapsed" arrow>
             <Badge badgeContent={<ExpandMore fontSize="small" />} className={classes.collapsable} />
           </Tooltip>
         </div>
@@ -51,7 +60,7 @@ const ItemPropsIndicator: FC<Props> = ({ question }) => {
         </div>
       )}
       {question[Constants.RDFS_COMMENT] && (
-        <div>
+        <div onClick={handleViewInPreview}>
           <Tooltip title={question[Constants.RDFS_COMMENT] || ''} arrow>
             <Badge badgeContent={<CommentIcon fontSize="small" />} className={classes.comment} />
           </Tooltip>

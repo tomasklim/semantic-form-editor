@@ -13,6 +13,7 @@ import EditorNew from '@components/editors/EditorNew/EditorNew';
 import EditorExport from '@components/editors/EditorExport/EditorExport';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import { CustomiseItemProvider } from '@contexts/CustomiseItemContext';
+import { EditorContext } from '@contexts/EditorContext';
 
 interface EditorProps {}
 
@@ -20,10 +21,10 @@ const Editor: FC<EditorProps> = ({}) => {
   const classes = useStyles();
 
   const { setFormFile } = useContext(FormStructureContext);
+  const { activeStep, setActiveStep } = useContext(EditorContext);
 
   const steps = ['New / Import', 'Customize', 'Preview', 'Export'];
 
-  const [activeStep, setActiveStep] = React.useState(0);
   const [unlockedSteps, unlockSteps] = React.useState(false);
 
   const getStepContent = () => {
