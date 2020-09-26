@@ -1,5 +1,6 @@
 import { Constants } from 's-forms';
 
+/* if you add attribute to model and generate value for it in code, add it also to constant below */
 export interface FormStructureQuestion {
   '@id': string;
   '@type': string;
@@ -7,12 +8,23 @@ export interface FormStructureQuestion {
   [Constants.LAYOUT_CLASS]: Array<string>;
   [Constants.HAS_PRECEDING_QUESTION]?: { '@id': string };
   [Constants.HAS_SUBQUESTION]?: Array<FormStructureQuestion> | undefined;
-  [Constants.IS_RELEVANT_IF]?: string;
   [Constants.REQUIRES_ANSWER]?: boolean;
   [Constants.HELP_DESCRIPTION]?: string;
-  [Constants.HAS_QUESTION_ORIGIN]?: string;
-  [Constants.HAS_POSSIBLE_VALUES_QUERY]?: string;
-  [Constants.ACCEPTS_ANSWER_VALUE]?: boolean;
-  [Constants.HAS_TESTED_QUESTION]?: boolean;
   [Constants.RDFS_COMMENT]?: string;
+  [Constants.INPUT_MASK]?: string;
+  [Constants.HAS_OPTIONS_QUERY]?: string;
+  [key: string]: any;
 }
+
+export const FORM_STRUCTURE_QUESTION_ATTRIBUTES = [
+  '@id',
+  '@type',
+  Constants.RDFS_LABEL,
+  Constants.LAYOUT_CLASS,
+  Constants.INPUT_MASK,
+  Constants.HAS_OPTIONS_QUERY,
+  Constants.HELP_DESCRIPTION,
+  Constants.HAS_SUBQUESTION,
+  Constants.HAS_PRECEDING_QUESTION,
+  Constants.REQUIRES_ANSWER
+];

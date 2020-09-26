@@ -19,6 +19,11 @@ const Sidebar = () => {
 
   // sidebar top position
   useEffect(() => {
+    document.addEventListener('scroll', calculateSidebarTopPosition);
+    return document.removeEventListener('scroll', calculateSidebarTopPosition);
+  }, []);
+
+  const calculateSidebarTopPosition = () => {
     document.addEventListener('scroll', () => {
       const scrollTop = document.documentElement.scrollTop;
 
@@ -27,12 +32,13 @@ const Sidebar = () => {
         setDrawerTop(drawerTop > 0 ? drawerTop : 0);
       }
     });
-  }, []);
+  };
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
+      e.stopPropagation();
       // @ts-ignore
-      if (!sidebarContainer.current?.contains(e.target)) {
+      if (!sidebarContainer.current?.contains(e.target) && !e.target.matches('[class^="MuiAutocomplete"]')) {
         reset();
       }
     };

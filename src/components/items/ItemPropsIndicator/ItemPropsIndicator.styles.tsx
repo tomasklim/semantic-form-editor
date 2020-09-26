@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles';
-import { green, red, purple, brown } from '@material-ui/core/colors';
+import { green, red, purple, brown, teal, amber } from '@material-ui/core/colors';
 
 export default makeStyles(() => ({
   headerIndicators: {
@@ -50,6 +50,26 @@ export default makeStyles(() => ({
       '& .MuiSvgIcon-fontSizeSmall': {
         fontSize: '0.65rem'
       }
+    }
+  },
+  inputMask: {
+    '& span': {
+      backgroundColor: teal[900],
+      fontSize: '0.55rem'
+    }
+  },
+  disabled: {
+    '& span': {
+      backgroundColor: amber[900],
+      '& .MuiSvgIcon-fontSizeSmall': {
+        fontSize: '0.65rem'
+      }
+    }
+  },
+  optionsQuery: {
+    '& span': {
+      backgroundColor: teal[900],
+      fontSize: '0.55rem'
     }
   }
 }));

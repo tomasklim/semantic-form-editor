@@ -7,6 +7,8 @@ export default makeStyles((theme: ITheme) => ({
     flexDirection: 'column',
     backgroundColor: theme.palette.custom[800],
     padding: theme.spacing(1.75, 2),
+    maxHeight: 'calc(100vh - (60px + 72px + 90px + 40px))', // header + stepperbar + space + footer
+    overflow: 'scroll',
     borderRadius: '4px',
     '& > *': {
       margin: theme.spacing(1, 0)
@@ -45,6 +47,25 @@ export default makeStyles((theme: ITheme) => ({
     },
     '& .MuiCheckbox-colorSecondary.Mui-checked': {
       color: '#ffffffcc'
+    },
+    '& .MuiLink-button': {
+      marginTop: 0,
+      marginBottom: theme.spacing(2),
+      color: theme.palette.custom.main,
+      display: 'flex',
+      justifyContent: 'left',
+      alignItems: 'center',
+      textDecoration: 'none',
+      outline: 'none !important',
+      '&:hover': {
+        color: 'white'
+      },
+      '&:focus': {
+        color: 'white'
+      }
+    },
+    '& .MuiFormControlLabel-root': {
+      width: 'fit-content'
     }
   },
   sidebarButtons: {

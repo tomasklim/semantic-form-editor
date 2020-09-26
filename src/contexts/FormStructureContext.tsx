@@ -120,10 +120,15 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
       return;
     }
 
-    node.data[Constants.RDFS_LABEL] = itemData[Constants.RDFS_LABEL];
-    node.data[Constants.LAYOUT_CLASS] = itemData[Constants.LAYOUT_CLASS];
-    node.data[Constants.REQUIRES_ANSWER] = itemData[Constants.REQUIRES_ANSWER];
-    node.data[Constants.HELP_DESCRIPTION] = itemData[Constants.HELP_DESCRIPTION];
+    Object.keys(node.data).forEach((key) => {
+      if (!itemData[key]) {
+        delete node.data[key];
+      }
+    });
+
+    Object.keys(itemData).forEach((key) => {
+      node.data[key] = itemData[key];
+    });
 
     setFormStructure(clonedFormStructure);
   };

@@ -85,6 +85,9 @@
     "requires-answer-if": {
       "@id": "http://onto.fel.cvut.cz/ontologies/form/requires-answer-if",
       "@type": "@id"
+    },
+    "has-media-content": {
+      "@id": "http://onto.fel.cvut.cz/ontologies/form/has-media-content"
     }
   },
   "@graph": [
@@ -149,7 +152,11 @@
       "@type": "doc:question",
       "has-question-origin": "@id",
       "requires-answer": true,
-      "label": "First name"
+      "label": "First name",
+      "has-datatype": "xsd:int",
+      "has-unit": "mm",
+      "maxInclusive": "20",
+      "minInclusive": "0"
     },
     {
       "@id": "rdfs:label-q",
@@ -272,6 +279,7 @@
         "rdfs:datetime"
       ],
       "has-layout-class": "section",
+      "has-media-content": "https://drive.google.com/file/d/18HBeiOb5zthhIFosidc7mRTZtNAd3Ur7/preview",
       "label": "Dates",
       "comment": "This is comment, it is not clever"
     }

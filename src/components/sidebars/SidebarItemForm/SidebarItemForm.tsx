@@ -8,6 +8,7 @@ import { getId } from '@utils/itemHelpers';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import { CustomiseItemContext } from '@contexts/CustomiseItemContext';
 import { createJsonAttValue, getJsonAttValue } from '@utils/formHelpers';
+import FormCustomAttributeList from '@components/sidebars/FormCustomAttributeList/FormCustomAttributeList';
 
 interface SidebarItemFormProps {}
 
@@ -65,22 +66,31 @@ const SidebarItemForm: React.FC<SidebarItemFormProps> = ({}) => {
       });
     } else if (name === ((Constants.LAYOUT_CLASS as unknown) as string)) {
       setItemData({ ...itemData!, [Constants.LAYOUT_CLASS]: [value] });
-    } else if (name === Constants.LAYOUT.COLLAPSED) {
+    } else if (name === Constants.LAYOUT.COLLAPSED || name === Constants.LAYOUT.DISABLED) {
       const layoutClass = itemData![Constants.LAYOUT_CLASS]!;
 
-      if (layoutClass.includes(Constants.LAYOUT.COLLAPSED)) {
-        layoutClass.splice(layoutClass.indexOf(Constants.LAYOUT.COLLAPSED), 1);
+      if (layoutClass.includes(name)) {
+        layoutClass.splice(layoutClass.indexOf(name), 1);
       } else {
-        layoutClass.push(Constants.LAYOUT.COLLAPSED);
+        layoutClass.push(name);
       }
 
       setItemData({ ...itemData!, [Constants.LAYOUT_CLASS]: layoutClass });
     } else if (name === ((Constants.REQUIRES_ANSWER as unknown) as string)) {
-      const requiresAttribute = createJsonAttValue(value, Constants.XSD.BOOLEAN);
+      if (!value) {
+        setItemData({ ...itemData!, [name]: null });
+      } else {
+        const requiresAttribute = createJsonAttValue(value, Constants.XSD.BOOLEAN);
 
-      setItemData({ ...itemData!, [name]: requiresAttribute });
+        setItemData({ ...itemData!, [name]: requiresAttribute });
+      }
     } else {
-      setItemData({ ...itemData!, [name]: value });
+      try {
+        const fieldValue = JSON.parse(value);
+        setItemData({ ...itemData!, [name]: fieldValue });
+      } catch (_) {
+        setItemData({ ...itemData!, [name]: value });
+      }
     }
   };
 
@@ -117,7 +127,11 @@ const SidebarItemForm: React.FC<SidebarItemFormProps> = ({}) => {
 
     const layoutType = layoutClasses.filter((layoutClass) => layoutTypeFields.includes(layoutClass));
 
-    if (layoutType.length !== 1) {
+    if (!layoutType.length && FormUtils.isSection(itemData)) {
+      return Constants.LAYOUT.QUESTION_SECTION;
+    }
+
+    if (!layoutType.length) {
       console.warn(`Question with id: ${itemData?.['@id']} does not have any defined layout type!`);
       return TEXT_FIELD;
     }
@@ -164,6 +178,39 @@ const SidebarItemForm: React.FC<SidebarItemFormProps> = ({}) => {
               </Select>
             </FormControl>
           )}
+          {FormUtils.isMaskedInput(itemData) && (
+            <TextField
+              name={(Constants.INPUT_MASK as unknown) as string}
+              label="Input mask"
+              variant="outlined"
+              value={itemData[Constants.INPUT_MASK] || ''}
+              onChange={handleChange}
+              autoComplete={'off'}
+              required
+            />
+          )}
+          {FormUtils.isTypeahead(itemData) && (
+            <TextField
+              name={(Constants.HAS_OPTIONS_QUERY as unknown) as string}
+              label="Options query"
+              variant="outlined"
+              value={itemData[Constants.HAS_OPTIONS_QUERY] || ''}
+              onChange={handleChange}
+              autoComplete={'off'}
+              required
+            />
+          )}
+
+          <TextField
+            name={(Constants.HELP_DESCRIPTION as unknown) as string}
+            label="Help description"
+            variant="outlined"
+            value={itemData[Constants.HELP_DESCRIPTION] || ''}
+            onChange={handleChange}
+            autoComplete={'off'}
+            multiline
+          />
+
           <FormControlLabel
             control={
               <Checkbox
@@ -186,15 +233,18 @@ const SidebarItemForm: React.FC<SidebarItemFormProps> = ({}) => {
               label="Collapsed"
             />
           )}
-          <TextField
-            name={(Constants.HELP_DESCRIPTION as unknown) as string}
-            label="Help description"
-            variant="outlined"
-            value={itemData[Constants.HELP_DESCRIPTION] || ''}
-            onChange={handleChange}
-            autoComplete={'off'}
-            multiline
+          <FormControlLabel
+            control={
+              <Checkbox
+                name={Constants.LAYOUT.DISABLED}
+                onChange={handleChange}
+                checked={itemData[Constants.LAYOUT_CLASS]?.includes(Constants.LAYOUT.DISABLED)}
+              />
+            }
+            label="Disabled"
           />
+
+          <FormCustomAttributeList itemData={itemData} setItemData={setItemData} handleChange={handleChange} />
 
           <div className={classes.sidebarButtons}>
             <CustomisedButton type="submit" size={'large'} className={classes.saveButton}>
@@ -206,7 +256,7 @@ const SidebarItemForm: React.FC<SidebarItemFormProps> = ({}) => {
           </div>
         </form>
       )}
-      {!itemData && <div className={classes.newItemDataContainer}>TODO: Hint: Did you know...?</div>}
+      {/*!itemData && <div className={classes.newItemDataContainer}>TODO: Hint: Did you know...?</div>*/}
     </>
   );
 };
