@@ -19,20 +19,19 @@ const Sidebar = () => {
 
   // sidebar top position
   useEffect(() => {
-    document.addEventListener('scroll', calculateSidebarTopPosition);
-    return document.removeEventListener('scroll', calculateSidebarTopPosition);
-  }, []);
-
-  const calculateSidebarTopPosition = () => {
-    document.addEventListener('scroll', () => {
+    const calculateSidebarTopPosition = () => {
       const scrollTop = document.documentElement.scrollTop;
 
       if (scrollTop >= 0) {
         const drawerTop = INITIAL_TOP - scrollTop;
         setDrawerTop(drawerTop > 0 ? drawerTop : 0);
       }
-    });
-  };
+    };
+
+    console.log('nazdar');
+    document.addEventListener('scroll', () => calculateSidebarTopPosition());
+    return document.removeEventListener('scroll', () => calculateSidebarTopPosition());
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
