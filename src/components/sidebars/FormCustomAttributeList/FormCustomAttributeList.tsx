@@ -7,6 +7,7 @@ import FormCustomAttributeInput from '@components/sidebars/FormCustomAttributeIn
 import { Clear } from '@material-ui/icons';
 import { createFakeChangeEvent, createJsonAttIdValue, getJsonAttValue } from '@utils/formHelpers';
 import { FormStructureContext } from '@contexts/FormStructureContext';
+import { isObject, isNull } from 'lodash';
 
 interface FormCustomAttributeListProps {
   itemData: FormStructureQuestion;
@@ -28,6 +29,7 @@ const FormCustomAttributeList: React.FC<FormCustomAttributeListProps> = ({ itemD
 
   const handleCustomAttributeInputChange = (e: React.ChangeEvent) => {
     try {
+      // if value is JSON, do not make any code modifications
       const value = JSON.parse((e.target as HTMLInputElement).value);
 
       const fakeEvent: any = createFakeChangeEvent((e.target as HTMLInputElement).name, value);
@@ -35,15 +37,14 @@ const FormCustomAttributeList: React.FC<FormCustomAttributeListProps> = ({ itemD
       handleChange(fakeEvent);
     } catch (_) {
       const contextAttribute = Object.values(formContext).find(
-        (value) => value['@id'] === (e.target as HTMLInputElement).name
+        (contextAttribute) => contextAttribute['@id'] === (e.target as HTMLInputElement).name
       );
 
-      let value;
+      let value: any = (e.target as HTMLInputElement).value;
+      // if attribute is available in context and is not just a string value
       if (contextAttribute && contextAttribute['@type'] === '@id') {
-        value = createJsonAttIdValue((e.target as HTMLInputElement).value);
+        value = createJsonAttIdValue(value);
       }
-
-      value = value || (e.target as HTMLInputElement).value;
 
       const fakeEvent: any = createFakeChangeEvent((e.target as HTMLInputElement).name, value);
 
@@ -58,9 +59,7 @@ const FormCustomAttributeList: React.FC<FormCustomAttributeListProps> = ({ itemD
         const jsonAttValue = getJsonAttValue(itemData, key, '@id');
         // if jsonAttValue is null, but value is not null and is object, then it is JSON
         const textFieldValue =
-          !jsonAttValue && typeof value === 'object' && value !== null
-            ? JSON.stringify(value, undefined, 2)
-            : jsonAttValue;
+          !jsonAttValue && isObject(value) && !isNull(value) ? JSON.stringify(value, undefined, 2) : jsonAttValue;
         return (
           <FormControl key={key} variant="outlined" className={classes.genericTextField}>
             <InputLabel htmlFor="outlined-adornment-password">{key}</InputLabel>

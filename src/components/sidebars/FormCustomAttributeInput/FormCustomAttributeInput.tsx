@@ -1,19 +1,18 @@
 import React, { Dispatch, SetStateAction, useContext, useRef } from 'react';
 import useStyles from './FormCustomAttributeInput.styles';
 import TextField from '@material-ui/core/TextField';
-import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import { CustomisedButton } from '@styles/CustomisedButton';
 import { CustomisedLinkButton } from '@styles/CustomisedLinkButton';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import { FORM_STRUCTURE_QUESTION_ATTRIBUTES } from '@model/FormStructureQuestion';
 import { createFakeChangeEvent, createJsonAttIdValue } from '@utils/formHelpers';
+import { isString } from 'lodash';
 
 interface FormCustomAttributeInputProps {
   handleChange: (event: React.ChangeEvent | React.ChangeEvent<{ value: unknown }>) => void;
   setShowCustomAttribute: Dispatch<SetStateAction<boolean>>;
 }
-
-const filter = createFilterOptions<JsonLdContextAttribute>();
 
 const FormCustomAttributeInput: React.FC<FormCustomAttributeInputProps> = ({
   handleChange,
@@ -44,7 +43,7 @@ const FormCustomAttributeInput: React.FC<FormCustomAttributeInputProps> = ({
     _: React.ChangeEvent<{}>,
     customAttribute: string | { id: string; title: string }
   ) => {
-    if (typeof customAttribute === 'string') {
+    if (isString(customAttribute)) {
       setCustomAttributeName({
         id: customAttribute
       });
@@ -57,13 +56,14 @@ const FormCustomAttributeInput: React.FC<FormCustomAttributeInputProps> = ({
   };
 
   const addGenericAttribute = () => {
+    // check HTML5 required validation
     if (!customAttValueEl.current!.checkValidity() || !customAttValueName.current!.checkValidity()) {
       customAttValueEl.current!.reportValidity();
       customAttValueName.current!.reportValidity();
       return;
     }
 
-    let value;
+    let value: any = customAttributeValue;
     if (customAttributeName?.title) {
       // @ts-ignore
       const contextAttribute = formContext[customAttributeName?.title];
@@ -71,8 +71,6 @@ const FormCustomAttributeInput: React.FC<FormCustomAttributeInputProps> = ({
         value = createJsonAttIdValue(customAttributeValue);
       }
     }
-
-    value = value || customAttributeValue;
 
     const fakeEvent: any = createFakeChangeEvent(customAttributeName!.id, value);
 
@@ -104,21 +102,7 @@ const FormCustomAttributeInput: React.FC<FormCustomAttributeInputProps> = ({
             inputRef={customAttValueName}
           />
         )}
-        freeSolo
         disableClearable
-        filterOptions={(options, params) => {
-          const filtered = filter(options, params);
-
-          // Suggest using a new value
-          if (params.inputValue !== '') {
-            filtered.push({
-              id: params.inputValue,
-              title: `Use "${params.inputValue}"`
-            });
-          }
-
-          return filtered;
-        }}
       />
       <TextField
         label="Custom attribute value"

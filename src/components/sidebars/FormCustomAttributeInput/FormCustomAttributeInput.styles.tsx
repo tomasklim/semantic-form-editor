@@ -9,6 +9,9 @@ export default makeStyles((theme: ITheme) => ({
     '& > *': {
       margin: theme.spacing(1, 0),
       width: '100%'
+    },
+    '& .MuiAutocomplete-popupIndicator': {
+      color: 'white'
     }
   },
   addNewAttributeTitle: {
