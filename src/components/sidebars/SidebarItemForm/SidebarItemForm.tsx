@@ -85,12 +85,7 @@ const SidebarItemForm: React.FC<SidebarItemFormProps> = ({}) => {
         setItemData({ ...itemData!, [name]: requiresAttribute });
       }
     } else {
-      try {
-        const fieldValue = JSON.parse(value);
-        setItemData({ ...itemData!, [name]: fieldValue });
-      } catch (_) {
-        setItemData({ ...itemData!, [name]: value });
-      }
+      setItemData({ ...itemData!, [name]: value });
     }
   };
 

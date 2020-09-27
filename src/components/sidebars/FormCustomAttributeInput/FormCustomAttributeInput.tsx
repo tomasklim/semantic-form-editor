@@ -6,6 +6,7 @@ import { CustomisedButton } from '@styles/CustomisedButton';
 import { CustomisedLinkButton } from '@styles/CustomisedLinkButton';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import { FORM_STRUCTURE_QUESTION_ATTRIBUTES } from '@model/FormStructureQuestion';
+import { createFakeChangeEvent, createJsonAttIdValue } from '@utils/formHelpers';
 
 interface FormCustomAttributeInputProps {
   handleChange: (event: React.ChangeEvent | React.ChangeEvent<{ value: unknown }>) => void;
@@ -39,14 +40,18 @@ const FormCustomAttributeInput: React.FC<FormCustomAttributeInputProps> = ({
 
   const contextAttributes: JsonLdContextAttribute[] = parseContextAttributes();
 
-  const handleChangeCustomAttributeName = (_: React.ChangeEvent<{}>, customAttribute: string | { id: string }) => {
+  const handleChangeCustomAttributeName = (
+    _: React.ChangeEvent<{}>,
+    customAttribute: string | { id: string; title: string }
+  ) => {
     if (typeof customAttribute === 'string') {
       setCustomAttributeName({
         id: customAttribute
       });
     } else if (customAttribute && customAttribute.id) {
       setCustomAttributeName({
-        id: customAttribute.id
+        id: customAttribute.id,
+        title: customAttribute.title
       });
     }
   };
@@ -58,12 +63,18 @@ const FormCustomAttributeInput: React.FC<FormCustomAttributeInputProps> = ({
       return;
     }
 
-    const fakeEvent: any = {
-      target: {
-        name: customAttributeName!.id,
-        value: customAttributeValue
+    let value;
+    if (customAttributeName?.title) {
+      // @ts-ignore
+      const contextAttribute = formContext[customAttributeName?.title];
+      if (contextAttribute && contextAttribute['@type'] && contextAttribute['@type'] === '@id') {
+        value = createJsonAttIdValue(customAttributeValue);
       }
-    };
+    }
+
+    value = value || customAttributeValue;
+
+    const fakeEvent: any = createFakeChangeEvent(customAttributeName!.id, value);
 
     handleChange(fakeEvent);
     setShowCustomAttribute(false);
@@ -75,6 +86,7 @@ const FormCustomAttributeInput: React.FC<FormCustomAttributeInputProps> = ({
       <Autocomplete
         // @ts-ignore
         value={customAttributeName}
+        // @ts-ignore
         onChange={handleChangeCustomAttributeName}
         selectOnFocus
         clearOnBlur

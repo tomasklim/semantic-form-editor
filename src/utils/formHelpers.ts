@@ -101,7 +101,7 @@ const transformHasLayoutClassToArray = (element: string): Array<string> => {
   return [element];
 };
 
-export const getJsonAttValue = (question: FormStructureQuestion, attribute: symbol) => {
+export const getJsonAttValue = (question: FormStructureQuestion, attribute: string | symbol, by?: string) => {
   if (!question) {
     return null;
   }
@@ -117,6 +117,10 @@ export const getJsonAttValue = (question: FormStructureQuestion, attribute: symb
     return att;
   }
 
+  if (by && att[by]) {
+    return att[by];
+  }
+
   if (att['@value']) {
     return att['@value'];
   }
@@ -128,5 +132,20 @@ export const createJsonAttValue = (value: string | boolean, dataType: string) =>
   return {
     '@type': dataType,
     '@value': value
+  };
+};
+
+export const createJsonAttIdValue = (id: string) => {
+  return {
+    '@id': id
+  };
+};
+
+export const createFakeChangeEvent = (name: string, value: any): any => {
+  return {
+    target: {
+      name,
+      value
+    }
   };
 };

@@ -28,7 +28,7 @@ const Sidebar = () => {
       }
     };
 
-    console.log('nazdar');
+    document.addEventListener('scroll', () => calculateSidebarTopPosition());
     document.addEventListener('scroll', () => calculateSidebarTopPosition());
     return document.removeEventListener('scroll', () => calculateSidebarTopPosition());
   }, []);
