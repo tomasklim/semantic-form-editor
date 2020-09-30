@@ -9,12 +9,14 @@ import { FormStructureContext } from '@contexts/FormStructureContext';
 import { CustomiseItemContext } from '@contexts/CustomiseItemContext';
 import { createJsonAttValue, getJsonAttValue } from '@utils/formHelpers';
 import FormCustomAttributeList from '@components/sidebars/FormCustomAttributeList/FormCustomAttributeList';
+import { isBoolean, isUndefined } from 'lodash';
 
 interface SidebarItemFormProps {}
 
 const TEXT_FIELD = 'text';
 
 const layoutTypeOptions = [
+  { value: Constants.LAYOUT.WIZARD_STEP, title: 'Wizard step' },
   { value: Constants.LAYOUT.QUESTION_SECTION, title: 'Section' },
   { value: TEXT_FIELD, title: 'Text Input' },
   { value: Constants.LAYOUT.QUESTION_TYPEAHEAD, title: 'Typeahead' },
@@ -41,7 +43,7 @@ const layoutTypeFields = [
 const SidebarItemForm: React.FC<SidebarItemFormProps> = ({}) => {
   const classes = useStyles();
 
-  const { formStructure } = useContext(FormStructureContext);
+  const { formStructure, isWizardless } = useContext(FormStructureContext);
 
   const { onSaveCallback, itemData, reset, setItemData, isNew } = useContext(CustomiseItemContext);
 
@@ -151,7 +153,7 @@ const SidebarItemForm: React.FC<SidebarItemFormProps> = ({}) => {
             autoFocus
             required
           />
-          {!FormUtils.isWizardStep(itemData) && (
+          {(isUndefined(isWizardless) || !FormUtils.isWizardStep(itemData)) && (
             <FormControl variant="outlined">
               <InputLabel htmlFor="layout-type">Layout type</InputLabel>
               <Select
@@ -165,11 +167,17 @@ const SidebarItemForm: React.FC<SidebarItemFormProps> = ({}) => {
                 }}
               >
                 <option aria-label="None" value="" />
-                {layoutTypeOptions.map((layoutType) => (
-                  <option key={layoutType.value} value={layoutType.value}>
-                    {layoutType.title}
-                  </option>
-                ))}
+                {layoutTypeOptions.map((layoutType) => {
+                  if (isBoolean(isWizardless) && layoutType.value === Constants.LAYOUT.WIZARD_STEP) {
+                    return null;
+                  }
+
+                  return (
+                    <option key={layoutType.value} value={layoutType.value}>
+                      {layoutType.title}
+                    </option>
+                  );
+                })}
               </Select>
             </FormControl>
           )}

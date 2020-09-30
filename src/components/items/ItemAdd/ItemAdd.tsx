@@ -25,13 +25,14 @@ type Props = {
   parentId: string;
   position: number;
   wizard?: boolean;
+  topLevelQuestion?: boolean;
 };
 
-const ItemAdd: FC<Props> = ({ parentId, position, wizard = false }) => {
+const ItemAdd: FC<Props> = ({ parentId, position, wizard = false, topLevelQuestion = false }) => {
   const classes = useStyles();
   const addContainer = useRef<HTMLDivElement | null>(null);
 
-  const { formStructure, getClonedFormStructure, setFormStructure } = useContext(FormStructureContext);
+  const { formStructure, getClonedFormStructure, setFormStructure, isWizardless } = useContext(FormStructureContext);
   const { customiseItemData } = useContext(CustomiseItemContext);
 
   // fix drag and drop bug https://stackoverflow.com/questions/17946886/hover-sticks-to-element-on-drag-and-drop
@@ -152,7 +153,7 @@ const ItemAdd: FC<Props> = ({ parentId, position, wizard = false }) => {
     highlightQuestion(movingNodeId);
 
     window.scrollBy(0, 40);
-    document.getElementById('unordered-wizard-step-drop-area')!.style.display = 'none';
+    document.getElementById('unordered-top-level-question-drop-area')!.style.display = 'none';
   };
 
   const handleAddNewQuestion = (e: React.MouseEvent) => {
@@ -168,7 +169,7 @@ const ItemAdd: FC<Props> = ({ parentId, position, wizard = false }) => {
     }
 
     customiseItemData({
-      itemData: wizard ? NEW_WIZARD_ITEM : NEW_ITEM,
+      itemData: isWizardless === false && wizard ? NEW_WIZARD_ITEM : NEW_ITEM,
       onSave: (): OnSaveCallback => (itemData) =>
         addNewQuestionToSpecificPosition(itemData, targetNode, clonedFormStructure),
       onCancel: () => () => addContainer.current?.classList.remove(classes.highlightAddLine),
@@ -199,7 +200,7 @@ const ItemAdd: FC<Props> = ({ parentId, position, wizard = false }) => {
 
   return (
     <div
-      className={classNames(classes.addLine, { [classes.marginTop]: wizard && position === 0 })}
+      className={classNames(classes.addLine, { [classes.marginTop]: topLevelQuestion })}
       ref={addContainer}
       data-droppable={true}
       onMouseEnter={handleMouseEnter}
@@ -209,7 +210,11 @@ const ItemAdd: FC<Props> = ({ parentId, position, wizard = false }) => {
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
       onClick={handleAddNewQuestion}
-      title={wizard ? 'Add new wizard step on certain position' : 'Add new related question on certain position'}
+      title={
+        wizard
+          ? 'Add new wizard step on certain position' + position
+          : 'Add new related question on certain position' + position
+      }
     >
       <AddIcon fontSize={'large'} />
     </div>

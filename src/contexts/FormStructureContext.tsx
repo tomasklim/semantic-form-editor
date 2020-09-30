@@ -1,6 +1,6 @@
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { cloneDeep } from 'lodash';
-import { Constants } from 's-forms';
+import { Constants, FormUtils } from 's-forms';
 import { JsonLdObj } from 'jsonld/jsonld-spec';
 import FormStructure from '@model/FormStructure';
 import {
@@ -30,6 +30,7 @@ interface FormStructureContextValues {
   getClonedFormStructure: () => FormStructure;
   formContext: JsonLdObj;
   updateNode: Function;
+  isWizardless: boolean | undefined;
 }
 
 type AddNewFormStructureNode = (
@@ -48,6 +49,21 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
   const [formContext, setFormContext] = useState<JsonLdObj>(null);
   // @ts-ignore
   const [formFile, setFormFile] = useState<JsonLdObj>(null);
+  // @ts-ignore
+  const [isWizardless, setIsWizardless] = useState<boolean | undefined>(undefined);
+
+  useEffect(() => {
+    if (formStructure?.root?.data && formStructure.root.data[Constants.HAS_SUBQUESTION]) {
+      const rootSubQuestions = formStructure.root.data[Constants.HAS_SUBQUESTION];
+
+      if (!rootSubQuestions?.length) {
+        setIsWizardless(undefined);
+      } else {
+        const isWizardless = rootSubQuestions.every((question) => !FormUtils.isWizardStep(question));
+        setIsWizardless(isWizardless);
+      }
+    }
+  }, [formStructure]);
 
   const getClonedFormStructure = (): FormStructure => {
     return cloneDeep(formStructure)!;
@@ -79,15 +95,15 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
     }
 
     // if moving node is non-section element => no highlight on wizard adds
-    if (wizard && !isSectionOrWizardStep(movingNode)) {
+    if (wizard && !isWizardless && !isSectionOrWizardStep(movingNode)) {
       return;
     }
 
     const layoutClass = movingNode.data[Constants.LAYOUT_CLASS];
 
-    if (wizard && !layoutClass.includes(Constants.LAYOUT.WIZARD_STEP)) {
+    if (wizard && !isWizardless && !layoutClass.includes(Constants.LAYOUT.WIZARD_STEP)) {
       layoutClass.push(Constants.LAYOUT.WIZARD_STEP);
-    } else if (!wizard && layoutClass.includes(Constants.LAYOUT.WIZARD_STEP)) {
+    } else if (!wizard && !isWizardless && layoutClass.includes(Constants.LAYOUT.WIZARD_STEP)) {
       layoutClass.splice(layoutClass.indexOf(Constants.LAYOUT.WIZARD_STEP), 1);
     }
 
@@ -144,9 +160,10 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
       formStructure,
       formContext,
       formFile,
-      setFormFile
+      setFormFile,
+      isWizardless
     }),
-    [formFile, formStructure, formContext]
+    [formFile, formStructure, formContext, isWizardless]
   );
 
   return <FormStructureContext.Provider value={values}>{children}</FormStructureContext.Provider>;

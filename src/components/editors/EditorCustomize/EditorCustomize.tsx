@@ -19,30 +19,14 @@ const EditorCustomize: FC<EditorCustomizeProps> = ({}) => {
   const buildFormUI = (
     questionData: FormStructureQuestion,
     position: number,
-    parentQuestion: FormStructureQuestion | undefined
+    parentQuestion: FormStructureQuestion
   ): JSX.Element => {
     const relatedQuestions = questionData[Constants.HAS_SUBQUESTION];
+    const topLevelQuestion = FormUtils.isForm(parentQuestion);
+
     let item = null;
 
-    if (FormUtils.isForm(questionData)) {
-      const relatedQuestions = questionData[Constants.HAS_SUBQUESTION];
-
-      if (!relatedQuestions || !relatedQuestions.length) {
-        return <ItemFormEmpty key={'empty-page'} />;
-      }
-
-      return (
-        <React.Fragment>
-          <ItemAdd parentId={questionData['@id']} position={0} wizard={true} />
-          {relatedQuestions.map((question, index) => (
-            <React.Fragment key={question['@id']}>
-              <ItemSection questionData={question} buildFormUI={buildFormUI} position={index + 1} />
-              <ItemAdd parentId={questionData['@id']} position={index + 1} wizard={true} />
-            </React.Fragment>
-          ))}
-        </React.Fragment>
-      );
-    } else if (FormUtils.isTypeahead(questionData)) {
+    if (FormUtils.isTypeahead(questionData)) {
       item = <Item questionData={questionData} position={position} />;
     } else if (FormUtils.isCalendar(questionData)) {
       item = <Item questionData={questionData} position={position} />;
@@ -52,11 +36,25 @@ const EditorCustomize: FC<EditorCustomizeProps> = ({}) => {
       item = <Item questionData={questionData} position={position} />;
     } else if (FormUtils.isTextarea(questionData, '')) {
       item = <Item questionData={questionData} position={position} />;
-    } else if (FormUtils.isSection(questionData)) {
+    } else if (FormUtils.isSection(questionData) || FormUtils.isWizardStep(questionData)) {
+      const isWizardStep = FormUtils.isWizardStep(questionData);
       return (
         <React.Fragment key={questionData['@id']}>
-          <ItemSection questionData={questionData} buildFormUI={buildFormUI} position={position} />
-          <ItemAdd parentId={parentQuestion?.['@id'] || ''} position={position} />
+          {position === 0 && (
+            <ItemAdd
+              parentId={parentQuestion['@id']}
+              position={0}
+              wizard={isWizardStep}
+              topLevelQuestion={topLevelQuestion}
+            />
+          )}
+          <ItemSection
+            questionData={questionData}
+            buildFormUI={buildFormUI}
+            position={position}
+            topLevelQuestion={topLevelQuestion}
+          />
+          <ItemAdd parentId={parentQuestion['@id']} position={position + 1} wizard={isWizardStep} />
         </React.Fragment>
       );
     } else {
@@ -66,24 +64,29 @@ const EditorCustomize: FC<EditorCustomizeProps> = ({}) => {
 
     return (
       <React.Fragment key={questionData['@id']}>
+        {position === 0 && (
+          <ItemAdd parentId={parentQuestion['@id']} position={0} topLevelQuestion={topLevelQuestion} />
+        )}
         {item}
         {relatedQuestions && (
           <ol id={questionData['@id']} className={classes.ol}>
-            {relatedQuestions!.length > 0 && <ItemAdd parentId={questionData['@id']} position={0} />}
-            {relatedQuestions!.map((question, index) => buildFormUI(question, index + 1, questionData))}
+            {relatedQuestions!.map((question, index) => buildFormUI(question, index, questionData))}
           </ol>
         )}
-        <ItemAdd
-          parentId={parentQuestion?.['@id'] || ''} // empty string for root only
-          position={position}
-        />
+        <ItemAdd parentId={parentQuestion['@id']} position={position + 1} />
       </React.Fragment>
     );
   };
 
+  const rootSubquestions = formStructure.root.data[Constants.HAS_SUBQUESTION];
+
   return (
     <div>
-      <ol className={classes.content}>{buildFormUI(formStructure.root.data, 1, undefined)}</ol>
+      <ol className={classes.content}>
+        {!rootSubquestions?.length && <ItemFormEmpty key={'empty-page'} />}
+
+        {rootSubquestions?.map((question, index) => buildFormUI(question, index, formStructure.root.data))}
+      </ol>
       <Sidebar />
     </div>
   );

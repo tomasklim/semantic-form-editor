@@ -31,7 +31,7 @@
     "notistack": "^1.0.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "s-forms": "./s-forms-0.2.10.tgz"
+    "s-forms": "./s-forms-0.2.13.tgz"
   },
   "devDependencies": {
     "@types/classnames": "^2.2.10",

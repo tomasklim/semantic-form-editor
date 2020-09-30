@@ -1,7 +1,7 @@
 import { CustomisedOutlineButton } from '@styles/CustomisedOutlineButton';
 import AddIcon from '@material-ui/icons/Add';
 import React, { useContext, useRef } from 'react';
-import { NEW_WIZARD_ITEM } from '../../../constants';
+import { NEW_ITEM, NEW_WIZARD_ITEM } from '../../../constants';
 import { CustomiseItemContext, OnSaveCallback } from '@contexts/CustomiseItemContext';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import useStyles from './SidebarWizardStep.styles';
@@ -13,7 +13,9 @@ const SidebarWizardStep = ({}) => {
   const addButton = useRef<HTMLButtonElement | null>(null);
   const unorderedDropArea = useRef<HTMLDivElement | null>(null);
 
-  const { getClonedFormStructure, addNewNode, formStructure, moveNodeUnderNode } = useContext(FormStructureContext);
+  const { getClonedFormStructure, addNewNode, formStructure, moveNodeUnderNode, isWizardless } = useContext(
+    FormStructureContext
+  );
 
   const { customiseItemData } = useContext(CustomiseItemContext);
 
@@ -28,7 +30,7 @@ const SidebarWizardStep = ({}) => {
     }
 
     customiseItemData({
-      itemData: NEW_WIZARD_ITEM,
+      itemData: isWizardless === false ? NEW_WIZARD_ITEM : NEW_ITEM,
       onSave: (): OnSaveCallback => (itemData) => addNewNode(itemData, root, clonedFormStructure),
       onCancel: () => () => addButton.current?.classList.remove(classes.buttonHighlight),
       onInit: () => addButton.current?.classList.add(classes.buttonHighlight),
@@ -68,7 +70,7 @@ const SidebarWizardStep = ({}) => {
     if ((e.target as HTMLDivElement).classList.contains(classes.unorderedDropArea)) {
       const movingNode = formStructure.getNode(e.dataTransfer.types.slice(-1)[0]);
 
-      if (!isSectionOrWizardStep(movingNode)) {
+      if (!isWizardless && !isSectionOrWizardStep(movingNode)) {
         return;
       }
 
@@ -94,11 +96,11 @@ const SidebarWizardStep = ({}) => {
         startIcon={<AddIcon />}
         variant="outlined"
       >
-        Add new wizard step
+        {isWizardless === false ? 'Add new wizard step' : 'Add new question'}
       </CustomisedOutlineButton>
       <div
         data-droppable={true}
-        id="unordered-wizard-step-drop-area"
+        id="unordered-top-level-question-drop-area"
         ref={unorderedDropArea}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
@@ -106,7 +108,7 @@ const SidebarWizardStep = ({}) => {
         onDragLeave={handleDragLeave}
         className={classes.unorderedDropArea}
       >
-        Drop here for unordered wizard step
+        Drop here for unordered top level question
       </div>
     </>
   );

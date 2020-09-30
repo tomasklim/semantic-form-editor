@@ -17,7 +17,7 @@ const Item: FC<Props> = ({ questionData, position }) => {
   const itemContainer = useRef<HTMLLIElement | null>(null);
 
   const { customiseItemData } = useContext(CustomiseItemContext);
-  const { updateNode } = useContext(FormStructureContext);
+  const { updateNode, isWizardless } = useContext(FormStructureContext);
 
   // fix drag and drop bug https://stackoverflow.com/questions/17946886/hover-sticks-to-element-on-drag-and-drop
   const handleMouseEnter = () => {
@@ -42,19 +42,35 @@ const Item: FC<Props> = ({ questionData, position }) => {
     });
   };
 
+  const onDragStart = (e: React.DragEvent<HTMLLIElement>) => {
+    if (isWizardless) {
+      document.getElementById('unordered-top-level-question-drop-area')!.style.display = 'block';
+    }
+
+    handleDragStart(e);
+  };
+
+  const onDragEnd = (e: React.DragEvent<HTMLLIElement>) => {
+    if (isWizardless) {
+      document.getElementById('unordered-top-level-question-drop-area')!.style.display = 'none';
+    }
+
+    handleDragEnd(e);
+  };
+
   return (
     <li
       id={questionData['@id']}
       ref={itemContainer}
-      onDragStart={handleDragStart}
-      onDragEnd={handleDragEnd}
+      onDragStart={onDragStart}
+      onDragEnd={onDragEnd}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onClick={onClickHandler}
       className={classes.listItem}
     >
       <CustomisedCard variant="outlined">
-        <ItemHeader container={itemContainer} nodeData={questionData} position={position} expandable={false} />
+        <ItemHeader container={itemContainer} nodeData={questionData} position={position + 1} expandable={false} />
         <ItemContent questionData={questionData} />
       </CustomisedCard>
     </li>

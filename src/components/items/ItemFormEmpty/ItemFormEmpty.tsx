@@ -4,7 +4,7 @@ import { Accordion } from '@material-ui/core';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import AddIcon from '@material-ui/icons/Add';
 import { CustomiseItemContext, OnSaveCallback } from '@contexts/CustomiseItemContext';
-import { NEW_WIZARD_ITEM } from '../../../constants';
+import { NEW_ITEM, NEW_WIZARD_ITEM } from '../../../constants';
 
 type ItemFormEmptyProps = {};
 
@@ -12,7 +12,7 @@ const ItemFormEmpty: FC<ItemFormEmptyProps> = ({}) => {
   const classes = useStyles();
   const itemFormEmptyContainer = useRef<HTMLDivElement | null>(null);
 
-  const { getClonedFormStructure, addNewNode } = useContext(FormStructureContext);
+  const { getClonedFormStructure, addNewNode, isWizardless } = useContext(FormStructureContext);
   const { customiseItemData } = useContext(CustomiseItemContext);
 
   const addNewPage = (e: React.MouseEvent) => {
@@ -28,7 +28,7 @@ const ItemFormEmpty: FC<ItemFormEmptyProps> = ({}) => {
     }
 
     customiseItemData({
-      itemData: NEW_WIZARD_ITEM,
+      itemData: isWizardless === false ? NEW_WIZARD_ITEM : NEW_ITEM,
       onSave: (): OnSaveCallback => (itemData) => addNewNode(itemData, root, clonedFormStructure),
       onCancel: () => () => itemFormEmptyContainer.current?.classList.remove(classes.pageHighlight),
       onInit: () => itemFormEmptyContainer.current?.classList.add(classes.pageHighlight),

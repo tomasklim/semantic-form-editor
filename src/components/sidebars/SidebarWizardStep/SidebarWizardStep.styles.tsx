@@ -29,7 +29,7 @@ export default makeStyles((theme: ITheme) => ({
     border: '2px dashed ' + theme.palette.custom.main,
     color: theme.palette.custom.main
   },
-  '@global #unordered-wizard-step-drop-area': {
+  '@global #unordered-top-level-question-drop-area': {
     display: 'none'
   }
 }));

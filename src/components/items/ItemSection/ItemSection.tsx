@@ -3,7 +3,6 @@ import useStyles, { CustomisedAccordionDetails } from './ItemSection.styles';
 import ItemHeader from '@components/items/ItemHeader/ItemHeader';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
 import { Constants } from 's-forms';
-import ItemAdd from '@components/items/ItemAdd/ItemAdd';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import { enableNotDraggableAndDroppable, handleDragEnd, handleDragStart, highlightQuestion } from '@utils/index';
 import { CustomiseItemContext } from '@contexts/CustomiseItemContext';
@@ -91,7 +90,7 @@ const ItemSection: FC<Props> = ({ questionData, position, buildFormUI }) => {
         return;
       }
 
-      document.getElementById('unordered-wizard-step-drop-area')!.style.display = 'none';
+      document.getElementById('unordered-top-level-question-drop-area')!.style.display = 'none';
 
       moveNodeUnderNode(movingNodeId, destinationPageId);
     }
@@ -118,13 +117,13 @@ const ItemSection: FC<Props> = ({ questionData, position, buildFormUI }) => {
   };
 
   const onDragStart = (e: React.DragEvent<HTMLLIElement>) => {
-    document.getElementById('unordered-wizard-step-drop-area')!.style.display = 'block';
+    document.getElementById('unordered-top-level-question-drop-area')!.style.display = 'block';
 
     handleDragStart(e);
   };
 
   const onDragEnd = (e: React.DragEvent<HTMLLIElement>) => {
-    document.getElementById('unordered-wizard-step-drop-area')!.style.display = 'none';
+    document.getElementById('unordered-top-level-question-drop-area')!.style.display = 'none';
 
     handleDragEnd(e);
   };
@@ -151,7 +150,7 @@ const ItemSection: FC<Props> = ({ questionData, position, buildFormUI }) => {
         <ItemHeader
           container={itemContainer}
           nodeData={questionData}
-          position={position}
+          position={position + 1}
           expandable={true}
           expanded={expanded}
           expandItemSection={expandItemSection}
@@ -162,8 +161,7 @@ const ItemSection: FC<Props> = ({ questionData, position, buildFormUI }) => {
           onMouseOver={handleMouseOver}
         >
           <ol id={questionData['@id']} className={classes.ol}>
-            {relatedQuestions!.length > 0 && <ItemAdd parentId={questionData['@id']} position={0} />}
-            {relatedQuestions!.map((question, index) => buildFormUI(question, index + 1, questionData))}
+            {relatedQuestions!.map((question, index) => buildFormUI(question, index, questionData))}
             {!relatedQuestions!.length && (
               <div id={questionData['@id']} className={classes.emptySection}>
                 Empty section...
