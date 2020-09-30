@@ -48,12 +48,7 @@ const EditorCustomize: FC<EditorCustomizeProps> = ({}) => {
               topLevelQuestion={topLevelQuestion}
             />
           )}
-          <ItemSection
-            questionData={questionData}
-            buildFormUI={buildFormUI}
-            position={position}
-            topLevelQuestion={topLevelQuestion}
-          />
+          <ItemSection questionData={questionData} buildFormUI={buildFormUI} position={position} />
           <ItemAdd parentId={parentQuestion['@id']} position={position + 1} wizard={isWizardStep} />
         </React.Fragment>
       );

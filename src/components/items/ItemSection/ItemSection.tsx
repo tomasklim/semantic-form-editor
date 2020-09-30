@@ -4,7 +4,13 @@ import ItemHeader from '@components/items/ItemHeader/ItemHeader';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
 import { Constants } from 's-forms';
 import { FormStructureContext } from '@contexts/FormStructureContext';
-import { enableNotDraggableAndDroppable, handleDragEnd, handleDragStart, highlightQuestion } from '@utils/index';
+import {
+  detectIsChildNode,
+  enableNotDraggableAndDroppable,
+  handleDragEnd,
+  handleDragStart,
+  highlightQuestion
+} from '@utils/index';
 import { CustomiseItemContext } from '@contexts/CustomiseItemContext';
 import { Accordion } from '@material-ui/core';
 
@@ -24,7 +30,7 @@ const ItemSection: FC<Props> = ({ questionData, position, buildFormUI }) => {
 
   const [expanded, setExpanded] = useState<boolean>(true);
 
-  const { moveNodeUnderNode, updateNode } = useContext(FormStructureContext);
+  const { formStructure, moveNodeUnderNode, updateNode } = useContext(FormStructureContext);
   const { customiseItemData } = useContext(CustomiseItemContext);
 
   // fix drag and drop bug https://stackoverflow.com/questions/17946886/hover-sticks-to-element-on-drag-and-drop
@@ -54,6 +60,14 @@ const ItemSection: FC<Props> = ({ questionData, position, buildFormUI }) => {
 
   const handleDragEnter = (e: React.DragEvent<HTMLLIElement>) => {
     if ((e.target as HTMLDivElement).classList.contains(classes.listItemSection)) {
+      const movingNode = formStructure.getNode(e.dataTransfer.types.slice(-1)[0]);
+      const targetNode = formStructure.getNode((e.target as HTMLLIElement).id);
+
+      // if target element is child of moving element => no highlight
+      if (movingNode && targetNode && detectIsChildNode(movingNode, targetNode)) {
+        return;
+      }
+
       (e.target as HTMLDivElement).classList.add(classes.listItemSectionOver);
       e.dataTransfer.dropEffect = 'move';
     }

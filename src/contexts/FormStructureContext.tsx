@@ -4,6 +4,7 @@ import { Constants, FormUtils } from 's-forms';
 import { JsonLdObj } from 'jsonld/jsonld-spec';
 import FormStructure from '@model/FormStructure';
 import {
+  detectIsChildNode,
   highlightQuestion,
   isSectionOrWizardStep,
   moveQuestion,
@@ -91,6 +92,12 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
 
     if (!movingNode?.data || !movingNode?.parent || !destinationNode?.data) {
       console.warn("Missing movingNode's data or parent, or destination's data");
+      return;
+    }
+
+    // if target element is child of moving element => no highlight
+    if (movingNode && destinationNode && detectIsChildNode(movingNode, destinationNode)) {
+      console.warn('Cannot move item under the same item!');
       return;
     }
 

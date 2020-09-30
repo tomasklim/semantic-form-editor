@@ -47,6 +47,7 @@ const SidebarWizardStep = ({}) => {
       enableNotDraggableAndDroppable();
 
       unorderedDropArea.current!.classList.remove(classes.unorderedDropAreaHighlight);
+      document.getElementById('unordered-top-level-question-drop-area')!.style.display = 'none';
 
       const destinationNodeId = formStructure.getRoot().data['@id'];
       const movingNodeId = e.dataTransfer.types.slice(-1)[0];
@@ -90,7 +91,7 @@ const SidebarWizardStep = ({}) => {
     <>
       <CustomisedOutlineButton
         onClick={addNewPage}
-        title={'Add new wizard step'}
+        title={isWizardless === false ? 'Add new wizard step' : 'Add new question'}
         ref={addButton}
         className={classes.addPageButton}
         startIcon={<AddIcon />}
