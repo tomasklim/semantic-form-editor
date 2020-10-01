@@ -6,10 +6,10 @@ import { CustomisedLinkButton } from '@styles/CustomisedLinkButton';
 import useStyles from './SidebarItemForm.styles';
 import { getId } from '@utils/itemHelpers';
 import { FormStructureContext } from '@contexts/FormStructureContext';
-import { CustomiseItemContext } from '@contexts/CustomiseItemContext';
+import { CustomiseQuestionContext } from '@contexts/CustomiseQuestionContext';
 import { createJsonAttValue, getJsonAttValue } from '@utils/formHelpers';
 import FormCustomAttributeList from '@components/sidebars/FormCustomAttributeList/FormCustomAttributeList';
-import { isBoolean, isUndefined } from 'lodash';
+import { isUndefined, isBoolean } from 'lodash';
 
 interface SidebarItemFormProps {}
 
@@ -45,7 +45,13 @@ const SidebarItemForm: React.FC<SidebarItemFormProps> = ({}) => {
 
   const { formStructure, isWizardless } = useContext(FormStructureContext);
 
-  const { onSaveCallback, itemData, reset, setItemData, isNew } = useContext(CustomiseItemContext);
+  const {
+    onSaveCallback,
+    customisingQuestion,
+    resetCustomisationProcess,
+    setCustomisingQuestion,
+    isNewQuestion
+  } = useContext(CustomiseQuestionContext);
 
   const handleChange = (event: React.ChangeEvent | React.ChangeEvent<{ value: unknown }>) => {
     const target = event.target as HTMLInputElement | HTMLSelectElement;
@@ -54,22 +60,22 @@ const SidebarItemForm: React.FC<SidebarItemFormProps> = ({}) => {
     const name = target.name;
 
     if (name === ((Constants.RDFS_LABEL as unknown) as string)) {
-      let id = itemData!['@id'];
-      if (isNew) {
+      let id = customisingQuestion!['@id'];
+      if (isNewQuestion) {
         do {
           id = getId(value);
         } while (formStructure.getNode(id));
       }
 
-      setItemData({
-        ...itemData!,
+      setCustomisingQuestion({
+        ...customisingQuestion!,
         [Constants.RDFS_LABEL]: value,
         '@id': id
       });
     } else if (name === ((Constants.LAYOUT_CLASS as unknown) as string)) {
-      setItemData({ ...itemData!, [Constants.LAYOUT_CLASS]: [value] });
+      setCustomisingQuestion({ ...customisingQuestion!, [Constants.LAYOUT_CLASS]: [value] });
     } else if (name === Constants.LAYOUT.COLLAPSED || name === Constants.LAYOUT.DISABLED) {
-      const layoutClass = itemData![Constants.LAYOUT_CLASS]!;
+      const layoutClass = customisingQuestion![Constants.LAYOUT_CLASS]!;
 
       if (layoutClass.includes(name)) {
         layoutClass.splice(layoutClass.indexOf(name), 1);
@@ -77,36 +83,36 @@ const SidebarItemForm: React.FC<SidebarItemFormProps> = ({}) => {
         layoutClass.push(name);
       }
 
-      setItemData({ ...itemData!, [Constants.LAYOUT_CLASS]: layoutClass });
+      setCustomisingQuestion({ ...customisingQuestion!, [Constants.LAYOUT_CLASS]: layoutClass });
     } else if (name === ((Constants.REQUIRES_ANSWER as unknown) as string)) {
       if (!value) {
-        setItemData({ ...itemData!, [name]: null });
+        setCustomisingQuestion({ ...customisingQuestion!, [name]: null });
       } else {
         const requiresAttribute = createJsonAttValue(value, Constants.XSD.BOOLEAN);
 
-        setItemData({ ...itemData!, [name]: requiresAttribute });
+        setCustomisingQuestion({ ...customisingQuestion!, [name]: requiresAttribute });
       }
     } else {
-      setItemData({ ...itemData!, [name]: value });
+      setCustomisingQuestion({ ...customisingQuestion!, [name]: value });
     }
   };
 
   const onSave = (e: FormEvent) => {
     e.preventDefault();
-    const newItem = { ...itemData! };
+    const newItem = { ...customisingQuestion! };
 
     onSaveCallback && onSaveCallback(newItem);
-    reset();
+    resetCustomisationProcess();
   };
 
   const onCancel = () => {
-    reset();
+    resetCustomisationProcess();
   };
 
   const findLayoutTypeOfQuestion = () => {
-    let layoutClasses = itemData && itemData[Constants.LAYOUT_CLASS];
+    let layoutClasses = customisingQuestion && customisingQuestion[Constants.LAYOUT_CLASS];
 
-    if (isNew && layoutClasses && !layoutClasses.length) {
+    if (isNewQuestion && layoutClasses && !layoutClasses.length) {
       return '';
     }
 
@@ -114,7 +120,7 @@ const SidebarItemForm: React.FC<SidebarItemFormProps> = ({}) => {
       return TEXT_FIELD;
     }
 
-    if (FormUtils.isWizardStep(itemData)) {
+    if (FormUtils.isWizardStep(customisingQuestion)) {
       return Constants.LAYOUT.WIZARD_STEP;
     }
 
@@ -124,12 +130,12 @@ const SidebarItemForm: React.FC<SidebarItemFormProps> = ({}) => {
 
     const layoutType = layoutClasses.filter((layoutClass) => layoutTypeFields.includes(layoutClass));
 
-    if (!layoutType.length && FormUtils.isSection(itemData)) {
+    if (!layoutType.length && FormUtils.isSection(customisingQuestion)) {
       return Constants.LAYOUT.QUESTION_SECTION;
     }
 
     if (!layoutType.length) {
-      console.warn(`Question with id: ${itemData?.['@id']} does not have any defined layout type!`);
+      console.warn(`Question with id: ${customisingQuestion?.['@id']} does not have any defined layout type!`);
       return TEXT_FIELD;
     }
 
@@ -140,64 +146,80 @@ const SidebarItemForm: React.FC<SidebarItemFormProps> = ({}) => {
 
   return (
     <>
-      {itemData && (
+      {customisingQuestion && (
         <form className={classes.newItemDataContainer} onSubmit={onSave}>
-          <TextField name="@id" label="Identification" variant="outlined" value={itemData['@id'] || ' '} disabled />
+          <TextField
+            name="@id"
+            label="Identification"
+            variant="outlined"
+            value={customisingQuestion['@id'] || ' '}
+            disabled
+          />
           <TextField
             name={(Constants.RDFS_LABEL as unknown) as string}
             label="Label"
             variant="outlined"
-            value={itemData[Constants.RDFS_LABEL] || ''}
+            value={customisingQuestion[Constants.RDFS_LABEL] || ''}
             onChange={handleChange}
             autoComplete={'off'}
             autoFocus
             required
           />
-          {(isUndefined(isWizardless) || !FormUtils.isWizardStep(itemData)) && (
-            <FormControl variant="outlined">
-              <InputLabel htmlFor="layout-type">Layout type</InputLabel>
-              <Select
-                native
-                label="Layout type"
-                value={layoutType || ''}
-                onChange={handleChange}
-                inputProps={{
-                  name: Constants.LAYOUT_CLASS,
-                  id: 'layout-type'
-                }}
-              >
-                <option aria-label="None" value="" />
-                {layoutTypeOptions.map((layoutType) => {
-                  if (isBoolean(isWizardless) && layoutType.value === Constants.LAYOUT.WIZARD_STEP) {
-                    return null;
-                  }
+          <FormControl variant="outlined">
+            <InputLabel htmlFor="layout-type">Layout type</InputLabel>
+            <Select
+              native
+              label="Layout type"
+              value={layoutType || ''}
+              onChange={handleChange}
+              inputProps={{
+                name: Constants.LAYOUT_CLASS,
+                id: 'layout-type'
+              }}
+              disabled={isBoolean(isWizardless) && FormUtils.isWizardStep(customisingQuestion)}
+            >
+              <option aria-label="None" value="" />
+              {layoutTypeOptions.map((layoutTypeOption) => {
+                if (isWizardless && layoutTypeOption.value === Constants.LAYOUT.WIZARD_STEP) {
+                  console.log('null');
+                  return null;
+                }
 
-                  return (
-                    <option key={layoutType.value} value={layoutType.value}>
-                      {layoutType.title}
-                    </option>
-                  );
-                })}
-              </Select>
-            </FormControl>
-          )}
-          {FormUtils.isMaskedInput(itemData) && (
+                console.log(layoutTypeOption, layoutType);
+
+                if (
+                  !isUndefined(isWizardless) &&
+                  layoutTypeOption.value === Constants.LAYOUT.WIZARD_STEP &&
+                  layoutType !== Constants.LAYOUT.WIZARD_STEP
+                ) {
+                  return null;
+                }
+
+                return (
+                  <option key={layoutTypeOption.value} value={layoutTypeOption.value}>
+                    {layoutTypeOption.title}
+                  </option>
+                );
+              })}
+            </Select>
+          </FormControl>
+          {FormUtils.isMaskedInput(customisingQuestion) && (
             <TextField
               name={(Constants.INPUT_MASK as unknown) as string}
               label="Input mask"
               variant="outlined"
-              value={itemData[Constants.INPUT_MASK] || ''}
+              value={customisingQuestion[Constants.INPUT_MASK] || ''}
               onChange={handleChange}
               autoComplete={'off'}
               required
             />
           )}
-          {FormUtils.isTypeahead(itemData) && (
+          {FormUtils.isTypeahead(customisingQuestion) && (
             <TextField
               name={(Constants.HAS_OPTIONS_QUERY as unknown) as string}
               label="Options query"
               variant="outlined"
-              value={itemData[Constants.HAS_OPTIONS_QUERY] || ''}
+              value={customisingQuestion[Constants.HAS_OPTIONS_QUERY] || ''}
               onChange={handleChange}
               autoComplete={'off'}
               required
@@ -208,7 +230,7 @@ const SidebarItemForm: React.FC<SidebarItemFormProps> = ({}) => {
             name={(Constants.HELP_DESCRIPTION as unknown) as string}
             label="Help description"
             variant="outlined"
-            value={itemData[Constants.HELP_DESCRIPTION] || ''}
+            value={customisingQuestion[Constants.HELP_DESCRIPTION] || ''}
             onChange={handleChange}
             autoComplete={'off'}
             multiline
@@ -219,18 +241,18 @@ const SidebarItemForm: React.FC<SidebarItemFormProps> = ({}) => {
               <Checkbox
                 name={(Constants.REQUIRES_ANSWER as unknown) as string}
                 onChange={handleChange}
-                checked={getJsonAttValue(itemData, Constants.REQUIRES_ANSWER) || false}
+                checked={getJsonAttValue(customisingQuestion, Constants.REQUIRES_ANSWER) || false}
               />
             }
             label="Required"
           />
-          {!FormUtils.isWizardStep(itemData) && FormUtils.isSection(itemData) && (
+          {!FormUtils.isWizardStep(customisingQuestion) && FormUtils.isSection(customisingQuestion) && (
             <FormControlLabel
               control={
                 <Checkbox
                   name={Constants.LAYOUT.COLLAPSED}
                   onChange={handleChange}
-                  checked={itemData[Constants.LAYOUT_CLASS]?.includes(Constants.LAYOUT.COLLAPSED)}
+                  checked={customisingQuestion[Constants.LAYOUT_CLASS]?.includes(Constants.LAYOUT.COLLAPSED)}
                 />
               }
               label="Collapsed"
@@ -241,13 +263,17 @@ const SidebarItemForm: React.FC<SidebarItemFormProps> = ({}) => {
               <Checkbox
                 name={Constants.LAYOUT.DISABLED}
                 onChange={handleChange}
-                checked={itemData[Constants.LAYOUT_CLASS]?.includes(Constants.LAYOUT.DISABLED)}
+                checked={customisingQuestion[Constants.LAYOUT_CLASS]?.includes(Constants.LAYOUT.DISABLED)}
               />
             }
             label="Disabled"
           />
 
-          <FormCustomAttributeList itemData={itemData} setItemData={setItemData} handleChange={handleChange} />
+          <FormCustomAttributeList
+            question={customisingQuestion}
+            setCustomisingQuestion={setCustomisingQuestion}
+            handleChange={handleChange}
+          />
 
           <div className={classes.sidebarButtons}>
             <CustomisedButton type="submit" size={'large'} className={classes.saveButton}>
@@ -259,7 +285,7 @@ const SidebarItemForm: React.FC<SidebarItemFormProps> = ({}) => {
           </div>
         </form>
       )}
-      {/*!itemData && <div className={classes.newItemDataContainer}>TODO: Hint: Did you know...?</div>*/}
+      {/*!customisingQuestion && <div className={classes.newItemDataContainer}>TODO: Hint: Did you know...?</div>*/}
     </>
   );
 };

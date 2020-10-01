@@ -2,14 +2,14 @@ import React, { FC, useContext, useRef, useState } from 'react';
 import { MoreVert } from '@material-ui/icons';
 import { ClickAwayListener, Grow, MenuItem, MenuList, Paper, Popper } from '@material-ui/core';
 import { Constants } from 's-forms';
-import { removeFromFormStructure, removeFromSubQuestions, sortRelatedQuestions } from '@utils/index';
+import { removeFromFormStructure, removeFromSubquestions, sortRelatedQuestions } from '@utils/index';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
 import AddIcon from '@material-ui/icons/Add';
 import SquaredIconButton from '@styles/SquaredIconButton';
-import { CustomiseItemContext, OnSaveCallback } from '@contexts/CustomiseItemContext';
+import { CustomiseQuestionContext, OnSaveCallback } from '@contexts/CustomiseQuestionContext';
 import useStyles from './ItemMenu.styles';
-import { NEW_ITEM } from '../../../constants';
+import { NEW_QUESTION } from '../../../constants';
 import { EditorContext } from '@contexts/EditorContext';
 
 interface Props {
@@ -20,8 +20,8 @@ const ItemMenu: FC<Props> = ({ question }) => {
   const classes = useStyles();
 
   const { getClonedFormStructure, setFormStructure, addNewNode } = useContext(FormStructureContext);
-  const { customiseItemData } = useContext(CustomiseItemContext);
-  const { SFormsConfig, setSFormsConfig, activeStep, setActiveStep } = useContext(EditorContext);
+  const { customiseQuestion } = useContext(CustomiseQuestionContext);
+  const { updateSFormsConfig, activeStep, setActiveStep } = useContext(EditorContext);
 
   const [open, setOpen] = useState<boolean>(false);
   const anchorEl = useRef<HTMLDivElement | null>(null);
@@ -48,16 +48,16 @@ const ItemMenu: FC<Props> = ({ question }) => {
     const targetNode = clonedFormStructure.getNode(question['@id']);
 
     if (!targetNode) {
-      console.error('Missing targetNode');
+      console.warn('Missing targetNode', targetNode);
       return;
     }
 
-    customiseItemData({
-      itemData: NEW_ITEM,
-      onSave: (): OnSaveCallback => (itemData) => addNewNode(itemData, targetNode, clonedFormStructure),
+    customiseQuestion({
+      customisingQuestion: NEW_QUESTION,
+      onSave: (): OnSaveCallback => (question) => addNewNode(question, targetNode, clonedFormStructure),
       onCancel: () => () => addButton.current?.classList.remove(classes.addButtonHighlight),
       onInit: () => addButton.current?.classList.add(classes.addButtonHighlight),
-      isNew: true
+      isNewQuestion: true
     });
   };
 
@@ -67,28 +67,29 @@ const ItemMenu: FC<Props> = ({ question }) => {
 
     const clonedFormStructure = getClonedFormStructure();
 
-    const q = clonedFormStructure.getNode(question['@id']);
+    const clonedQuestion = clonedFormStructure.getNode(question['@id']);
 
-    if (!q) {
+    if (!clonedQuestion) {
       console.warn('Question with id not found', question['@id']);
       return;
     }
 
-    const questionParent = q.parent;
+    const questionParent = clonedQuestion.parent;
 
     if (!questionParent) {
       console.warn('questionParent does not exist');
       return;
     }
 
-    const index = removeFromSubQuestions(questionParent, q);
+    const index = removeFromSubquestions(questionParent, clonedQuestion);
 
-    removeFromFormStructure(clonedFormStructure, q);
+    removeFromFormStructure(clonedFormStructure, clonedQuestion);
 
     const potentialFollowingQuestion = questionParent?.data[Constants.HAS_SUBQUESTION]![index];
 
-    if (potentialFollowingQuestion && potentialFollowingQuestion[Constants.HAS_PRECEDING_QUESTION] && q) {
-      potentialFollowingQuestion[Constants.HAS_PRECEDING_QUESTION] = q.data[Constants.HAS_PRECEDING_QUESTION];
+    if (potentialFollowingQuestion && potentialFollowingQuestion[Constants.HAS_PRECEDING_QUESTION] && clonedQuestion) {
+      potentialFollowingQuestion[Constants.HAS_PRECEDING_QUESTION] =
+        clonedQuestion.data[Constants.HAS_PRECEDING_QUESTION];
     }
 
     questionParent.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(
@@ -101,13 +102,13 @@ const ItemMenu: FC<Props> = ({ question }) => {
   const handleViewInPreview = (e: React.SyntheticEvent<EventTarget>) => {
     e.stopPropagation();
 
-    setSFormsConfig({ ...SFormsConfig, startingQuestionId: question['@id'] });
+    updateSFormsConfig({ startingQuestionId: question['@id'] });
     setActiveStep(activeStep + 1);
   };
 
   return (
     <span>
-      <SquaredIconButton ref={addButton} onClick={addNewItem} title="Add new related question unordered">
+      <SquaredIconButton ref={addButton} onClick={addNewItem} title="Add new unordered subquestion">
         <AddIcon />
       </SquaredIconButton>
       {/* @ts-ignore */}

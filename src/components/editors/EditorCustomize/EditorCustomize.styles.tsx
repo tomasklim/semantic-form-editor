@@ -3,12 +3,12 @@ import { ITheme } from '@interfaces/index';
 
 // @ts-ignore
 export default makeStyles((theme: ITheme) => ({
-  content: {
+  form: {
     marginRight: theme.custom.sidebarWidth,
     padding: theme.spacing(0, 2, 1),
-    '& *': { userSelect: 'none' },
     listStyle: 'none',
     margin: 0,
+    '& *': { userSelect: 'none' },
     '& li > div': {
       backgroundColor: theme.palette.custom[800]
     },
@@ -29,11 +29,15 @@ export default makeStyles((theme: ITheme) => ({
     },
     '& ol ol ol ol ol ol li div': {
       backgroundColor: theme.palette.custom[100]
+    },
+    '& ol': {
+      listStyle: 'none',
+      width: '100%',
+      paddingLeft: 0
     }
   },
-  ol: {
-    listStyle: 'none',
-    paddingLeft: '30px'
+  olPaddingLeft: {
+    paddingLeft: theme.spacing(2.5) + '!important'
   },
   '@global .highlightQuestion': {
     border: '2px dotted ' + theme.palette.custom.main + '!important'
@@ -44,7 +48,7 @@ export default makeStyles((theme: ITheme) => ({
   '@global [data-disabled="true"] *': {
     pointerEvents: 'none  !important'
   },
-  '@global .listItemHover': {
+  '@global .itemHover': {
     border: '2px dashed ' + theme.palette.custom.main + ' !important'
   }
 }));

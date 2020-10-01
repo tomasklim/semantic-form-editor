@@ -40,11 +40,11 @@ const findFormRoot = (structure: Array<FormStructureQuestion>): FormStructureQue
 };
 
 const preOrderBuild = (parentNode: FormStructureNode, tree: FormStructure) => {
-  let relatedQuestions = parentNode.data[Constants.HAS_SUBQUESTION];
-  if (relatedQuestions) {
-    relatedQuestions = sortRelatedQuestions(relatedQuestions);
+  let subquestions = parentNode.data[Constants.HAS_SUBQUESTION];
+  if (subquestions) {
+    subquestions = sortRelatedQuestions(subquestions);
 
-    relatedQuestions.forEach((question: FormStructureQuestion) => {
+    subquestions.forEach((question: FormStructureQuestion) => {
       const node = new FormStructureNode(parentNode, question);
 
       tree.addNode(question['@id'], node);
@@ -57,14 +57,14 @@ const preOrderBuild = (parentNode: FormStructureNode, tree: FormStructure) => {
 };
 
 export const sortRelatedQuestions = (
-  relatedQuestions: Array<FormStructureQuestion> | undefined
+  subquestions: Array<FormStructureQuestion> | undefined
 ): Array<FormStructureQuestion> => {
-  if (!relatedQuestions) {
+  if (!subquestions) {
     return [];
   }
 
   // sort by label
-  const localizedRelatedQuestions = JsonLdObjectUtils.orderByLocalizedLabels(relatedQuestions, {
+  const localizedRelatedQuestions = JsonLdObjectUtils.orderByLocalizedLabels(subquestions, {
     locale: 'en'
   });
 
@@ -81,7 +81,7 @@ const unifyFormStructure = (form: ExpandedForm): ExpandedForm => {
   form['@graph'].forEach((node) => {
     if (node[Constants.HAS_SUBQUESTION] && !Array.isArray(node[Constants.HAS_SUBQUESTION])) {
       // @ts-ignore
-      node[Constants.HAS_SUBQUESTION] = transformSubQuestionsToArray(node[Constants.HAS_SUBQUESTION]);
+      node[Constants.HAS_SUBQUESTION] = transformSubquestionsToArray(node[Constants.HAS_SUBQUESTION]);
     }
 
     if (node[Constants.LAYOUT_CLASS] && !Array.isArray(node[Constants.LAYOUT_CLASS])) {
@@ -93,7 +93,7 @@ const unifyFormStructure = (form: ExpandedForm): ExpandedForm => {
   return form;
 };
 
-const transformSubQuestionsToArray = (element: FormStructureQuestion): Array<FormStructureQuestion> => {
+const transformSubquestionsToArray = (element: FormStructureQuestion): Array<FormStructureQuestion> => {
   return [element];
 };
 
@@ -128,24 +128,15 @@ export const getJsonAttValue = (question: FormStructureQuestion, attribute: stri
   return null;
 };
 
-export const createJsonAttValue = (value: string | boolean, dataType: string) => {
+export const createJsonAttValue = (value: string | boolean, dataType: string): object => {
   return {
     '@type': dataType,
     '@value': value
   };
 };
 
-export const createJsonAttIdValue = (id: string) => {
+export const createJsonAttIdValue = (id: string): object => {
   return {
     '@id': id
-  };
-};
-
-export const createFakeChangeEvent = (name: string, value: any): any => {
-  return {
-    target: {
-      name,
-      value
-    }
   };
 };

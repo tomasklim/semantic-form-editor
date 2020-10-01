@@ -16,11 +16,6 @@ export default makeStyles((theme: ITheme) => ({
   listItemSectionHighlight: {
     border: '2px solid ' + theme.palette.custom.main + '!important'
   },
-  ol: {
-    listStyle: 'none',
-    paddingLeft: '0',
-    width: '100%'
-  },
   emptySection: {
     fontStyle: 'italic',
     opacity: 0.6,

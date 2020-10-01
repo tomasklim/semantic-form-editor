@@ -6,6 +6,7 @@ import { buildFormStructure } from '@utils/index';
 import { useSnackbar } from 'notistack';
 import { CustomisedButton } from '@styles/CustomisedButton';
 import { CustomisedOutlineButton } from '@styles/CustomisedOutlineButton';
+import 'jsoneditor/dist/jsoneditor.css';
 
 interface EditorNewProps {
   nextStep: () => void;
@@ -42,7 +43,7 @@ const EditorNew: FC<EditorNewProps> = ({ nextStep }) => {
   };
 
   const initialiseNewForm = () => {
-    const newForm = require('@utils/newForm.json');
+    const newForm = require('@data/newForm.json');
     jsonEditorInstance?.set(newForm);
     setContinueButtonDisabled(false);
   };

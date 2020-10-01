@@ -4,47 +4,33 @@ import ItemHeader from '@components/items/ItemHeader/ItemHeader';
 import ItemContent from '@components/items/ItemContent/ItemContent';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
 import { handleDragEnd, handleDragStart, highlightQuestion } from '@utils/index';
-import { CustomiseItemContext } from '@contexts/CustomiseItemContext';
+import { CustomiseQuestionContext } from '@contexts/CustomiseQuestionContext';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 
 type Props = {
-  questionData: FormStructureQuestion;
+  question: FormStructureQuestion;
   position: number;
 };
 
-const Item: FC<Props> = ({ questionData, position }) => {
+const Item: FC<Props> = ({ question, position }) => {
   const classes = useStyles();
   const itemContainer = useRef<HTMLLIElement | null>(null);
 
-  const { customiseItemData } = useContext(CustomiseItemContext);
+  const { customiseQuestion } = useContext(CustomiseQuestionContext);
   const { updateNode, isWizardless } = useContext(FormStructureContext);
 
   // fix drag and drop bug https://stackoverflow.com/questions/17946886/hover-sticks-to-element-on-drag-and-drop
   const handleMouseEnter = () => {
-    itemContainer.current?.classList.add('listItemHover');
+    itemContainer.current?.classList.add('itemHover');
   };
 
   const handleMouseLeave = () => {
-    itemContainer.current?.classList.remove('listItemHover');
-  };
-
-  const onClickHandler = (e: React.MouseEvent) => {
-    e.stopPropagation();
-
-    customiseItemData({
-      itemData: questionData,
-      onSave: () => (itemData: FormStructureQuestion) => {
-        updateNode(itemData);
-        highlightQuestion(itemData['@id']);
-      },
-      onInit: () => itemContainer.current?.classList.add(classes.listItemHighlight),
-      onCancel: () => () => itemContainer.current?.classList.remove(classes.listItemHighlight)
-    });
+    itemContainer.current?.classList.remove('itemHover');
   };
 
   const onDragStart = (e: React.DragEvent<HTMLLIElement>) => {
     if (isWizardless) {
-      document.getElementById('unordered-top-level-question-drop-area')!.style.display = 'block';
+      document.getElementById('question-drop-area')!.style.display = 'block';
     }
 
     handleDragStart(e);
@@ -52,15 +38,29 @@ const Item: FC<Props> = ({ questionData, position }) => {
 
   const onDragEnd = (e: React.DragEvent<HTMLLIElement>) => {
     if (isWizardless) {
-      document.getElementById('unordered-top-level-question-drop-area')!.style.display = 'none';
+      document.getElementById('question-drop-area')!.style.display = 'none';
     }
 
     handleDragEnd(e);
   };
 
+  const onClickHandler = (e: React.MouseEvent) => {
+    e.stopPropagation();
+
+    customiseQuestion({
+      customisingQuestion: question,
+      onSave: () => (customisingQuestion: FormStructureQuestion) => {
+        updateNode(customisingQuestion);
+        highlightQuestion(customisingQuestion['@id']);
+      },
+      onInit: () => itemContainer.current?.classList.add(classes.listItemHighlight),
+      onCancel: () => () => itemContainer.current?.classList.remove(classes.listItemHighlight)
+    });
+  };
+
   return (
     <li
-      id={questionData['@id']}
+      id={question['@id']}
       ref={itemContainer}
       onDragStart={onDragStart}
       onDragEnd={onDragEnd}
@@ -70,8 +70,8 @@ const Item: FC<Props> = ({ questionData, position }) => {
       className={classes.listItem}
     >
       <CustomisedCard variant="outlined">
-        <ItemHeader container={itemContainer} nodeData={questionData} position={position + 1} expandable={false} />
-        <ItemContent questionData={questionData} />
+        <ItemHeader container={itemContainer} question={question} position={position + 1} />
+        <ItemContent question={question} />
       </CustomisedCard>
     </li>
   );

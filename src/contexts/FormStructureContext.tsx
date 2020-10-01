@@ -9,7 +9,7 @@ import {
   isSectionOrWizardStep,
   moveQuestion,
   removeBeingPrecedingQuestion,
-  removeFromSubQuestions,
+  removeFromSubquestions,
   removePrecedingQuestion,
   sortRelatedQuestions
 } from '@utils/index';
@@ -22,10 +22,10 @@ interface FormStructureProviderProps {
 
 interface FormStructureContextValues {
   addNewNode: AddNewFormStructureNode;
-  moveNodeUnderNode: (movingNodeId: string, destinationNodeId: string, wizard?: boolean) => void;
+  moveNodeUnderNode: (movingNodeId: string, targetNodeId: string, isWizardPosition?: boolean) => void;
   formStructure: FormStructure;
-  formFile: JsonLdObj;
-  setFormFile: Dispatch<SetStateAction<FormStructure>>;
+  formFile: JsonLdObj | null;
+  setFormFile: Dispatch<SetStateAction<FormStructure | null>>;
   setFormStructure: Dispatch<SetStateAction<FormStructure>>;
   setFormContext: Dispatch<SetStateAction<JsonLdObj>>;
   getClonedFormStructure: () => FormStructure;
@@ -48,19 +48,18 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
   const [formStructure, setFormStructure] = useState<FormStructure>(null);
   // @ts-ignore
   const [formContext, setFormContext] = useState<JsonLdObj>(null);
-  // @ts-ignore
-  const [formFile, setFormFile] = useState<JsonLdObj>(null);
+  const [formFile, setFormFile] = useState<JsonLdObj | null>(null);
   // @ts-ignore
   const [isWizardless, setIsWizardless] = useState<boolean | undefined>(undefined);
 
   useEffect(() => {
     if (formStructure?.root?.data && formStructure.root.data[Constants.HAS_SUBQUESTION]) {
-      const rootSubQuestions = formStructure.root.data[Constants.HAS_SUBQUESTION];
+      const rootSubquestions = formStructure.root.data[Constants.HAS_SUBQUESTION];
 
-      if (!rootSubQuestions?.length) {
+      if (!rootSubquestions?.length) {
         setIsWizardless(undefined);
       } else {
-        const isWizardless = rootSubQuestions.every((question) => !FormUtils.isWizardStep(question));
+        const isWizardless = rootSubquestions.every((question) => !FormUtils.isWizardStep(question));
         setIsWizardless(isWizardless);
       }
     }
@@ -84,33 +83,33 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
     highlightQuestion(newItemData['@id']);
   };
 
-  const moveNodeUnderNode = (movingNodeId: string, destinationNodeId: string, wizard: boolean = false) => {
+  const moveNodeUnderNode = (movingNodeId: string, targetNodeId: string, isWizardPosition: boolean = false) => {
     const clonedFormStructure = getClonedFormStructure();
 
     const movingNode = clonedFormStructure.structure.get(movingNodeId);
-    const destinationNode = clonedFormStructure.structure.get(destinationNodeId);
+    const targetNode = clonedFormStructure.structure.get(targetNodeId);
 
-    if (!movingNode?.data || !movingNode?.parent || !destinationNode?.data) {
-      console.warn("Missing movingNode's data or parent, or destination's data");
+    if (!movingNode?.data || !movingNode?.parent || !targetNode?.data) {
+      console.warn("Missing movingNode's data or parent, or target's data");
       return;
     }
 
     // if target element is child of moving element => no highlight
-    if (movingNode && destinationNode && detectIsChildNode(movingNode, destinationNode)) {
-      console.warn('Cannot move item under the same item!');
+    if (movingNode && targetNode && detectIsChildNode(movingNode, targetNode)) {
+      console.warn("Cannot move item under it's child item!");
       return;
     }
 
     // if moving node is non-section element => no highlight on wizard adds
-    if (wizard && !isWizardless && !isSectionOrWizardStep(movingNode)) {
+    if (isWizardPosition && !isWizardless && !isSectionOrWizardStep(movingNode)) {
       return;
     }
 
     const layoutClass = movingNode.data[Constants.LAYOUT_CLASS];
 
-    if (wizard && !isWizardless && !layoutClass.includes(Constants.LAYOUT.WIZARD_STEP)) {
+    if (isWizardPosition && !isWizardless && !layoutClass.includes(Constants.LAYOUT.WIZARD_STEP)) {
       layoutClass.push(Constants.LAYOUT.WIZARD_STEP);
-    } else if (!wizard && !isWizardless && layoutClass.includes(Constants.LAYOUT.WIZARD_STEP)) {
+    } else if (!isWizardPosition && !isWizardless && layoutClass.includes(Constants.LAYOUT.WIZARD_STEP)) {
       layoutClass.splice(layoutClass.indexOf(Constants.LAYOUT.WIZARD_STEP), 1);
     }
 
@@ -120,37 +119,35 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
 
     removeBeingPrecedingQuestion(movingNodeParent, movingNode);
 
-    removeFromSubQuestions(movingNodeParent, movingNode);
+    removeFromSubquestions(movingNodeParent, movingNode);
 
-    moveQuestion(movingNode, destinationNode);
+    moveQuestion(movingNode, targetNode);
 
-    destinationNode.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(
-      destinationNode.data[Constants.HAS_SUBQUESTION]
-    );
+    targetNode.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(targetNode.data[Constants.HAS_SUBQUESTION]);
 
     setFormStructure(clonedFormStructure);
 
     highlightQuestion(movingNodeId);
   };
 
-  const updateNode = (itemData: FormStructureQuestion) => {
+  const updateNode = (question: FormStructureQuestion) => {
     const clonedFormStructure = getClonedFormStructure();
 
-    const node = clonedFormStructure.structure.get(itemData['@id']);
+    const node = clonedFormStructure.structure.get(question['@id']);
 
     if (!node) {
-      console.warn('Not existing node id', clonedFormStructure, itemData);
+      console.warn('Not existing node id', clonedFormStructure, question);
       return;
     }
 
     Object.keys(node.data).forEach((key) => {
-      if (!itemData[key]) {
+      if (!question[key]) {
         delete node.data[key];
       }
     });
 
-    Object.keys(itemData).forEach((key) => {
-      node.data[key] = itemData[key];
+    Object.keys(question).forEach((key) => {
+      node.data[key] = question[key];
     });
 
     setFormStructure(clonedFormStructure);

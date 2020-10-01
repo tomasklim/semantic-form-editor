@@ -5,6 +5,7 @@ import { exportForm } from '@utils/index';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import { CustomisedOutlineButton } from '@styles/CustomisedOutlineButton';
 import { CustomisedButton } from '@styles/CustomisedButton';
+import 'jsoneditor/dist/jsoneditor.css';
 
 interface EditorExportProps {
   resetEditor: () => void;

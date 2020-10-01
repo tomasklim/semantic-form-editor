@@ -3,8 +3,8 @@ import useStyles, { CustomisedAccordionDetails } from './ItemFormEmpty.styles';
 import { Accordion } from '@material-ui/core';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import AddIcon from '@material-ui/icons/Add';
-import { CustomiseItemContext, OnSaveCallback } from '@contexts/CustomiseItemContext';
-import { NEW_ITEM, NEW_WIZARD_ITEM } from '../../../constants';
+import { CustomiseQuestionContext, OnSaveCallback } from '@contexts/CustomiseQuestionContext';
+import { NEW_QUESTION, NEW_WIZARD_SECTION_QUESTION } from '../../../constants';
 
 type ItemFormEmptyProps = {};
 
@@ -13,9 +13,9 @@ const ItemFormEmpty: FC<ItemFormEmptyProps> = ({}) => {
   const itemFormEmptyContainer = useRef<HTMLDivElement | null>(null);
 
   const { getClonedFormStructure, addNewNode, isWizardless } = useContext(FormStructureContext);
-  const { customiseItemData } = useContext(CustomiseItemContext);
+  const { customiseQuestion } = useContext(CustomiseQuestionContext);
 
-  const addNewPage = (e: React.MouseEvent) => {
+  const addNewTopLevelQuestion = (e: React.MouseEvent) => {
     e.stopPropagation();
 
     const clonedFormStructure = getClonedFormStructure();
@@ -23,22 +23,27 @@ const ItemFormEmpty: FC<ItemFormEmptyProps> = ({}) => {
     const root = clonedFormStructure.getRoot();
 
     if (!root) {
-      console.error('Missing root', clonedFormStructure);
+      console.warn('Missing root question!', clonedFormStructure);
       return;
     }
 
-    customiseItemData({
-      itemData: isWizardless === false ? NEW_WIZARD_ITEM : NEW_ITEM,
-      onSave: (): OnSaveCallback => (itemData) => addNewNode(itemData, root, clonedFormStructure),
+    customiseQuestion({
+      customisingQuestion: isWizardless === false ? NEW_WIZARD_SECTION_QUESTION : NEW_QUESTION,
+      onSave: (): OnSaveCallback => (customisingQuestion) => addNewNode(customisingQuestion, root, clonedFormStructure),
       onCancel: () => () => itemFormEmptyContainer.current?.classList.remove(classes.pageHighlight),
       onInit: () => itemFormEmptyContainer.current?.classList.add(classes.pageHighlight),
-      isNew: true
+      isNewQuestion: true
     });
   };
 
   return (
     <div className={classes.page} ref={itemFormEmptyContainer}>
-      <Accordion expanded={true} className={classes.accordion} onClick={addNewPage} title={'Add new wizard step'}>
+      <Accordion
+        expanded={true}
+        className={classes.accordion}
+        onClick={addNewTopLevelQuestion}
+        title={isWizardless === false ? 'Add new wizard step' : 'Add new question'}
+      >
         <CustomisedAccordionDetails>
           <AddIcon />
         </CustomisedAccordionDetails>

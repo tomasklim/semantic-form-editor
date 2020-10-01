@@ -11,11 +11,11 @@ import {
   handleDragStart,
   highlightQuestion
 } from '@utils/index';
-import { CustomiseItemContext } from '@contexts/CustomiseItemContext';
+import { CustomiseQuestionContext } from '@contexts/CustomiseQuestionContext';
 import { Accordion } from '@material-ui/core';
 
 type Props = {
-  questionData: FormStructureQuestion;
+  question: FormStructureQuestion;
   position: number;
   buildFormUI: (
     question: FormStructureQuestion,
@@ -24,31 +24,31 @@ type Props = {
   ) => JSX.Element;
 };
 
-const ItemSection: FC<Props> = ({ questionData, position, buildFormUI }) => {
+const ItemSection: FC<Props> = ({ question, position, buildFormUI }) => {
   const classes = useStyles();
   const itemContainer = useRef<HTMLLIElement | null>(null);
 
   const [expanded, setExpanded] = useState<boolean>(true);
 
   const { formStructure, moveNodeUnderNode, updateNode } = useContext(FormStructureContext);
-  const { customiseItemData } = useContext(CustomiseItemContext);
+  const { customiseQuestion } = useContext(CustomiseQuestionContext);
 
   // fix drag and drop bug https://stackoverflow.com/questions/17946886/hover-sticks-to-element-on-drag-and-drop
   const handleMouseEnter = () => {
-    itemContainer.current?.classList.add('listItemHover');
+    itemContainer.current?.classList.add('itemHover');
   };
 
   const handleMouseLeave = () => {
-    itemContainer.current?.classList.remove('listItemHover');
+    itemContainer.current?.classList.remove('itemHover');
   };
 
   const handleMouseOver = (e: React.MouseEvent<HTMLDivElement>) => {
-    const correct = (e.target as HTMLOListElement | HTMLDivElement).id === questionData['@id'];
+    const correct = (e.target as HTMLOListElement | HTMLDivElement).id === question['@id'];
 
-    if (correct && !itemContainer.current?.classList.contains('listItemHover')) {
-      itemContainer.current?.classList.add('listItemHover');
-    } else if (!correct && itemContainer.current?.classList.contains('listItemHover')) {
-      itemContainer.current?.classList.remove('listItemHover');
+    if (correct && !itemContainer.current?.classList.contains('itemHover')) {
+      itemContainer.current?.classList.add('itemHover');
+    } else if (!correct && itemContainer.current?.classList.contains('itemHover')) {
+      itemContainer.current?.classList.remove('itemHover');
     }
   };
 
@@ -91,33 +91,33 @@ const ItemSection: FC<Props> = ({ questionData, position, buildFormUI }) => {
         page.classList.remove(classes.listItemSectionOver);
       });
 
-      const destinationPageId = (e.target as HTMLDivElement).id;
       const movingNodeId = e.dataTransfer.types.slice(-1)[0];
+      const targetNodeId = (e.target as HTMLDivElement).id;
 
-      if (destinationPageId === movingNodeId) {
+      if (targetNodeId === movingNodeId) {
         console.warn('Cannot move item under the same item!');
         return;
       }
 
-      if (!destinationPageId || !movingNodeId) {
-        console.warn('Missing destinationPageId or movingNodeId');
+      if (!targetNodeId || !movingNodeId) {
+        console.warn('Missing targetNodeId or movingNodeId');
         return;
       }
 
-      document.getElementById('unordered-top-level-question-drop-area')!.style.display = 'none';
+      document.getElementById('question-drop-area')!.style.display = 'none';
 
-      moveNodeUnderNode(movingNodeId, destinationPageId);
+      moveNodeUnderNode(movingNodeId, targetNodeId);
     }
   };
 
   const onClickHandler = (e: React.MouseEvent) => {
     e.stopPropagation();
 
-    customiseItemData({
-      itemData: questionData,
-      onSave: () => (itemData: FormStructureQuestion) => {
-        updateNode(itemData);
-        highlightQuestion(itemData['@id']);
+    customiseQuestion({
+      customisingQuestion: question,
+      onSave: () => (customisingQuestion: FormStructureQuestion) => {
+        updateNode(customisingQuestion);
+        highlightQuestion(customisingQuestion['@id']);
       },
       onInit: () => itemContainer.current?.classList.add(classes.listItemSectionHighlight),
       onCancel: () => () => itemContainer.current?.classList.remove(classes.listItemSectionHighlight)
@@ -131,22 +131,22 @@ const ItemSection: FC<Props> = ({ questionData, position, buildFormUI }) => {
   };
 
   const onDragStart = (e: React.DragEvent<HTMLLIElement>) => {
-    document.getElementById('unordered-top-level-question-drop-area')!.style.display = 'block';
+    document.getElementById('question-drop-area')!.style.display = 'block';
 
     handleDragStart(e);
   };
 
   const onDragEnd = (e: React.DragEvent<HTMLLIElement>) => {
-    document.getElementById('unordered-top-level-question-drop-area')!.style.display = 'none';
+    document.getElementById('question-drop-area')!.style.display = 'none';
 
     handleDragEnd(e);
   };
 
-  const relatedQuestions = questionData[Constants.HAS_SUBQUESTION];
+  const subquestions = question[Constants.HAS_SUBQUESTION];
 
   return (
     <li
-      id={questionData['@id']}
+      id={question['@id']}
       ref={itemContainer}
       onDragStart={onDragStart}
       onDragEnd={onDragEnd}
@@ -163,21 +163,17 @@ const ItemSection: FC<Props> = ({ questionData, position, buildFormUI }) => {
       <Accordion expanded={expanded} variant="outlined">
         <ItemHeader
           container={itemContainer}
-          nodeData={questionData}
+          question={question}
           position={position + 1}
           expandable={true}
           expanded={expanded}
           expandItemSection={expandItemSection}
         />
-        <CustomisedAccordionDetails
-          className={classes.cardContent}
-          id={questionData['@id']}
-          onMouseOver={handleMouseOver}
-        >
-          <ol id={questionData['@id']} className={classes.ol}>
-            {relatedQuestions!.map((question, index) => buildFormUI(question, index, questionData))}
-            {!relatedQuestions!.length && (
-              <div id={questionData['@id']} className={classes.emptySection}>
+        <CustomisedAccordionDetails className={classes.cardContent} id={question['@id']} onMouseOver={handleMouseOver}>
+          <ol id={question['@id']}>
+            {subquestions!.map((subquestion, index) => buildFormUI(subquestion, index, question))}
+            {!subquestions!.length && (
+              <div id={question['@id']} className={classes.emptySection}>
                 Empty section...
               </div>
             )}

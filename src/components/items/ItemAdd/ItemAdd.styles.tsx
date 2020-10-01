@@ -2,7 +2,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { ITheme } from '@interfaces/index';
 
 export default makeStyles((theme: ITheme) => ({
-  addLine: {
+  addItem: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -17,10 +17,10 @@ export default makeStyles((theme: ITheme) => ({
       color: theme.palette.custom.main
     }
   },
-  '@global .addLineHover': {
+  '@global .addItemHover': {
     border: '2px dashed ' + theme.palette.custom.main
   },
-  '@global .addLineHover svg': {
+  '@global .addItemHover svg': {
     transitionDelay: '0.3s',
     transitionDuration: '0.5s',
     transform: 'scale(0.7) !important'

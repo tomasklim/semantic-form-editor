@@ -24,17 +24,17 @@ export const removeBeingPrecedingQuestion = (
   movingNode: FormStructureNode
 ): void => {
   // if some node has nodeToMove as a preceding node, it loses it
-  movingNodeParent.data[Constants.HAS_SUBQUESTION]?.forEach((nodeData: FormStructureQuestion) => {
+  movingNodeParent.data[Constants.HAS_SUBQUESTION]?.forEach((question: FormStructureQuestion) => {
     if (
-      nodeData[Constants.HAS_PRECEDING_QUESTION] &&
-      nodeData[Constants.HAS_PRECEDING_QUESTION]!['@id'] === movingNode.data['@id']
+      question[Constants.HAS_PRECEDING_QUESTION] &&
+      question[Constants.HAS_PRECEDING_QUESTION]!['@id'] === movingNode.data['@id']
     ) {
-      delete nodeData[Constants.HAS_PRECEDING_QUESTION];
+      delete question[Constants.HAS_PRECEDING_QUESTION];
     }
   });
 };
 
-export const removeFromSubQuestions = (movingNodeParent: FormStructureNode, movingNode: FormStructureNode): number => {
+export const removeFromSubquestions = (movingNodeParent: FormStructureNode, movingNode: FormStructureNode): number => {
   let removedNodeIndex = -1;
 
   movingNodeParent.data[Constants.HAS_SUBQUESTION] = movingNodeParent.data[Constants.HAS_SUBQUESTION]?.filter(
@@ -80,13 +80,13 @@ export const moveQuestionToSpecificPosition = (
   movingNode.parent = targetNode;
 };
 
-export const moveQuestion = (movingNode: FormStructureNode, destinationNode: FormStructureNode): void => {
-  if (!destinationNode.data[Constants.HAS_SUBQUESTION]) {
-    destinationNode.data[Constants.HAS_SUBQUESTION] = [];
+export const moveQuestion = (movingNode: FormStructureNode, targetNode: FormStructureNode): void => {
+  if (!targetNode.data[Constants.HAS_SUBQUESTION]) {
+    targetNode.data[Constants.HAS_SUBQUESTION] = [];
   }
 
-  destinationNode.data[Constants.HAS_SUBQUESTION]!.push(movingNode.data);
-  movingNode.parent = destinationNode;
+  targetNode.data[Constants.HAS_SUBQUESTION]!.push(movingNode.data);
+  movingNode.parent = targetNode;
 };
 
 export const highlightQuestion = (movingNodeId: string): void => {
@@ -95,8 +95,8 @@ export const highlightQuestion = (movingNodeId: string): void => {
   setTimeout(() => {
     document.getElementById(movingNodeId)?.classList.add('highlightQuestion');
 
-    document.querySelector('.listItemHover')?.classList.remove('listItemHover');
-    document.querySelector('.listItemHover')?.classList.remove('addLineHover');
+    document.querySelector('.itemHover')?.classList.remove('itemHover');
+    document.querySelector('.itemHover')?.classList.remove('addItemHover');
   }, 100);
 
   setTimeout(() => {
@@ -115,4 +115,13 @@ export const getId = (title: string): string => {
     .match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g)!
     .map((x: string) => x.toLowerCase())
     .join('-');
+};
+
+export const createFakeChangeEvent = (name: string, value: any): any => {
+  return {
+    target: {
+      name,
+      value
+    }
+  };
 };

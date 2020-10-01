@@ -1,11 +1,14 @@
 import { FC, useContext, useEffect, useState } from 'react';
-import { FormStructureContext } from '@contexts/FormStructureContext';
 import SForms from 's-forms';
 import { exportForm } from '@utils/index';
+import { JsonLdObj } from 'jsonld/jsonld-spec';
+import { FormStructureContext } from '@contexts/FormStructureContext';
 import useStyles from './EditorPreview.styles';
 import { EditorContext } from '@contexts/EditorContext';
-import { Grid } from '@material-ui/core';
-import CustomisedSwitch from '@styles/CustomisedSwitch';
+import WizardOrientationSwitch from '@components/mix/WizardOrientationSwitch/WizardOrientationSwitch';
+import 'bootstrap/dist/css/bootstrap.css';
+import 'react-datepicker/dist/react-datepicker.css';
+import 's-forms/css/s-forms.min.css';
 
 interface EditorPreviewProps {}
 
@@ -15,7 +18,8 @@ const EditorPreview: FC<EditorPreviewProps> = ({}) => {
   const { formContext, getClonedFormStructure, isWizardless } = useContext(FormStructureContext);
   const { SFormsConfig } = useContext(EditorContext);
 
-  const [form, setForm] = useState<any>(null);
+  // @ts-ignore
+  const [form, setForm] = useState<JsonLdObj>(null);
   const [horizontalWizardNav, setHorizontalWizardNav] = useState<boolean>(true);
 
   useEffect(() => {
@@ -41,6 +45,11 @@ const EditorPreview: FC<EditorPreviewProps> = ({}) => {
     startingQuestionId: SFormsConfig.startingQuestionId
   };
 
+  const fetchTypeaheadValuesMock = (_: string): Promise<object> => {
+    const possibleValues = require('@data/possibleValuesMock.json');
+    return new Promise((resolve) => setTimeout(() => resolve(possibleValues), 1500));
+  };
+
   const handleWizardTypeChange = () => {
     setHorizontalWizardNav(!horizontalWizardNav);
   };
@@ -50,34 +59,14 @@ const EditorPreview: FC<EditorPreviewProps> = ({}) => {
   }
 
   return (
-    <div className={classes.container}>
+    <div className={classes.previewContainer}>
       {isWizardless === false && (
-        <div className={classes.switchContainer}>
-          <span>Navigation</span>
-          <Grid component="label" container spacing={1} className={classes.switch}>
-            <Grid item>Horizontal</Grid>
-            <Grid item>
-              <CustomisedSwitch checked={horizontalWizardNav} onChange={handleWizardTypeChange} name="checkedC" />
-            </Grid>
-            <Grid item>Vertical</Grid>
-          </Grid>
-        </div>
-      )}
-      {horizontalWizardNav ? (
-        <SForms
-          form={form}
-          options={options}
-          // @ts-ignore
-          fetchTypeAheadValues={() => {}}
-        />
-      ) : (
-        <SForms
-          form={form}
-          options={options}
-          // @ts-ignore
-          fetchTypeAheadValues={() => {}}
+        <WizardOrientationSwitch
+          handleWizardTypeChange={handleWizardTypeChange}
+          horizontalWizardNav={horizontalWizardNav}
         />
       )}
+      <SForms form={form} options={options} fetchTypeAheadValues={fetchTypeaheadValuesMock} />
     </div>
   );
 };

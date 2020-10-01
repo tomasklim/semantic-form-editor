@@ -1,8 +1,8 @@
 import { CustomisedOutlineButton } from '@styles/CustomisedOutlineButton';
 import AddIcon from '@material-ui/icons/Add';
 import React, { useContext, useRef } from 'react';
-import { NEW_ITEM, NEW_WIZARD_ITEM } from '../../../constants';
-import { CustomiseItemContext, OnSaveCallback } from '@contexts/CustomiseItemContext';
+import { NEW_QUESTION, NEW_WIZARD_SECTION_QUESTION } from '../../../constants';
+import { CustomiseQuestionContext, OnSaveCallback } from '@contexts/CustomiseQuestionContext';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import useStyles from './SidebarWizardStep.styles';
 import { enableNotDraggableAndDroppable, isSectionOrWizardStep } from '@utils/itemDragHelpers';
@@ -17,24 +17,24 @@ const SidebarWizardStep = ({}) => {
     FormStructureContext
   );
 
-  const { customiseItemData } = useContext(CustomiseItemContext);
+  const { customiseQuestion } = useContext(CustomiseQuestionContext);
 
-  const addNewPage = () => {
+  const addNewTopLevelQuestion = () => {
     const clonedFormStructure = getClonedFormStructure();
 
     const root = clonedFormStructure.getRoot();
 
     if (!root) {
-      console.error('Missing root', clonedFormStructure);
+      console.warn('Missing root', clonedFormStructure);
       return;
     }
 
-    customiseItemData({
-      itemData: isWizardless === false ? NEW_WIZARD_ITEM : NEW_ITEM,
-      onSave: (): OnSaveCallback => (itemData) => addNewNode(itemData, root, clonedFormStructure),
+    customiseQuestion({
+      customisingQuestion: isWizardless === false ? NEW_WIZARD_SECTION_QUESTION : NEW_QUESTION,
+      onSave: (): OnSaveCallback => (question) => addNewNode(question, root, clonedFormStructure),
       onCancel: () => () => addButton.current?.classList.remove(classes.buttonHighlight),
       onInit: () => addButton.current?.classList.add(classes.buttonHighlight),
-      isNew: true
+      isNewQuestion: true
     });
   };
 
@@ -47,17 +47,17 @@ const SidebarWizardStep = ({}) => {
       enableNotDraggableAndDroppable();
 
       unorderedDropArea.current!.classList.remove(classes.unorderedDropAreaHighlight);
-      document.getElementById('unordered-top-level-question-drop-area')!.style.display = 'none';
+      document.getElementById('question-drop-area')!.style.display = 'none';
 
-      const destinationNodeId = formStructure.getRoot().data['@id'];
       const movingNodeId = e.dataTransfer.types.slice(-1)[0];
+      const targetNodeId = formStructure.getRoot().data['@id'];
 
-      if (!destinationNodeId || !movingNodeId) {
-        console.warn('Missing destinationPageId or movingNodeId');
+      if (!targetNodeId || !movingNodeId) {
+        console.warn('Missing targetNodeId or movingNodeId');
         return;
       }
 
-      moveNodeUnderNode(movingNodeId, destinationNodeId, true);
+      moveNodeUnderNode(movingNodeId, targetNodeId, true);
     }
   };
 
@@ -90,7 +90,7 @@ const SidebarWizardStep = ({}) => {
   return (
     <>
       <CustomisedOutlineButton
-        onClick={addNewPage}
+        onClick={addNewTopLevelQuestion}
         title={isWizardless === false ? 'Add new wizard step' : 'Add new question'}
         ref={addButton}
         className={classes.addPageButton}
@@ -101,7 +101,7 @@ const SidebarWizardStep = ({}) => {
       </CustomisedOutlineButton>
       <div
         data-droppable={true}
-        id="unordered-top-level-question-drop-area"
+        id="question-drop-area"
         ref={unorderedDropArea}
         onDrop={handleDrop}
         onDragOver={handleDragOver}

@@ -16,16 +16,18 @@ type Props = {
 const ItemPropsIndicator: FC<Props> = ({ question }) => {
   const classes = useStyles();
 
-  const { SFormsConfig, setSFormsConfig, activeStep, setActiveStep } = useContext(EditorContext);
+  const { updateSFormsConfig, activeStep, setActiveStep } = useContext(EditorContext);
 
   const handlePrecedingQuestionBadgeClick = (e: React.MouseEvent) => {
     e.stopPropagation();
+
     highlightQuestion(question[Constants.HAS_PRECEDING_QUESTION]!['@id']);
   };
 
   const handleViewInPreview = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setSFormsConfig({ ...SFormsConfig, startingQuestionId: question['@id'] });
+
+    updateSFormsConfig({ startingQuestionId: question['@id'] });
     setActiveStep(activeStep + 1);
   };
 

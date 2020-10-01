@@ -5,7 +5,7 @@ import Footer from '@components/structure/Footer/Footer';
 import useStyles from './Layout.styles';
 
 type Props = {
-  children: JSX.Element;
+  children: React.ReactNode;
   title: string;
 };
 

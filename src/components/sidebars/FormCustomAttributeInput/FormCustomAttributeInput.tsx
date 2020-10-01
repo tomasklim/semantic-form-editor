@@ -6,8 +6,9 @@ import { CustomisedButton } from '@styles/CustomisedButton';
 import { CustomisedLinkButton } from '@styles/CustomisedLinkButton';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import { FORM_STRUCTURE_QUESTION_ATTRIBUTES } from '@model/FormStructureQuestion';
-import { createFakeChangeEvent, createJsonAttIdValue } from '@utils/formHelpers';
+import { createJsonAttIdValue } from '@utils/formHelpers';
 import { isString } from 'lodash';
+import { createFakeChangeEvent } from '@utils/itemHelpers';
 
 interface FormCustomAttributeInputProps {
   handleChange: (event: React.ChangeEvent | React.ChangeEvent<{ value: unknown }>) => void;

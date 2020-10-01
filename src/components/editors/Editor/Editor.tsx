@@ -1,5 +1,5 @@
 import React, { FC, useContext } from 'react';
-import classnames from 'classnames';
+import classNames from 'classnames';
 import { Step } from '@material-ui/core';
 import useStyles, {
   CustomisedConnector,
@@ -12,7 +12,7 @@ import EditorPreview from '@components/editors/EditorPreview/EditorPreview';
 import EditorNew from '@components/editors/EditorNew/EditorNew';
 import EditorExport from '@components/editors/EditorExport/EditorExport';
 import { FormStructureContext } from '@contexts/FormStructureContext';
-import { CustomiseItemProvider } from '@contexts/CustomiseItemContext';
+import { CustomiseQuestionProvider } from '@contexts/CustomiseQuestionContext';
 import { EditorContext } from '@contexts/EditorContext';
 
 interface EditorProps {}
@@ -25,7 +25,24 @@ const Editor: FC<EditorProps> = ({}) => {
 
   const steps = ['New / Import', 'Customize', 'Preview', 'Export'];
 
-  const [unlockedSteps, unlockSteps] = React.useState(false);
+  const [lockedSteps, setLockedSteps] = React.useState<boolean>(true);
+
+  const handleStepClick = (index: number): void => {
+    if (!lockedSteps) {
+      setActiveStep(index);
+    }
+  };
+
+  const moveToCustomiseStep = () => {
+    setActiveStep(1);
+    setLockedSteps(false);
+  };
+
+  const resetEditor = () => {
+    setLockedSteps(true);
+    setActiveStep(0);
+    setFormFile(null);
+  };
 
   const getStepContent = () => {
     switch (activeStep) {
@@ -33,9 +50,9 @@ const Editor: FC<EditorProps> = ({}) => {
         return <EditorNew nextStep={moveToCustomiseStep} />;
       case 1:
         return (
-          <CustomiseItemProvider>
+          <CustomiseQuestionProvider>
             <EditorCustomize />
-          </CustomiseItemProvider>
+          </CustomiseQuestionProvider>
         );
       case 2:
         return <EditorPreview />;
@@ -44,23 +61,7 @@ const Editor: FC<EditorProps> = ({}) => {
     }
   };
 
-  const handleStepClick = (index: number): void => {
-    if (unlockedSteps) {
-      setActiveStep(index);
-    }
-  };
-
-  const moveToCustomiseStep = () => {
-    setActiveStep(1);
-    unlockSteps(true);
-  };
-
-  const resetEditor = () => {
-    unlockSteps(false);
-    setActiveStep(0);
-    // @ts-ignore
-    setFormFile(null);
-  };
+  const stepContent = getStepContent();
 
   return (
     <>
@@ -68,7 +69,7 @@ const Editor: FC<EditorProps> = ({}) => {
         <CustomisedStepper
           activeStep={activeStep}
           connector={<CustomisedConnector />}
-          className={classnames({ [classes.unlockedStep]: unlockedSteps })}
+          className={classNames({ [classes.unlockedSteps]: !lockedSteps })}
         >
           {steps.map((label, index) => (
             <Step key={label} onClick={() => handleStepClick(index)}>
@@ -77,7 +78,7 @@ const Editor: FC<EditorProps> = ({}) => {
           ))}
         </CustomisedStepper>
       </div>
-      {getStepContent()}
+      {stepContent}
     </>
   );
 };

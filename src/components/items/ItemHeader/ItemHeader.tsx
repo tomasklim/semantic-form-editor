@@ -1,14 +1,14 @@
 import React, { FC } from 'react';
-import useStyles, { CustomisedCardHeader } from './ItemHeader.styles';
 import { Constants } from 's-forms';
 import { DragIndicator, ExpandLess, ExpandMore } from '@material-ui/icons';
+import useStyles, { CustomisedCardHeader } from './ItemHeader.styles';
 import ItemMenu from '@components/items/ItemMenu/ItemMenu';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
 import ItemPropsIndicator from '@components/items/ItemPropsIndicator/ItemPropsIndicator';
 
 type ItemHeaderProps = {
   container: React.MutableRefObject<HTMLLIElement | null>;
-  nodeData: FormStructureQuestion;
+  question: FormStructureQuestion;
   position: number;
   expandable?: boolean;
   expanded?: boolean;
@@ -17,7 +17,7 @@ type ItemHeaderProps = {
 
 const ItemHeader: FC<ItemHeaderProps> = ({
   container,
-  nodeData,
+  question,
   position,
   expandable,
   expanded,
@@ -45,14 +45,12 @@ const ItemHeader: FC<ItemHeaderProps> = ({
             )}
             <DragIndicator className={classes.cardHeaderDrag} />
             <span>
-              {position}
-              {'. '}
-              {nodeData[Constants.RDFS_LABEL] || nodeData['@id']}
+              {position}.&nbsp;{question[Constants.RDFS_LABEL] || question['@id']}
             </span>
-            <ItemPropsIndicator question={nodeData} />
+            <ItemPropsIndicator question={question} />
           </span>
           <span className={classes.cardHeaderItemRight} onMouseEnter={removeDraggable} onMouseLeave={addDraggable}>
-            <ItemMenu question={nodeData} />
+            <ItemMenu question={question} />
           </span>
         </div>
       }

@@ -1,7 +1,7 @@
 import { Drawer } from '@material-ui/core';
 import useStyles from './Sidebar.styles';
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { CustomiseItemContext } from '@contexts/CustomiseItemContext';
+import { CustomiseQuestionContext } from '@contexts/CustomiseQuestionContext';
 import SidebarItemForm from '@components/sidebars/SidebarItemForm/SidebarItemForm';
 import SidebarWizardStep from '@components/sidebars/SidebarWizardStep/SidebarWizardStep';
 
@@ -15,7 +15,7 @@ const Sidebar = () => {
 
   const [drawerTop, setDrawerTop] = useState<number>(INITIAL_TOP);
 
-  const { reset } = useContext(CustomiseItemContext);
+  const { resetCustomisationProcess } = useContext(CustomiseQuestionContext);
 
   // sidebar top position
   useEffect(() => {
@@ -38,7 +38,7 @@ const Sidebar = () => {
       e.stopPropagation();
       // @ts-ignore
       if (!sidebarContainer.current?.contains(e.target) && !e.target.matches('[class^="MuiAutocomplete"]')) {
-        reset();
+        resetCustomisationProcess();
       }
     };
 
@@ -46,7 +46,7 @@ const Sidebar = () => {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [sidebarContainer, reset]);
+  }, [sidebarContainer, resetCustomisationProcess]);
 
   return (
     <Drawer
