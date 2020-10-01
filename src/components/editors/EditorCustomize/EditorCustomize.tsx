@@ -55,7 +55,7 @@ const EditorCustomize: FC<EditorCustomizeProps> = ({}) => {
     }
 
     return (
-      <React.Fragment key={question['@id']}>
+      <div key={question['@id']}>
         {position === 0 && (
           <ItemAdd parentQuestionId={parentQuestion['@id']} position={position} topLevelPosition={topLevelPosition} />
         )}
@@ -66,7 +66,7 @@ const EditorCustomize: FC<EditorCustomizeProps> = ({}) => {
           </ol>
         )}
         <ItemAdd parentQuestionId={parentQuestion['@id']} position={position + 1} />
-      </React.Fragment>
+      </div>
     );
   };
 

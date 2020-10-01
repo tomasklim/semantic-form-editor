@@ -37,7 +37,7 @@ export default makeStyles((theme: ITheme) => ({
     }
   },
   olPaddingLeft: {
-    paddingLeft: theme.spacing(2.5) + '!important'
+    paddingLeft: '20px !important'
   },
   '@global .highlightQuestion': {
     border: '2px dotted ' + theme.palette.custom.main + '!important'
