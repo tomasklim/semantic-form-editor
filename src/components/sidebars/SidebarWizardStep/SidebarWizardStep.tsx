@@ -2,7 +2,7 @@ import { CustomisedOutlineButton } from '@styles/CustomisedOutlineButton';
 import AddIcon from '@material-ui/icons/Add';
 import React, { useContext, useRef } from 'react';
 import { NEW_QUESTION, NEW_WIZARD_SECTION_QUESTION } from '../../../constants';
-import { CustomiseQuestionContext, OnSaveCallback } from '@contexts/CustomiseQuestionContext';
+import { CustomiseQuestionContext, OnSaveQuestionsCallback } from '@contexts/CustomiseQuestionContext';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import useStyles from './SidebarWizardStep.styles';
 import { enableNotDraggableAndDroppable, isSectionOrWizardStep } from '@utils/itemDragHelpers';
@@ -14,7 +14,7 @@ const SidebarWizardStep = ({}) => {
   const addButton = useRef<HTMLButtonElement | null>(null);
   const unorderedDropArea = useRef<HTMLDivElement | null>(null);
 
-  const { getClonedFormStructure, addNewNode, formStructure, moveNodeUnderNode, isWizardless } = useContext(
+  const { getClonedFormStructure, addNewNodes, formStructure, moveNodeUnderNode, isWizardless } = useContext(
     FormStructureContext
   );
 
@@ -32,7 +32,7 @@ const SidebarWizardStep = ({}) => {
 
     customiseQuestion({
       customisingQuestion: isWizardless === false ? { ...NEW_WIZARD_SECTION_QUESTION } : { ...NEW_QUESTION },
-      onSave: (): OnSaveCallback => (question) => addNewNode(question, root, clonedFormStructure),
+      onSave: (): OnSaveQuestionsCallback => (questions) => addNewNodes(questions, root, clonedFormStructure),
       onCancel: () => () => addButton.current?.classList.remove(classes.buttonHighlight),
       onInit: () => addButton.current?.classList.add(classes.buttonHighlight),
       isNewQuestion: true

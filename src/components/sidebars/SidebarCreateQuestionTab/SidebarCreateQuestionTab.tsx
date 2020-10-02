@@ -1,6 +1,7 @@
 import useStyles from './SidebarCreateQuestionTab.styles';
-import { AppBar, Tab, Tabs, Typography } from '@material-ui/core';
-import React from 'react';
+import { Tab, Tabs, Typography } from '@material-ui/core';
+import React, { useContext } from 'react';
+import { CustomiseQuestionContext } from '@contexts/CustomiseQuestionContext';
 
 interface SidebarCreateQuestionTabProps {
   activeTab: number;
@@ -22,13 +23,13 @@ export const TabPanel: React.FC<TabPanelProps> = ({ children, value, index }) =>
 const SidebarCreateQuestionTab: React.FC<SidebarCreateQuestionTabProps> = ({ activeTab, handleChange }) => {
   const styles = useStyles();
 
+  const { isSpecificPosition } = useContext(CustomiseQuestionContext);
+
   return (
-    <AppBar className={styles.appBar} position="static">
-      <Tabs variant="fullWidth" value={activeTab} onChange={handleChange}>
-        <Tab label="question" />
-        <Tab label="Multiple questions" />
-      </Tabs>
-    </AppBar>
+    <Tabs className={styles.appBar} variant="fullWidth" value={activeTab} onChange={handleChange}>
+      <Tab label="question" />
+      <Tab label="Multiple questions" disabled={isSpecificPosition} />
+    </Tabs>
   );
 };
 

@@ -9,12 +9,15 @@ import { isBoolean, isUndefined } from 'lodash';
 import FormTypeSwitch from '@components/mix/FormTypeSwitch/FormTypeSwitch';
 import { Constants } from 's-forms';
 import { getId } from '@utils/itemHelpers';
+import { FormStructureQuestion } from '@model/FormStructureQuestion';
 
 interface SidebarCreateQuestionsProps {
   handleChangeTab: (_: any, newValue: number) => void;
   isWizardlessFormType: boolean;
   handleFormTypeChange: () => void;
 }
+
+const NUMBER_OF_SPACES = 2;
 
 const SidebarCreateQuestions: React.FC<SidebarCreateQuestionsProps> = ({
   handleChangeTab,
@@ -35,14 +38,8 @@ const SidebarCreateQuestions: React.FC<SidebarCreateQuestionsProps> = ({
 
   const { onSaveCallback, customisingQuestion, resetCustomisationProcess } = useContext(CustomiseQuestionContext);
 
-  const NUMBER_OF_SPACES = 2;
-
-  interface array {
-    label: string;
-    children: Array<array> | null;
-  }
-
-  const createQuestionTree = (array: Array<preparedArray>, level: number): Array<array> | null => {
+  const usedIds: Array<string> = [];
+  const createQuestionTree = (array: Array<preparedArray>, level: number): Array<FormStructureQuestion> | null => {
     const currentSpaces = NUMBER_OF_SPACES * level;
 
     const splitIndexes = array
@@ -66,9 +63,10 @@ const SidebarCreateQuestions: React.FC<SidebarCreateQuestionsProps> = ({
       const subquestions = createQuestionTree(array, level + 1);
       let id;
       do {
-        // TODO check id
         id = getId(array[0].label);
-      } while (formStructure.getNode(id));
+      } while (formStructure.getNode(id) || usedIds.includes(id));
+      usedIds.push(id);
+
       return {
         '@id': id,
         '@type': 'http://onto.fel.cvut.cz/ontologies/documentation/question',
@@ -88,7 +86,7 @@ const SidebarCreateQuestions: React.FC<SidebarCreateQuestionsProps> = ({
     spaces: number;
   }
 
-  const prepareQuestions = () => {
+  const prepareQuestions = (): Array<FormStructureQuestion> => {
     let result: Array<preparedArray> = multipleQuestions
       .split(/\r?\n/)
       .filter((label) => label)
@@ -97,6 +95,7 @@ const SidebarCreateQuestions: React.FC<SidebarCreateQuestionsProps> = ({
         spaces: label.search(/\S/)
       }));
 
+    // @ts-ignore
     return createQuestionTree(result, 0);
   };
 
@@ -105,8 +104,12 @@ const SidebarCreateQuestions: React.FC<SidebarCreateQuestionsProps> = ({
 
     const questions = prepareQuestions();
 
-    const newItem = questions;
-    onSaveCallback && onSaveCallback(newItem);
+    if (questions === null) {
+      return;
+    }
+
+    // @ts-ignore
+    onSaveCallback && onSaveCallback(questions);
     resetCustomisationProcess(true);
     handleChangeTab(null, 0);
   };

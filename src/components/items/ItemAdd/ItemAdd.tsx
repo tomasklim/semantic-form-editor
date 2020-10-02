@@ -15,7 +15,7 @@ import {
 import { Constants } from 's-forms';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import FormStructureNode from '@model/FormStructureNode';
-import { CustomiseQuestionContext, OnSaveCallback } from '@contexts/CustomiseQuestionContext';
+import { CustomiseQuestionContext, OnSaveQuestionCallback } from '@contexts/CustomiseQuestionContext';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
 import FormStructure from '@model/FormStructure';
 import { NEW_QUESTION, NEW_WIZARD_SECTION_QUESTION } from '../../../constants';
@@ -175,11 +175,12 @@ const ItemAdd: FC<Props> = ({ parentQuestionId, position, isWizardPosition = fal
     customiseQuestion({
       customisingQuestion:
         isWizardless === false && isWizardPosition ? { ...NEW_WIZARD_SECTION_QUESTION } : { ...NEW_QUESTION },
-      onSave: (): OnSaveCallback => (customisingQuestion) =>
-        addNewQuestionToSpecificPosition(customisingQuestion, targetNode, clonedFormStructure),
+      onSave: (): OnSaveQuestionCallback => (question) =>
+        addNewQuestionToSpecificPosition(question, targetNode, clonedFormStructure),
       onCancel: () => () => addContainer.current?.classList.remove(classes.highlightAddLine),
       onInit: () => addContainer.current?.classList.add(classes.highlightAddLine),
-      isNewQuestion: true
+      isNewQuestion: true,
+      isSpecificPosition: true
     });
   };
 

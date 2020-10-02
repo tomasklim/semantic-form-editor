@@ -5,9 +5,7 @@ export default makeStyles((theme: ITheme) => ({
   appBar: {
     borderTopLeftRadius: '4px',
     borderTopRightRadius: '4px',
-    '&.MuiAppBar-colorPrimary': {
-      backgroundColor: theme.palette.custom[600]
-    },
+    backgroundColor: theme.palette.custom[600],
     '& .MuiTabs-indicator': {
       backgroundColor: theme.palette.custom.main
     },

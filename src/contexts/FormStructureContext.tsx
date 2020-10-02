@@ -22,7 +22,7 @@ interface FormStructureProviderProps {
 }
 
 interface FormStructureContextValues {
-  addNewNode: AddNewFormStructureNode;
+  addNewNodes: AddNewFormStructureNode;
   moveNodeUnderNode: (movingNodeId: string, targetNodeId: string, isWizardPosition?: boolean) => void;
   formStructure: FormStructure;
   formFile: JsonLdObj | null;
@@ -70,36 +70,24 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
     return cloneDeep(formStructure)!;
   };
 
-  const addNewNode: AddNewFormStructureNode = (newItemData, targetNode, clonedFormStructure) => {
-    if (Array.isArray(newItemData)) {
-      newItemData.forEach((question) => {
-        const node = new FormStructureNode(targetNode, question);
-        clonedFormStructure.addNode(question['@id'], node);
-
-        buildFormStructureResursion(node, clonedFormStructure);
-        moveQuestion(node, targetNode);
-
-        highlightQuestion(question['@id']);
-      });
-
-      targetNode.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(targetNode.data[Constants.HAS_SUBQUESTION]);
-
-      setFormStructure(clonedFormStructure);
-
-      return;
+  const addNewNodes: AddNewFormStructureNode = (questions, targetNode, clonedFormStructure) => {
+    if (!Array.isArray(questions)) {
+      questions = [questions];
     }
 
-    const node = new FormStructureNode(targetNode, newItemData);
+    questions.forEach((question) => {
+      const node = new FormStructureNode(targetNode, question);
+      clonedFormStructure.addNode(question['@id'], node);
 
-    clonedFormStructure.addNode(newItemData['@id'], node);
+      buildFormStructureResursion(node, clonedFormStructure);
+      moveQuestion(node, targetNode);
 
-    moveQuestion(node, targetNode);
+      highlightQuestion(question['@id']);
+    });
 
     targetNode.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(targetNode.data[Constants.HAS_SUBQUESTION]);
 
     setFormStructure(clonedFormStructure);
-
-    highlightQuestion(newItemData['@id']);
   };
 
   const moveNodeUnderNode = (movingNodeId: string, targetNodeId: string, isWizardPosition: boolean = false) => {
@@ -174,7 +162,7 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
 
   const values = React.useMemo<FormStructureContextValues>(
     () => ({
-      addNewNode,
+      addNewNodes,
       moveNodeUnderNode,
       getClonedFormStructure,
       updateNode,
