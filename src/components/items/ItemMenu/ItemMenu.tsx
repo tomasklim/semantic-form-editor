@@ -7,7 +7,7 @@ import { FormStructureContext } from '@contexts/FormStructureContext';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
 import AddIcon from '@material-ui/icons/Add';
 import SquaredIconButton from '@styles/SquaredIconButton';
-import { CustomiseQuestionContext, OnSaveCallback } from '@contexts/CustomiseQuestionContext';
+import { CustomiseQuestionContext, OnSaveQuestionsCallback } from '@contexts/CustomiseQuestionContext';
 import useStyles from './ItemMenu.styles';
 import { NEW_QUESTION } from '../../../constants';
 import { EditorContext } from '@contexts/EditorContext';
@@ -19,7 +19,7 @@ interface Props {
 const ItemMenu: FC<Props> = ({ question }) => {
   const classes = useStyles();
 
-  const { getClonedFormStructure, setFormStructure, addNewNode } = useContext(FormStructureContext);
+  const { getClonedFormStructure, setFormStructure, addNewNodes } = useContext(FormStructureContext);
   const { customiseQuestion } = useContext(CustomiseQuestionContext);
   const { updateSFormsConfig, activeStep, setActiveStep } = useContext(EditorContext);
 
@@ -53,8 +53,8 @@ const ItemMenu: FC<Props> = ({ question }) => {
     }
 
     customiseQuestion({
-      customisingQuestion: NEW_QUESTION,
-      onSave: (): OnSaveCallback => (question) => addNewNode(question, targetNode, clonedFormStructure),
+      customisingQuestion: { ...NEW_QUESTION },
+      onSave: (): OnSaveQuestionsCallback => (questions) => addNewNodes(questions, targetNode, clonedFormStructure),
       onCancel: () => () => addButton.current?.classList.remove(classes.addButtonHighlight),
       onInit: () => addButton.current?.classList.add(classes.addButtonHighlight),
       isNewQuestion: true

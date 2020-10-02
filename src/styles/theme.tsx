@@ -30,7 +30,7 @@ const theme = createMuiTheme({
     }
   },
   custom: {
-    sidebarWidth: '400px'
+    sidebarWidth: '425px'
   }
 } as IThemeOptions);
 

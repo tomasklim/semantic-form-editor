@@ -1,16 +1,15 @@
 import { makeStyles } from '@material-ui/core/styles';
 import { ITheme } from '@interfaces/index';
 
+// @ts-ignore
 export default makeStyles((theme: ITheme) => ({
-  newItemDataContainer: {
-    display: 'flex',
-    flexDirection: 'column',
+  questionContainer: {
     backgroundColor: theme.palette.custom[800],
     padding: theme.spacing(1.75, 2),
-    maxHeight: 'calc(100vh - (60px + 72px + 90px + 40px))', // header + stepperbar + space + footer
+    maxHeight: 'calc(100vh - (60px + 72px + 90px + 40px))', // header + stepper-bar + space + footer
     overflow: 'scroll',
     borderRadius: '4px',
-    '& > *': {
+    '& form > *': {
       margin: theme.spacing(1, 0)
     },
     '& .MuiInputBase-input': {
@@ -37,9 +36,6 @@ export default makeStyles((theme: ITheme) => ({
     '& .MuiSelect-root option': {
       color: 'initial',
       backgroundColor: 'initial'
-    },
-    '& .MuiIconButton-root': {
-      marginLeft: '-9px'
     },
     '& .MuiCheckbox-root': { color: '#ffffffcc' },
     '& .MuiCheckbox-colorSecondary:hover, & .MuiCheckbox-colorSecondary.Mui-checked:hover, & .MuiIconButton-root:hover': {
@@ -68,11 +64,8 @@ export default makeStyles((theme: ITheme) => ({
       width: 'fit-content'
     }
   },
-  sidebarButtons: {
-    display: 'flex',
-    justifyContent: 'center'
-  },
-  saveButton: {
-    width: '90px'
+  noBorderTopRadius: {
+    borderTopRightRadius: 0,
+    borderTopLeftRadius: 0
   }
 }));

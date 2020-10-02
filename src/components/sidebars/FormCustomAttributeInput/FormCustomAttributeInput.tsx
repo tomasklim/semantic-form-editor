@@ -81,7 +81,6 @@ const FormCustomAttributeInput: React.FC<FormCustomAttributeInputProps> = ({
 
   return (
     <div className={classes.customAttributeContainer}>
-      <span className={classes.addNewAttributeTitle}>New custom attribute</span>
       <Autocomplete
         // @ts-ignore
         value={customAttributeName}

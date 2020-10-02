@@ -14,11 +14,6 @@ export default makeStyles((theme: ITheme) => ({
       color: 'white'
     }
   },
-  addNewAttributeTitle: {
-    color: 'white',
-    fontWeight: 500,
-    marginTop: 0
-  },
   addNewAttributeButtons: {
     fontWeight: 500
   }

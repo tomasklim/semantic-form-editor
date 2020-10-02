@@ -3,8 +3,8 @@ import { AccordionDetails } from '@material-ui/core';
 import { ITheme } from '@interfaces/index';
 
 export default makeStyles((theme: ITheme) => ({
-  page: {
-    marginTop: '22px',
+  itemFormEmptyContainer: {
+    marginTop: '24px',
     border: '2px solid transparent',
     borderRadius: '2px',
     '& .MuiPaper-elevation1': {

@@ -7,27 +7,33 @@ interface CustomiseItemProviderProps {
 
 interface CustomiseQuestionContextValues {
   customiseQuestion: CustomiseQuestion;
-  onSaveCallback: OnSaveCallback | null;
+  onSaveCallback: OnSaveQuestionCallback | OnSaveQuestionsCallback | null;
   customisingQuestion: FormStructureQuestion | null;
-  resetCustomisationProcess: () => void;
+  resetCustomisationProcess: (forceReset?: boolean) => void;
   setCustomisingQuestion: Dispatch<SetStateAction<FormStructureQuestion | null>>;
   isNewQuestion: boolean;
+  isSpecificPosition: boolean;
 }
 
-export type OnSaveCallback = (customisingQuestion: FormStructureQuestion) => void;
+export type OnSaveQuestionCallback = (customisingQuestion: FormStructureQuestion) => void;
+export type OnSaveQuestionsCallback = (
+  customisingQuestion: FormStructureQuestion | Array<FormStructureQuestion>
+) => void;
 
 type CustomiseQuestion = ({
   customisingQuestion,
   onSave,
   onCancel,
   onInit,
-  isNewQuestion
+  isNewQuestion,
+  isSpecificPosition
 }: {
   customisingQuestion: FormStructureQuestion;
-  onSave?: (customisingQuestion: FormStructureQuestion) => void;
+  onSave?: OnSaveQuestionCallback | OnSaveQuestionsCallback;
   onCancel?: () => void;
   onInit?: () => void;
   isNewQuestion?: boolean;
+  isSpecificPosition?: boolean;
 }) => void;
 
 // @ts-ignore
@@ -38,30 +44,42 @@ const CustomiseQuestionProvider: React.FC<CustomiseItemProviderProps> = ({ child
   const [customisingQuestion, setCustomisingQuestion] = useState<FormStructureQuestion | null>(null);
 
   // @ts-ignore
-  const [onSaveCallback, setOnSaveCallback] = useState<OnSaveCallback | null>(null);
+  const [onSaveCallback, setOnSaveCallback] = useState<OnSaveQuestionCallback | OnSaveQuestionsCallback | null>(null);
 
   // @ts-ignore
   const [onCancelCallback, setOnCancelCallback] = useState<(() => void) | null>(null);
 
   const [isNewQuestion, setIsNewQuestion] = useState<boolean>(false);
+  const [isSpecificPosition, setIsSpecificPosition] = useState<boolean>(false);
 
-  const customiseQuestion: CustomiseQuestion = ({ customisingQuestion, onSave, onCancel, onInit, isNewQuestion }) => {
+  const customiseQuestion: CustomiseQuestion = ({
+    customisingQuestion,
+    onSave,
+    onCancel,
+    onInit,
+    isNewQuestion,
+    isSpecificPosition
+  }) => {
     onCancelCallback && onCancelCallback();
     onInit && onInit();
     onSave && setOnSaveCallback(onSave);
     onCancel && setOnCancelCallback(onCancel);
-    isNewQuestion && setIsNewQuestion(isNewQuestion);
+    isNewQuestion && setIsNewQuestion(true);
+    isSpecificPosition && setIsSpecificPosition(true);
 
     setCustomisingQuestion(customisingQuestion);
   };
 
-  const resetCustomisationProcess = () => {
-    onCancelCallback && onCancelCallback();
+  const resetCustomisationProcess = (forceReset: boolean = false) => {
+    if (onCancelCallback || forceReset) {
+      onCancelCallback && onCancelCallback();
 
-    setOnSaveCallback(null);
-    setCustomisingQuestion(null);
-    setOnCancelCallback(null);
-    setIsNewQuestion(false);
+      setOnSaveCallback(null);
+      setCustomisingQuestion(null);
+      setOnCancelCallback(null);
+      setIsNewQuestion(false);
+      setIsSpecificPosition(false);
+    }
   };
 
   const values = React.useMemo<CustomiseQuestionContextValues>(
@@ -71,7 +89,8 @@ const CustomiseQuestionProvider: React.FC<CustomiseItemProviderProps> = ({ child
       onSaveCallback,
       customisingQuestion,
       resetCustomisationProcess,
-      isNewQuestion
+      isNewQuestion,
+      isSpecificPosition
     }),
     [customisingQuestion, onSaveCallback, isNewQuestion]
   );

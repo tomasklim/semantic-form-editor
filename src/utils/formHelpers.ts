@@ -20,7 +20,7 @@ export const buildFormStructure = async (form: ExpandedForm) => {
   const formStructure = new FormStructure(rootNode);
   formStructure.addNode(rootNode.data['@id'], rootNode);
 
-  preOrderBuild(rootNode, formStructure);
+  buildFormStructureResursion(rootNode, formStructure);
 
   return formStructure;
 };
@@ -39,7 +39,7 @@ const findFormRoot = (structure: Array<FormStructureQuestion>): FormStructureQue
   return Object.values(structure).find((item: FormStructureQuestion) => FormUtils.isForm(item));
 };
 
-const preOrderBuild = (parentNode: FormStructureNode, tree: FormStructure) => {
+export const buildFormStructureResursion = (parentNode: FormStructureNode, tree: FormStructure) => {
   let subquestions = parentNode.data[Constants.HAS_SUBQUESTION];
   if (subquestions) {
     subquestions = sortRelatedQuestions(subquestions);
@@ -49,7 +49,7 @@ const preOrderBuild = (parentNode: FormStructureNode, tree: FormStructure) => {
 
       tree.addNode(question['@id'], node);
 
-      preOrderBuild(node, tree);
+      buildFormStructureResursion(node, tree);
     });
   }
 
