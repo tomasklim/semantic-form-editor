@@ -53,7 +53,7 @@ const ItemMenu: FC<Props> = ({ question }) => {
     }
 
     customiseQuestion({
-      customisingQuestion: NEW_QUESTION,
+      customisingQuestion: { ...NEW_QUESTION },
       onSave: (): OnSaveCallback => (question) => addNewNode(question, targetNode, clonedFormStructure),
       onCancel: () => () => addButton.current?.classList.remove(classes.addButtonHighlight),
       onInit: () => addButton.current?.classList.add(classes.addButtonHighlight),

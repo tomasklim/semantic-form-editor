@@ -9,12 +9,12 @@ interface CustomiseQuestionContextValues {
   customiseQuestion: CustomiseQuestion;
   onSaveCallback: OnSaveCallback | null;
   customisingQuestion: FormStructureQuestion | null;
-  resetCustomisationProcess: () => void;
+  resetCustomisationProcess: (forceReset?: boolean) => void;
   setCustomisingQuestion: Dispatch<SetStateAction<FormStructureQuestion | null>>;
   isNewQuestion: boolean;
 }
 
-export type OnSaveCallback = (customisingQuestion: FormStructureQuestion) => void;
+export type OnSaveCallback = (customisingQuestion: FormStructureQuestion | Array<FormStructureQuestion>) => void;
 
 type CustomiseQuestion = ({
   customisingQuestion,
@@ -55,13 +55,15 @@ const CustomiseQuestionProvider: React.FC<CustomiseItemProviderProps> = ({ child
     setCustomisingQuestion(customisingQuestion);
   };
 
-  const resetCustomisationProcess = () => {
-    onCancelCallback && onCancelCallback();
+  const resetCustomisationProcess = (forceReset: boolean = false) => {
+    if (onCancelCallback || forceReset) {
+      onCancelCallback && onCancelCallback();
 
-    setOnSaveCallback(null);
-    setCustomisingQuestion(null);
-    setOnCancelCallback(null);
-    setIsNewQuestion(false);
+      setOnSaveCallback(null);
+      setCustomisingQuestion(null);
+      setOnCancelCallback(null);
+      setIsNewQuestion(false);
+    }
   };
 
   const values = React.useMemo<CustomiseQuestionContextValues>(

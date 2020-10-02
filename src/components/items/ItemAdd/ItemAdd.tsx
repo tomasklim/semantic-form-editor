@@ -173,7 +173,8 @@ const ItemAdd: FC<Props> = ({ parentQuestionId, position, isWizardPosition = fal
     }
 
     customiseQuestion({
-      customisingQuestion: isWizardless === false && isWizardPosition ? NEW_WIZARD_SECTION_QUESTION : NEW_QUESTION,
+      customisingQuestion:
+        isWizardless === false && isWizardPosition ? { ...NEW_WIZARD_SECTION_QUESTION } : { ...NEW_QUESTION },
       onSave: (): OnSaveCallback => (customisingQuestion) =>
         addNewQuestionToSpecificPosition(customisingQuestion, targetNode, clonedFormStructure),
       onCancel: () => () => addContainer.current?.classList.remove(classes.highlightAddLine),

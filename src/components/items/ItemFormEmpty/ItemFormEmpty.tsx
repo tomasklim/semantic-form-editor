@@ -1,4 +1,4 @@
-import React, { FC, useContext, useRef } from 'react';
+import React, { FC, useContext, useEffect, useRef } from 'react';
 import useStyles, { CustomisedAccordionDetails } from './ItemFormEmpty.styles';
 import { Accordion } from '@material-ui/core';
 import { FormStructureContext } from '@contexts/FormStructureContext';
@@ -15,9 +15,11 @@ const ItemFormEmpty: FC<ItemFormEmptyProps> = ({}) => {
   const { getClonedFormStructure, addNewNode, isWizardless } = useContext(FormStructureContext);
   const { customiseQuestion } = useContext(CustomiseQuestionContext);
 
-  const addNewTopLevelQuestion = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  useEffect(() => {
+    addNewTopLevelQuestion();
+  }, []);
 
+  const addNewTopLevelQuestion = () => {
     const clonedFormStructure = getClonedFormStructure();
 
     const root = clonedFormStructure.getRoot();
@@ -27,23 +29,18 @@ const ItemFormEmpty: FC<ItemFormEmptyProps> = ({}) => {
       return;
     }
 
+    itemFormEmptyContainer.current?.classList.add(classes.pageHighlight);
+
     customiseQuestion({
-      customisingQuestion: isWizardless === false ? NEW_WIZARD_SECTION_QUESTION : NEW_QUESTION,
+      customisingQuestion: isWizardless === false ? { ...NEW_WIZARD_SECTION_QUESTION } : { ...NEW_QUESTION },
       onSave: (): OnSaveCallback => (customisingQuestion) => addNewNode(customisingQuestion, root, clonedFormStructure),
-      onCancel: () => () => itemFormEmptyContainer.current?.classList.remove(classes.pageHighlight),
-      onInit: () => itemFormEmptyContainer.current?.classList.add(classes.pageHighlight),
       isNewQuestion: true
     });
   };
 
   return (
-    <div className={classes.page} ref={itemFormEmptyContainer}>
-      <Accordion
-        expanded={true}
-        className={classes.accordion}
-        onClick={addNewTopLevelQuestion}
-        title={isWizardless === false ? 'Add new wizard step' : 'Add new question'}
-      >
+    <div className={classes.itemFormEmptyContainer} ref={itemFormEmptyContainer}>
+      <Accordion expanded={true} className={classes.accordion} title="Add new question">
         <CustomisedAccordionDetails>
           <AddIcon />
         </CustomisedAccordionDetails>

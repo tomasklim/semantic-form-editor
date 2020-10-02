@@ -6,6 +6,7 @@ import { CustomiseQuestionContext, OnSaveCallback } from '@contexts/CustomiseQue
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import useStyles from './SidebarWizardStep.styles';
 import { enableNotDraggableAndDroppable, isSectionOrWizardStep } from '@utils/itemDragHelpers';
+import { isBoolean } from 'lodash';
 
 const SidebarWizardStep = ({}) => {
   const classes = useStyles();
@@ -30,7 +31,7 @@ const SidebarWizardStep = ({}) => {
     }
 
     customiseQuestion({
-      customisingQuestion: isWizardless === false ? NEW_WIZARD_SECTION_QUESTION : NEW_QUESTION,
+      customisingQuestion: isWizardless === false ? { ...NEW_WIZARD_SECTION_QUESTION } : { ...NEW_QUESTION },
       onSave: (): OnSaveCallback => (question) => addNewNode(question, root, clonedFormStructure),
       onCancel: () => () => addButton.current?.classList.remove(classes.buttonHighlight),
       onInit: () => addButton.current?.classList.add(classes.buttonHighlight),
@@ -89,16 +90,18 @@ const SidebarWizardStep = ({}) => {
 
   return (
     <>
-      <CustomisedOutlineButton
-        onClick={addNewTopLevelQuestion}
-        title={isWizardless === false ? 'Add new wizard step' : 'Add new question'}
-        ref={addButton}
-        className={classes.addPageButton}
-        startIcon={<AddIcon />}
-        variant="outlined"
-      >
-        {isWizardless === false ? 'Add new wizard step' : 'Add new question'}
-      </CustomisedOutlineButton>
+      {isBoolean(isWizardless) && (
+        <CustomisedOutlineButton
+          onClick={addNewTopLevelQuestion}
+          title={isWizardless === false ? 'Add new wizard step' : 'Add new question'}
+          ref={addButton}
+          className={classes.addPageButton}
+          startIcon={<AddIcon />}
+          variant="outlined"
+        >
+          {!isWizardless ? 'Add new wizard step' : 'Add new question'}
+        </CustomisedOutlineButton>
+      )}
       <div
         data-droppable={true}
         id="question-drop-area"

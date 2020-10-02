@@ -8,6 +8,7 @@ import {
   highlightQuestion,
   isSectionOrWizardStep,
   moveQuestion,
+  buildFormStructureResursion,
   removeBeingPrecedingQuestion,
   removeFromSubquestions,
   removePrecedingQuestion,
@@ -35,7 +36,7 @@ interface FormStructureContextValues {
 }
 
 type AddNewFormStructureNode = (
-  newItemData: FormStructureQuestion,
+  newItemData: FormStructureQuestion | Array<FormStructureQuestion>,
   targetNode: FormStructureNode,
   clonedFormStructure: FormStructure
 ) => void;
@@ -70,6 +71,24 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
   };
 
   const addNewNode: AddNewFormStructureNode = (newItemData, targetNode, clonedFormStructure) => {
+    if (Array.isArray(newItemData)) {
+      newItemData.forEach((question) => {
+        const node = new FormStructureNode(targetNode, question);
+        clonedFormStructure.addNode(question['@id'], node);
+
+        buildFormStructureResursion(node, clonedFormStructure);
+        moveQuestion(node, targetNode);
+
+        highlightQuestion(question['@id']);
+      });
+
+      targetNode.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(targetNode.data[Constants.HAS_SUBQUESTION]);
+
+      setFormStructure(clonedFormStructure);
+
+      return;
+    }
+
     const node = new FormStructureNode(targetNode, newItemData);
 
     clonedFormStructure.addNode(newItemData['@id'], node);
