@@ -5,12 +5,13 @@ import SidebarCreateQuestionTab, {
 } from '@components/sidebars/SidebarCreateQuestionTab/SidebarCreateQuestionTab';
 import SidebarCustomiseQuestion from '@components/sidebars/SidebarCustomiseQuestion/SidebarCustomiseQuestion';
 import SidebarCreateQuestions from '@components/sidebars/SidebarCreateQuestions/SidebarCreateQuestions';
-// import useStyles from './SidebarItemForm.styles';
+import useStyles from './SidebarItemForm.styles';
+import classNames from 'classnames';
 
 interface SidebarItemFormProps {}
 
 const SidebarItemForm: React.FC<SidebarItemFormProps> = ({}) => {
-  // const classes = useStyles();
+  const classes = useStyles();
 
   const { customisingQuestion, isNewQuestion } = useContext(CustomiseQuestionContext);
 
@@ -35,7 +36,7 @@ const SidebarItemForm: React.FC<SidebarItemFormProps> = ({}) => {
       {isNewQuestion && <SidebarCreateQuestionTab activeTab={activeTab} handleChange={handleChangeTab} />}
 
       {customisingQuestion && (
-        <>
+        <div className={classNames(classes.questionContainer, { [classes.noBorderTopRadius]: isNewQuestion })}>
           <TabPanel value={activeTab} index={0}>
             <SidebarCustomiseQuestion
               isWizardlessFormType={isWizardlessFormType}
@@ -49,7 +50,7 @@ const SidebarItemForm: React.FC<SidebarItemFormProps> = ({}) => {
               handleFormTypeChange={handleFormTypeChange}
             />
           </TabPanel>
-        </>
+        </div>
       )}
     </>
   );

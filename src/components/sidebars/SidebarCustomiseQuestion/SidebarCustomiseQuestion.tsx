@@ -10,7 +10,6 @@ import { CustomiseQuestionContext } from '@contexts/CustomiseQuestionContext';
 import { createJsonAttValue, getJsonAttValue } from '@utils/formHelpers';
 import FormCustomAttributeList from '@components/sidebars/FormCustomAttributeList/FormCustomAttributeList';
 import { isUndefined, isBoolean } from 'lodash';
-import classNames from 'classnames';
 import FormTypeSwitch from '@components/mix/FormTypeSwitch/FormTypeSwitch';
 // @ts-ignore
 import JsonLdUtils from 'jsonld-utils';
@@ -167,10 +166,7 @@ const SidebarCustomiseQuestion: React.FC<SidebarCustomiseQuestionProps> = ({
   }
 
   return (
-    <form
-      className={classNames(classes.questionFormContainer, { [classes.borderRadiusTop]: !isNewQuestion })}
-      onSubmit={onSave}
-    >
+    <form className={classes.form} onSubmit={onSave}>
       {isUndefined(isWizardless) && (
         <FormTypeSwitch isWizardlessFormType={isWizardlessFormType} handleFormTypeChange={handleFormTypeChange} />
       )}

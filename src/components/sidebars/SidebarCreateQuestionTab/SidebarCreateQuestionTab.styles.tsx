@@ -14,6 +14,9 @@ export default makeStyles((theme: ITheme) => ({
     },
     '&.MuiPaper-elevation4': {
       boxShadow: 'none'
+    },
+    '& .MuiTab-wrapper': {
+      flexDirection: 'row'
     }
   }
 }));

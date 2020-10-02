@@ -67,15 +67,18 @@ const SidebarCreateQuestions: React.FC<SidebarCreateQuestionsProps> = ({
       } while (formStructure.getNode(id) || usedIds.includes(id));
       usedIds.push(id);
 
+      const layoutClass =
+        !isWizardlessFormType && level === 0
+          ? [Constants.LAYOUT.WIZARD_STEP, Constants.LAYOUT.QUESTION_SECTION]
+          : subquestions
+          ? [Constants.LAYOUT.QUESTION_SECTION]
+          : [];
+
       return {
         '@id': id,
         '@type': 'http://onto.fel.cvut.cz/ontologies/documentation/question',
         [Constants.RDFS_LABEL]: array[0].label,
-        [Constants.LAYOUT_CLASS]: subquestions
-          ? !isWizardlessFormType && level === 0
-            ? [Constants.LAYOUT.WIZARD_STEP, Constants.LAYOUT.QUESTION_SECTION]
-            : [Constants.LAYOUT.QUESTION_SECTION]
-          : [],
+        [Constants.LAYOUT_CLASS]: layoutClass,
         [Constants.HAS_SUBQUESTION]: subquestions || []
       };
     });
@@ -125,7 +128,7 @@ const SidebarCreateQuestions: React.FC<SidebarCreateQuestionsProps> = ({
   }
 
   return (
-    <form className={classes.questionFormContainer} onSubmit={onSave}>
+    <form className={classes.form} onSubmit={onSave}>
       {isUndefined(isWizardless) && (
         <FormTypeSwitch isWizardlessFormType={isWizardlessFormType} handleFormTypeChange={handleFormTypeChange} />
       )}

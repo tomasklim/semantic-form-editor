@@ -19,6 +19,10 @@ export default makeStyles((theme: ITheme) => ({
     alignItems: 'center',
     justifyContent: 'center',
     fontWeight: 'initial',
-    width: 'fit-content'
+    width: 'fit-content',
+    '& .MuiGrid-root': {
+      display: 'flex',
+      alignItems: 'center'
+    }
   }
 }));
