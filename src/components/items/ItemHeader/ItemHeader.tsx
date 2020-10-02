@@ -5,6 +5,8 @@ import useStyles, { CustomisedCardHeader } from './ItemHeader.styles';
 import ItemMenu from '@components/items/ItemMenu/ItemMenu';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
 import ItemPropsIndicator from '@components/items/ItemPropsIndicator/ItemPropsIndicator';
+// @ts-ignore
+import JsonLdUtils from 'jsonld-utils';
 
 type ItemHeaderProps = {
   container: React.MutableRefObject<HTMLLIElement | null>;
@@ -45,7 +47,7 @@ const ItemHeader: FC<ItemHeaderProps> = ({
             )}
             <DragIndicator className={classes.cardHeaderDrag} />
             <span>
-              {position}.&nbsp;{question[Constants.RDFS_LABEL] || question['@id']}
+              {position}.&nbsp;{JsonLdUtils.getLocalized(question[Constants.RDFS_LABEL], {}) || question['@id']}
             </span>
             <ItemPropsIndicator question={question} />
           </span>

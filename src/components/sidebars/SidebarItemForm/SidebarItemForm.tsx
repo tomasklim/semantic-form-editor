@@ -10,6 +10,8 @@ import { CustomiseQuestionContext } from '@contexts/CustomiseQuestionContext';
 import { createJsonAttValue, getJsonAttValue } from '@utils/formHelpers';
 import FormCustomAttributeList from '@components/sidebars/FormCustomAttributeList/FormCustomAttributeList';
 import { isUndefined, isBoolean } from 'lodash';
+// @ts-ignore
+import JsonLdUtils from 'jsonld-utils';
 
 interface SidebarItemFormProps {}
 
@@ -159,7 +161,7 @@ const SidebarItemForm: React.FC<SidebarItemFormProps> = ({}) => {
             name={(Constants.RDFS_LABEL as unknown) as string}
             label="Label"
             variant="outlined"
-            value={customisingQuestion[Constants.RDFS_LABEL] || ''}
+            value={JsonLdUtils.getLocalized(customisingQuestion[Constants.RDFS_LABEL], {}) || ''}
             onChange={handleChange}
             autoComplete={'off'}
             autoFocus
@@ -181,11 +183,8 @@ const SidebarItemForm: React.FC<SidebarItemFormProps> = ({}) => {
               <option aria-label="None" value="" />
               {layoutTypeOptions.map((layoutTypeOption) => {
                 if (isWizardless && layoutTypeOption.value === Constants.LAYOUT.WIZARD_STEP) {
-                  console.log('null');
                   return null;
                 }
-
-                console.log(layoutTypeOption, layoutType);
 
                 if (
                   !isUndefined(isWizardless) &&
