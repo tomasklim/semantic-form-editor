@@ -2,7 +2,13 @@ import React, { FC, useContext, useRef, useState } from 'react';
 import { MoreVert } from '@material-ui/icons';
 import { ClickAwayListener, Grow, MenuItem, MenuList, Paper, Popper } from '@material-ui/core';
 import { Constants } from 's-forms';
-import { removeFromFormStructure, removeFromSubquestions, sortRelatedQuestions } from '@utils/index';
+import {
+  highlightQuestion,
+  removeFromFormStructure,
+  removeFromSubquestions,
+  removePrecedingQuestion,
+  sortRelatedQuestions
+} from '@utils/index';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
 import AddIcon from '@material-ui/icons/Add';
@@ -32,8 +38,8 @@ const ItemMenu: FC<Props> = ({ question }) => {
     setOpen(!open);
   };
 
-  const handleClose = (e: React.SyntheticEvent<EventTarget>) => {
-    if (anchorEl.current!.contains(e.target as HTMLDivElement)) {
+  const handleClose = (e?: React.SyntheticEvent<EventTarget>) => {
+    if (e && anchorEl.current!.contains(e.target as HTMLDivElement)) {
       return;
     }
 
@@ -106,6 +112,28 @@ const ItemMenu: FC<Props> = ({ question }) => {
     setActiveStep(activeStep + 1);
   };
 
+  const removePrecedingQuestionLink = (e: React.SyntheticEvent<EventTarget>) => {
+    e.stopPropagation();
+    handleClose();
+
+    const clonedFormStructure = getClonedFormStructure();
+
+    const clonedNode = clonedFormStructure.getNode(question['@id']);
+    const nodeParent = clonedNode?.parent;
+
+    if (!clonedNode || !nodeParent) {
+      return;
+    }
+
+    removePrecedingQuestion(clonedNode);
+
+    sortRelatedQuestions(nodeParent.data[Constants.HAS_SUBQUESTION]);
+
+    setFormStructure(clonedFormStructure);
+
+    highlightQuestion(question['@id']);
+  };
+
   return (
     <span>
       <SquaredIconButton ref={addButton} onClick={addNewItem} title="Add new unordered subquestion">
@@ -121,6 +149,9 @@ const ItemMenu: FC<Props> = ({ question }) => {
             <Paper>
               <ClickAwayListener onClickAway={handleClose}>
                 <MenuList>
+                  {question[Constants.HAS_PRECEDING_QUESTION] && (
+                    <MenuItem onClick={removePrecedingQuestionLink}>Remove preceding question link</MenuItem>
+                  )}
                   <MenuItem onClick={handleViewInPreview}>View in preview</MenuItem>
                   <MenuItem onClick={handleDelete}>Delete question</MenuItem>
                 </MenuList>

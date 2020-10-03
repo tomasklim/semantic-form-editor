@@ -7,9 +7,13 @@ interface InitialProps {
   statusCode: number;
 }
 
-const Error: NextPage<ErrorProps> = ({ statusCode }) => (
+const Error: NextPage<ErrorProps> = ({ statusCode, title }) => (
   <div>
-    <p>{statusCode ? `An error ${statusCode} occurred on server` : 'An error occurred on client'}</p>
+    <p>
+      {statusCode
+        ? `An error ${title} - ${statusCode} occurred on server`
+        : `An error ${title} - ${statusCode} occurred on client`}
+    </p>
     <Button variant="contained" color="primary" onClick={() => Router.push('/')}>
       Home
     </Button>

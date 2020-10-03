@@ -7,7 +7,7 @@ export default makeStyles((theme: ITheme) => ({
     backgroundColor: theme.palette.custom[800],
     padding: theme.spacing(1.75, 2),
     maxHeight: 'calc(100vh - (60px + 72px + 90px + 40px))', // header + stepper-bar + space + footer
-    overflow: 'scroll',
+    overflow: 'auto',
     borderRadius: '4px',
     '& form > *': {
       margin: theme.spacing(1, 0)

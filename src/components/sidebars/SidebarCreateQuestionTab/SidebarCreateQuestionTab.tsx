@@ -1,5 +1,5 @@
 import useStyles from './SidebarCreateQuestionTab.styles';
-import { Tab, Tabs, Tooltip, Typography } from '@material-ui/core';
+import { Tab, Tabs, Tooltip } from '@material-ui/core';
 import React, { useContext } from 'react';
 import { CustomiseQuestionContext } from '@contexts/CustomiseQuestionContext';
 import HelpIcon from '@material-ui/icons/Help';
@@ -17,7 +17,7 @@ interface TabPanelProps {
 
 export const TabPanel: React.FC<TabPanelProps> = ({ children, value, index }) => (
   <div role="tabpanel" hidden={value !== index} id={`nav-tabpanel-${index}`}>
-    {value === index && <Typography>{children}</Typography>}
+    {value === index && children}
   </div>
 );
 
