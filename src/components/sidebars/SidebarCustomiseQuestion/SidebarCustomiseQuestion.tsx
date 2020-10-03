@@ -13,6 +13,7 @@ import { isUndefined, isBoolean } from 'lodash';
 import FormTypeSwitch from '@components/mix/FormTypeSwitch/FormTypeSwitch';
 // @ts-ignore
 import JsonLdUtils from 'jsonld-utils';
+import LocalisedInput from '@components/mix/LocalisedInput/LocalisedInput';
 
 const TEXT_FIELD = 'text';
 
@@ -179,15 +180,11 @@ const SidebarCustomiseQuestion: React.FC<SidebarCustomiseQuestionProps> = ({
         disabled
       />
 
-      <TextField
-        name={(Constants.RDFS_LABEL as unknown) as string}
-        label="Label"
-        variant="outlined"
-        value={JsonLdUtils.getLocalized(customisingQuestion[Constants.RDFS_LABEL], {}) || ''}
-        onChange={handleChange}
-        autoComplete={'off'}
+      <LocalisedInput
+        type={(Constants.RDFS_LABEL as unknown) as string}
+        question={customisingQuestion}
+        handleChange={handleChange}
         autoFocus
-        required
       />
 
       <FormControl variant="outlined">
@@ -259,13 +256,10 @@ const SidebarCustomiseQuestion: React.FC<SidebarCustomiseQuestionProps> = ({
         />
       )}
 
-      <TextField
-        name={(Constants.HELP_DESCRIPTION as unknown) as string}
-        label="Help description"
-        variant="outlined"
-        value={customisingQuestion[Constants.HELP_DESCRIPTION] || ''}
-        onChange={handleChange}
-        autoComplete={'off'}
+      <LocalisedInput
+        type={(Constants.HELP_DESCRIPTION as unknown) as string}
+        question={customisingQuestion}
+        handleChange={handleChange}
         multiline
       />
 
