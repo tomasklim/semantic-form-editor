@@ -157,6 +157,12 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
       node.data[key] = question[key];
     });
 
+    const parent = node.parent;
+
+    if (parent) {
+      parent.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(parent.data[Constants.HAS_SUBQUESTION]);
+    }
+
     setFormStructure(clonedFormStructure);
   };
 

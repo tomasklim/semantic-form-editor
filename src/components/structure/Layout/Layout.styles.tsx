@@ -8,5 +8,8 @@ export default makeStyles((theme: ITheme) => ({
     minHeight: '100vh',
     padding: 0,
     backgroundColor: theme.palette.custom[900]
+  },
+  '@global html, body': {
+    backgroundColor: theme.palette.custom[900]
   }
 }));
