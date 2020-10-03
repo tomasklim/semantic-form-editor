@@ -26,5 +26,11 @@ export default makeStyles((theme: ITheme) => ({
   emptySidebar: {
     fontStyle: 'italic',
     color: '#ffffffcc'
+  },
+  resizer: {
+    height: '100%',
+    width: '5px',
+    position: 'absolute',
+    cursor: 'ew-resize'
   }
 }));

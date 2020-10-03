@@ -74,7 +74,7 @@ const EditorCustomize: FC<EditorCustomizeProps> = ({}) => {
 
   return (
     <div>
-      <ol className={classes.form}>
+      <ol className={classes.form} id="form">
         {!rootSubquestions?.length && <ItemFormEmpty key={'empty-page'} />}
 
         {rootSubquestions?.map((subquestion, index) => buildFormUI(subquestion, index, formStructure.root.data))}
