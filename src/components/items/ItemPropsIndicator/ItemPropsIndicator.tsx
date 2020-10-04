@@ -8,6 +8,8 @@ import VerticalAlignTopIcon from '@material-ui/icons/VerticalAlignTop';
 import CommentIcon from '@material-ui/icons/Comment';
 import { highlightQuestion } from '@utils/itemHelpers';
 import { EditorContext } from '@contexts/EditorContext';
+// @ts-ignore
+import JsonLdUtils from 'jsonld-utils';
 
 type Props = {
   question: FormStructureQuestion;
@@ -63,7 +65,7 @@ const ItemPropsIndicator: FC<Props> = ({ question }) => {
       )}
       {question[Constants.RDFS_COMMENT] && (
         <div onClick={handleViewInPreview}>
-          <Tooltip title={question[Constants.RDFS_COMMENT] || ''} arrow>
+          <Tooltip title={JsonLdUtils.getLocalized(question[Constants.RDFS_COMMENT], {}) || ''} arrow>
             <Badge badgeContent={<CommentIcon fontSize="small" />} className={classes.comment} />
           </Tooltip>
         </div>
