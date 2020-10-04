@@ -25,12 +25,6 @@ const SidebarItemForm: React.FC<SidebarItemFormProps> = ({}) => {
     setActiveTab(activateTab);
   };
 
-  const [isWizardlessFormType, setIsWizardlessFormType] = React.useState<boolean>(true);
-
-  const handleFormTypeChange = () => {
-    setIsWizardlessFormType(!isWizardlessFormType);
-  };
-
   return (
     <>
       {isNewQuestion && <SidebarCreateQuestionTab activeTab={activeTab} handleChange={handleChangeTab} />}
@@ -38,17 +32,10 @@ const SidebarItemForm: React.FC<SidebarItemFormProps> = ({}) => {
       {customisingQuestion && (
         <div className={classNames(classes.questionContainer, { [classes.noBorderTopRadius]: isNewQuestion })}>
           <TabPanel value={activeTab} index={0}>
-            <SidebarCustomiseQuestion
-              isWizardlessFormType={isWizardlessFormType}
-              handleFormTypeChange={handleFormTypeChange}
-            />
+            <SidebarCustomiseQuestion />
           </TabPanel>
           <TabPanel value={activeTab} index={1}>
-            <SidebarCreateQuestions
-              handleChangeTab={handleChangeTab}
-              isWizardlessFormType={isWizardlessFormType}
-              handleFormTypeChange={handleFormTypeChange}
-            />
+            <SidebarCreateQuestions handleChangeTab={handleChangeTab} />
           </TabPanel>
         </div>
       )}

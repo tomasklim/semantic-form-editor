@@ -34,6 +34,7 @@ type CustomiseQuestion = ({
   onInit?: () => void;
   isNewQuestion?: boolean;
   isSpecificPosition?: boolean;
+  level?: number;
 }) => void;
 
 // @ts-ignore
@@ -51,6 +52,7 @@ const CustomiseQuestionProvider: React.FC<CustomiseItemProviderProps> = ({ child
 
   const [isNewQuestion, setIsNewQuestion] = useState<boolean>(false);
   const [isSpecificPosition, setIsSpecificPosition] = useState<boolean>(false);
+  const [level, setLevel] = useState<number | null>(null);
 
   const customiseQuestion: CustomiseQuestion = ({
     customisingQuestion,
@@ -58,7 +60,8 @@ const CustomiseQuestionProvider: React.FC<CustomiseItemProviderProps> = ({ child
     onCancel,
     onInit,
     isNewQuestion,
-    isSpecificPosition
+    isSpecificPosition,
+    level
   }) => {
     onCancelCallback && onCancelCallback();
     onInit && onInit();
@@ -66,6 +69,7 @@ const CustomiseQuestionProvider: React.FC<CustomiseItemProviderProps> = ({ child
     onCancel && setOnCancelCallback(onCancel);
     isNewQuestion && setIsNewQuestion(true);
     isSpecificPosition && setIsSpecificPosition(true);
+    Number.isInteger(level) && setLevel(level);
 
     setCustomisingQuestion(customisingQuestion);
   };
@@ -79,6 +83,7 @@ const CustomiseQuestionProvider: React.FC<CustomiseItemProviderProps> = ({ child
       setOnCancelCallback(null);
       setIsNewQuestion(false);
       setIsSpecificPosition(false);
+      setLevel(null);
     }
   };
 
@@ -90,9 +95,10 @@ const CustomiseQuestionProvider: React.FC<CustomiseItemProviderProps> = ({ child
       customisingQuestion,
       resetCustomisationProcess,
       isNewQuestion,
-      isSpecificPosition
+      isSpecificPosition,
+      level
     }),
-    [customisingQuestion, onSaveCallback, isNewQuestion]
+    [customisingQuestion, onSaveCallback, isNewQuestion, isSpecificPosition, level]
   );
 
   return <CustomiseQuestionContext.Provider value={values}>{children}</CustomiseQuestionContext.Provider>;

@@ -9,10 +9,6 @@ import { FormStructureContext } from '@contexts/FormStructureContext';
 import { CustomiseQuestionContext } from '@contexts/CustomiseQuestionContext';
 import { createJsonAttValue, getJsonAttValue } from '@utils/formHelpers';
 import FormCustomAttributeList from '@components/sidebars/FormCustomAttributeList/FormCustomAttributeList';
-import { isUndefined, isBoolean } from 'lodash';
-import FormTypeSwitch from '@components/mix/FormTypeSwitch/FormTypeSwitch';
-// @ts-ignore
-import JsonLdUtils from 'jsonld-utils';
 import LocalisedInput from '@components/mix/LocalisedInput/LocalisedInput';
 
 const TEXT_FIELD = 'text';
@@ -42,25 +38,20 @@ const layoutTypeFields = [
   Constants.LAYOUT.CHECKBOX
 ];
 
-interface SidebarCustomiseQuestionProps {
-  isWizardlessFormType: boolean;
-  handleFormTypeChange: () => void;
-}
+interface SidebarCustomiseQuestionProps {}
 
-const SidebarCustomiseQuestion: React.FC<SidebarCustomiseQuestionProps> = ({
-  isWizardlessFormType,
-  handleFormTypeChange
-}) => {
+const SidebarCustomiseQuestion: React.FC<SidebarCustomiseQuestionProps> = ({}) => {
   const classes = useStyles();
 
-  const { formStructure, isWizardless } = useContext(FormStructureContext);
+  const { formStructure, isWizardless, isEmptyFormStructure } = useContext(FormStructureContext);
 
   const {
     onSaveCallback,
     customisingQuestion,
     resetCustomisationProcess,
     setCustomisingQuestion,
-    isNewQuestion
+    isNewQuestion,
+    level
   } = useContext(CustomiseQuestionContext);
 
   const handleChange = (event: React.ChangeEvent | React.ChangeEvent<{ value: unknown }>) => {
@@ -122,10 +113,10 @@ const SidebarCustomiseQuestion: React.FC<SidebarCustomiseQuestionProps> = ({
   const findLayoutTypeOfQuestion = () => {
     let layoutClasses = customisingQuestion && customisingQuestion[Constants.LAYOUT_CLASS];
 
-    if (isUndefined(isWizardless) && !isWizardlessFormType) {
+    if (isEmptyFormStructure && !isWizardless) {
       customisingQuestion![Constants.LAYOUT_CLASS] = [Constants.LAYOUT.WIZARD_STEP, Constants.LAYOUT.QUESTION_SECTION];
       return Constants.LAYOUT.WIZARD_STEP;
-    } else if (isUndefined(isWizardless) && isWizardlessFormType && FormUtils.isWizardStep(customisingQuestion)) {
+    } else if (isEmptyFormStructure && isWizardless && FormUtils.isWizardStep(customisingQuestion)) {
       customisingQuestion![Constants.LAYOUT_CLASS] = [];
       return '';
     }
@@ -168,10 +159,6 @@ const SidebarCustomiseQuestion: React.FC<SidebarCustomiseQuestionProps> = ({
 
   return (
     <form className={classes.form} onSubmit={onSave}>
-      {isUndefined(isWizardless) && (
-        <FormTypeSwitch isWizardlessFormType={isWizardlessFormType} handleFormTypeChange={handleFormTypeChange} />
-      )}
-
       <TextField
         name="@id"
         label="Identification"
@@ -185,6 +172,7 @@ const SidebarCustomiseQuestion: React.FC<SidebarCustomiseQuestionProps> = ({
         question={customisingQuestion}
         handleChange={handleChange}
         autoFocus
+        required
       />
 
       <FormControl variant="outlined">
@@ -199,25 +187,28 @@ const SidebarCustomiseQuestion: React.FC<SidebarCustomiseQuestionProps> = ({
             id: 'layout-type'
           }}
           disabled={
-            (isBoolean(isWizardless) && FormUtils.isWizardStep(customisingQuestion)) ||
-            (isUndefined(isWizardless) && !isWizardlessFormType)
+            (!isEmptyFormStructure && FormUtils.isWizardStep(customisingQuestion)) ||
+            (isEmptyFormStructure && !isWizardless)
           }
         >
           <option aria-label="None" value="" />
           {layoutTypeOptions.map((layoutTypeOption) => {
-            if (isWizardless && layoutTypeOption.value === Constants.LAYOUT.WIZARD_STEP) {
-              return null;
-            }
-
             if (
-              isUndefined(isWizardless) &&
-              isWizardlessFormType &&
+              !isEmptyFormStructure &&
+              level !== 0 &&
+              !isWizardless &&
               layoutTypeOption.value === Constants.LAYOUT.WIZARD_STEP
             ) {
               return null;
             } else if (
-              isUndefined(isWizardless) &&
-              !isWizardlessFormType &&
+              isEmptyFormStructure &&
+              isWizardless &&
+              layoutTypeOption.value === Constants.LAYOUT.WIZARD_STEP
+            ) {
+              return null;
+            } else if (
+              isEmptyFormStructure &&
+              !isWizardless &&
               layoutTypeOption.value !== Constants.LAYOUT.WIZARD_STEP
             ) {
               return null;
@@ -308,7 +299,7 @@ const SidebarCustomiseQuestion: React.FC<SidebarCustomiseQuestionProps> = ({
         <CustomisedButton type="submit" size={'large'} className={classes.saveButton}>
           Save
         </CustomisedButton>
-        {isBoolean(isWizardless) && (
+        {!isEmptyFormStructure && (
           <CustomisedLinkButton onClick={onCancel} size={'large'}>
             Cancel
           </CustomisedLinkButton>

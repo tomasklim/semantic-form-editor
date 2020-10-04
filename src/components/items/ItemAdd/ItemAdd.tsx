@@ -173,14 +173,14 @@ const ItemAdd: FC<Props> = ({ parentQuestionId, position, isWizardPosition = fal
     }
 
     customiseQuestion({
-      customisingQuestion:
-        isWizardless === false && isWizardPosition ? { ...NEW_WIZARD_SECTION_QUESTION } : { ...NEW_QUESTION },
+      customisingQuestion: !isWizardless && isWizardPosition ? { ...NEW_WIZARD_SECTION_QUESTION } : { ...NEW_QUESTION },
       onSave: (): OnSaveQuestionCallback => (question) =>
         addNewQuestionToSpecificPosition(question, targetNode, clonedFormStructure),
       onCancel: () => () => addContainer.current?.classList.remove(classes.highlightAddLine),
       onInit: () => addContainer.current?.classList.add(classes.highlightAddLine),
       isNewQuestion: true,
-      isSpecificPosition: true
+      isSpecificPosition: true,
+      level: isWizardPosition ? 0 : undefined
     });
   };
 

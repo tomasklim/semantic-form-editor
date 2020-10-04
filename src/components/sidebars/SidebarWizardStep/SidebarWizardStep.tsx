@@ -7,6 +7,7 @@ import { FormStructureContext } from '@contexts/FormStructureContext';
 import useStyles from './SidebarWizardStep.styles';
 import { enableNotDraggableAndDroppable, isSectionOrWizardStep } from '@utils/itemDragHelpers';
 import { isBoolean } from 'lodash';
+import ConfigModal from '@components/mix/ConfigModal/ConfigModal';
 
 const SidebarWizardStep = ({}) => {
   const classes = useStyles();
@@ -31,11 +32,12 @@ const SidebarWizardStep = ({}) => {
     }
 
     customiseQuestion({
-      customisingQuestion: isWizardless === false ? { ...NEW_WIZARD_SECTION_QUESTION } : { ...NEW_QUESTION },
+      customisingQuestion: !isWizardless ? { ...NEW_WIZARD_SECTION_QUESTION } : { ...NEW_QUESTION },
       onSave: (): OnSaveQuestionsCallback => (questions) => addNewNodes(questions, root, clonedFormStructure),
       onCancel: () => () => addButton.current?.classList.remove(classes.buttonHighlight),
       onInit: () => addButton.current?.classList.add(classes.buttonHighlight),
-      isNewQuestion: true
+      isNewQuestion: true,
+      level: 0
     });
   };
 
@@ -90,17 +92,19 @@ const SidebarWizardStep = ({}) => {
 
   return (
     <>
-      {isBoolean(isWizardless) && (
-        <CustomisedOutlineButton
-          onClick={addNewTopLevelQuestion}
-          title={isWizardless === false ? 'Add new wizard step' : 'Add new question'}
-          ref={addButton}
-          className={classes.addPageButton}
-          startIcon={<AddIcon />}
-          variant="outlined"
-        >
-          {!isWizardless ? 'Add new wizard step' : 'Add new question'}
-        </CustomisedOutlineButton>
+      {isBoolean(true) && (
+        <div className={classes.addPageButton}>
+          <CustomisedOutlineButton
+            onClick={addNewTopLevelQuestion}
+            title={isWizardless === false ? 'Add new wizard step' : 'Add new question'}
+            ref={addButton}
+            startIcon={<AddIcon />}
+            variant="outlined"
+          >
+            {!isWizardless ? 'Add new wizard step' : 'Add new question'}
+          </CustomisedOutlineButton>
+          <ConfigModal />
+        </div>
       )}
       <div
         data-droppable={true}

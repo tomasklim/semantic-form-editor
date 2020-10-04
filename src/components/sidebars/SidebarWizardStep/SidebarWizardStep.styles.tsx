@@ -13,7 +13,11 @@ export default makeStyles((theme: ITheme) => ({
     '&.MuiButton-outlined': {
       width: 'fit-content',
       border: '2px solid ' + theme.palette.custom.main
-    }
+    },
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between'
   },
   unorderedDropArea: {
     padding: '4rem 1rem',

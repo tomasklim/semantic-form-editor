@@ -14,10 +14,12 @@ const Layout: React.FC<Props> = ({ children, title }) => {
   const classes = useStyles();
 
   useEffect(() => {
-    TrackJS.install({
-      token: 'a5fe573aa8754a3d9d2fd99f6fcc87d1',
-      application: 'master-thesis'
-    });
+    if (process.env.NODE_ENV === 'production') {
+      TrackJS.install({
+        token: 'a5fe573aa8754a3d9d2fd99f6fcc87d1',
+        application: 'master-thesis'
+      });
+    }
   }, []);
 
   return (

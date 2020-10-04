@@ -11,9 +11,17 @@ interface LocalisedInputProps {
   handleChange: any;
   multiline?: boolean;
   autoFocus?: boolean;
+  required?: boolean;
 }
 
-const LocalisedInput: React.FC<LocalisedInputProps> = ({ type, question, handleChange, multiline, autoFocus }) => {
+const LocalisedInput: React.FC<LocalisedInputProps> = ({
+  type,
+  question,
+  handleChange,
+  multiline,
+  autoFocus,
+  required
+}) => {
   const value = question[type];
 
   const handleLabelsChange = (e: React.ChangeEvent | React.ChangeEvent<{ value: unknown }>) => {
@@ -36,17 +44,29 @@ const LocalisedInput: React.FC<LocalisedInputProps> = ({ type, question, handleC
     handleChange(fakeEvent);
   };
 
+  let label: string;
+  switch (type) {
+    case (Constants.RDFS_LABEL as unknown) as string:
+      label = 'Label';
+      break;
+    case (Constants.HELP_DESCRIPTION as unknown) as string:
+      label = 'Help description';
+      break;
+    default:
+      label = 'Unknown type';
+  }
+
   if (!value || isString(value)) {
     return (
       <TextField
         name={type}
-        label="Label"
+        label={label}
         variant="outlined"
         value={value || ''}
         onChange={handleChange}
         autoComplete={'off'}
         autoFocus={autoFocus}
-        required
+        required={required}
         // @ts-ignore
         multiline={multiline}
       />
@@ -59,13 +79,13 @@ const LocalisedInput: React.FC<LocalisedInputProps> = ({ type, question, handleC
         key={labelLang['@language']}
         name={type}
         inputProps={{ ['data-language']: labelLang['@language'] }}
-        label={'Label ' + labelLang['@language'].toUpperCase()}
+        label={`${label} ${labelLang['@language'].toUpperCase()}`}
         variant="outlined"
         value={labelLang['@value'] || ''}
         onChange={handleLabelsChange}
         autoComplete={'off'}
         autoFocus={autoFocus && index === 0}
-        required
+        required={required}
         // @ts-ignore
         multiline={multiline}
       />

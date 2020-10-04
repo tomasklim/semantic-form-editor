@@ -1,16 +1,20 @@
-import React from 'react';
 import { Grid, Tooltip } from '@material-ui/core';
 import CustomisedSwitch from '@styles/CustomisedSwitch';
 import useStyles from './FormTypeSwitch.styles';
 import HelpIcon from '@material-ui/icons/Help';
+import React, { useContext } from 'react';
+import { FormStructureContext } from '@contexts/FormStructureContext';
 
-interface FormTypeSwitchProps {
-  isWizardlessFormType: boolean;
-  handleFormTypeChange: () => void;
-}
+interface FormTypeSwitchProps {}
 
-const FormTypeSwitch: React.FC<FormTypeSwitchProps> = ({ isWizardlessFormType, handleFormTypeChange }) => {
+const FormTypeSwitch: React.FC<FormTypeSwitchProps> = ({}) => {
   const classes = useStyles();
+
+  const { isEmptyFormStructure, isWizardless, setIsWizardless } = useContext(FormStructureContext);
+
+  const handleFormTypeChange = () => {
+    setIsWizardless(!isWizardless);
+  };
 
   return (
     <div className={classes.switchContainer}>
@@ -22,7 +26,7 @@ const FormTypeSwitch: React.FC<FormTypeSwitchProps> = ({ isWizardlessFormType, h
           &nbsp;Wizard form
         </Grid>
         <Grid item>
-          <CustomisedSwitch checked={isWizardlessFormType} onChange={handleFormTypeChange} />
+          <CustomisedSwitch checked={isWizardless} onChange={handleFormTypeChange} disabled={!isEmptyFormStructure} />
         </Grid>
         <Grid item>
           Simple form&nbsp;

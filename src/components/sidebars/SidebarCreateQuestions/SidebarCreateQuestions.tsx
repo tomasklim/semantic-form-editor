@@ -5,28 +5,20 @@ import { CustomisedLinkButton } from '@styles/CustomisedLinkButton';
 import useStyles from './SidebarCreateQuestions.styles';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import { CustomiseQuestionContext } from '@contexts/CustomiseQuestionContext';
-import { isBoolean, isUndefined } from 'lodash';
-import FormTypeSwitch from '@components/mix/FormTypeSwitch/FormTypeSwitch';
 import { Constants } from 's-forms';
 import { getId } from '@utils/itemHelpers';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
 
 interface SidebarCreateQuestionsProps {
   handleChangeTab: (_: any, newValue: number) => void;
-  isWizardlessFormType: boolean;
-  handleFormTypeChange: () => void;
 }
 
 const NUMBER_OF_SPACES = 2;
 
-const SidebarCreateQuestions: React.FC<SidebarCreateQuestionsProps> = ({
-  handleChangeTab,
-  isWizardlessFormType,
-  handleFormTypeChange
-}) => {
+const SidebarCreateQuestions: React.FC<SidebarCreateQuestionsProps> = ({ handleChangeTab }) => {
   const classes = useStyles();
 
-  const { isWizardless, formStructure } = useContext(FormStructureContext);
+  const { isWizardless, formStructure, isEmptyFormStructure } = useContext(FormStructureContext);
 
   const [multipleQuestions, setMultipleQuestions] = useState<string>('');
 
@@ -68,7 +60,7 @@ const SidebarCreateQuestions: React.FC<SidebarCreateQuestionsProps> = ({
       usedIds.push(id);
 
       const layoutClass =
-        !isWizardlessFormType && level === 0
+        !isWizardless && level === 0
           ? [Constants.LAYOUT.WIZARD_STEP, Constants.LAYOUT.QUESTION_SECTION]
           : subquestions
           ? [Constants.LAYOUT.QUESTION_SECTION]
@@ -129,10 +121,6 @@ const SidebarCreateQuestions: React.FC<SidebarCreateQuestionsProps> = ({
 
   return (
     <form className={classes.form} onSubmit={onSave}>
-      {isUndefined(isWizardless) && (
-        <FormTypeSwitch isWizardlessFormType={isWizardlessFormType} handleFormTypeChange={handleFormTypeChange} />
-      )}
-
       <TextField
         name="create-questions"
         label="Create questions"
@@ -150,7 +138,7 @@ const SidebarCreateQuestions: React.FC<SidebarCreateQuestionsProps> = ({
         <CustomisedButton type="submit" size={'large'} className={classes.saveButton}>
           Save
         </CustomisedButton>
-        {isBoolean(isWizardless) && (
+        {!isEmptyFormStructure && (
           <CustomisedLinkButton onClick={onCancel} size={'large'}>
             Cancel
           </CustomisedLinkButton>
