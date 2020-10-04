@@ -171,8 +171,8 @@ const ItemSection: FC<Props> = ({ question, position, buildFormUI }) => {
         />
         <CustomisedAccordionDetails className={classes.cardContent} id={question['@id']} onMouseOver={handleMouseOver}>
           <ol id={question['@id']}>
-            {subquestions!.map((subquestion, index) => buildFormUI(subquestion, index, question))}
-            {!subquestions!.length && (
+            {subquestions && subquestions.map((subquestion, index) => buildFormUI(subquestion, index, question))}
+            {subquestions && !subquestions.length && (
               <div id={question['@id']} className={classes.emptySection}>
                 Empty section...
               </div>
