@@ -4,7 +4,9 @@ import { Accordion } from '@material-ui/core';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import AddIcon from '@material-ui/icons/Add';
 import { CustomiseQuestionContext, OnSaveQuestionsCallback } from '@contexts/CustomiseQuestionContext';
-import { NEW_QUESTION, NEW_WIZARD_SECTION_QUESTION } from '../../../constants';
+import { NEW_QUESTION, NEW_WIZARD_SECTION_QUESTION } from '@constants/index';
+import { EditorContext } from '@contexts/EditorContext';
+import { getIntl } from '@utils/formHelpers';
 
 type ItemFormEmptyProps = {};
 
@@ -14,6 +16,7 @@ const ItemFormEmpty: FC<ItemFormEmptyProps> = ({}) => {
 
   const { getClonedFormStructure, addNewNodes, isWizardless } = useContext(FormStructureContext);
   const { customiseQuestion } = useContext(CustomiseQuestionContext);
+  const { languages } = useContext(EditorContext);
 
   useEffect(() => {
     addNewTopLevelQuestion();
@@ -29,11 +32,12 @@ const ItemFormEmpty: FC<ItemFormEmptyProps> = ({}) => {
       return;
     }
 
-    itemFormEmptyContainer.current?.classList.add(classes.pageHighlight);
+    itemFormEmptyContainer.current?.classList.add(classes.itemSectionHighlight);
 
     customiseQuestion({
-      customisingQuestion: isWizardless === false ? { ...NEW_WIZARD_SECTION_QUESTION } : { ...NEW_QUESTION },
-      onSave: (): OnSaveQuestionsCallback => (questions) => addNewNodes(questions, root, clonedFormStructure),
+      customisingQuestion: !isWizardless ? { ...NEW_WIZARD_SECTION_QUESTION } : { ...NEW_QUESTION },
+      onSave: (): OnSaveQuestionsCallback => (questions) =>
+        addNewNodes(questions, root, clonedFormStructure, getIntl(languages[0])),
       isNewQuestion: true
     });
   };

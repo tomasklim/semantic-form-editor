@@ -8,7 +8,7 @@ export default makeStyles((theme: ITheme) => ({
       color: 'white'
     }
   },
-  addPageButton: {
+  addQuestionButton: {
     marginBottom: theme.spacing(1.5),
     '&.MuiButton-outlined': {
       width: 'fit-content',

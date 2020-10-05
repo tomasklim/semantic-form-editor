@@ -1,13 +1,15 @@
 import { CustomisedOutlineButton } from '@styles/CustomisedOutlineButton';
 import AddIcon from '@material-ui/icons/Add';
 import React, { useContext, useRef } from 'react';
-import { NEW_QUESTION, NEW_WIZARD_SECTION_QUESTION } from '../../../constants';
+import { NEW_QUESTION, NEW_WIZARD_SECTION_QUESTION } from '@constants/index';
 import { CustomiseQuestionContext, OnSaveQuestionsCallback } from '@contexts/CustomiseQuestionContext';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import useStyles from './SidebarWizardStep.styles';
 import { enableNotDraggableAndDroppable, isSectionOrWizardStep } from '@utils/itemDragHelpers';
 import { isBoolean } from 'lodash';
 import ConfigModal from '@components/mix/ConfigModal/ConfigModal';
+import { getIntl } from '@utils/formHelpers';
+import { EditorContext } from '@contexts/EditorContext';
 
 const SidebarWizardStep = ({}) => {
   const classes = useStyles();
@@ -20,6 +22,7 @@ const SidebarWizardStep = ({}) => {
   );
 
   const { customiseQuestion } = useContext(CustomiseQuestionContext);
+  const { languages } = useContext(EditorContext);
 
   const addNewTopLevelQuestion = () => {
     const clonedFormStructure = getClonedFormStructure();
@@ -33,7 +36,8 @@ const SidebarWizardStep = ({}) => {
 
     customiseQuestion({
       customisingQuestion: !isWizardless ? { ...NEW_WIZARD_SECTION_QUESTION } : { ...NEW_QUESTION },
-      onSave: (): OnSaveQuestionsCallback => (questions) => addNewNodes(questions, root, clonedFormStructure),
+      onSave: (): OnSaveQuestionsCallback => (questions) =>
+        addNewNodes(questions, root, clonedFormStructure, getIntl(languages[0])),
       onCancel: () => () => addButton.current?.classList.remove(classes.buttonHighlight),
       onInit: () => addButton.current?.classList.add(classes.buttonHighlight),
       isNewQuestion: true,
@@ -60,7 +64,7 @@ const SidebarWizardStep = ({}) => {
         return;
       }
 
-      moveNodeUnderNode(movingNodeId, targetNodeId, true);
+      moveNodeUnderNode(movingNodeId, targetNodeId, true, getIntl(languages[0]));
     }
   };
 
@@ -93,10 +97,10 @@ const SidebarWizardStep = ({}) => {
   return (
     <>
       {isBoolean(true) && (
-        <div className={classes.addPageButton}>
+        <div className={classes.addQuestionButton}>
           <CustomisedOutlineButton
             onClick={addNewTopLevelQuestion}
-            title={isWizardless === false ? 'Add new wizard step' : 'Add new question'}
+            title={!isWizardless ? 'Add new wizard step' : 'Add new question'}
             ref={addButton}
             startIcon={<AddIcon />}
             variant="outlined"

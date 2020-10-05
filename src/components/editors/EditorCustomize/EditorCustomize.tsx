@@ -1,4 +1,4 @@
-import React, { FC, useContext } from 'react';
+import React, { useContext } from 'react';
 import { Constants, FormUtils } from 's-forms';
 import Item from '@components/items/Item/Item';
 import ItemAdd from '@components/items/ItemAdd/ItemAdd';
@@ -9,9 +9,7 @@ import ItemSection from '@components/items/ItemSection/ItemSection';
 import Sidebar from '@components/sidebars/Sidebar/Sidebar';
 import ItemFormEmpty from '@components/items/ItemFormEmpty/ItemFormEmpty';
 
-interface EditorCustomizeProps {}
-
-const EditorCustomize: FC<EditorCustomizeProps> = ({}) => {
+const EditorCustomize: React.FC = () => {
   const classes = useStyles();
 
   const { formStructure } = useContext(FormStructureContext);
@@ -75,7 +73,7 @@ const EditorCustomize: FC<EditorCustomizeProps> = ({}) => {
   return (
     <div>
       <ol className={classes.form} id="form">
-        {!rootSubquestions?.length && <ItemFormEmpty key={'empty-page'} />}
+        {!rootSubquestions?.length && <ItemFormEmpty />}
 
         {rootSubquestions?.map((subquestion, index) => buildFormUI(subquestion, index, formStructure.root.data))}
       </ol>

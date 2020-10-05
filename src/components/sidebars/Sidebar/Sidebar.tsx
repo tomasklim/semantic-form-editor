@@ -4,7 +4,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import { CustomiseQuestionContext } from '@contexts/CustomiseQuestionContext';
 import SidebarItemForm from '@components/sidebars/SidebarItemForm/SidebarItemForm';
 import SidebarWizardStep from '@components/sidebars/SidebarWizardStep/SidebarWizardStep';
-import { LOCAL_STORAGE_SIDEBAR_WIDTH } from '../../../constants';
+import { LOCAL_STORAGE_SIDEBAR_WIDTH } from '@constants/index';
 
 // Header + Stepper
 const INITIAL_TOP = 60 + 88;
@@ -17,7 +17,7 @@ const Sidebar = () => {
 
   const [drawerTop, setDrawerTop] = useState<number>(INITIAL_TOP);
 
-  const { resetCustomisationProcess } = useContext(CustomiseQuestionContext);
+  const { customiseQuestion, resetCustomisationProcess } = useContext(CustomiseQuestionContext);
 
   useEffect(() => {
     let x = 0;
@@ -77,21 +77,29 @@ const Sidebar = () => {
     return () => resizer!.current!.removeEventListener('mousedown', mouseDownHandler);
   }, [resizer.current, sidebarContainer?.current]);
 
+  const calculateSidebarTopPosition = () => {
+    const scrollTop = document.documentElement.scrollTop;
+    const questionContainer = document.getElementById('question-container');
+
+    if (scrollTop >= 0) {
+      const drawerTop = INITIAL_TOP - scrollTop;
+      setDrawerTop(drawerTop > 0 ? drawerTop : 0);
+
+      if (questionContainer) {
+        questionContainer.style.maxHeight = `calc(100vh - ${Math.max(drawerTop, 0) + 100}px)`;
+      }
+    }
+  };
+
   // sidebar top position
   useEffect(() => {
-    const calculateSidebarTopPosition = () => {
-      const scrollTop = document.documentElement.scrollTop;
-
-      if (scrollTop >= 0) {
-        const drawerTop = INITIAL_TOP - scrollTop;
-        setDrawerTop(drawerTop > 0 ? drawerTop : 0);
-      }
-    };
-
-    document.addEventListener('scroll', () => calculateSidebarTopPosition());
     document.addEventListener('scroll', () => calculateSidebarTopPosition());
     return document.removeEventListener('scroll', () => calculateSidebarTopPosition());
   }, []);
+
+  useEffect(() => {
+    calculateSidebarTopPosition();
+  }, [customiseQuestion]);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {

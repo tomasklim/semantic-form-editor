@@ -30,7 +30,10 @@ const SidebarItemForm: React.FC<SidebarItemFormProps> = ({}) => {
       {isNewQuestion && <SidebarCreateQuestionTab activeTab={activeTab} handleChange={handleChangeTab} />}
 
       {customisingQuestion && (
-        <div className={classNames(classes.questionContainer, { [classes.noBorderTopRadius]: isNewQuestion })}>
+        <div
+          className={classNames(classes.questionContainer, { [classes.noBorderTopRadius]: isNewQuestion })}
+          id="question-container"
+        >
           <TabPanel value={activeTab} index={0}>
             <SidebarCustomiseQuestion />
           </TabPanel>

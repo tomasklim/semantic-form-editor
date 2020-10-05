@@ -1,12 +1,4 @@
 import React, { FC, useContext } from 'react';
-import classNames from 'classnames';
-import { Step } from '@material-ui/core';
-import useStyles, {
-  CustomisedConnector,
-  CustomisedStepIcon,
-  CustomisedStepLabel,
-  CustomisedStepper
-} from './Editor.styles';
 import EditorCustomize from '@components/editors/EditorCustomize/EditorCustomize';
 import EditorPreview from '@components/editors/EditorPreview/EditorPreview';
 import EditorNew from '@components/editors/EditorNew/EditorNew';
@@ -14,24 +6,15 @@ import EditorExport from '@components/editors/EditorExport/EditorExport';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import { CustomiseQuestionProvider } from '@contexts/CustomiseQuestionContext';
 import { EditorContext } from '@contexts/EditorContext';
+import StepperBar from '@components/mix/StepperBar/StepperBar';
 
 interface EditorProps {}
 
 const Editor: FC<EditorProps> = ({}) => {
-  const classes = useStyles();
-
   const { setFormFile } = useContext(FormStructureContext);
   const { activeStep, setActiveStep } = useContext(EditorContext);
 
-  const steps = ['New / Import', 'Customize', 'Preview', 'Export'];
-
   const [lockedSteps, setLockedSteps] = React.useState<boolean>(true);
-
-  const handleStepClick = (index: number): void => {
-    if (!lockedSteps) {
-      setActiveStep(index);
-    }
-  };
 
   const moveToCustomiseStep = () => {
     setActiveStep(1);
@@ -65,19 +48,7 @@ const Editor: FC<EditorProps> = ({}) => {
 
   return (
     <>
-      <div className={classes.stepperBar}>
-        <CustomisedStepper
-          activeStep={activeStep}
-          connector={<CustomisedConnector />}
-          className={classNames({ [classes.unlockedSteps]: !lockedSteps })}
-        >
-          {steps.map((label, index) => (
-            <Step key={label} onClick={() => handleStepClick(index)}>
-              <CustomisedStepLabel StepIconComponent={CustomisedStepIcon}>{label}</CustomisedStepLabel>
-            </Step>
-          ))}
-        </CustomisedStepper>
-      </div>
+      <StepperBar lockedSteps={lockedSteps} />
       {stepContent}
     </>
   );

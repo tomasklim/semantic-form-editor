@@ -4,6 +4,7 @@ import AddIcon from '@material-ui/icons/Add';
 import {
   detectIsChildNode,
   enableNotDraggableAndDroppable,
+  getIntl,
   highlightQuestion,
   isSectionOrWizardStep,
   moveQuestionToSpecificPosition,
@@ -18,67 +19,78 @@ import FormStructureNode from '@model/FormStructureNode';
 import { CustomiseQuestionContext, OnSaveQuestionCallback } from '@contexts/CustomiseQuestionContext';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
 import FormStructure from '@model/FormStructure';
-import { NEW_QUESTION, NEW_WIZARD_SECTION_QUESTION } from '../../../constants';
+import { NEW_QUESTION, NEW_WIZARD_SECTION_QUESTION } from '@constants/index';
 import classNames from 'classnames';
+import { EditorContext } from '@contexts/EditorContext';
 
-type Props = {
+const handleMouseEnter = (addContainer: React.MutableRefObject<HTMLDivElement | null>) => {
+  addContainer.current?.classList.add('addItemHover');
+};
+
+const handleMouseLeave = (addContainer: React.MutableRefObject<HTMLDivElement | null>) => {
+  addContainer.current?.classList.remove('addItemHover');
+};
+
+const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+  e.preventDefault();
+
+  e.dataTransfer.dropEffect = 'move';
+};
+
+const handleDragEnter = (
+  e: React.DragEvent<HTMLDivElement>,
+  formStructure: FormStructure,
+  parentQuestionId: string,
+  isWizardPosition: boolean
+) => {
+  if ((e.target as HTMLDivElement).classList.contains('addItem')) {
+    const movingNode = formStructure.getNode(e.dataTransfer.types.slice(-1)[0]);
+    const targetNode = formStructure.getNode(parentQuestionId);
+
+    // if target element is child of moving element => no highlight
+    if (movingNode && targetNode && detectIsChildNode(movingNode, targetNode)) {
+      return;
+    }
+
+    // if moving node is non-section element => no highlight on wizard adds
+    if (isWizardPosition && !isSectionOrWizardStep(movingNode)) {
+      return;
+    }
+
+    (e.target as HTMLDivElement).classList.add('addItemHover');
+
+    e.dataTransfer.dropEffect = 'move';
+  }
+};
+
+const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+  if ((e.target as HTMLDivElement).classList.contains('addItem')) {
+    (e.target as HTMLDivElement).classList.remove('addItemHover');
+  }
+};
+
+type ItemAddProps = {
   position: number;
   parentQuestionId: string;
   isWizardPosition?: boolean;
   topLevelPosition?: boolean;
 };
 
-const ItemAdd: FC<Props> = ({ parentQuestionId, position, isWizardPosition = false, topLevelPosition = false }) => {
+const ItemAdd: FC<ItemAddProps> = ({
+  parentQuestionId,
+  position,
+  isWizardPosition = false,
+  topLevelPosition = false
+}) => {
   const classes = useStyles();
   const addContainer = useRef<HTMLDivElement | null>(null);
 
   const { formStructure, setFormStructure, getClonedFormStructure, isWizardless } = useContext(FormStructureContext);
   const { customiseQuestion } = useContext(CustomiseQuestionContext);
-
-  // fix drag and drop bug https://stackoverflow.com/questions/17946886/hover-sticks-to-element-on-drag-and-drop
-  const handleMouseEnter = () => {
-    addContainer.current?.classList.add('addItemHover');
-  };
-
-  const handleMouseLeave = () => {
-    addContainer.current?.classList.remove('addItemHover');
-  };
-
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-
-    e.dataTransfer.dropEffect = 'move';
-  };
-
-  const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
-    if ((e.target as HTMLDivElement).classList.contains(classes.addItem)) {
-      const movingNode = formStructure.getNode(e.dataTransfer.types.slice(-1)[0]);
-      const targetNode = formStructure.getNode(parentQuestionId);
-
-      // if target element is child of moving element => no highlight
-      if (movingNode && targetNode && detectIsChildNode(movingNode, targetNode)) {
-        return;
-      }
-
-      // if moving node is non-section element => no highlight on wizard adds
-      if (isWizardPosition && !isSectionOrWizardStep(movingNode)) {
-        return;
-      }
-
-      (e.target as HTMLDivElement).classList.add('addItemHover');
-
-      e.dataTransfer.dropEffect = 'move';
-    }
-  };
-
-  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
-    if ((e.target as HTMLDivElement).classList.contains(classes.addItem)) {
-      (e.target as HTMLDivElement).classList.remove('addItemHover');
-    }
-  };
+  const { languages } = useContext(EditorContext);
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    if ((e.target as HTMLDivElement).classList.contains(classes.addItem)) {
+    if ((e.target as HTMLDivElement).classList.contains('addItem')) {
       e.preventDefault();
 
       enableNotDraggableAndDroppable();
@@ -150,7 +162,10 @@ const ItemAdd: FC<Props> = ({ parentQuestionId, position, isWizardPosition = fal
 
     moveQuestionToSpecificPosition(position, targetNode, movingNode);
 
-    targetNode.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(targetNode.data[Constants.HAS_SUBQUESTION]);
+    targetNode.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(
+      targetNode.data[Constants.HAS_SUBQUESTION],
+      getIntl(languages[0])
+    );
 
     setFormStructure(clonedFormStructure);
 
@@ -197,22 +212,25 @@ const ItemAdd: FC<Props> = ({ parentQuestionId, position, isWizardPosition = fal
 
     moveQuestionToSpecificPosition(position, targetNode, node);
 
-    targetNode.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(targetNode.data[Constants.HAS_SUBQUESTION]);
+    targetNode.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(
+      targetNode.data[Constants.HAS_SUBQUESTION],
+      getIntl(languages[0])
+    );
 
     setFormStructure(clonedFormStructure);
 
     highlightQuestion(newQuestion['@id']);
   };
 
-  return useMemo(() => {
-    return (
+  return useMemo(
+    () => (
       <div
-        className={classNames(classes.addItem, { [classes.marginTop]: topLevelPosition })}
+        className={classNames('addItem', { [classes.marginTop]: topLevelPosition })}
         ref={addContainer}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
+        onMouseEnter={() => handleMouseEnter(addContainer)}
+        onMouseLeave={() => handleMouseLeave(addContainer)}
         onDragOver={handleDragOver}
-        onDragEnter={handleDragEnter}
+        onDragEnter={(e) => handleDragEnter(e, formStructure, parentQuestionId, isWizardPosition)}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         onClick={handleAddNewQuestion}
@@ -221,8 +239,9 @@ const ItemAdd: FC<Props> = ({ parentQuestionId, position, isWizardPosition = fal
       >
         <AddIcon fontSize={'large'} />
       </div>
-    );
-  }, [isWizardPosition, topLevelPosition]);
+    ),
+    [isWizardPosition, topLevelPosition]
+  );
 };
 
 export default ItemAdd;

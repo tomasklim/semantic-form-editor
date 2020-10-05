@@ -105,7 +105,7 @@ const SidebarCreateQuestions: React.FC<SidebarCreateQuestionsProps> = ({ handleC
     return createQuestionTree(result, 0);
   };
 
-  const onSave = (e: FormEvent) => {
+  const onAdd = (e: FormEvent) => {
     e.preventDefault();
 
     const questions = prepareQuestions();
@@ -131,7 +131,7 @@ const SidebarCreateQuestions: React.FC<SidebarCreateQuestionsProps> = ({ handleC
   }
 
   return (
-    <form className={classes.form} onSubmit={onSave}>
+    <form className={classes.form} onSubmit={onAdd}>
       <TextField
         name="create-questions"
         label="Create questions"
@@ -147,7 +147,7 @@ const SidebarCreateQuestions: React.FC<SidebarCreateQuestionsProps> = ({ handleC
       />
       <div className={classes.sidebarButtons}>
         <CustomisedButton type="submit" size={'large'} className={classes.saveButton}>
-          Save
+          Add
         </CustomisedButton>
         {!isEmptyFormStructure && (
           <CustomisedLinkButton onClick={onCancel} size={'large'}>

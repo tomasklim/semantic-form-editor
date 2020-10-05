@@ -6,6 +6,7 @@ import { FormStructureQuestion } from '@model/FormStructureQuestion';
 import { Context, JsonLdObj } from 'jsonld/jsonld-spec';
 import { ExpandedForm } from '@model/ExpandedForm';
 import { isObject } from 'lodash';
+import { IIntl } from '@interfaces/index';
 
 export const buildFormStructure = async (form: ExpandedForm) => {
   const flattenedForm: JsonLdObj = await jsonld.flatten(form, {});
@@ -21,7 +22,9 @@ export const buildFormStructure = async (form: ExpandedForm) => {
   const formStructure = new FormStructure(rootNode);
   formStructure.addNode(rootNode.data['@id'], rootNode);
 
-  buildFormStructureResursion(rootNode, formStructure);
+  const languages = findFormLanguages(formStructure);
+
+  buildFormStructureResursion(rootNode, formStructure, getIntl(languages[0]));
 
   return formStructure;
 };
@@ -64,17 +67,17 @@ export const findFormLanguages = (formStructure: FormStructure): Array<string> =
   return [];
 };
 
-export const buildFormStructureResursion = (parentNode: FormStructureNode, tree: FormStructure) => {
+export const buildFormStructureResursion = (parentNode: FormStructureNode, tree: FormStructure, intl: IIntl) => {
   let subquestions = parentNode.data[Constants.HAS_SUBQUESTION];
   if (subquestions) {
-    subquestions = sortRelatedQuestions(subquestions);
+    subquestions = sortRelatedQuestions(subquestions, intl);
 
     subquestions.forEach((question: FormStructureQuestion) => {
       const node = new FormStructureNode(parentNode, question);
 
       tree.addNode(question['@id'], node);
 
-      buildFormStructureResursion(node, tree);
+      buildFormStructureResursion(node, tree, intl);
     });
   }
 
@@ -82,16 +85,15 @@ export const buildFormStructureResursion = (parentNode: FormStructureNode, tree:
 };
 
 export const sortRelatedQuestions = (
-  subquestions: Array<FormStructureQuestion> | undefined
+  subquestions: Array<FormStructureQuestion> | undefined,
+  intl: IIntl
 ): Array<FormStructureQuestion> => {
   if (!subquestions) {
     return [];
   }
 
   // sort by label
-  const localizedRelatedQuestions = JsonLdObjectUtils.orderByLocalizedLabels(subquestions, {
-    locale: 'en'
-  });
+  const localizedRelatedQuestions = JsonLdObjectUtils.orderByLocalizedLabels(subquestions, intl);
 
   // sort by property
   const topologicalSortedRelatedQuestions = JsonLdObjectUtils.orderPreservingToplogicalSort(
@@ -181,5 +183,14 @@ export const createJsonAttValue = (value: string | boolean, dataType: string): o
 export const createJsonAttIdValue = (id: string): object => {
   return {
     '@id': id
+  };
+};
+
+export const getIntl = (lang: string): IIntl => {
+  if (!lang) {
+    return {};
+  }
+  return {
+    locale: lang
   };
 };
