@@ -1,4 +1,4 @@
-import React, { FC, useContext, useRef } from 'react';
+import React, { FC, useContext, useMemo, useRef } from 'react';
 import useStyles, { CustomisedCard } from './Item.styles';
 import ItemHeader from '@components/items/ItemHeader/ItemHeader';
 import ItemContent from '@components/items/ItemContent/ItemContent';
@@ -58,23 +58,25 @@ const Item: FC<Props> = ({ question, position }) => {
     });
   };
 
-  return (
-    <li
-      id={question['@id']}
-      ref={itemContainer}
-      onDragStart={onDragStart}
-      onDragEnd={onDragEnd}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      onClick={onClickHandler}
-      className={classes.listItem}
-    >
-      <CustomisedCard variant="outlined">
-        <ItemHeader container={itemContainer} question={question} position={position + 1} />
-        <ItemContent question={question} />
-      </CustomisedCard>
-    </li>
-  );
+  return useMemo(() => {
+    return (
+      <li
+        id={question['@id']}
+        ref={itemContainer}
+        onDragStart={onDragStart}
+        onDragEnd={onDragEnd}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        onClick={onClickHandler}
+        className={classes.listItem}
+      >
+        <CustomisedCard variant="outlined">
+          <ItemHeader container={itemContainer} question={question} position={position + 1} />
+          <ItemContent question={question} />
+        </CustomisedCard>
+      </li>
+    );
+  }, [question, position]);
 };
 
 export default Item;

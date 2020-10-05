@@ -116,7 +116,7 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
       return;
     }
 
-    const layoutClass = movingNode.data[Constants.LAYOUT_CLASS];
+    const layoutClass = movingNode.data[Constants.LAYOUT_CLASS] || [];
 
     if (isWizardPosition && !isWizardless && !layoutClass.includes(Constants.LAYOUT.WIZARD_STEP)) {
       layoutClass.push(Constants.LAYOUT.WIZARD_STEP);

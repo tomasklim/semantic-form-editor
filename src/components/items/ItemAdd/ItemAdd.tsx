@@ -1,4 +1,4 @@
-import React, { FC, useContext, useRef } from 'react';
+import React, { FC, useContext, useMemo, useRef } from 'react';
 import useStyles from './ItemAdd.styles';
 import AddIcon from '@material-ui/icons/Add';
 import {
@@ -204,23 +204,25 @@ const ItemAdd: FC<Props> = ({ parentQuestionId, position, isWizardPosition = fal
     highlightQuestion(newQuestion['@id']);
   };
 
-  return (
-    <div
-      className={classNames(classes.addItem, { [classes.marginTop]: topLevelPosition })}
-      ref={addContainer}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      onDragOver={handleDragOver}
-      onDragEnter={handleDragEnter}
-      onDragLeave={handleDragLeave}
-      onDrop={handleDrop}
-      onClick={handleAddNewQuestion}
-      title={isWizardPosition ? 'Add new wizard step on certain position' : 'Add new question on certain position'}
-      data-droppable={true}
-    >
-      <AddIcon fontSize={'large'} />
-    </div>
-  );
+  return useMemo(() => {
+    return (
+      <div
+        className={classNames(classes.addItem, { [classes.marginTop]: topLevelPosition })}
+        ref={addContainer}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        onDragOver={handleDragOver}
+        onDragEnter={handleDragEnter}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+        onClick={handleAddNewQuestion}
+        title={isWizardPosition ? 'Add new wizard step on certain position' : 'Add new question on certain position'}
+        data-droppable={true}
+      >
+        <AddIcon fontSize={'large'} />
+      </div>
+    );
+  }, [isWizardPosition, topLevelPosition]);
 };
 
 export default ItemAdd;

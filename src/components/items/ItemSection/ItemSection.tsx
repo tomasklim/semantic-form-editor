@@ -1,4 +1,4 @@
-import React, { FC, useContext, useRef, useState } from 'react';
+import React, { FC, useContext, useMemo, useRef, useState } from 'react';
 import useStyles, { CustomisedAccordionDetails } from './ItemSection.styles';
 import ItemHeader from '@components/items/ItemHeader/ItemHeader';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
@@ -142,46 +142,52 @@ const ItemSection: FC<Props> = ({ question, position, buildFormUI }) => {
     handleDragEnd(e);
   };
 
-  const subquestions = question[Constants.HAS_SUBQUESTION];
+  return useMemo(() => {
+    const subquestions = question[Constants.HAS_SUBQUESTION];
 
-  return (
-    <li
-      id={question['@id']}
-      ref={itemContainer}
-      onDragStart={onDragStart}
-      onDragEnd={onDragEnd}
-      onDragOver={handleDragOver}
-      onDragEnter={handleDragEnter}
-      onDragLeave={handleDragLeave}
-      onDrop={handleDrop}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      className={classes.listItemSection}
-      data-droppable={true}
-      onClick={onClickHandler}
-    >
-      <Accordion expanded={expanded} variant="outlined">
-        <ItemHeader
-          container={itemContainer}
-          question={question}
-          position={position + 1}
-          expandable={true}
-          expanded={expanded}
-          expandItemSection={expandItemSection}
-        />
-        <CustomisedAccordionDetails className={classes.cardContent} id={question['@id']} onMouseOver={handleMouseOver}>
-          <ol id={question['@id']}>
-            {subquestions && subquestions.map((subquestion, index) => buildFormUI(subquestion, index, question))}
-            {subquestions && !subquestions.length && (
-              <div id={question['@id']} className={classes.emptySection}>
-                Empty section...
-              </div>
-            )}
-          </ol>
-        </CustomisedAccordionDetails>
-      </Accordion>
-    </li>
-  );
+    return (
+      <li
+        id={question['@id']}
+        ref={itemContainer}
+        onDragStart={onDragStart}
+        onDragEnd={onDragEnd}
+        onDragOver={handleDragOver}
+        onDragEnter={handleDragEnter}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        className={classes.listItemSection}
+        data-droppable={true}
+        onClick={onClickHandler}
+      >
+        <Accordion expanded={expanded} variant="outlined">
+          <ItemHeader
+            container={itemContainer}
+            question={question}
+            position={position + 1}
+            expandable={true}
+            expanded={expanded}
+            expandItemSection={expandItemSection}
+          />
+          <CustomisedAccordionDetails
+            className={classes.cardContent}
+            id={question['@id']}
+            onMouseOver={handleMouseOver}
+          >
+            <ol id={question['@id']}>
+              {subquestions && subquestions.map((subquestion, index) => buildFormUI(subquestion, index, question))}
+              {subquestions && !subquestions.length && (
+                <div id={question['@id']} className={classes.emptySection}>
+                  Empty section...
+                </div>
+              )}
+            </ol>
+          </CustomisedAccordionDetails>
+        </Accordion>
+      </li>
+    );
+  }, [question, expanded]);
 };
 
 export default ItemSection;

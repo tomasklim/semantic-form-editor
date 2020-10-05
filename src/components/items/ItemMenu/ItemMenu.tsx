@@ -1,4 +1,4 @@
-import React, { FC, useContext, useRef, useState } from 'react';
+import React, { FC, useContext, useMemo, useRef, useState } from 'react';
 import { MoreVert } from '@material-ui/icons';
 import { ClickAwayListener, Grow, MenuItem, MenuList, Paper, Popper } from '@material-ui/core';
 import { Constants } from 's-forms';
@@ -134,34 +134,36 @@ const ItemMenu: FC<Props> = ({ question }) => {
     highlightQuestion(question['@id']);
   };
 
-  return (
-    <span>
-      <SquaredIconButton ref={addButton} onClick={addNewItem} title="Add new unordered subquestion">
-        <AddIcon />
-      </SquaredIconButton>
-      {/* @ts-ignore */}
-      <SquaredIconButton ref={anchorEl} onClick={handleToggle} title="Show more">
-        <MoreVert />
-      </SquaredIconButton>
-      <Popper open={open} anchorEl={anchorEl.current} transition={true} disablePortal={true} className={classes.menu}>
-        {({ TransitionProps }) => (
-          <Grow {...TransitionProps}>
-            <Paper>
-              <ClickAwayListener onClickAway={handleClose}>
-                <MenuList>
-                  {question[Constants.HAS_PRECEDING_QUESTION] && (
-                    <MenuItem onClick={removePrecedingQuestionLink}>Remove preceding question link</MenuItem>
-                  )}
-                  <MenuItem onClick={handleViewInPreview}>View in preview</MenuItem>
-                  <MenuItem onClick={handleDelete}>Delete question</MenuItem>
-                </MenuList>
-              </ClickAwayListener>
-            </Paper>
-          </Grow>
-        )}
-      </Popper>
-    </span>
-  );
+  return useMemo(() => {
+    return (
+      <span>
+        <SquaredIconButton ref={addButton} onClick={addNewItem} title="Add new unordered subquestion">
+          <AddIcon />
+        </SquaredIconButton>
+        {/* @ts-ignore */}
+        <SquaredIconButton ref={anchorEl} onClick={handleToggle} title="Show more">
+          <MoreVert />
+        </SquaredIconButton>
+        <Popper open={open} anchorEl={anchorEl.current} transition={true} disablePortal={true} className={classes.menu}>
+          {({ TransitionProps }) => (
+            <Grow {...TransitionProps}>
+              <Paper>
+                <ClickAwayListener onClickAway={handleClose}>
+                  <MenuList>
+                    {question[Constants.HAS_PRECEDING_QUESTION] && (
+                      <MenuItem onClick={removePrecedingQuestionLink}>Remove preceding question link</MenuItem>
+                    )}
+                    <MenuItem onClick={handleViewInPreview}>View in preview</MenuItem>
+                    <MenuItem onClick={handleDelete}>Delete question</MenuItem>
+                  </MenuList>
+                </ClickAwayListener>
+              </Paper>
+            </Grow>
+          )}
+        </Popper>
+      </span>
+    );
+  }, [question, open]);
 };
 
 export default ItemMenu;
