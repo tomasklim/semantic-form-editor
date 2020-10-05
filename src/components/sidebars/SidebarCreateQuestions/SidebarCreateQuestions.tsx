@@ -8,6 +8,7 @@ import { CustomiseQuestionContext } from '@contexts/CustomiseQuestionContext';
 import { Constants } from 's-forms';
 import { getId } from '@utils/itemHelpers';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
+import { EditorContext } from '@contexts/EditorContext';
 
 interface SidebarCreateQuestionsProps {
   handleChangeTab: (_: any, newValue: number) => void;
@@ -19,6 +20,7 @@ const SidebarCreateQuestions: React.FC<SidebarCreateQuestionsProps> = ({ handleC
   const classes = useStyles();
 
   const { isWizardless, formStructure, isEmptyFormStructure } = useContext(FormStructureContext);
+  const { languages } = useContext(EditorContext);
 
   const [multipleQuestions, setMultipleQuestions] = useState<string>('');
 
@@ -66,10 +68,19 @@ const SidebarCreateQuestions: React.FC<SidebarCreateQuestionsProps> = ({ handleC
           ? [Constants.LAYOUT.QUESTION_SECTION]
           : [];
 
+      const label = languages.length
+        ? [
+            {
+              '@language': languages[0],
+              '@value': array[0].label
+            }
+          ]
+        : array[0].label;
+
       return {
         '@id': id,
         '@type': 'http://onto.fel.cvut.cz/ontologies/documentation/question',
-        [Constants.RDFS_LABEL]: array[0].label,
+        [Constants.RDFS_LABEL]: label,
         [Constants.LAYOUT_CLASS]: layoutClass,
         [Constants.HAS_SUBQUESTION]: subquestions || []
       };

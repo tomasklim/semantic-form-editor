@@ -40,6 +40,30 @@ const findFormRoot = (structure: Array<FormStructureQuestion>): FormStructureQue
   return Object.values(structure).find((item: FormStructureQuestion) => FormUtils.isForm(item));
 };
 
+export const findFormLanguages = (formStructure: FormStructure): Array<string> => {
+  if (formStructure?.root?.data && formStructure.root.data[Constants.HAS_SUBQUESTION]) {
+    const rootSubquestions = formStructure.root.data[Constants.HAS_SUBQUESTION];
+    const languagesSet = new Set<string>();
+
+    // @ts-ignore
+    for (const [index, question] of rootSubquestions.entries()) {
+      // check first five root questions to find languages of the form
+      if (index === 5) break;
+
+      const label = question[Constants.RDFS_LABEL];
+
+      if (Array.isArray(label)) {
+        label.forEach((localisedLabel) => {
+          languagesSet.add(localisedLabel['@language']);
+        });
+      }
+    }
+
+    return Array.from(languagesSet);
+  }
+  return [];
+};
+
 export const buildFormStructureResursion = (parentNode: FormStructureNode, tree: FormStructure) => {
   let subquestions = parentNode.data[Constants.HAS_SUBQUESTION];
   if (subquestions) {

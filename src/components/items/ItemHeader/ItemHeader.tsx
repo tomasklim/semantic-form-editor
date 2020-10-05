@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useContext } from 'react';
 import { Constants } from 's-forms';
 import { DragIndicator, ExpandLess, ExpandMore } from '@material-ui/icons';
 import useStyles, { CustomisedCardHeader } from './ItemHeader.styles';
@@ -7,6 +7,7 @@ import { FormStructureQuestion } from '@model/FormStructureQuestion';
 import ItemPropsIndicator from '@components/items/ItemPropsIndicator/ItemPropsIndicator';
 // @ts-ignore
 import JsonLdUtils from 'jsonld-utils';
+import { EditorContext } from '@contexts/EditorContext';
 
 type ItemHeaderProps = {
   container: React.MutableRefObject<HTMLLIElement | null>;
@@ -26,6 +27,8 @@ const ItemHeader: FC<ItemHeaderProps> = ({
   expandItemSection
 }) => {
   const classes = useStyles();
+
+  const { languages } = useContext(EditorContext);
 
   const addDraggable = () => {
     container?.current?.setAttribute('draggable', 'true');
@@ -47,7 +50,9 @@ const ItemHeader: FC<ItemHeaderProps> = ({
             )}
             <DragIndicator className={classes.cardHeaderDrag} />
             <span>
-              {position}.&nbsp;{JsonLdUtils.getLocalized(question[Constants.RDFS_LABEL], {}) || question['@id']}
+              {position}.&nbsp;
+              {JsonLdUtils.getLocalized(question[Constants.RDFS_LABEL], languages.length && { locale: languages[0] }) ||
+                question['@id']}
             </span>
             <ItemPropsIndicator question={question} />
           </span>

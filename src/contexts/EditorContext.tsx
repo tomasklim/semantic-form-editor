@@ -9,6 +9,8 @@ interface EditorContextValues {
   setActiveStep: Dispatch<SetStateAction<number>>;
   SFormsConfig: Partial<SFormsConfig>;
   updateSFormsConfig: (change: Partial<SFormsConfig>) => void;
+  languages: Array<string>;
+  setLanguages: Dispatch<SetStateAction<Array<string>>>;
 }
 
 interface SFormsConfig {
@@ -21,6 +23,7 @@ const EditorContext = React.createContext<EditorContextValues>({});
 const EditorProvider: React.FC<EditorProviderProps> = ({ children }) => {
   const [activeStep, setActiveStep] = React.useState<number>(0);
   const [SFormsConfig, setSFormsConfig] = React.useState<Partial<SFormsConfig>>({});
+  const [languages, setLanguages] = React.useState<Array<string>>([]);
 
   const updateSFormsConfig = (change: Partial<SFormsConfig>): void => {
     setSFormsConfig({ ...SFormsConfig, ...change });
@@ -31,9 +34,11 @@ const EditorProvider: React.FC<EditorProviderProps> = ({ children }) => {
       activeStep,
       setActiveStep,
       SFormsConfig,
-      updateSFormsConfig
+      updateSFormsConfig,
+      languages,
+      setLanguages
     }),
-    [activeStep, SFormsConfig]
+    [activeStep, SFormsConfig, languages]
   );
 
   return <EditorContext.Provider value={values}>{children}</EditorContext.Provider>;

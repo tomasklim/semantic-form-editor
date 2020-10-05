@@ -1,14 +1,14 @@
 import { FormStructureQuestion, LanguageObject } from '@model/FormStructureQuestion';
-import React from 'react';
+import React, { useContext } from 'react';
 import { TextField } from '@material-ui/core';
-import { isString } from 'lodash';
 import { Constants } from 's-forms';
 import { createFakeChangeEvent } from '@utils/itemHelpers';
+import { EditorContext } from '@contexts/EditorContext';
 
 interface LocalisedInputProps {
   type: string;
   question: FormStructureQuestion;
-  handleChange: any;
+  handleChange: (event: React.ChangeEvent | React.ChangeEvent<{ value: unknown }>) => void;
   multiline?: boolean;
   autoFocus?: boolean;
   required?: boolean;
@@ -22,7 +22,9 @@ const LocalisedInput: React.FC<LocalisedInputProps> = ({
   autoFocus,
   required
 }) => {
-  const value = question[type];
+  let value = question[type] || [];
+
+  const { languages } = useContext(EditorContext);
 
   const handleLabelsChange = (e: React.ChangeEvent | React.ChangeEvent<{ value: unknown }>) => {
     const target = e.target as HTMLInputElement;
@@ -33,11 +35,20 @@ const LocalisedInput: React.FC<LocalisedInputProps> = ({
       handleChange(e);
     }
 
-    value.forEach((labelObj: LanguageObject) => {
-      if (labelObj['@language'] === lang) {
-        labelObj['@value'] = target.value;
+    const availableLanguage =
+      Array.isArray(value) && value.find((language: LanguageObject) => language['@language'] === lang);
+
+    if (availableLanguage) {
+      availableLanguage['@value'] = target.value;
+    } else {
+      if (!Array.isArray(value)) {
+        value = [];
       }
-    });
+      value.push({
+        '@language': lang,
+        '@value': target.value
+      });
+    }
 
     const fakeEvent = createFakeChangeEvent(type, value);
 
@@ -56,7 +67,7 @@ const LocalisedInput: React.FC<LocalisedInputProps> = ({
       label = 'Unknown type';
   }
 
-  if (!value || isString(value)) {
+  if (!languages.length) {
     return (
       <TextField
         name={type}
@@ -73,24 +84,36 @@ const LocalisedInput: React.FC<LocalisedInputProps> = ({
     );
   }
 
-  return value.map((labelLang: LanguageObject, index: number) => {
-    return (
-      <TextField
-        key={labelLang['@language']}
-        name={type}
-        inputProps={{ ['data-language']: labelLang['@language'] }}
-        label={`${label} ${labelLang['@language'].toUpperCase()}`}
-        variant="outlined"
-        value={labelLang['@value'] || ''}
-        onChange={handleLabelsChange}
-        autoComplete={'off'}
-        autoFocus={autoFocus && index === 0}
-        required={required}
-        // @ts-ignore
-        multiline={multiline}
-      />
-    );
-  });
+  return (
+    <>
+      {languages.map((language: string, index: number) => {
+        let foundLanguage;
+        Array.isArray(value) &&
+          value.forEach((labelObj: LanguageObject) => {
+            if (labelObj['@language'] === language) {
+              foundLanguage = labelObj;
+            }
+          });
+
+        return (
+          <TextField
+            key={language}
+            name={type}
+            inputProps={{ ['data-language']: language }}
+            label={`${label} ${language.toUpperCase()}`}
+            variant="outlined"
+            value={(foundLanguage && foundLanguage['@value']) || ''}
+            onChange={handleLabelsChange}
+            autoComplete={'off'}
+            autoFocus={autoFocus && index === 0}
+            required={required}
+            // @ts-ignore
+            multiline={multiline}
+          />
+        );
+      })}
+    </>
+  );
 };
 
 export default LocalisedInput;

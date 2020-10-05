@@ -11,11 +11,13 @@ export default makeStyles((theme: ITheme) => ({
   paper: {
     position: 'absolute',
     width: 600,
-    top: '160px',
+    top: '170px',
     backgroundColor: 'white',
-    border: '2px solid #000',
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3)
+    border: '2px solid ' + theme.palette.custom.main,
+    padding: theme.spacing(2, 4, 3),
+    '& h2': {
+      marginBottom: '1.5rem'
+    }
   },
   buttons: {
     display: 'flex',

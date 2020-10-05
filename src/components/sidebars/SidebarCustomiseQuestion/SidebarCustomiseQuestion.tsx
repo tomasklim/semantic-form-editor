@@ -10,6 +10,10 @@ import { CustomiseQuestionContext } from '@contexts/CustomiseQuestionContext';
 import { createJsonAttValue, getJsonAttValue } from '@utils/formHelpers';
 import FormCustomAttributeList from '@components/sidebars/FormCustomAttributeList/FormCustomAttributeList';
 import LocalisedInput from '@components/mix/LocalisedInput/LocalisedInput';
+import { EditorContext } from '@contexts/EditorContext';
+// @ts-ignore
+import JsonLdUtils from 'jsonld-utils';
+import { isString } from 'lodash';
 
 const TEXT_FIELD = 'text';
 
@@ -44,6 +48,7 @@ const SidebarCustomiseQuestion: React.FC<SidebarCustomiseQuestionProps> = ({}) =
   const classes = useStyles();
 
   const { formStructure, isWizardless, isEmptyFormStructure } = useContext(FormStructureContext);
+  const { languages } = useContext(EditorContext);
 
   const {
     onSaveCallback,
@@ -64,7 +69,8 @@ const SidebarCustomiseQuestion: React.FC<SidebarCustomiseQuestionProps> = ({}) =
       let id = customisingQuestion!['@id'];
       if (isNewQuestion) {
         do {
-          id = getId(value);
+          const label = (isString(value) && value) || JsonLdUtils.getLocalized(value, { locale: languages[0] });
+          id = getId(label);
         } while (formStructure.getNode(id));
       }
 

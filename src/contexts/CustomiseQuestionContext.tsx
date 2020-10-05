@@ -13,6 +13,7 @@ interface CustomiseQuestionContextValues {
   setCustomisingQuestion: Dispatch<SetStateAction<FormStructureQuestion | null>>;
   isNewQuestion: boolean;
   isSpecificPosition: boolean;
+  level?: number | null;
 }
 
 export type OnSaveQuestionCallback = (customisingQuestion: FormStructureQuestion) => void;
@@ -69,6 +70,7 @@ const CustomiseQuestionProvider: React.FC<CustomiseItemProviderProps> = ({ child
     onCancel && setOnCancelCallback(onCancel);
     isNewQuestion && setIsNewQuestion(true);
     isSpecificPosition && setIsSpecificPosition(true);
+    // @ts-ignore
     Number.isInteger(level) && setLevel(level);
 
     setCustomisingQuestion(customisingQuestion);

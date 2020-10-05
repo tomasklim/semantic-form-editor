@@ -4,10 +4,10 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import { CustomiseQuestionContext } from '@contexts/CustomiseQuestionContext';
 import SidebarItemForm from '@components/sidebars/SidebarItemForm/SidebarItemForm';
 import SidebarWizardStep from '@components/sidebars/SidebarWizardStep/SidebarWizardStep';
+import { LOCAL_STORAGE_SIDEBAR_WIDTH } from '../../../constants';
 
 // Header + Stepper
 const INITIAL_TOP = 60 + 88;
-const LOCAL_STORAGE_SIDEBAR_WIDTH = 'sidebar_width';
 
 const Sidebar = () => {
   const classes = useStyles();

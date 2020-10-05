@@ -1,17 +1,27 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import useStyles from './ConfigModal.styles';
 import SettingsIcon from '@material-ui/icons/Settings';
 import { Modal, TextField } from '@material-ui/core';
 import { Autocomplete, createFilterOptions } from '@material-ui/lab';
 import FormTypeSwitch from '@components/mix/FormTypeSwitch/FormTypeSwitch';
 import { CustomisedButton } from '@styles/CustomisedButton';
+import { FormStructureContext } from '@contexts/FormStructureContext';
+import { EditorContext } from '@contexts/EditorContext';
+import { union } from 'lodash';
 
 const filter = createFilterOptions<string>();
+
+const LANGUAGE_OPTIONS = ['cs', 'de', 'en'];
 
 const ConfigModal = () => {
   const classes = useStyles();
 
-  const [open, setOpen] = React.useState(false);
+  const { isEmptyFormStructure } = useContext(FormStructureContext);
+  const { languages, setLanguages } = useContext(EditorContext);
+
+  const [open, setOpen] = React.useState(isEmptyFormStructure);
+
+  const mergedLanguagesOptions = union(LANGUAGE_OPTIONS, languages);
 
   const handleOpenConfigModal = () => {
     setOpen(!open);
@@ -22,14 +32,14 @@ const ConfigModal = () => {
       <h2>Configure your form</h2>
       <Autocomplete
         multiple
-        id="tags-standard"
-        options={['cs', 'de', 'en']}
+        options={mergedLanguagesOptions}
+        value={languages}
+        onChange={(_, value) => setLanguages(value)}
         getOptionLabel={(option) => option}
         filterOptions={(options, params) => {
           const filtered = filter(options, params);
 
-          // Suggest the creation of a new value
-          if (params.inputValue !== '') {
+          if (params.inputValue !== '' && !options.includes(params.inputValue)) {
             filtered.push(params.inputValue);
           }
 
@@ -38,7 +48,7 @@ const ConfigModal = () => {
         renderInput={(params) => (
           <TextField
             {...params}
-            variant="standard"
+            variant="outlined"
             label="Form languages (optional)"
             placeholder="Choose or type your own language"
           />
@@ -47,7 +57,7 @@ const ConfigModal = () => {
       <FormTypeSwitch />
       <div className={classes.buttons}>
         <CustomisedButton type="submit" size={'large'} onClick={handleOpenConfigModal}>
-          Close
+          Continue
         </CustomisedButton>
       </div>
     </div>
