@@ -8,9 +8,7 @@ export default makeStyles((theme: ITheme) => ({
     flexDirection: 'column',
     color: 'white',
     fontWeight: '500',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: '1rem',
+    margin: theme.spacing(2, 0),
     '& > span': {
       marginBottom: '0.3rem'
     }
@@ -22,7 +20,8 @@ export default makeStyles((theme: ITheme) => ({
     width: 'fit-content',
     '& .MuiGrid-root': {
       display: 'flex',
-      alignItems: 'center'
+      alignItems: 'center',
+      color: 'black'
     }
   }
 }));

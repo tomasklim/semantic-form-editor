@@ -4,12 +4,12 @@ import { Constants } from 's-forms';
 export interface FormStructureQuestion {
   '@id': string;
   '@type': string;
-  [Constants.RDFS_LABEL]?: string;
+  [Constants.RDFS_LABEL]?: string | Array<LanguageObject>;
   [Constants.LAYOUT_CLASS]: Array<string>;
   [Constants.HAS_PRECEDING_QUESTION]?: { '@id': string };
   [Constants.HAS_SUBQUESTION]?: Array<FormStructureQuestion> | undefined;
   [Constants.REQUIRES_ANSWER]?: boolean;
-  [Constants.HELP_DESCRIPTION]?: string;
+  [Constants.HELP_DESCRIPTION]?: string | Array<LanguageObject>;
   [Constants.RDFS_COMMENT]?: string;
   [Constants.INPUT_MASK]?: string;
   [Constants.HAS_OPTIONS_QUERY]?: string;
@@ -28,3 +28,8 @@ export const FORM_STRUCTURE_QUESTION_ATTRIBUTES = [
   Constants.HAS_PRECEDING_QUESTION,
   Constants.REQUIRES_ANSWER
 ];
+
+export type LanguageObject = {
+  '@language': string;
+  '@value': string;
+};

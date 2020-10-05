@@ -13,3 +13,5 @@ export const NEW_WIZARD_SECTION_QUESTION = {
   [Constants.LAYOUT_CLASS]: ['section', 'wizard-step'],
   [Constants.HAS_SUBQUESTION]: []
 };
+
+export const LOCAL_STORAGE_SIDEBAR_WIDTH = 'sidebar_width';

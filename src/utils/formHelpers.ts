@@ -5,6 +5,7 @@ import FormStructureNode from '@model/FormStructureNode';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
 import { Context, JsonLdObj } from 'jsonld/jsonld-spec';
 import { ExpandedForm } from '@model/ExpandedForm';
+import { isObject } from 'lodash';
 
 export const buildFormStructure = async (form: ExpandedForm) => {
   const flattenedForm: JsonLdObj = await jsonld.flatten(form, {});
@@ -37,6 +38,30 @@ export const exportForm = async (formStructure: FormStructure, formContext: Cont
 
 const findFormRoot = (structure: Array<FormStructureQuestion>): FormStructureQuestion | undefined => {
   return Object.values(structure).find((item: FormStructureQuestion) => FormUtils.isForm(item));
+};
+
+export const findFormLanguages = (formStructure: FormStructure): Array<string> => {
+  if (formStructure?.root?.data && formStructure.root.data[Constants.HAS_SUBQUESTION]) {
+    const rootSubquestions = formStructure.root.data[Constants.HAS_SUBQUESTION];
+    const languagesSet = new Set<string>();
+
+    // @ts-ignore
+    for (const [index, question] of rootSubquestions.entries()) {
+      // check first five root questions to find languages of the form
+      if (index === 5) break;
+
+      const label = question[Constants.RDFS_LABEL];
+
+      if (Array.isArray(label)) {
+        label.forEach((localisedLabel) => {
+          languagesSet.add(localisedLabel['@language']);
+        });
+      }
+    }
+
+    return Array.from(languagesSet);
+  }
+  return [];
 };
 
 export const buildFormStructureResursion = (parentNode: FormStructureNode, tree: FormStructure) => {
@@ -87,6 +112,24 @@ const unifyFormStructure = (form: ExpandedForm): ExpandedForm => {
     if (node[Constants.LAYOUT_CLASS] && !Array.isArray(node[Constants.LAYOUT_CLASS])) {
       // @ts-ignore
       node[Constants.LAYOUT_CLASS] = transformHasLayoutClassToArray(node[Constants.LAYOUT_CLASS]);
+    }
+
+    if (
+      node[Constants.RDFS_LABEL] &&
+      isObject(node[Constants.RDFS_LABEL]) &&
+      !Array.isArray(node[Constants.RDFS_LABEL])
+    ) {
+      // @ts-ignore
+      node[Constants.RDFS_LABEL] = [node[Constants.RDFS_LABEL]];
+    }
+
+    if (
+      node[Constants.HELP_DESCRIPTION] &&
+      isObject(node[Constants.HELP_DESCRIPTION]) &&
+      !Array.isArray(node[Constants.HELP_DESCRIPTION])
+    ) {
+      // @ts-ignore
+      node[Constants.HELP_DESCRIPTION] = [node[Constants.HELP_DESCRIPTION]];
     }
   });
 

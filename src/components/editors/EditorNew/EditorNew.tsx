@@ -2,11 +2,12 @@ import React, { ChangeEvent, FC, useContext, useEffect, useRef, useState } from 
 import JSONEditor, { JSONEditorMode } from 'jsoneditor';
 import useStyles from './EditorNew.styles';
 import { FormStructureContext } from '@contexts/FormStructureContext';
-import { buildFormStructure } from '@utils/index';
+import { buildFormStructure, findFormLanguages } from '@utils/index';
 import { useSnackbar } from 'notistack';
 import { CustomisedButton } from '@styles/CustomisedButton';
 import { CustomisedOutlineButton } from '@styles/CustomisedOutlineButton';
 import 'jsoneditor/dist/jsoneditor.css';
+import { EditorContext } from '@contexts/EditorContext';
 
 interface EditorNewProps {
   nextStep: () => void;
@@ -21,6 +22,7 @@ const EditorNew: FC<EditorNewProps> = ({ nextStep }) => {
   const jsonEditorContainer = useRef<any>(null);
 
   const { setFormStructure, setFormContext, formFile, setFormFile } = useContext(FormStructureContext);
+  const { setLanguages } = useContext(EditorContext);
 
   useEffect(() => {
     const options = {
@@ -119,6 +121,9 @@ const EditorNew: FC<EditorNewProps> = ({ nextStep }) => {
     setFormStructure(formStructure);
     setFormContext(form['@context']);
     setFormFile(form);
+
+    const languages = findFormLanguages(formStructure);
+    setLanguages(languages);
 
     nextStep();
   };

@@ -32,7 +32,9 @@ interface FormStructureContextValues {
   getClonedFormStructure: () => FormStructure;
   formContext: JsonLdObj;
   updateNode: Function;
-  isWizardless: boolean | undefined;
+  isWizardless: boolean;
+  setIsWizardless: Dispatch<SetStateAction<boolean>>;
+  isEmptyFormStructure: boolean;
 }
 
 type AddNewFormStructureNode = (
@@ -51,17 +53,19 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
   const [formContext, setFormContext] = useState<JsonLdObj>(null);
   const [formFile, setFormFile] = useState<JsonLdObj | null>(null);
   // @ts-ignore
-  const [isWizardless, setIsWizardless] = useState<boolean | undefined>(undefined);
+  const [isWizardless, setIsWizardless] = useState<boolean>(true);
+  const [isEmptyFormStructure, setIsEmptyFormStructure] = useState<boolean>(true);
 
   useEffect(() => {
     if (formStructure?.root?.data && formStructure.root.data[Constants.HAS_SUBQUESTION]) {
       const rootSubquestions = formStructure.root.data[Constants.HAS_SUBQUESTION];
 
       if (!rootSubquestions?.length) {
-        setIsWizardless(undefined);
+        setIsEmptyFormStructure(true);
       } else {
         const isWizardless = rootSubquestions.every((question) => !FormUtils.isWizardStep(question));
         setIsWizardless(isWizardless);
+        setIsEmptyFormStructure(false);
       }
     }
   }, [formStructure]);
@@ -178,9 +182,11 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
       formContext,
       formFile,
       setFormFile,
-      isWizardless
+      isWizardless,
+      setIsWizardless,
+      isEmptyFormStructure
     }),
-    [formFile, formStructure, formContext, isWizardless]
+    [formFile, formStructure, formContext, isWizardless, isEmptyFormStructure]
   );
 
   return <FormStructureContext.Provider value={values}>{children}</FormStructureContext.Provider>;
