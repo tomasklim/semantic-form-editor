@@ -37,7 +37,7 @@ const PreviewConfig: React.FC<PreviewConfigProps> = ({
           horizontalWizardNav={horizontalWizardNav}
         />
       )}
-      {languages.length && (
+      {languages.length ? (
         <FormControl>
           <InputLabel>Language</InputLabel>
           <Select native value={intl?.locale} onChange={(e) => setIntl(getIntl((e.target.value as unknown) as string))}>
@@ -46,7 +46,7 @@ const PreviewConfig: React.FC<PreviewConfigProps> = ({
             ))}
           </Select>
         </FormControl>
-      )}
+      ) : null}
     </div>
   );
 };

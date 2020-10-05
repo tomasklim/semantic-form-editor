@@ -1,4 +1,6 @@
-import React, { Dispatch, SetStateAction } from 'react';
+import React, { Dispatch, SetStateAction, useEffect } from 'react';
+import { IIntl } from '@interfaces/index';
+import { getIntl } from '@utils/formHelpers';
 
 interface EditorProviderProps {
   children: React.ReactNode;
@@ -11,6 +13,9 @@ interface EditorContextValues {
   updateSFormsConfig: (change: Partial<SFormsConfig>) => void;
   languages: Array<string>;
   setLanguages: Dispatch<SetStateAction<Array<string>>>;
+  intl: IIntl;
+  configModalDisplayed: boolean;
+  setConfigModalDisplayed: Dispatch<SetStateAction<boolean>>;
 }
 
 interface SFormsConfig {
@@ -24,6 +29,13 @@ const EditorProvider: React.FC<EditorProviderProps> = ({ children }) => {
   const [activeStep, setActiveStep] = React.useState<number>(0);
   const [SFormsConfig, setSFormsConfig] = React.useState<Partial<SFormsConfig>>({});
   const [languages, setLanguages] = React.useState<Array<string>>([]);
+  const [intl, setIntl] = React.useState<IIntl>({});
+
+  const [configModalDisplayed, setConfigModalDisplayed] = React.useState<boolean>(false);
+
+  useEffect(() => {
+    setIntl(getIntl(languages[0]));
+  }, [languages]);
 
   const updateSFormsConfig = (change: Partial<SFormsConfig>): void => {
     setSFormsConfig({ ...SFormsConfig, ...change });
@@ -36,9 +48,12 @@ const EditorProvider: React.FC<EditorProviderProps> = ({ children }) => {
       SFormsConfig,
       updateSFormsConfig,
       languages,
-      setLanguages
+      setLanguages,
+      intl,
+      configModalDisplayed,
+      setConfigModalDisplayed
     }),
-    [activeStep, SFormsConfig, languages]
+    [activeStep, SFormsConfig, languages, intl, configModalDisplayed]
   );
 
   return <EditorContext.Provider value={values}>{children}</EditorContext.Provider>;

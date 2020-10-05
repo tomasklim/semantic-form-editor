@@ -7,7 +7,6 @@ import { FormStructureContext } from '@contexts/FormStructureContext';
 import {
   detectIsChildNode,
   enableNotDraggableAndDroppable,
-  getIntl,
   handleDragEnd,
   handleDragStart,
   onItemClickHandler
@@ -132,7 +131,7 @@ const ItemSection: FC<ItemSectionProps> = ({ question, position, buildFormUI }) 
 
   const { formStructure, moveNodeUnderNode, updateNode } = useContext(FormStructureContext);
   const { customiseQuestion } = useContext(CustomiseQuestionContext);
-  const { languages } = useContext(EditorContext);
+  const { intl } = useContext(EditorContext);
 
   const expandItemSection = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -152,7 +151,7 @@ const ItemSection: FC<ItemSectionProps> = ({ question, position, buildFormUI }) 
         onDragOver={handleDragOver}
         onDragEnter={(e) => handleDragEnter(e, formStructure)}
         onDragLeave={handleDragLeave}
-        onDrop={(e) => handleDrop(e, moveNodeUnderNode, getIntl(languages[0]))}
+        onDrop={(e) => handleDrop(e, moveNodeUnderNode, intl)}
         onMouseEnter={() => handleMouseEnter(itemContainer)}
         onMouseLeave={() => handleMouseLeave(itemContainer)}
         className={'listItemSection'}
@@ -165,7 +164,7 @@ const ItemSection: FC<ItemSectionProps> = ({ question, position, buildFormUI }) 
             updateNode,
             itemContainer,
             classes.listItemSectionHighlight,
-            getIntl(languages[0])
+            intl
           )
         }
       >

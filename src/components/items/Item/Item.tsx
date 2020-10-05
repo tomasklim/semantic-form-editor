@@ -3,7 +3,7 @@ import useStyles, { CustomisedCard } from './Item.styles';
 import ItemHeader from '@components/items/ItemHeader/ItemHeader';
 import ItemContent from '@components/items/ItemContent/ItemContent';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
-import { getIntl, handleDragEnd, handleDragStart, onItemClickHandler } from '@utils/index';
+import { handleDragEnd, handleDragStart, onItemClickHandler } from '@utils/index';
 import { CustomiseQuestionContext } from '@contexts/CustomiseQuestionContext';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import { EditorContext } from '@contexts/EditorContext';
@@ -43,7 +43,7 @@ const Item: FC<ItemProps> = ({ question, position }) => {
 
   const { customiseQuestion } = useContext(CustomiseQuestionContext);
   const { updateNode, isWizardless } = useContext(FormStructureContext);
-  const { languages } = useContext(EditorContext);
+  const { intl } = useContext(EditorContext);
 
   return useMemo(
     () => (
@@ -55,15 +55,7 @@ const Item: FC<ItemProps> = ({ question, position }) => {
         onMouseEnter={() => handleMouseEnter(itemContainer)}
         onMouseLeave={() => handleMouseLeave(itemContainer)}
         onClick={(e) =>
-          onItemClickHandler(
-            e,
-            customiseQuestion,
-            question,
-            updateNode,
-            itemContainer,
-            classes.listItemHighlight,
-            getIntl(languages[0])
-          )
+          onItemClickHandler(e, customiseQuestion, question, updateNode, itemContainer, classes.listItemHighlight, intl)
         }
         className={classes.listItem}
       >

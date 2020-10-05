@@ -8,7 +8,6 @@ import ItemPropsIndicator from '@components/items/ItemPropsIndicator/ItemPropsIn
 // @ts-ignore
 import JsonLdUtils from 'jsonld-utils';
 import { EditorContext } from '@contexts/EditorContext';
-import { getIntl } from '@utils/formHelpers';
 
 type ItemHeaderProps = {
   container: React.MutableRefObject<HTMLLIElement | null>;
@@ -29,7 +28,7 @@ const ItemHeader: FC<ItemHeaderProps> = ({
 }) => {
   const classes = useStyles();
 
-  const { languages } = useContext(EditorContext);
+  const { intl } = useContext(EditorContext);
 
   const addDraggable = () => {
     container?.current?.setAttribute('draggable', 'true');
@@ -52,8 +51,7 @@ const ItemHeader: FC<ItemHeaderProps> = ({
             <DragIndicator className={classes.cardHeaderDrag} />
             <span>
               {position}.&nbsp;
-              {JsonLdUtils.getLocalized(question[Constants.RDFS_LABEL], languages.length && getIntl(languages[0])) ||
-                question['@id']}
+              {JsonLdUtils.getLocalized(question[Constants.RDFS_LABEL], intl) || question['@id']}
             </span>
             <ItemPropsIndicator question={question} />
           </span>

@@ -8,7 +8,6 @@ import useStyles from './SidebarWizardStep.styles';
 import { enableNotDraggableAndDroppable, isSectionOrWizardStep } from '@utils/itemDragHelpers';
 import { isBoolean } from 'lodash';
 import ConfigModal from '@components/mix/ConfigModal/ConfigModal';
-import { getIntl } from '@utils/formHelpers';
 import { EditorContext } from '@contexts/EditorContext';
 
 const SidebarWizardStep = ({}) => {
@@ -22,7 +21,7 @@ const SidebarWizardStep = ({}) => {
   );
 
   const { customiseQuestion } = useContext(CustomiseQuestionContext);
-  const { languages } = useContext(EditorContext);
+  const { intl } = useContext(EditorContext);
 
   const addNewTopLevelQuestion = () => {
     const clonedFormStructure = getClonedFormStructure();
@@ -36,8 +35,7 @@ const SidebarWizardStep = ({}) => {
 
     customiseQuestion({
       customisingQuestion: !isWizardless ? { ...NEW_WIZARD_SECTION_QUESTION } : { ...NEW_QUESTION },
-      onSave: (): OnSaveQuestionsCallback => (questions) =>
-        addNewNodes(questions, root, clonedFormStructure, getIntl(languages[0])),
+      onSave: (): OnSaveQuestionsCallback => (questions) => addNewNodes(questions, root, clonedFormStructure, intl),
       onCancel: () => () => addButton.current?.classList.remove(classes.buttonHighlight),
       onInit: () => addButton.current?.classList.add(classes.buttonHighlight),
       isNewQuestion: true,
@@ -64,7 +62,7 @@ const SidebarWizardStep = ({}) => {
         return;
       }
 
-      moveNodeUnderNode(movingNodeId, targetNodeId, true, getIntl(languages[0]));
+      moveNodeUnderNode(movingNodeId, targetNodeId, true, intl);
     }
   };
 

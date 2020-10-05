@@ -7,7 +7,7 @@ import useStyles from './SidebarCustomiseQuestion.styles';
 import { getId } from '@utils/itemHelpers';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import { CustomiseQuestionContext } from '@contexts/CustomiseQuestionContext';
-import { createJsonAttValue, getIntl, getJsonAttValue } from '@utils/formHelpers';
+import { createJsonAttValue, getJsonAttValue } from '@utils/formHelpers';
 import FormCustomAttributeList from '@components/sidebars/FormCustomAttributeList/FormCustomAttributeList';
 import LocalisedInput from '@components/mix/LocalisedInput/LocalisedInput';
 import { EditorContext } from '@contexts/EditorContext';
@@ -48,7 +48,7 @@ const SidebarCustomiseQuestion: React.FC<SidebarCustomiseQuestionProps> = ({}) =
   const classes = useStyles();
 
   const { formStructure, isWizardless, isEmptyFormStructure } = useContext(FormStructureContext);
-  const { languages } = useContext(EditorContext);
+  const { intl } = useContext(EditorContext);
 
   const {
     onSaveCallback,
@@ -69,7 +69,7 @@ const SidebarCustomiseQuestion: React.FC<SidebarCustomiseQuestionProps> = ({}) =
       let id = customisingQuestion!['@id'];
       if (isNewQuestion) {
         do {
-          const label = (isString(value) && value) || JsonLdUtils.getLocalized(value, getIntl(languages[0]));
+          const label = (isString(value) && value) || JsonLdUtils.getLocalized(value, intl);
           id = getId(label);
         } while (formStructure.getNode(id));
       }

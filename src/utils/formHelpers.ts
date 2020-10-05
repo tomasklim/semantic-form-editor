@@ -2,7 +2,7 @@ import { Constants, FormUtils, JsonLdFramingUtils, JsonLdObjectUtils } from 's-f
 import * as jsonld from 'jsonld';
 import FormStructure from '@model/FormStructure';
 import FormStructureNode from '@model/FormStructureNode';
-import { FormStructureQuestion } from '@model/FormStructureQuestion';
+import { FormStructureQuestion, LanguageObject } from '@model/FormStructureQuestion';
 import { Context, JsonLdObj } from 'jsonld/jsonld-spec';
 import { ExpandedForm } from '@model/ExpandedForm';
 import { isObject } from 'lodash';
@@ -107,13 +107,11 @@ export const sortRelatedQuestions = (
 const unifyFormStructure = (form: ExpandedForm): ExpandedForm => {
   form['@graph'].forEach((node) => {
     if (node[Constants.HAS_SUBQUESTION] && !Array.isArray(node[Constants.HAS_SUBQUESTION])) {
-      // @ts-ignore
-      node[Constants.HAS_SUBQUESTION] = transformSubquestionsToArray(node[Constants.HAS_SUBQUESTION]);
+      node[Constants.HAS_SUBQUESTION] = transformToArray(node[Constants.HAS_SUBQUESTION]);
     }
 
     if (node[Constants.LAYOUT_CLASS] && !Array.isArray(node[Constants.LAYOUT_CLASS])) {
-      // @ts-ignore
-      node[Constants.LAYOUT_CLASS] = transformHasLayoutClassToArray(node[Constants.LAYOUT_CLASS]);
+      node[Constants.LAYOUT_CLASS] = transformToArray(node[Constants.LAYOUT_CLASS]);
     }
 
     if (
@@ -121,8 +119,7 @@ const unifyFormStructure = (form: ExpandedForm): ExpandedForm => {
       isObject(node[Constants.RDFS_LABEL]) &&
       !Array.isArray(node[Constants.RDFS_LABEL])
     ) {
-      // @ts-ignore
-      node[Constants.RDFS_LABEL] = [node[Constants.RDFS_LABEL]];
+      node[Constants.RDFS_LABEL] = transformToArray(node[Constants.RDFS_LABEL]);
     }
 
     if (
@@ -130,19 +127,14 @@ const unifyFormStructure = (form: ExpandedForm): ExpandedForm => {
       isObject(node[Constants.HELP_DESCRIPTION]) &&
       !Array.isArray(node[Constants.HELP_DESCRIPTION])
     ) {
-      // @ts-ignore
-      node[Constants.HELP_DESCRIPTION] = [node[Constants.HELP_DESCRIPTION]];
+      node[Constants.HELP_DESCRIPTION] = transformToArray(node[Constants.HELP_DESCRIPTION]);
     }
   });
 
   return form;
 };
 
-const transformSubquestionsToArray = (element: FormStructureQuestion): Array<FormStructureQuestion> => {
-  return [element];
-};
-
-const transformHasLayoutClassToArray = (element: string): Array<string> => {
+const transformToArray = (element: any): Array<any> => {
   return [element];
 };
 
@@ -183,6 +175,13 @@ export const createJsonAttValue = (value: string | boolean, dataType: string): o
 export const createJsonAttIdValue = (id: string): object => {
   return {
     '@id': id
+  };
+};
+
+export const createJsonLanguageValue = (lang: string, value: string): LanguageObject => {
+  return {
+    '@language': lang,
+    '@value': value
   };
 };
 

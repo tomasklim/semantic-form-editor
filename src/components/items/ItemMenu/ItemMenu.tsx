@@ -3,7 +3,6 @@ import { MoreVert } from '@material-ui/icons';
 import { ClickAwayListener, Grow, MenuItem, MenuList, Paper, Popper } from '@material-ui/core';
 import { Constants } from 's-forms';
 import {
-  getIntl,
   highlightQuestion,
   removeFromFormStructure,
   removeFromSubquestions,
@@ -28,7 +27,7 @@ const ItemMenu: FC<Props> = ({ question }) => {
 
   const { getClonedFormStructure, setFormStructure, addNewNodes } = useContext(FormStructureContext);
   const { customiseQuestion } = useContext(CustomiseQuestionContext);
-  const { updateSFormsConfig, activeStep, setActiveStep, languages } = useContext(EditorContext);
+  const { updateSFormsConfig, activeStep, setActiveStep, intl } = useContext(EditorContext);
 
   const [open, setOpen] = useState<boolean>(false);
   const anchorEl = useRef<HTMLDivElement | null>(null);
@@ -62,7 +61,7 @@ const ItemMenu: FC<Props> = ({ question }) => {
     customiseQuestion({
       customisingQuestion: { ...NEW_QUESTION },
       onSave: (): OnSaveQuestionsCallback => (questions) =>
-        addNewNodes(questions, targetNode, clonedFormStructure, getIntl(languages[0])),
+        addNewNodes(questions, targetNode, clonedFormStructure, intl),
       onCancel: () => () => addButton.current?.classList.remove(classes.addButtonHighlight),
       onInit: () => addButton.current?.classList.add(classes.addButtonHighlight),
       isNewQuestion: true
@@ -102,7 +101,7 @@ const ItemMenu: FC<Props> = ({ question }) => {
 
     questionParent.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(
       questionParent.data[Constants.HAS_SUBQUESTION],
-      getIntl(languages[0])
+      intl
     );
 
     setFormStructure(clonedFormStructure);
@@ -130,7 +129,7 @@ const ItemMenu: FC<Props> = ({ question }) => {
 
     removePrecedingQuestion(clonedNode);
 
-    sortRelatedQuestions(nodeParent.data[Constants.HAS_SUBQUESTION], getIntl(languages[0]));
+    sortRelatedQuestions(nodeParent.data[Constants.HAS_SUBQUESTION], intl);
 
     setFormStructure(clonedFormStructure);
 

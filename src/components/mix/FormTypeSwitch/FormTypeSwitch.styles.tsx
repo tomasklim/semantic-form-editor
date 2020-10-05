@@ -5,10 +5,11 @@ import { ITheme } from '@interfaces/index';
 export default makeStyles((theme: ITheme) => ({
   switchContainer: {
     display: 'flex',
-    flexDirection: 'column',
+    justifyContent: 'center',
     color: 'white',
     fontWeight: '500',
-    margin: theme.spacing(2, 0),
+    fontSize: '1.1rem',
+    margin: theme.spacing(3, 0, 2),
     '& > span': {
       marginBottom: '0.3rem'
     }
@@ -21,7 +22,7 @@ export default makeStyles((theme: ITheme) => ({
     '& .MuiGrid-root': {
       display: 'flex',
       alignItems: 'center',
-      color: 'black'
+      color: 'white'
     }
   }
 }));

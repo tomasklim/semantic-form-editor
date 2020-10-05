@@ -4,6 +4,7 @@ import { TextField } from '@material-ui/core';
 import { Constants } from 's-forms';
 import { createFakeChangeEvent } from '@utils/itemHelpers';
 import { EditorContext } from '@contexts/EditorContext';
+import { createJsonLanguageValue } from '@utils/formHelpers';
 
 interface LocalisedInputProps {
   type: string;
@@ -22,7 +23,7 @@ const LocalisedInput: React.FC<LocalisedInputProps> = ({
   autoFocus,
   required
 }) => {
-  let value = question[type] || [];
+  let questionValue = question[type] || [];
 
   const { languages } = useContext(EditorContext);
 
@@ -31,26 +32,29 @@ const LocalisedInput: React.FC<LocalisedInputProps> = ({
 
     const lang = target.getAttribute('data-language');
 
+    // simple no language field
     if (!lang) {
       handleChange(e);
     }
 
     const availableLanguage =
-      Array.isArray(value) && value.find((language: LanguageObject) => language['@language'] === lang);
+      Array.isArray(questionValue) && questionValue.find((language: LanguageObject) => language['@language'] === lang);
 
+    // field already have value in this language
     if (availableLanguage) {
       availableLanguage['@value'] = target.value;
     } else {
-      if (!Array.isArray(value)) {
-        value = [];
+      // language have to be added
+      if (!Array.isArray(questionValue)) {
+        questionValue = [];
       }
-      value.push({
-        '@language': lang,
-        '@value': target.value
-      });
+
+      const languageObject = createJsonLanguageValue(lang!, target.value);
+
+      questionValue.push(languageObject);
     }
 
-    const fakeEvent = createFakeChangeEvent(type, value);
+    const fakeEvent = createFakeChangeEvent(type, questionValue);
 
     handleChange(fakeEvent);
   };
@@ -73,7 +77,7 @@ const LocalisedInput: React.FC<LocalisedInputProps> = ({
         name={type}
         label={label}
         variant="outlined"
-        value={value || ''}
+        value={questionValue || ''}
         onChange={handleChange}
         autoComplete={'off'}
         autoFocus={autoFocus}
@@ -87,11 +91,11 @@ const LocalisedInput: React.FC<LocalisedInputProps> = ({
   return (
     <>
       {languages.map((language: string, index: number) => {
-        let foundLanguage;
-        Array.isArray(value) &&
-          value.forEach((labelObj: LanguageObject) => {
-            if (labelObj['@language'] === language) {
-              foundLanguage = labelObj;
+        const foundLanguageObject =
+          Array.isArray(questionValue) &&
+          questionValue.find((languageQuestionObject: LanguageObject) => {
+            if (languageQuestionObject['@language'] === language) {
+              return languageQuestionObject;
             }
           });
 
@@ -102,12 +106,11 @@ const LocalisedInput: React.FC<LocalisedInputProps> = ({
             inputProps={{ ['data-language']: language }}
             label={`${label} ${language.toUpperCase()}`}
             variant="outlined"
-            value={(foundLanguage && foundLanguage['@value']) || ''}
+            value={(foundLanguageObject && foundLanguageObject['@value']) || ''}
             onChange={handleLabelsChange}
             autoComplete={'off'}
             autoFocus={autoFocus && index === 0}
             required={required}
-            // @ts-ignore
             multiline={multiline}
           />
         );

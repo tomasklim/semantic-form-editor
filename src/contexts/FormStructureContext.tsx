@@ -66,6 +66,7 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
         setIsEmptyFormStructure(true);
       } else {
         const isWizardless = rootSubquestions.every((question) => !FormUtils.isWizardStep(question));
+
         setIsWizardless(isWizardless);
         setIsEmptyFormStructure(false);
       }
@@ -91,7 +92,7 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
       highlightQuestion(question['@id']);
     });
 
-    targetNode.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(targetNode.data[Constants.HAS_SUBQUESTION], intl);
+    sortRelatedQuestions(targetNode.data[Constants.HAS_SUBQUESTION], intl);
 
     setFormStructure(clonedFormStructure);
   };

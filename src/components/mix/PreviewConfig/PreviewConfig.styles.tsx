@@ -5,6 +5,7 @@ export default makeStyles(() => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
+    marginBottom: '1rem',
     '&>:not(:first-child)': {
       marginLeft: '2rem'
     },
@@ -17,6 +18,7 @@ export default makeStyles(() => ({
       fontSize: '0.875rem'
     },
     '& .MuiInputLabel-shrink': {
+      marginTop: '4px',
       transform: 'translate(0, 1.5px) scale(1);'
     },
     '& .MuiInputBase-root': {
@@ -33,6 +35,9 @@ export default makeStyles(() => ({
     },
     '& .Mui-focused:after': {
       display: 'none'
+    },
+    '& label + .MuiInput-formControl': {
+      marginTop: '22px'
     }
   }
 }));

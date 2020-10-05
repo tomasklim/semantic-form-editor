@@ -4,7 +4,6 @@ import AddIcon from '@material-ui/icons/Add';
 import {
   detectIsChildNode,
   enableNotDraggableAndDroppable,
-  getIntl,
   highlightQuestion,
   isSectionOrWizardStep,
   moveQuestionToSpecificPosition,
@@ -87,7 +86,7 @@ const ItemAdd: FC<ItemAddProps> = ({
 
   const { formStructure, setFormStructure, getClonedFormStructure, isWizardless } = useContext(FormStructureContext);
   const { customiseQuestion } = useContext(CustomiseQuestionContext);
-  const { languages } = useContext(EditorContext);
+  const { intl } = useContext(EditorContext);
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     if ((e.target as HTMLDivElement).classList.contains('addItem')) {
@@ -162,10 +161,7 @@ const ItemAdd: FC<ItemAddProps> = ({
 
     moveQuestionToSpecificPosition(position, targetNode, movingNode);
 
-    targetNode.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(
-      targetNode.data[Constants.HAS_SUBQUESTION],
-      getIntl(languages[0])
-    );
+    targetNode.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(targetNode.data[Constants.HAS_SUBQUESTION], intl);
 
     setFormStructure(clonedFormStructure);
 
@@ -212,10 +208,7 @@ const ItemAdd: FC<ItemAddProps> = ({
 
     moveQuestionToSpecificPosition(position, targetNode, node);
 
-    targetNode.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(
-      targetNode.data[Constants.HAS_SUBQUESTION],
-      getIntl(languages[0])
-    );
+    targetNode.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(targetNode.data[Constants.HAS_SUBQUESTION], intl);
 
     setFormStructure(clonedFormStructure);
 

@@ -1,6 +1,6 @@
 import { FC, useContext, useEffect, useState } from 'react';
 import SForms, { SOptions } from 's-forms';
-import { exportForm, getIntl } from '@utils/index';
+import { exportForm } from '@utils/index';
 import { JsonLdObj } from 'jsonld/jsonld-spec';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import useStyles from './EditorPreview.styles';
@@ -23,11 +23,11 @@ const EditorPreview: FC<EditorPreviewProps> = ({}) => {
   const classes = useStyles();
 
   const { formContext, getClonedFormStructure } = useContext(FormStructureContext);
-  const { SFormsConfig, languages } = useContext(EditorContext);
+  const { SFormsConfig, intl } = useContext(EditorContext);
 
   const [form, setForm] = useState<JsonLdObj>();
   const [horizontalWizardNav, setHorizontalWizardNav] = useState<boolean>(true);
-  const [intl, setIntl] = useState<IIntl>(languages.length ? getIntl(languages[0]) : {});
+  const [intlPreview, setIntlPreview] = useState<IIntl>(intl);
 
   useEffect(() => {
     async function getExportedForm() {
@@ -63,8 +63,8 @@ const EditorPreview: FC<EditorPreviewProps> = ({}) => {
       <PreviewConfig
         horizontalWizardNav={horizontalWizardNav}
         setHorizontalWizardNav={setHorizontalWizardNav}
-        intl={intl}
-        setIntl={setIntl}
+        intl={intlPreview}
+        setIntl={setIntlPreview}
       />
       <SForms form={form} options={options} fetchTypeAheadValues={fetchTypeaheadValuesMock} />
     </div>
