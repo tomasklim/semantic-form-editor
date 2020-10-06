@@ -46,7 +46,7 @@ export default makeStyles((theme: ITheme) => ({
       width: '200px'
     }
   },
-  config: {
+  configButton: {
     minWidth: 'fit-content',
     padding: '5px 10px'
   }

@@ -1,4 +1,4 @@
-import React, { FC, useContext, useMemo, useRef, useState } from 'react';
+import React, { FC, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import useStyles, { CustomisedAccordionDetails } from './ItemSection.styles';
 import ItemHeader from '@components/items/ItemHeader/ItemHeader';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
@@ -131,7 +131,11 @@ const ItemSection: FC<ItemSectionProps> = ({ question, position, buildFormUI }) 
 
   const { formStructure, moveNodeUnderNode, updateNode } = useContext(FormStructureContext);
   const { customiseQuestion } = useContext(CustomiseQuestionContext);
-  const { intl } = useContext(EditorContext);
+  const { intl, sectionsExpanded } = useContext(EditorContext);
+
+  useEffect(() => {
+    setExpanded(sectionsExpanded);
+  }, [sectionsExpanded]);
 
   const expandItemSection = (e: React.MouseEvent) => {
     e.stopPropagation();

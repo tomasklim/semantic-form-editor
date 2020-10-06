@@ -70,7 +70,7 @@ const ConfigModal = () => {
     <div>
       <CustomisedOutlineButton
         variant="outlined"
-        className={classes.config}
+        className={classes.configButton}
         title={'Form configuration'}
         onClick={handleOpenConfigModal}
       >

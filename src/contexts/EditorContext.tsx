@@ -17,6 +17,8 @@ interface EditorContextValues {
   intl: Intl;
   configModalDisplayed: boolean;
   setConfigModalDisplayed: Dispatch<SetStateAction<boolean>>;
+  sectionsExpanded: boolean;
+  setSectionsExpanded: Dispatch<SetStateAction<boolean>>;
 }
 
 interface SFormsConfig {
@@ -31,6 +33,7 @@ const EditorProvider: React.FC<EditorProviderProps> = ({ children }) => {
   const [SFormsConfig, setSFormsConfig] = React.useState<Partial<SFormsConfig>>({});
   const [languages, setLanguages] = React.useState<Array<string>>([]);
   const [intl, setIntl] = React.useState<Intl>({});
+  const [sectionsExpanded, setSectionsExpanded] = React.useState<boolean>(true);
 
   const [configModalDisplayed, setConfigModalDisplayed] = React.useState<boolean>(false);
 
@@ -52,9 +55,11 @@ const EditorProvider: React.FC<EditorProviderProps> = ({ children }) => {
       setLanguages,
       intl,
       configModalDisplayed,
-      setConfigModalDisplayed
+      setConfigModalDisplayed,
+      sectionsExpanded,
+      setSectionsExpanded
     }),
-    [activeStep, SFormsConfig, languages, intl, configModalDisplayed]
+    [activeStep, SFormsConfig, languages, intl, configModalDisplayed, sectionsExpanded]
   );
 
   return <EditorContext.Provider value={values}>{children}</EditorContext.Provider>;

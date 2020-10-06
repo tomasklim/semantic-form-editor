@@ -17,6 +17,13 @@ export default makeStyles((theme: ITheme) => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between'
+    '& > :not(:first-child)': {
+      marginLeft: theme.spacing(1)
+    }
+  },
+  expandButton: {
+    minWidth: 'fit-content',
+    padding: '5px 10px',
+    marginRight: 'auto'
   }
 }));

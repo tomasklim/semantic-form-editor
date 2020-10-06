@@ -8,6 +8,7 @@ import useStyles from './SIdebarNav.styles';
 import ConfigModal from '@components/mix/ConfigModal/ConfigModal';
 import { EditorContext } from '@contexts/EditorContext';
 import SidebarDroparea from '@components/sidebars/SidebarDroparea/SidebarDroparea';
+import { ExpandLess, ExpandMore } from '@material-ui/icons';
 
 const SidebarNav = ({}) => {
   const classes = useStyles();
@@ -16,7 +17,7 @@ const SidebarNav = ({}) => {
 
   const { getClonedFormStructure, addNewNodes, isWizardless, isEmptyFormStructure } = useContext(FormStructureContext);
   const { customiseQuestion } = useContext(CustomiseQuestionContext);
-  const { intl } = useContext(EditorContext);
+  const { intl, setSectionsExpanded, sectionsExpanded } = useContext(EditorContext);
 
   const addNewTopLevelQuestion = () => {
     const clonedFormStructure = getClonedFormStructure();
@@ -38,6 +39,10 @@ const SidebarNav = ({}) => {
     });
   };
 
+  const handleSectionsExpansion = () => {
+    setSectionsExpanded(!sectionsExpanded);
+  };
+
   return (
     <>
       <div className={classes.sidebarNav}>
@@ -50,6 +55,14 @@ const SidebarNav = ({}) => {
           id="new-question-button"
         >
           {!isWizardless ? 'Add new wizard step' : 'Add new question'}
+        </CustomisedOutlineButton>
+        <CustomisedOutlineButton
+          variant="outlined"
+          title={'Expand / collapse all'}
+          className={classes.expandButton}
+          onClick={handleSectionsExpansion}
+        >
+          {sectionsExpanded ? <ExpandLess /> : <ExpandMore />}
         </CustomisedOutlineButton>
         <ConfigModal />
       </div>
