@@ -3,15 +3,23 @@ import useStyles from './JsonEditor.styles';
 import JSONEditor, { JSONEditorOptions } from 'jsoneditor';
 import { useSnackbar } from 'notistack';
 import { JsonLdObj } from 'jsonld/jsonld-spec';
+import classNames from 'classnames';
 
 interface JsonEditorProps {
   form: JsonLdObj | null;
   processFormCallback?: (form: JsonLdObj) => void;
   finishFormCallback?: Dispatch<SetStateAction<Function>>;
   editorOptions: JSONEditorOptions;
+  className?: string;
 }
 
-const JsonEditor: React.FC<JsonEditorProps> = ({ form, editorOptions, processFormCallback, finishFormCallback }) => {
+const JsonEditor: React.FC<JsonEditorProps> = ({
+  form,
+  editorOptions,
+  processFormCallback,
+  finishFormCallback,
+  className
+}) => {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -74,7 +82,7 @@ const JsonEditor: React.FC<JsonEditorProps> = ({ form, editorOptions, processFor
     processFormCallback && processFormCallback(form);
   };
 
-  return <div className={classes.container} ref={jsonEditorContainer} />;
+  return <div className={classNames(classes.container, { [className!]: className })} ref={jsonEditorContainer} />;
 };
 
 export default JsonEditor;

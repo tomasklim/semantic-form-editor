@@ -3,7 +3,6 @@ import useStyles from './EditorCustomizeCode.styles';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import { EditorContext } from '@contexts/EditorContext';
 import { buildFormStructure, exportForm } from '@utils/formHelpers';
-import { Code } from '@material-ui/icons';
 import { CustomisedOutlineButton } from '@styles/CustomisedOutlineButton';
 import JsonEditor from '@components/mix/JsonEditor/JsonEditor';
 import { JSONEditorMode } from 'jsoneditor';
@@ -45,11 +44,6 @@ const EditorCustomizeCode: React.FC = () => {
   // @ts-ignore
   return (
     <>
-      <div className={classes.continueButtons}>
-        <CustomisedOutlineButton className={classes.codeButton} variant="outlined" onClick={finishCallback}>
-          <Code />
-        </CustomisedOutlineButton>
-      </div>
       <JsonEditor
         form={form}
         processFormCallback={processForm}
@@ -57,7 +51,13 @@ const EditorCustomizeCode: React.FC = () => {
         editorOptions={{
           mode: 'code' as JSONEditorMode
         }}
+        className={classes.jsonEditor}
       />
+      <div className={classes.continueButtons}>
+        <CustomisedOutlineButton className={classes.codeButton} variant="outlined" onClick={finishCallback}>
+          &nbsp; Save and switch to customize view
+        </CustomisedOutlineButton>
+      </div>
     </>
   );
 };

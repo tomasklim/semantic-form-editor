@@ -1,4 +1,4 @@
-import React, { FC, useContext } from 'react';
+import React, { FC, useContext, useEffect } from 'react';
 import EditorCustomize from '@components/editors/EditorCustomize/EditorCustomize';
 import EditorPreview from '@components/editors/EditorPreview/EditorPreview';
 import EditorNew from '@components/editors/EditorNew/EditorNew';
@@ -13,9 +13,15 @@ interface EditorProps {}
 
 const Editor: FC<EditorProps> = ({}) => {
   const { setFormFile } = useContext(FormStructureContext);
-  const { activeStep, setActiveStep, codeEditEnabled } = useContext(EditorContext);
+  const { activeStep, setActiveStep, setCodeEditEnabled, codeEditEnabled } = useContext(EditorContext);
 
   const [lockedSteps, setLockedSteps] = React.useState<boolean>(true);
+
+  useEffect(() => {
+    if (codeEditEnabled && activeStep !== 1) {
+      setCodeEditEnabled(false);
+    }
+  }, [activeStep]);
 
   const moveToCustomiseStep = () => {
     setActiveStep(1);

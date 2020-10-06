@@ -28,6 +28,12 @@ export default makeStyles((theme: ITheme) => ({
   codeButton: {
     minWidth: 'fit-content',
     padding: '5px 10px',
-    marginRight: 'auto'
+    marginRight: 'auto',
+    '&.MuiButton-outlined.Mui-disabled': {
+      border: '1px solid rgb(255 255 255 / 12%)'
+    },
+    '&.MuiButton-root.Mui-disabled': {
+      color: 'rgb(255 255 255 / 26%)'
+    }
   }
 }));

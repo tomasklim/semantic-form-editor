@@ -75,6 +75,7 @@ const SidebarNav = ({}) => {
           title={'Edit in code'}
           className={classes.codeButton}
           onClick={switchToCodeEditor}
+          disabled={isEmptyFormStructure}
         >
           <Code />
         </CustomisedOutlineButton>
