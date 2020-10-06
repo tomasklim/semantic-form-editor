@@ -26,7 +26,7 @@ const SidebarItemForm: React.FC<SidebarItemFormProps> = ({}) => {
   };
 
   return (
-    <>
+    <div>
       {isNewQuestion && <SidebarCreateQuestionTab activeTab={activeTab} handleChange={handleChangeTab} />}
 
       {customisingQuestion && (
@@ -42,7 +42,7 @@ const SidebarItemForm: React.FC<SidebarItemFormProps> = ({}) => {
           </TabPanel>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

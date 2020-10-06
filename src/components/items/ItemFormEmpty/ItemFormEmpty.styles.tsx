@@ -20,6 +20,12 @@ export default makeStyles((theme: ITheme) => ({
   },
   itemSectionHighlight: {
     border: '2px solid ' + theme.palette.custom.main + '!important'
+  },
+  buttonHighlight: {
+    '&.MuiButton-outlined': {
+      backgroundColor: theme.palette.custom.main,
+      color: 'white'
+    }
   }
 }));
 

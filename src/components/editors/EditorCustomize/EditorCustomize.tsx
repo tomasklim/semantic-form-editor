@@ -77,6 +77,7 @@ const EditorCustomize: React.FC = () => {
 
         {rootSubquestions?.map((subquestion, index) => buildFormUI(subquestion, index, formStructure.root.data))}
       </ol>
+
       <Sidebar />
     </div>
   );

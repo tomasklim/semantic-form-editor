@@ -9,7 +9,7 @@ export default makeStyles((theme: ITheme) => ({
     color: 'white',
     fontWeight: '500',
     fontSize: '1.1rem',
-    margin: theme.spacing(3, 0, 2),
+    margin: theme.spacing(3, 0, 5),
     '& > span': {
       marginBottom: '0.3rem'
     }

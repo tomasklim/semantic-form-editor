@@ -4,18 +4,17 @@ import { Constants, FormUtils } from 's-forms';
 import { CustomisedButton } from '@styles/CustomisedButton';
 import { CustomisedLinkButton } from '@styles/CustomisedLinkButton';
 import useStyles from './SidebarCustomiseQuestion.styles';
-import { getId } from '@utils/itemHelpers';
+import { findLayoutTypeOfQuestion, getId } from '@utils/itemHelpers';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import { CustomiseQuestionContext } from '@contexts/CustomiseQuestionContext';
 import { createJsonAttValue, getJsonAttValue } from '@utils/formHelpers';
 import FormCustomAttributeList from '@components/sidebars/FormCustomAttributeList/FormCustomAttributeList';
 import LocalisedInput from '@components/mix/LocalisedInput/LocalisedInput';
 import { EditorContext } from '@contexts/EditorContext';
+import { isString } from 'lodash';
+import { TEXT_FIELD } from '@constants/index';
 // @ts-ignore
 import JsonLdUtils from 'jsonld-utils';
-import { isString } from 'lodash';
-
-const TEXT_FIELD = 'text';
 
 const layoutTypeOptions = [
   { value: Constants.LAYOUT.WIZARD_STEP, title: 'Wizard step' },
@@ -30,21 +29,7 @@ const layoutTypeOptions = [
   { value: Constants.LAYOUT.CHECKBOX, title: 'Checkbox' }
 ];
 
-// no section, no wizard-step
-const layoutTypeFields = [
-  TEXT_FIELD,
-  Constants.LAYOUT.QUESTION_TYPEAHEAD,
-  Constants.LAYOUT.TEXTAREA,
-  Constants.LAYOUT.DATE,
-  Constants.LAYOUT.TIME,
-  Constants.LAYOUT.DATETIME,
-  Constants.LAYOUT.MASKED_INPUT,
-  Constants.LAYOUT.CHECKBOX
-];
-
-interface SidebarCustomiseQuestionProps {}
-
-const SidebarCustomiseQuestion: React.FC<SidebarCustomiseQuestionProps> = ({}) => {
+const SidebarCustomiseQuestion: React.FC = () => {
   const classes = useStyles();
 
   const { formStructure, isWizardless, isEmptyFormStructure } = useContext(FormStructureContext);
@@ -59,27 +44,13 @@ const SidebarCustomiseQuestion: React.FC<SidebarCustomiseQuestionProps> = ({}) =
     level
   } = useContext(CustomiseQuestionContext);
 
-  const handleChange = (event: React.ChangeEvent | React.ChangeEvent<{ value: unknown }>) => {
+  const handleChangeDefault = (event: React.ChangeEvent | React.ChangeEvent<{ value: unknown }>) => {
     const target = event.target as HTMLInputElement | HTMLSelectElement;
     // @ts-ignore
     const value = target.type === 'checkbox' ? target.checked : target.value;
     const name = target.name;
 
-    if (name === ((Constants.RDFS_LABEL as unknown) as string)) {
-      let id = customisingQuestion!['@id'];
-      if (isNewQuestion) {
-        do {
-          const label = (isString(value) && value) || JsonLdUtils.getLocalized(value, intl);
-          id = getId(label);
-        } while (formStructure.getNode(id));
-      }
-
-      setCustomisingQuestion({
-        ...customisingQuestion!,
-        [Constants.RDFS_LABEL]: value,
-        '@id': id
-      });
-    } else if (name === ((Constants.LAYOUT_CLASS as unknown) as string)) {
+    if (name === ((Constants.LAYOUT_CLASS as unknown) as string)) {
       setCustomisingQuestion({ ...customisingQuestion!, [Constants.LAYOUT_CLASS]: [value] });
     } else if (name === Constants.LAYOUT.COLLAPSED || name === Constants.LAYOUT.DISABLED) {
       const layoutClass = customisingQuestion![Constants.LAYOUT_CLASS]!;
@@ -91,18 +62,41 @@ const SidebarCustomiseQuestion: React.FC<SidebarCustomiseQuestionProps> = ({}) =
       }
 
       setCustomisingQuestion({ ...customisingQuestion!, [Constants.LAYOUT_CLASS]: layoutClass });
-    } else if (name === ((Constants.REQUIRES_ANSWER as unknown) as string)) {
-      if (!value) {
-        setCustomisingQuestion({ ...customisingQuestion!, [name]: null });
-      } else {
-        const requiresAttribute = createJsonAttValue(value, Constants.XSD.BOOLEAN);
-
-        setCustomisingQuestion({ ...customisingQuestion!, [name]: requiresAttribute });
-      }
     } else {
       setCustomisingQuestion({ ...customisingQuestion!, [name]: value });
     }
   };
+
+  const handleChangeRequiresAnswer = (e: React.ChangeEvent) => {
+    const checked = (e.target as HTMLInputElement).checked;
+
+    const attribute = checked ? createJsonAttValue(true, Constants.XSD.BOOLEAN) : null;
+
+    setCustomisingQuestion({ ...customisingQuestion!, [(Constants.REQUIRES_ANSWER as unknown) as string]: attribute });
+  };
+
+  const handleChangeLabel = (e: React.ChangeEvent<any>) => {
+    const value = (e.target as HTMLInputElement).value;
+
+    let id = customisingQuestion!['@id'];
+    if (isNewQuestion) {
+      do {
+        const label = (isString(value) && value) || JsonLdUtils.getLocalized(value, intl);
+        id = getId(label);
+      } while (formStructure.getNode(id));
+    }
+
+    setCustomisingQuestion({
+      ...customisingQuestion!,
+      [Constants.RDFS_LABEL]: value,
+      '@id': id
+    });
+  };
+
+  /*
+  const handleChangeLayoutClass = (e: React.ChangeEvent<any>) => {
+
+  }*/
 
   const onSave = (e: FormEvent) => {
     e.preventDefault();
@@ -116,52 +110,11 @@ const SidebarCustomiseQuestion: React.FC<SidebarCustomiseQuestionProps> = ({}) =
     resetCustomisationProcess();
   };
 
-  const findLayoutTypeOfQuestion = () => {
-    let layoutClasses = customisingQuestion && customisingQuestion[Constants.LAYOUT_CLASS];
-
-    if (isEmptyFormStructure && !isWizardless) {
-      customisingQuestion![Constants.LAYOUT_CLASS] = [Constants.LAYOUT.WIZARD_STEP, Constants.LAYOUT.QUESTION_SECTION];
-      return Constants.LAYOUT.WIZARD_STEP;
-    } else if (isEmptyFormStructure && isWizardless && FormUtils.isWizardStep(customisingQuestion)) {
-      customisingQuestion![Constants.LAYOUT_CLASS] = [];
-      return '';
-    }
-
-    if (isNewQuestion && layoutClasses && !layoutClasses.length) {
-      return '';
-    }
-
-    if (!layoutClasses || !layoutClasses.length) {
-      return TEXT_FIELD;
-    }
-
-    if (FormUtils.isWizardStep(customisingQuestion)) {
-      return Constants.LAYOUT.WIZARD_STEP;
-    }
-
-    if (layoutClasses.length === 1 && layoutClasses[0] === Constants.LAYOUT.QUESTION_SECTION) {
-      return Constants.LAYOUT.QUESTION_SECTION;
-    }
-
-    const layoutType = layoutClasses.filter((layoutClass) => layoutTypeFields.includes(layoutClass));
-
-    if (!layoutType.length && FormUtils.isSection(customisingQuestion)) {
-      return Constants.LAYOUT.QUESTION_SECTION;
-    }
-
-    if (!layoutType.length) {
-      console.warn(`Question with id: ${customisingQuestion?.['@id']} does not have any defined layout type!`);
-      return TEXT_FIELD;
-    }
-
-    return layoutType[0];
-  };
-
-  const layoutType = findLayoutTypeOfQuestion();
-
   if (!customisingQuestion) {
     return null;
   }
+
+  const layoutType = findLayoutTypeOfQuestion(customisingQuestion, isEmptyFormStructure, isWizardless, isNewQuestion);
 
   return (
     <form className={classes.form} onSubmit={onSave}>
@@ -176,7 +129,7 @@ const SidebarCustomiseQuestion: React.FC<SidebarCustomiseQuestionProps> = ({}) =
       <LocalisedInput
         type={(Constants.RDFS_LABEL as unknown) as string}
         question={customisingQuestion}
-        handleChange={handleChange}
+        handleChange={handleChangeLabel}
         autoFocus
         required
       />
@@ -187,7 +140,7 @@ const SidebarCustomiseQuestion: React.FC<SidebarCustomiseQuestionProps> = ({}) =
           native
           label="Layout type"
           value={layoutType || ''}
-          onChange={handleChange}
+          onChange={handleChangeDefault}
           inputProps={{
             name: Constants.LAYOUT_CLASS,
             id: 'layout-type'
@@ -235,7 +188,7 @@ const SidebarCustomiseQuestion: React.FC<SidebarCustomiseQuestionProps> = ({}) =
           label="Input mask"
           variant="outlined"
           value={customisingQuestion[Constants.INPUT_MASK] || ''}
-          onChange={handleChange}
+          onChange={handleChangeDefault}
           autoComplete={'off'}
           required
         />
@@ -247,7 +200,7 @@ const SidebarCustomiseQuestion: React.FC<SidebarCustomiseQuestionProps> = ({}) =
           label="Options query"
           variant="outlined"
           value={customisingQuestion[Constants.HAS_OPTIONS_QUERY] || ''}
-          onChange={handleChange}
+          onChange={handleChangeDefault}
           autoComplete={'off'}
           required
         />
@@ -256,7 +209,7 @@ const SidebarCustomiseQuestion: React.FC<SidebarCustomiseQuestionProps> = ({}) =
       <LocalisedInput
         type={(Constants.HELP_DESCRIPTION as unknown) as string}
         question={customisingQuestion}
-        handleChange={handleChange}
+        handleChange={handleChangeDefault}
         multiline
       />
 
@@ -264,7 +217,7 @@ const SidebarCustomiseQuestion: React.FC<SidebarCustomiseQuestionProps> = ({}) =
         control={
           <Checkbox
             name={(Constants.REQUIRES_ANSWER as unknown) as string}
-            onChange={handleChange}
+            onChange={handleChangeRequiresAnswer}
             checked={getJsonAttValue(customisingQuestion, Constants.REQUIRES_ANSWER) || false}
           />
         }
@@ -276,7 +229,7 @@ const SidebarCustomiseQuestion: React.FC<SidebarCustomiseQuestionProps> = ({}) =
           control={
             <Checkbox
               name={Constants.LAYOUT.COLLAPSED}
-              onChange={handleChange}
+              onChange={handleChangeDefault}
               checked={customisingQuestion[Constants.LAYOUT_CLASS]?.includes(Constants.LAYOUT.COLLAPSED)}
             />
           }
@@ -288,7 +241,7 @@ const SidebarCustomiseQuestion: React.FC<SidebarCustomiseQuestionProps> = ({}) =
         control={
           <Checkbox
             name={Constants.LAYOUT.DISABLED}
-            onChange={handleChange}
+            onChange={handleChangeDefault}
             checked={customisingQuestion[Constants.LAYOUT_CLASS]?.includes(Constants.LAYOUT.DISABLED)}
           />
         }
@@ -298,7 +251,7 @@ const SidebarCustomiseQuestion: React.FC<SidebarCustomiseQuestionProps> = ({}) =
       <FormCustomAttributeList
         question={customisingQuestion}
         setCustomisingQuestion={setCustomisingQuestion}
-        handleChange={handleChange}
+        handleChange={handleChangeDefault}
       />
 
       <div className={classes.sidebarButtons}>

@@ -8,6 +8,7 @@ import { CustomisedButton } from '@styles/CustomisedButton';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import { EditorContext } from '@contexts/EditorContext';
 import { union } from 'lodash';
+import { CustomisedOutlineButton } from '@styles/CustomisedOutlineButton';
 
 const filter = createFilterOptions<string>();
 
@@ -67,7 +68,9 @@ const ConfigModal = () => {
 
   return (
     <div>
-      <SettingsIcon className={classes.config} onClick={handleOpenConfigModal} />
+      <CustomisedOutlineButton variant="outlined" className={classes.config} title={'Form configuration'}>
+        <SettingsIcon onClick={handleOpenConfigModal} />
+      </CustomisedOutlineButton>
       <Modal className={classes.modal} open={open} onClose={handleOpenConfigModal}>
         {modalBody}
       </Modal>

@@ -28,10 +28,7 @@ export default makeStyles((theme: ITheme) => ({
     '&:focus': {
       outline: 'none'
     },
-    '& .MuiInputBase-input': {
-      color: '#ffffff'
-    },
-    '& .MuiFormLabel-root': {
+    '& .MuiInputBase-input, & .MuiIconButton-label, & .MuiFormLabel-root': {
       color: '#ffffff'
     },
     '& .MuiOutlinedInput-notchedOutline': {
@@ -48,5 +45,9 @@ export default makeStyles((theme: ITheme) => ({
     '& button': {
       width: '200px'
     }
+  },
+  config: {
+    minWidth: 'fit-content',
+    padding: '5px 10px'
   }
 }));

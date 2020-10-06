@@ -31,11 +31,16 @@ const ItemFormEmpty: FC<ItemFormEmptyProps> = ({}) => {
       return;
     }
 
+    const addButton = document.getElementById('new-question-button');
     itemFormEmptyContainer.current?.classList.add(classes.itemSectionHighlight);
+    addButton?.classList.add(classes.buttonHighlight);
 
     customiseQuestion({
       customisingQuestion: !isWizardless ? { ...NEW_WIZARD_SECTION_QUESTION } : { ...NEW_QUESTION },
-      onSave: (): OnSaveQuestionsCallback => (questions) => addNewNodes(questions, root, clonedFormStructure, intl),
+      onSave: (): OnSaveQuestionsCallback => (questions) => {
+        addNewNodes(questions, root, clonedFormStructure, intl);
+        addButton?.classList.add(classes.buttonHighlight);
+      },
       isNewQuestion: true
     });
   };

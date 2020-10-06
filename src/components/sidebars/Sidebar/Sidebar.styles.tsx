@@ -18,7 +18,8 @@ export default makeStyles((theme: ITheme) => ({
     borderLeft: 0,
     color: 'white',
     marginRight: theme.spacing(2),
-    backgroundColor: 'transparent'
+    backgroundColor: 'transparent',
+    overflow: 'visible'
   },
   drawerContainer: {
     overflow: 'auto'
@@ -26,11 +27,5 @@ export default makeStyles((theme: ITheme) => ({
   emptySidebar: {
     fontStyle: 'italic',
     color: '#ffffffcc'
-  },
-  resizer: {
-    height: '100%',
-    width: '5px',
-    position: 'absolute',
-    cursor: 'ew-resize'
   }
 }));
