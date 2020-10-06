@@ -28,7 +28,7 @@ const ItemHeader: FC<ItemHeaderProps> = ({
 }) => {
   const classes = useStyles();
 
-  const { languages } = useContext(EditorContext);
+  const { intl } = useContext(EditorContext);
 
   const addDraggable = () => {
     container?.current?.setAttribute('draggable', 'true');
@@ -51,8 +51,7 @@ const ItemHeader: FC<ItemHeaderProps> = ({
             <DragIndicator className={classes.cardHeaderDrag} />
             <span>
               {position}.&nbsp;
-              {JsonLdUtils.getLocalized(question[Constants.RDFS_LABEL], languages.length && { locale: languages[0] }) ||
-                question['@id']}
+              {JsonLdUtils.getLocalized(question[Constants.RDFS_LABEL], intl) || question['@id']}
             </span>
             <ItemPropsIndicator question={question} />
           </span>

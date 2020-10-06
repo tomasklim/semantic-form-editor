@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { cloneDeep } from 'lodash';
-import { Constants, FormUtils } from 's-forms';
+import { Constants, FormUtils, Intl } from 's-forms';
 import { JsonLdObj } from 'jsonld/jsonld-spec';
 import FormStructure from '@model/FormStructure';
 import {
@@ -23,7 +23,7 @@ interface FormStructureProviderProps {
 
 interface FormStructureContextValues {
   addNewNodes: AddNewFormStructureNode;
-  moveNodeUnderNode: (movingNodeId: string, targetNodeId: string, isWizardPosition?: boolean) => void;
+  moveNodeUnderNode: (movingNodeId: string, targetNodeId: string, isWizardPosition: boolean, intl: Intl) => void;
   formStructure: FormStructure;
   formFile: JsonLdObj | null;
   setFormFile: Dispatch<SetStateAction<FormStructure | null>>;
@@ -31,7 +31,7 @@ interface FormStructureContextValues {
   setFormContext: Dispatch<SetStateAction<JsonLdObj>>;
   getClonedFormStructure: () => FormStructure;
   formContext: JsonLdObj;
-  updateNode: Function;
+  updateNode: (question: FormStructureQuestion, intl: Intl) => void;
   isWizardless: boolean;
   setIsWizardless: Dispatch<SetStateAction<boolean>>;
   isEmptyFormStructure: boolean;
@@ -40,7 +40,8 @@ interface FormStructureContextValues {
 type AddNewFormStructureNode = (
   newItemData: FormStructureQuestion | Array<FormStructureQuestion>,
   targetNode: FormStructureNode,
-  clonedFormStructure: FormStructure
+  clonedFormStructure: FormStructure,
+  intl: Intl
 ) => void;
 
 // @ts-ignore
@@ -64,6 +65,7 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
         setIsEmptyFormStructure(true);
       } else {
         const isWizardless = rootSubquestions.every((question) => !FormUtils.isWizardStep(question));
+
         setIsWizardless(isWizardless);
         setIsEmptyFormStructure(false);
       }
@@ -74,7 +76,7 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
     return cloneDeep(formStructure)!;
   };
 
-  const addNewNodes: AddNewFormStructureNode = (questions, targetNode, clonedFormStructure) => {
+  const addNewNodes: AddNewFormStructureNode = (questions, targetNode, clonedFormStructure, intl) => {
     if (!Array.isArray(questions)) {
       questions = [questions];
     }
@@ -83,18 +85,18 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
       const node = new FormStructureNode(targetNode, question);
       clonedFormStructure.addNode(question['@id'], node);
 
-      buildFormStructureResursion(node, clonedFormStructure);
+      buildFormStructureResursion(node, clonedFormStructure, intl);
       moveQuestion(node, targetNode);
 
       highlightQuestion(question['@id']);
     });
 
-    targetNode.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(targetNode.data[Constants.HAS_SUBQUESTION]);
+    sortRelatedQuestions(targetNode.data[Constants.HAS_SUBQUESTION], intl);
 
     setFormStructure(clonedFormStructure);
   };
 
-  const moveNodeUnderNode = (movingNodeId: string, targetNodeId: string, isWizardPosition: boolean = false) => {
+  const moveNodeUnderNode = (movingNodeId: string, targetNodeId: string, isWizardPosition: boolean, intl: Intl) => {
     const clonedFormStructure = getClonedFormStructure();
 
     const movingNode = clonedFormStructure.structure.get(movingNodeId);
@@ -134,14 +136,14 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
 
     moveQuestion(movingNode, targetNode);
 
-    targetNode.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(targetNode.data[Constants.HAS_SUBQUESTION]);
+    targetNode.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(targetNode.data[Constants.HAS_SUBQUESTION], intl);
 
     setFormStructure(clonedFormStructure);
 
     highlightQuestion(movingNodeId);
   };
 
-  const updateNode = (question: FormStructureQuestion) => {
+  const updateNode = (question: FormStructureQuestion, intl: Intl) => {
     const clonedFormStructure = getClonedFormStructure();
 
     const node = clonedFormStructure.structure.get(question['@id']);
@@ -164,7 +166,7 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
     const parent = node.parent;
 
     if (parent) {
-      parent.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(parent.data[Constants.HAS_SUBQUESTION]);
+      parent.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(parent.data[Constants.HAS_SUBQUESTION], intl);
     }
 
     setFormStructure(clonedFormStructure);

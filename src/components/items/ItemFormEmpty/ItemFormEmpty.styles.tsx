@@ -18,8 +18,14 @@ export default makeStyles((theme: ITheme) => ({
     backgroundColor: theme.palette.custom[800],
     color: theme.palette.custom.contrastText
   },
-  pageHighlight: {
+  itemSectionHighlight: {
     border: '2px solid ' + theme.palette.custom.main + '!important'
+  },
+  buttonHighlight: {
+    '&.MuiButton-outlined': {
+      backgroundColor: theme.palette.custom.main,
+      color: 'white'
+    }
   }
 }));
 

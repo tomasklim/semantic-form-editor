@@ -4,6 +4,7 @@ import useStyles from './FormTypeSwitch.styles';
 import HelpIcon from '@material-ui/icons/Help';
 import React, { useContext } from 'react';
 import { FormStructureContext } from '@contexts/FormStructureContext';
+import classNames from 'classnames';
 
 interface FormTypeSwitchProps {}
 
@@ -25,7 +26,7 @@ const FormTypeSwitch: React.FC<FormTypeSwitchProps> = ({}) => {
           </Tooltip>
           &nbsp;Wizard form
         </Grid>
-        <Grid item>
+        <Grid item className={classNames({ [classes.switchDisabled]: !isEmptyFormStructure })}>
           <CustomisedSwitch checked={isWizardless} onChange={handleFormTypeChange} disabled={!isEmptyFormStructure} />
         </Grid>
         <Grid item>

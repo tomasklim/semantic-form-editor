@@ -21,7 +21,7 @@ export type OnSaveQuestionsCallback = (
   customisingQuestion: FormStructureQuestion | Array<FormStructureQuestion>
 ) => void;
 
-type CustomiseQuestion = ({
+export type CustomiseQuestion = ({
   customisingQuestion,
   onSave,
   onCancel,

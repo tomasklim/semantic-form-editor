@@ -1,7 +1,9 @@
 import FormStructureNode from '@model/FormStructureNode';
-import { Constants } from 's-forms';
+import { Constants, Intl } from 's-forms';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
 import FormStructure from '@model/FormStructure';
+import React from 'react';
+import { CustomiseQuestion } from '@contexts/CustomiseQuestionContext';
 
 export const detectIsChildNode = (testedNode: FormStructureNode, exemplarNode: FormStructureNode): boolean => {
   if (!exemplarNode.parent) {
@@ -124,4 +126,26 @@ export const createFakeChangeEvent = (name: string, value: any): any => {
       value
     }
   };
+};
+
+export const onItemClickHandler = (
+  e: React.MouseEvent,
+  customiseQuestion: CustomiseQuestion,
+  question: FormStructureQuestion,
+  updateNode: Function,
+  itemContainer: React.MutableRefObject<HTMLLIElement | null>,
+  highlightClass: string,
+  intl: Intl
+) => {
+  e.stopPropagation();
+
+  customiseQuestion({
+    customisingQuestion: question,
+    onSave: () => (customisingQuestion: FormStructureQuestion) => {
+      updateNode(customisingQuestion, intl);
+      highlightQuestion(customisingQuestion['@id']);
+    },
+    onInit: () => itemContainer.current?.classList.add(highlightClass),
+    onCancel: () => () => itemContainer.current?.classList.remove(highlightClass)
+  });
 };

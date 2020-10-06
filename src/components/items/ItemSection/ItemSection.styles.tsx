@@ -3,14 +3,14 @@ import { AccordionDetails } from '@material-ui/core';
 import { ITheme } from '@interfaces/index';
 
 export default makeStyles((theme: ITheme) => ({
-  listItemSection: {
+  '@global .listItemSection': {
     width: '100%',
-    border: '2px solid transparent',
-    '& .MuiAccordion-root': {
-      color: theme.palette.custom.contrastText
-    }
+    border: '2px solid transparent'
   },
-  listItemSectionOver: {
+  '@global .listItemSection .MuiAccordion-root': {
+    color: theme.palette.custom.contrastText
+  },
+  '@global .listItemSectionOver': {
     border: '2px dashed ' + theme.palette.custom.main
   },
   listItemSectionHighlight: {

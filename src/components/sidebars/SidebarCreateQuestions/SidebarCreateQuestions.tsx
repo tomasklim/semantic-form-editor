@@ -9,9 +9,15 @@ import { Constants } from 's-forms';
 import { getId } from '@utils/itemHelpers';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
 import { EditorContext } from '@contexts/EditorContext';
+import { createJsonLanguageValue } from '@utils/formHelpers';
 
 interface SidebarCreateQuestionsProps {
   handleChangeTab: (_: any, newValue: number) => void;
+}
+
+interface ParsedLabelsWithSpaces {
+  label: string;
+  spaces: number;
 }
 
 const NUMBER_OF_SPACES = 2;
@@ -20,6 +26,7 @@ const SidebarCreateQuestions: React.FC<SidebarCreateQuestionsProps> = ({ handleC
   const classes = useStyles();
 
   const { isWizardless, formStructure, isEmptyFormStructure } = useContext(FormStructureContext);
+  const { onSaveCallback, customisingQuestion, resetCustomisationProcess } = useContext(CustomiseQuestionContext);
   const { languages } = useContext(EditorContext);
 
   const [multipleQuestions, setMultipleQuestions] = useState<string>('');
@@ -30,13 +37,16 @@ const SidebarCreateQuestions: React.FC<SidebarCreateQuestionsProps> = ({ handleC
     setMultipleQuestions(target.value);
   };
 
-  const { onSaveCallback, customisingQuestion, resetCustomisationProcess } = useContext(CustomiseQuestionContext);
-
   const usedIds: Array<string> = [];
-  const createQuestionTree = (array: Array<preparedArray>, level: number): Array<FormStructureQuestion> | null => {
+  // use conquer and divide method to create new questions
+  const createQuestionTree = (
+    parsedLabels: Array<ParsedLabelsWithSpaces>,
+    level: number
+  ): Array<FormStructureQuestion> | null => {
     const currentSpaces = NUMBER_OF_SPACES * level;
 
-    const splitIndexes = array
+    // find indexes where to split array to create small arrays of parent and its children (subquestions)
+    const splitIndexes = parsedLabels
       .map((obj, index) => (obj.spaces === currentSpaces ? index : null))
       .filter((index) => index !== null);
 
@@ -44,16 +54,17 @@ const SidebarCreateQuestions: React.FC<SidebarCreateQuestionsProps> = ({ handleC
       return null;
     }
 
+    // split arrays by indexes
     // @ts-ignore
-    const parsedArray = splitIndexes.map((arrayIndex: number, index) => {
+    const splitLabelArrays = splitIndexes.map((arrayIndex: number, index) => {
       if (index < splitIndexes.length) {
         // @ts-ignore
-        return array.slice(arrayIndex, splitIndexes[index + 1]);
+        return parsedLabels.slice(arrayIndex, splitIndexes[index + 1]);
       }
     });
 
     // @ts-ignore
-    return parsedArray.map((array: Array<preparedArray>) => {
+    return splitLabelArrays.map((array: Array<ParsedLabelsWithSpaces>) => {
       const subquestions = createQuestionTree(array, level + 1);
       let id;
       do {
@@ -68,14 +79,7 @@ const SidebarCreateQuestions: React.FC<SidebarCreateQuestionsProps> = ({ handleC
           ? [Constants.LAYOUT.QUESTION_SECTION]
           : [];
 
-      const label = languages.length
-        ? [
-            {
-              '@language': languages[0],
-              '@value': array[0].label
-            }
-          ]
-        : array[0].label;
+      const label = languages.length ? [createJsonLanguageValue(languages[0], array[0].label)] : array[0].label;
 
       return {
         '@id': id,
@@ -87,13 +91,8 @@ const SidebarCreateQuestions: React.FC<SidebarCreateQuestionsProps> = ({ handleC
     });
   };
 
-  interface preparedArray {
-    label: string;
-    spaces: number;
-  }
-
-  const prepareQuestions = (): Array<FormStructureQuestion> => {
-    let result: Array<preparedArray> = multipleQuestions
+  const createQuestions = (): Array<FormStructureQuestion> | null => {
+    const parsedLabelsWithSpaces: Array<ParsedLabelsWithSpaces> = multipleQuestions
       .split(/\r?\n/)
       .filter((label) => label)
       .map((label) => ({
@@ -101,14 +100,13 @@ const SidebarCreateQuestions: React.FC<SidebarCreateQuestionsProps> = ({ handleC
         spaces: label.search(/\S/)
       }));
 
-    // @ts-ignore
-    return createQuestionTree(result, 0);
+    return createQuestionTree(parsedLabelsWithSpaces, 0);
   };
 
-  const onSave = (e: FormEvent) => {
+  const onAdd = (e: FormEvent) => {
     e.preventDefault();
 
-    const questions = prepareQuestions();
+    const questions = createQuestions();
 
     if (questions === null) {
       return;
@@ -131,7 +129,7 @@ const SidebarCreateQuestions: React.FC<SidebarCreateQuestionsProps> = ({ handleC
   }
 
   return (
-    <form className={classes.form} onSubmit={onSave}>
+    <form className={classes.form} onSubmit={onAdd}>
       <TextField
         name="create-questions"
         label="Create questions"
@@ -147,7 +145,7 @@ const SidebarCreateQuestions: React.FC<SidebarCreateQuestionsProps> = ({ handleC
       />
       <div className={classes.sidebarButtons}>
         <CustomisedButton type="submit" size={'large'} className={classes.saveButton}>
-          Save
+          Add
         </CustomisedButton>
         {!isEmptyFormStructure && (
           <CustomisedLinkButton onClick={onCancel} size={'large'}>

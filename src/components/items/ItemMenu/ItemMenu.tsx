@@ -15,7 +15,7 @@ import AddIcon from '@material-ui/icons/Add';
 import SquaredIconButton from '@styles/SquaredIconButton';
 import { CustomiseQuestionContext, OnSaveQuestionsCallback } from '@contexts/CustomiseQuestionContext';
 import useStyles from './ItemMenu.styles';
-import { NEW_QUESTION } from '../../../constants';
+import { NEW_QUESTION } from '@constants/index';
 import { EditorContext } from '@contexts/EditorContext';
 
 interface Props {
@@ -27,7 +27,7 @@ const ItemMenu: FC<Props> = ({ question }) => {
 
   const { getClonedFormStructure, setFormStructure, addNewNodes } = useContext(FormStructureContext);
   const { customiseQuestion } = useContext(CustomiseQuestionContext);
-  const { updateSFormsConfig, activeStep, setActiveStep } = useContext(EditorContext);
+  const { updateSFormsConfig, activeStep, setActiveStep, intl } = useContext(EditorContext);
 
   const [open, setOpen] = useState<boolean>(false);
   const anchorEl = useRef<HTMLDivElement | null>(null);
@@ -60,7 +60,8 @@ const ItemMenu: FC<Props> = ({ question }) => {
 
     customiseQuestion({
       customisingQuestion: { ...NEW_QUESTION },
-      onSave: (): OnSaveQuestionsCallback => (questions) => addNewNodes(questions, targetNode, clonedFormStructure),
+      onSave: (): OnSaveQuestionsCallback => (questions) =>
+        addNewNodes(questions, targetNode, clonedFormStructure, intl),
       onCancel: () => () => addButton.current?.classList.remove(classes.addButtonHighlight),
       onInit: () => addButton.current?.classList.add(classes.addButtonHighlight),
       isNewQuestion: true
@@ -99,7 +100,8 @@ const ItemMenu: FC<Props> = ({ question }) => {
     }
 
     questionParent.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(
-      questionParent.data[Constants.HAS_SUBQUESTION]
+      questionParent.data[Constants.HAS_SUBQUESTION],
+      intl
     );
 
     setFormStructure(clonedFormStructure);
@@ -127,7 +129,7 @@ const ItemMenu: FC<Props> = ({ question }) => {
 
     removePrecedingQuestion(clonedNode);
 
-    sortRelatedQuestions(nodeParent.data[Constants.HAS_SUBQUESTION]);
+    sortRelatedQuestions(nodeParent.data[Constants.HAS_SUBQUESTION], intl);
 
     setFormStructure(clonedFormStructure);
 

@@ -118,12 +118,12 @@ const EditorNew: FC<EditorNewProps> = ({ nextStep }) => {
 
     const formStructure = await buildFormStructure(form);
 
+    const languages = findFormLanguages(formStructure);
+    setLanguages(languages);
+
     setFormStructure(formStructure);
     setFormContext(form['@context']);
     setFormFile(form);
-
-    const languages = findFormLanguages(formStructure);
-    setLanguages(languages);
 
     nextStep();
   };

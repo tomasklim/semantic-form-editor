@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import useStyles from './ConfigModal.styles';
 import SettingsIcon from '@material-ui/icons/Settings';
 import { Modal, TextField } from '@material-ui/core';
@@ -8,6 +8,7 @@ import { CustomisedButton } from '@styles/CustomisedButton';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import { EditorContext } from '@contexts/EditorContext';
 import { union } from 'lodash';
+import { CustomisedOutlineButton } from '@styles/CustomisedOutlineButton';
 
 const filter = createFilterOptions<string>();
 
@@ -17,11 +18,13 @@ const ConfigModal = () => {
   const classes = useStyles();
 
   const { isEmptyFormStructure } = useContext(FormStructureContext);
-  const { languages, setLanguages } = useContext(EditorContext);
+  const { languages, setLanguages, configModalDisplayed, setConfigModalDisplayed } = useContext(EditorContext);
 
-  const [open, setOpen] = React.useState(isEmptyFormStructure);
+  const [open, setOpen] = React.useState(isEmptyFormStructure && !configModalDisplayed);
 
   const mergedLanguagesOptions = union(LANGUAGE_OPTIONS, languages);
+
+  useEffect(() => setConfigModalDisplayed(true), []);
 
   const handleOpenConfigModal = () => {
     setOpen(!open);
@@ -29,7 +32,7 @@ const ConfigModal = () => {
 
   const modalBody = (
     <div className={classes.paper}>
-      <h2>Configure your form</h2>
+      <h3>Form Configuration</h3>
       <Autocomplete
         multiple
         options={mergedLanguagesOptions}
@@ -65,14 +68,15 @@ const ConfigModal = () => {
 
   return (
     <div>
-      <SettingsIcon className={classes.config} onClick={handleOpenConfigModal} />
-      <Modal
-        className={classes.modal}
-        open={open}
-        onClose={handleOpenConfigModal}
-        aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description"
+      <CustomisedOutlineButton
+        variant="outlined"
+        className={classes.config}
+        title={'Form configuration'}
+        onClick={handleOpenConfigModal}
       >
+        <SettingsIcon />
+      </CustomisedOutlineButton>
+      <Modal className={classes.modal} open={open} onClose={handleOpenConfigModal}>
         {modalBody}
       </Modal>
     </div>

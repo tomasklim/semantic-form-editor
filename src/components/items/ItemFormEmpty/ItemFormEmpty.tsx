@@ -4,7 +4,8 @@ import { Accordion } from '@material-ui/core';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import AddIcon from '@material-ui/icons/Add';
 import { CustomiseQuestionContext, OnSaveQuestionsCallback } from '@contexts/CustomiseQuestionContext';
-import { NEW_QUESTION, NEW_WIZARD_SECTION_QUESTION } from '../../../constants';
+import { NEW_QUESTION, NEW_WIZARD_SECTION_QUESTION } from '@constants/index';
+import { EditorContext } from '@contexts/EditorContext';
 
 type ItemFormEmptyProps = {};
 
@@ -14,10 +15,11 @@ const ItemFormEmpty: FC<ItemFormEmptyProps> = ({}) => {
 
   const { getClonedFormStructure, addNewNodes, isWizardless } = useContext(FormStructureContext);
   const { customiseQuestion } = useContext(CustomiseQuestionContext);
+  const { intl } = useContext(EditorContext);
 
   useEffect(() => {
     addNewTopLevelQuestion();
-  }, []);
+  }, [isWizardless]);
 
   const addNewTopLevelQuestion = () => {
     const clonedFormStructure = getClonedFormStructure();
@@ -29,12 +31,18 @@ const ItemFormEmpty: FC<ItemFormEmptyProps> = ({}) => {
       return;
     }
 
-    itemFormEmptyContainer.current?.classList.add(classes.pageHighlight);
+    const addButton = document.getElementById('new-question-button');
+    itemFormEmptyContainer.current?.classList.add(classes.itemSectionHighlight);
+    addButton?.classList.add(classes.buttonHighlight);
 
     customiseQuestion({
-      customisingQuestion: isWizardless === false ? { ...NEW_WIZARD_SECTION_QUESTION } : { ...NEW_QUESTION },
-      onSave: (): OnSaveQuestionsCallback => (questions) => addNewNodes(questions, root, clonedFormStructure),
-      isNewQuestion: true
+      customisingQuestion: !isWizardless ? { ...NEW_WIZARD_SECTION_QUESTION } : { ...NEW_QUESTION },
+      onSave: (): OnSaveQuestionsCallback => (questions) => {
+        addNewNodes(questions, root, clonedFormStructure, intl);
+        addButton?.classList.add(classes.buttonHighlight);
+      },
+      isNewQuestion: true,
+      level: 0
     });
   };
 

@@ -74,7 +74,6 @@ const FormCustomAttributeList: React.FC<FormCustomAttributeListProps> = ({
               label={key}
               value={textFieldValue}
               multiline
-              rowsMax={6}
               onChange={handleCustomAttributeInputChange}
               endAdornment={
                 <InputAdornment position="end">

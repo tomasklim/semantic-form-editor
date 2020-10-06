@@ -1,8 +1,8 @@
-import { Constants, FormUtils, JsonLdFramingUtils, JsonLdObjectUtils } from 's-forms';
+import { Constants, FormUtils, Intl, JsonLdFramingUtils, JsonLdObjectUtils } from 's-forms';
 import * as jsonld from 'jsonld';
 import FormStructure from '@model/FormStructure';
 import FormStructureNode from '@model/FormStructureNode';
-import { FormStructureQuestion } from '@model/FormStructureQuestion';
+import { FormStructureQuestion, LanguageObject } from '@model/FormStructureQuestion';
 import { Context, JsonLdObj } from 'jsonld/jsonld-spec';
 import { ExpandedForm } from '@model/ExpandedForm';
 import { isObject } from 'lodash';
@@ -21,7 +21,9 @@ export const buildFormStructure = async (form: ExpandedForm) => {
   const formStructure = new FormStructure(rootNode);
   formStructure.addNode(rootNode.data['@id'], rootNode);
 
-  buildFormStructureResursion(rootNode, formStructure);
+  const languages = findFormLanguages(formStructure);
+
+  buildFormStructureResursion(rootNode, formStructure, getIntl(languages[0]));
 
   return formStructure;
 };
@@ -64,17 +66,17 @@ export const findFormLanguages = (formStructure: FormStructure): Array<string> =
   return [];
 };
 
-export const buildFormStructureResursion = (parentNode: FormStructureNode, tree: FormStructure) => {
+export const buildFormStructureResursion = (parentNode: FormStructureNode, tree: FormStructure, intl: Intl) => {
   let subquestions = parentNode.data[Constants.HAS_SUBQUESTION];
   if (subquestions) {
-    subquestions = sortRelatedQuestions(subquestions);
+    subquestions = sortRelatedQuestions(subquestions, intl);
 
     subquestions.forEach((question: FormStructureQuestion) => {
       const node = new FormStructureNode(parentNode, question);
 
       tree.addNode(question['@id'], node);
 
-      buildFormStructureResursion(node, tree);
+      buildFormStructureResursion(node, tree, intl);
     });
   }
 
@@ -82,16 +84,15 @@ export const buildFormStructureResursion = (parentNode: FormStructureNode, tree:
 };
 
 export const sortRelatedQuestions = (
-  subquestions: Array<FormStructureQuestion> | undefined
+  subquestions: Array<FormStructureQuestion> | undefined,
+  intl: Intl
 ): Array<FormStructureQuestion> => {
   if (!subquestions) {
     return [];
   }
 
   // sort by label
-  const localizedRelatedQuestions = JsonLdObjectUtils.orderByLocalizedLabels(subquestions, {
-    locale: 'en'
-  });
+  const localizedRelatedQuestions = JsonLdObjectUtils.orderByLocalizedLabels(subquestions, intl);
 
   // sort by property
   const topologicalSortedRelatedQuestions = JsonLdObjectUtils.orderPreservingToplogicalSort(
@@ -105,13 +106,11 @@ export const sortRelatedQuestions = (
 const unifyFormStructure = (form: ExpandedForm): ExpandedForm => {
   form['@graph'].forEach((node) => {
     if (node[Constants.HAS_SUBQUESTION] && !Array.isArray(node[Constants.HAS_SUBQUESTION])) {
-      // @ts-ignore
-      node[Constants.HAS_SUBQUESTION] = transformSubquestionsToArray(node[Constants.HAS_SUBQUESTION]);
+      node[Constants.HAS_SUBQUESTION] = transformToArray(node[Constants.HAS_SUBQUESTION]);
     }
 
     if (node[Constants.LAYOUT_CLASS] && !Array.isArray(node[Constants.LAYOUT_CLASS])) {
-      // @ts-ignore
-      node[Constants.LAYOUT_CLASS] = transformHasLayoutClassToArray(node[Constants.LAYOUT_CLASS]);
+      node[Constants.LAYOUT_CLASS] = transformToArray(node[Constants.LAYOUT_CLASS]);
     }
 
     if (
@@ -119,8 +118,7 @@ const unifyFormStructure = (form: ExpandedForm): ExpandedForm => {
       isObject(node[Constants.RDFS_LABEL]) &&
       !Array.isArray(node[Constants.RDFS_LABEL])
     ) {
-      // @ts-ignore
-      node[Constants.RDFS_LABEL] = [node[Constants.RDFS_LABEL]];
+      node[Constants.RDFS_LABEL] = transformToArray(node[Constants.RDFS_LABEL]);
     }
 
     if (
@@ -128,19 +126,14 @@ const unifyFormStructure = (form: ExpandedForm): ExpandedForm => {
       isObject(node[Constants.HELP_DESCRIPTION]) &&
       !Array.isArray(node[Constants.HELP_DESCRIPTION])
     ) {
-      // @ts-ignore
-      node[Constants.HELP_DESCRIPTION] = [node[Constants.HELP_DESCRIPTION]];
+      node[Constants.HELP_DESCRIPTION] = transformToArray(node[Constants.HELP_DESCRIPTION]);
     }
   });
 
   return form;
 };
 
-const transformSubquestionsToArray = (element: FormStructureQuestion): Array<FormStructureQuestion> => {
-  return [element];
-};
-
-const transformHasLayoutClassToArray = (element: string): Array<string> => {
+const transformToArray = (element: any): Array<any> => {
   return [element];
 };
 
@@ -181,5 +174,21 @@ export const createJsonAttValue = (value: string | boolean, dataType: string): o
 export const createJsonAttIdValue = (id: string): object => {
   return {
     '@id': id
+  };
+};
+
+export const createJsonLanguageValue = (lang: string, value: string): LanguageObject => {
+  return {
+    '@language': lang,
+    '@value': value
+  };
+};
+
+export const getIntl = (lang: string): Intl => {
+  if (!lang) {
+    return {};
+  }
+  return {
+    locale: lang
   };
 };

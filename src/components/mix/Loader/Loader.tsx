@@ -2,7 +2,7 @@ import { CircularProgress } from '@material-ui/core';
 import React from 'react';
 import useStyles from './Loader.styles';
 
-const Loader = () => {
+const Loader: React.FC = () => {
   const classes = useStyles();
 
   return <CircularProgress className={classes.loader} size={70} />;

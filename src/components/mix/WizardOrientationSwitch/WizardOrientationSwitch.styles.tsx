@@ -10,7 +10,6 @@ export default makeStyles((theme: ITheme) => ({
     fontWeight: '500',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: '1rem',
     '& > span': {
       marginBottom: '0.3rem'
     }

@@ -3,8 +3,8 @@ import useStyles from './Sidebar.styles';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { CustomiseQuestionContext } from '@contexts/CustomiseQuestionContext';
 import SidebarItemForm from '@components/sidebars/SidebarItemForm/SidebarItemForm';
-import SidebarWizardStep from '@components/sidebars/SidebarWizardStep/SidebarWizardStep';
-import { LOCAL_STORAGE_SIDEBAR_WIDTH } from '../../../constants';
+import SidebarNav from '@components/sidebars/SidebarNav/SidebarNav';
+import SidebarResizer from '@components/sidebars/SidebarResizer/SidebarResizer';
 
 // Header + Stepper
 const INITIAL_TOP = 60 + 88;
@@ -12,86 +12,35 @@ const INITIAL_TOP = 60 + 88;
 const Sidebar = () => {
   const classes = useStyles();
 
-  const sidebarContainer = useRef<HTMLDivElement | null>(null);
-  const resizer = useRef<HTMLDivElement | null>(null);
+  const sidebarContainer = useRef<HTMLDivElement>();
 
   const [drawerTop, setDrawerTop] = useState<number>(INITIAL_TOP);
 
-  const { resetCustomisationProcess } = useContext(CustomiseQuestionContext);
+  const { customiseQuestion, resetCustomisationProcess } = useContext(CustomiseQuestionContext);
 
-  useEffect(() => {
-    let x = 0;
+  const calculateSidebarTopPosition = () => {
+    const scrollTop = document.documentElement.scrollTop;
+    const questionContainer = document.getElementById('question-container');
 
-    const mouseDownHandler = (e: MouseEvent) => {
-      x = e.clientX;
+    if (scrollTop >= 0) {
+      const drawerTop = INITIAL_TOP - scrollTop;
+      setDrawerTop(drawerTop > 0 ? drawerTop : 0);
 
-      document.addEventListener('mousemove', mouseMoveHandler);
-      document.addEventListener('mouseup', mouseUpHandler);
-      document.querySelectorAll('*').forEach((el) => {
-        (el as HTMLDivElement | HTMLLIElement).style.pointerEvents = 'none';
-        (el as HTMLDivElement | HTMLLIElement).style.cursor = 'ew-resize';
-      });
-    };
-
-    const mouseMoveHandler = (e: MouseEvent) => {
-      const dx = x - e.clientX;
-      x = e.clientX;
-
-      const form: HTMLDivElement | null = document.querySelector('#form');
-
-      if (!form || !sidebarContainer?.current) {
-        return;
+      if (questionContainer) {
+        questionContainer.style.maxHeight = `calc(100vh - ${Math.max(drawerTop, 0) + 100}px)`;
       }
-
-      const width = Math.min(
-        Math.max(sidebarContainer.current.getBoundingClientRect().width + dx, 400),
-        window.innerWidth / 2
-      );
-
-      sidebarContainer.current.style.width = `${width}px`;
-
-      form.style.marginRight = `${width + 14}px`;
-
-      localStorage.setItem(LOCAL_STORAGE_SIDEBAR_WIDTH, String(width));
-    };
-
-    const mouseUpHandler = () => {
-      document.removeEventListener('mousemove', mouseMoveHandler);
-      document.removeEventListener('mouseup', mouseUpHandler);
-      document.querySelectorAll('*').forEach((el) => {
-        (el as HTMLDivElement | HTMLLIElement).style.removeProperty('pointer-events');
-        (el as HTMLDivElement | HTMLLIElement).style.removeProperty('cursor');
-      });
-    };
-
-    const localStorageSavedWidth = localStorage.getItem(LOCAL_STORAGE_SIDEBAR_WIDTH);
-    if (localStorageSavedWidth) {
-      const form: HTMLDivElement | null = document.querySelector('#form');
-
-      sidebarContainer!.current!.style.width = `${localStorageSavedWidth}px`;
-      form!.style.marginRight = `${Number(localStorageSavedWidth) + 14}px`;
     }
-
-    resizer!.current!.addEventListener('mousedown', mouseDownHandler);
-
-    return () => resizer!.current!.removeEventListener('mousedown', mouseDownHandler);
-  }, [resizer.current, sidebarContainer?.current]);
+  };
 
   // sidebar top position
   useEffect(() => {
-    const calculateSidebarTopPosition = () => {
-      const scrollTop = document.documentElement.scrollTop;
-
-      if (scrollTop >= 0) {
-        const drawerTop = INITIAL_TOP - scrollTop;
-        setDrawerTop(drawerTop > 0 ? drawerTop : 0);
-      }
-    };
-
-    document.addEventListener('scroll', () => calculateSidebarTopPosition());
     document.addEventListener('scroll', () => calculateSidebarTopPosition());
     return document.removeEventListener('scroll', () => calculateSidebarTopPosition());
   }, []);
+
+  useEffect(() => {
+    calculateSidebarTopPosition();
+  }, [customiseQuestion]);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -121,9 +70,9 @@ const Sidebar = () => {
       }}
       ref={sidebarContainer}
     >
-      <div className={classes.resizer} id="resizer" ref={resizer} />
+      <SidebarResizer sidebarContainer={sidebarContainer} />
 
-      <SidebarWizardStep />
+      <SidebarNav />
 
       <SidebarItemForm />
     </Drawer>

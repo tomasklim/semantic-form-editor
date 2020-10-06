@@ -16,12 +16,7 @@ const CustomisedSwitch = withStyles((theme: ITheme) =>
       backgroundColor: theme.palette.custom.main,
       '&$checked': {
         transform: 'translateX(12px)',
-        color: 'white',
-        '& + $track': {
-          opacity: 1,
-          backgroundColor: theme.palette.custom.main,
-          borderColor: theme.palette.custom.main
-        }
+        color: 'white'
       }
     },
     thumb: {
@@ -32,8 +27,8 @@ const CustomisedSwitch = withStyles((theme: ITheme) =>
     track: {
       border: `1px solid ${theme.palette.custom.main}`,
       borderRadius: 16 / 2,
-      opacity: 1,
-      backgroundColor: theme.palette.custom.main
+      opacity: '1 !important',
+      backgroundColor: theme.palette.custom.main + '!important'
     },
     checked: {}
   })
