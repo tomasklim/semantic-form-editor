@@ -15,4 +15,3 @@ export const NEW_WIZARD_SECTION_QUESTION = {
 };
 
 export const LOCAL_STORAGE_SIDEBAR_WIDTH = 'sidebar_width';
-export const TEXT_FIELD = 'text';

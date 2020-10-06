@@ -24,5 +24,8 @@ export default makeStyles((theme: ITheme) => ({
       alignItems: 'center',
       color: 'white'
     }
+  },
+  switchDisabled: {
+    cursor: 'not-allowed'
   }
 }));

@@ -1,11 +1,9 @@
 import FormStructureNode from '@model/FormStructureNode';
-import { Constants, FormUtils } from 's-forms';
+import { Constants, Intl } from 's-forms';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
 import FormStructure from '@model/FormStructure';
 import React from 'react';
 import { CustomiseQuestion } from '@contexts/CustomiseQuestionContext';
-import { IIntl } from '@interfaces/index';
-import { TEXT_FIELD } from '@constants/index';
 
 export const detectIsChildNode = (testedNode: FormStructureNode, exemplarNode: FormStructureNode): boolean => {
   if (!exemplarNode.parent) {
@@ -137,7 +135,7 @@ export const onItemClickHandler = (
   updateNode: Function,
   itemContainer: React.MutableRefObject<HTMLLIElement | null>,
   highlightClass: string,
-  intl: IIntl
+  intl: Intl
 ) => {
   e.stopPropagation();
 
@@ -150,62 +148,4 @@ export const onItemClickHandler = (
     onInit: () => itemContainer.current?.classList.add(highlightClass),
     onCancel: () => () => itemContainer.current?.classList.remove(highlightClass)
   });
-};
-
-// no section, no wizard-step
-const layoutTypeFields = [
-  TEXT_FIELD,
-  Constants.LAYOUT.QUESTION_TYPEAHEAD,
-  Constants.LAYOUT.TEXTAREA,
-  Constants.LAYOUT.DATE,
-  Constants.LAYOUT.TIME,
-  Constants.LAYOUT.DATETIME,
-  Constants.LAYOUT.MASKED_INPUT,
-  Constants.LAYOUT.CHECKBOX
-];
-
-export const findLayoutTypeOfQuestion = (
-  question: FormStructureQuestion,
-  isEmptyFormStructure: boolean,
-  isWizardless: boolean,
-  isNewQuestion: boolean
-) => {
-  let layoutClasses = question[Constants.LAYOUT_CLASS];
-
-  if (isEmptyFormStructure && !isWizardless) {
-    question![Constants.LAYOUT_CLASS] = [Constants.LAYOUT.WIZARD_STEP, Constants.LAYOUT.QUESTION_SECTION];
-    return Constants.LAYOUT.WIZARD_STEP;
-  } else if (isEmptyFormStructure && isWizardless && FormUtils.isWizardStep(question)) {
-    question![Constants.LAYOUT_CLASS] = [];
-    return '';
-  }
-
-  if (isNewQuestion && layoutClasses && !layoutClasses.length) {
-    return '';
-  }
-
-  if (!layoutClasses || !layoutClasses.length) {
-    return TEXT_FIELD;
-  }
-
-  if (FormUtils.isWizardStep(question)) {
-    return Constants.LAYOUT.WIZARD_STEP;
-  }
-
-  if (layoutClasses.length === 1 && layoutClasses[0] === Constants.LAYOUT.QUESTION_SECTION) {
-    return Constants.LAYOUT.QUESTION_SECTION;
-  }
-
-  const layoutType = layoutClasses.filter((layoutClass) => layoutTypeFields.includes(layoutClass));
-
-  if (!layoutType.length && FormUtils.isSection(question)) {
-    return Constants.LAYOUT.QUESTION_SECTION;
-  }
-
-  if (!layoutType.length) {
-    console.warn(`Question with id: ${question?.['@id']} does not have any defined layout type!`);
-    return TEXT_FIELD;
-  }
-
-  return layoutType[0];
 };

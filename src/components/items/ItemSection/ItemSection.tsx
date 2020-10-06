@@ -2,7 +2,7 @@ import React, { FC, useContext, useMemo, useRef, useState } from 'react';
 import useStyles, { CustomisedAccordionDetails } from './ItemSection.styles';
 import ItemHeader from '@components/items/ItemHeader/ItemHeader';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
-import { Constants } from 's-forms';
+import { Constants, Intl } from 's-forms';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import {
   detectIsChildNode,
@@ -14,7 +14,7 @@ import {
 import { CustomiseQuestionContext } from '@contexts/CustomiseQuestionContext';
 import { Accordion } from '@material-ui/core';
 import FormStructure from '@model/FormStructure';
-import { IIntl } from '@interfaces/index';
+
 import { EditorContext } from '@contexts/EditorContext';
 
 const onDragStart = (e: React.DragEvent<HTMLLIElement>) => {
@@ -80,8 +80,8 @@ const handleDragLeave = (e: React.DragEvent<HTMLLIElement>) => {
 
 const handleDrop = (
   e: React.DragEvent<HTMLLIElement>,
-  moveNodeUnderNode: (movingNodeId: string, targetNodeId: string, isWizardPosition: boolean, intl: IIntl) => void,
-  intl: IIntl
+  moveNodeUnderNode: (movingNodeId: string, targetNodeId: string, isWizardPosition: boolean, intl: Intl) => void,
+  intl: Intl
 ) => {
   if ((e.target as HTMLDivElement).classList.contains('listItemSection')) {
     e.preventDefault();

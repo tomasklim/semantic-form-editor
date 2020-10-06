@@ -68,8 +68,13 @@ const ConfigModal = () => {
 
   return (
     <div>
-      <CustomisedOutlineButton variant="outlined" className={classes.config} title={'Form configuration'}>
-        <SettingsIcon onClick={handleOpenConfigModal} />
+      <CustomisedOutlineButton
+        variant="outlined"
+        className={classes.config}
+        title={'Form configuration'}
+        onClick={handleOpenConfigModal}
+      >
+        <SettingsIcon />
       </CustomisedOutlineButton>
       <Modal className={classes.modal} open={open} onClose={handleOpenConfigModal}>
         {modalBody}

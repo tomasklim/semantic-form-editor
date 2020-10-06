@@ -1,5 +1,5 @@
 import { FC, useContext, useEffect, useState } from 'react';
-import SForms, { SOptions } from 's-forms';
+import SForms, { Intl, SOptions } from 's-forms';
 import { exportForm } from '@utils/index';
 import { JsonLdObj } from 'jsonld/jsonld-spec';
 import { FormStructureContext } from '@contexts/FormStructureContext';
@@ -9,7 +9,6 @@ import 'bootstrap/dist/css/bootstrap.css';
 import 'react-datepicker/dist/react-datepicker.css';
 import 's-forms/css/s-forms.min.css';
 import PreviewConfig from '@components/mix/PreviewConfig/PreviewConfig';
-import { IIntl } from '@interfaces/index';
 
 const fetchTypeaheadValuesMock = (_: string): Promise<object> => {
   const possibleValues = require('@data/possibleValuesMock.json');
@@ -27,7 +26,7 @@ const EditorPreview: FC<EditorPreviewProps> = ({}) => {
 
   const [form, setForm] = useState<JsonLdObj>();
   const [horizontalWizardNav, setHorizontalWizardNav] = useState<boolean>(true);
-  const [intlPreview, setIntlPreview] = useState<IIntl>(intl);
+  const [intlPreview, setIntlPreview] = useState<Intl>(intl);
 
   useEffect(() => {
     async function getExportedForm() {

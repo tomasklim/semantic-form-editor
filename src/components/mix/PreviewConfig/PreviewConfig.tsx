@@ -4,14 +4,15 @@ import useStyles from './PreviewConfig.styles';
 import WizardOrientationSwitch from '@components/mix/WizardOrientationSwitch/WizardOrientationSwitch';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import { EditorContext } from '@contexts/EditorContext';
-import { IIntl } from '@interfaces/index';
+
 import { getIntl } from '@utils/formHelpers';
+import { Intl } from 's-forms';
 
 interface PreviewConfigProps {
   horizontalWizardNav: boolean;
   setHorizontalWizardNav: Dispatch<SetStateAction<boolean>>;
-  intl: IIntl;
-  setIntl: Dispatch<SetStateAction<IIntl>>;
+  intl: Intl;
+  setIntl: Dispatch<SetStateAction<Intl>>;
 }
 
 const PreviewConfig: React.FC<PreviewConfigProps> = ({

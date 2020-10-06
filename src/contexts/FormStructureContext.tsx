@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { cloneDeep } from 'lodash';
-import { Constants, FormUtils } from 's-forms';
+import { Constants, FormUtils, Intl } from 's-forms';
 import { JsonLdObj } from 'jsonld/jsonld-spec';
 import FormStructure from '@model/FormStructure';
 import {
@@ -16,7 +16,6 @@ import {
 } from '@utils/index';
 import FormStructureNode from '@model/FormStructureNode';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
-import { IIntl } from '@interfaces/index';
 
 interface FormStructureProviderProps {
   children: React.ReactNode;
@@ -24,7 +23,7 @@ interface FormStructureProviderProps {
 
 interface FormStructureContextValues {
   addNewNodes: AddNewFormStructureNode;
-  moveNodeUnderNode: (movingNodeId: string, targetNodeId: string, isWizardPosition: boolean, intl: IIntl) => void;
+  moveNodeUnderNode: (movingNodeId: string, targetNodeId: string, isWizardPosition: boolean, intl: Intl) => void;
   formStructure: FormStructure;
   formFile: JsonLdObj | null;
   setFormFile: Dispatch<SetStateAction<FormStructure | null>>;
@@ -32,7 +31,7 @@ interface FormStructureContextValues {
   setFormContext: Dispatch<SetStateAction<JsonLdObj>>;
   getClonedFormStructure: () => FormStructure;
   formContext: JsonLdObj;
-  updateNode: (question: FormStructureQuestion, intl: IIntl) => void;
+  updateNode: (question: FormStructureQuestion, intl: Intl) => void;
   isWizardless: boolean;
   setIsWizardless: Dispatch<SetStateAction<boolean>>;
   isEmptyFormStructure: boolean;
@@ -42,7 +41,7 @@ type AddNewFormStructureNode = (
   newItemData: FormStructureQuestion | Array<FormStructureQuestion>,
   targetNode: FormStructureNode,
   clonedFormStructure: FormStructure,
-  intl: IIntl
+  intl: Intl
 ) => void;
 
 // @ts-ignore
@@ -97,7 +96,7 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
     setFormStructure(clonedFormStructure);
   };
 
-  const moveNodeUnderNode = (movingNodeId: string, targetNodeId: string, isWizardPosition: boolean, intl: IIntl) => {
+  const moveNodeUnderNode = (movingNodeId: string, targetNodeId: string, isWizardPosition: boolean, intl: Intl) => {
     const clonedFormStructure = getClonedFormStructure();
 
     const movingNode = clonedFormStructure.structure.get(movingNodeId);
@@ -144,7 +143,7 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
     highlightQuestion(movingNodeId);
   };
 
-  const updateNode = (question: FormStructureQuestion, intl: IIntl) => {
+  const updateNode = (question: FormStructureQuestion, intl: Intl) => {
     const clonedFormStructure = getClonedFormStructure();
 
     const node = clonedFormStructure.structure.get(question['@id']);

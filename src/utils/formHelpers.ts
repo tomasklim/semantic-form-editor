@@ -1,4 +1,4 @@
-import { Constants, FormUtils, JsonLdFramingUtils, JsonLdObjectUtils } from 's-forms';
+import { Constants, FormUtils, Intl, JsonLdFramingUtils, JsonLdObjectUtils } from 's-forms';
 import * as jsonld from 'jsonld';
 import FormStructure from '@model/FormStructure';
 import FormStructureNode from '@model/FormStructureNode';
@@ -6,7 +6,6 @@ import { FormStructureQuestion, LanguageObject } from '@model/FormStructureQuest
 import { Context, JsonLdObj } from 'jsonld/jsonld-spec';
 import { ExpandedForm } from '@model/ExpandedForm';
 import { isObject } from 'lodash';
-import { IIntl } from '@interfaces/index';
 
 export const buildFormStructure = async (form: ExpandedForm) => {
   const flattenedForm: JsonLdObj = await jsonld.flatten(form, {});
@@ -67,7 +66,7 @@ export const findFormLanguages = (formStructure: FormStructure): Array<string> =
   return [];
 };
 
-export const buildFormStructureResursion = (parentNode: FormStructureNode, tree: FormStructure, intl: IIntl) => {
+export const buildFormStructureResursion = (parentNode: FormStructureNode, tree: FormStructure, intl: Intl) => {
   let subquestions = parentNode.data[Constants.HAS_SUBQUESTION];
   if (subquestions) {
     subquestions = sortRelatedQuestions(subquestions, intl);
@@ -86,7 +85,7 @@ export const buildFormStructureResursion = (parentNode: FormStructureNode, tree:
 
 export const sortRelatedQuestions = (
   subquestions: Array<FormStructureQuestion> | undefined,
-  intl: IIntl
+  intl: Intl
 ): Array<FormStructureQuestion> => {
   if (!subquestions) {
     return [];
@@ -185,7 +184,7 @@ export const createJsonLanguageValue = (lang: string, value: string): LanguageOb
   };
 };
 
-export const getIntl = (lang: string): IIntl => {
+export const getIntl = (lang: string): Intl => {
   if (!lang) {
     return {};
   }

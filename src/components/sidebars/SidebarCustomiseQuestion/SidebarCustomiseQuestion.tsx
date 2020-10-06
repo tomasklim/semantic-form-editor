@@ -1,10 +1,10 @@
 import React, { FormEvent, useContext } from 'react';
-import { Checkbox, FormControl, FormControlLabel, InputLabel, Select, TextField } from '@material-ui/core';
+import { Checkbox, FormControlLabel, TextField } from '@material-ui/core';
 import { Constants, FormUtils } from 's-forms';
 import { CustomisedButton } from '@styles/CustomisedButton';
 import { CustomisedLinkButton } from '@styles/CustomisedLinkButton';
 import useStyles from './SidebarCustomiseQuestion.styles';
-import { findLayoutTypeOfQuestion, getId } from '@utils/itemHelpers';
+import { getId } from '@utils/itemHelpers';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import { CustomiseQuestionContext } from '@contexts/CustomiseQuestionContext';
 import { createJsonAttValue, getJsonAttValue } from '@utils/formHelpers';
@@ -12,27 +12,14 @@ import FormCustomAttributeList from '@components/sidebars/FormCustomAttributeLis
 import LocalisedInput from '@components/mix/LocalisedInput/LocalisedInput';
 import { EditorContext } from '@contexts/EditorContext';
 import { isString } from 'lodash';
-import { TEXT_FIELD } from '@constants/index';
 // @ts-ignore
 import JsonLdUtils from 'jsonld-utils';
-
-const layoutTypeOptions = [
-  { value: Constants.LAYOUT.WIZARD_STEP, title: 'Wizard step' },
-  { value: Constants.LAYOUT.QUESTION_SECTION, title: 'Section' },
-  { value: TEXT_FIELD, title: 'Text Input' },
-  { value: Constants.LAYOUT.QUESTION_TYPEAHEAD, title: 'Typeahead' },
-  { value: Constants.LAYOUT.TEXTAREA, title: 'Textarea' },
-  { value: Constants.LAYOUT.DATE, title: 'Date' },
-  { value: Constants.LAYOUT.TIME, title: 'Time' },
-  { value: Constants.LAYOUT.DATETIME, title: 'Datetime' },
-  { value: Constants.LAYOUT.MASKED_INPUT, title: 'Masked Input' },
-  { value: Constants.LAYOUT.CHECKBOX, title: 'Checkbox' }
-];
+import LayoutClassInput from '@components/mix/LayoutClassInput/LayoutClassInput';
 
 const SidebarCustomiseQuestion: React.FC = () => {
   const classes = useStyles();
 
-  const { formStructure, isWizardless, isEmptyFormStructure } = useContext(FormStructureContext);
+  const { formStructure, isEmptyFormStructure } = useContext(FormStructureContext);
   const { intl } = useContext(EditorContext);
 
   const {
@@ -40,31 +27,16 @@ const SidebarCustomiseQuestion: React.FC = () => {
     customisingQuestion,
     resetCustomisationProcess,
     setCustomisingQuestion,
-    isNewQuestion,
-    level
+    isNewQuestion
   } = useContext(CustomiseQuestionContext);
 
-  const handleChangeDefault = (event: React.ChangeEvent | React.ChangeEvent<{ value: unknown }>) => {
-    const target = event.target as HTMLInputElement | HTMLSelectElement;
+  const handleChangeDefault = (e: React.ChangeEvent | React.ChangeEvent<{ value: unknown }>) => {
+    const target = e.target as HTMLInputElement | HTMLSelectElement;
     // @ts-ignore
     const value = target.type === 'checkbox' ? target.checked : target.value;
     const name = target.name;
 
-    if (name === ((Constants.LAYOUT_CLASS as unknown) as string)) {
-      setCustomisingQuestion({ ...customisingQuestion!, [Constants.LAYOUT_CLASS]: [value] });
-    } else if (name === Constants.LAYOUT.COLLAPSED || name === Constants.LAYOUT.DISABLED) {
-      const layoutClass = customisingQuestion![Constants.LAYOUT_CLASS]!;
-
-      if (layoutClass.includes(name)) {
-        layoutClass.splice(layoutClass.indexOf(name), 1);
-      } else {
-        layoutClass.push(name);
-      }
-
-      setCustomisingQuestion({ ...customisingQuestion!, [Constants.LAYOUT_CLASS]: layoutClass });
-    } else {
-      setCustomisingQuestion({ ...customisingQuestion!, [name]: value });
-    }
+    setCustomisingQuestion({ ...customisingQuestion!, [name]: value });
   };
 
   const handleChangeRequiresAnswer = (e: React.ChangeEvent) => {
@@ -93,10 +65,9 @@ const SidebarCustomiseQuestion: React.FC = () => {
     });
   };
 
-  /*
-  const handleChangeLayoutClass = (e: React.ChangeEvent<any>) => {
-
-  }*/
+  const handleChangeLayoutClass = (layoutClasses: Array<string>) => {
+    setCustomisingQuestion({ ...customisingQuestion!, [Constants.LAYOUT_CLASS]: layoutClasses });
+  };
 
   const onSave = (e: FormEvent) => {
     e.preventDefault();
@@ -113,8 +84,6 @@ const SidebarCustomiseQuestion: React.FC = () => {
   if (!customisingQuestion) {
     return null;
   }
-
-  const layoutType = findLayoutTypeOfQuestion(customisingQuestion, isEmptyFormStructure, isWizardless, isNewQuestion);
 
   return (
     <form className={classes.form} onSubmit={onSave}>
@@ -134,53 +103,7 @@ const SidebarCustomiseQuestion: React.FC = () => {
         required
       />
 
-      <FormControl variant="outlined">
-        <InputLabel htmlFor="layout-type">Layout type</InputLabel>
-        <Select
-          native
-          label="Layout type"
-          value={layoutType || ''}
-          onChange={handleChangeDefault}
-          inputProps={{
-            name: Constants.LAYOUT_CLASS,
-            id: 'layout-type'
-          }}
-          disabled={
-            (!isEmptyFormStructure && FormUtils.isWizardStep(customisingQuestion)) ||
-            (isEmptyFormStructure && !isWizardless)
-          }
-        >
-          <option aria-label="None" value="" />
-          {layoutTypeOptions.map((layoutTypeOption) => {
-            if (
-              !isEmptyFormStructure &&
-              level !== 0 &&
-              !isWizardless &&
-              layoutTypeOption.value === Constants.LAYOUT.WIZARD_STEP
-            ) {
-              return null;
-            } else if (
-              isEmptyFormStructure &&
-              isWizardless &&
-              layoutTypeOption.value === Constants.LAYOUT.WIZARD_STEP
-            ) {
-              return null;
-            } else if (
-              isEmptyFormStructure &&
-              !isWizardless &&
-              layoutTypeOption.value !== Constants.LAYOUT.WIZARD_STEP
-            ) {
-              return null;
-            }
-
-            return (
-              <option key={layoutTypeOption.value} value={layoutTypeOption.value}>
-                {layoutTypeOption.title}
-              </option>
-            );
-          })}
-        </Select>
-      </FormControl>
+      <LayoutClassInput question={customisingQuestion} handleChange={handleChangeLayoutClass} />
 
       {FormUtils.isMaskedInput(customisingQuestion) && (
         <TextField
@@ -222,30 +145,6 @@ const SidebarCustomiseQuestion: React.FC = () => {
           />
         }
         label="Required"
-      />
-
-      {!FormUtils.isWizardStep(customisingQuestion) && FormUtils.isSection(customisingQuestion) && (
-        <FormControlLabel
-          control={
-            <Checkbox
-              name={Constants.LAYOUT.COLLAPSED}
-              onChange={handleChangeDefault}
-              checked={customisingQuestion[Constants.LAYOUT_CLASS]?.includes(Constants.LAYOUT.COLLAPSED)}
-            />
-          }
-          label="Collapsed"
-        />
-      )}
-
-      <FormControlLabel
-        control={
-          <Checkbox
-            name={Constants.LAYOUT.DISABLED}
-            onChange={handleChangeDefault}
-            checked={customisingQuestion[Constants.LAYOUT_CLASS]?.includes(Constants.LAYOUT.DISABLED)}
-          />
-        }
-        label="Disabled"
       />
 
       <FormCustomAttributeList

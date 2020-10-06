@@ -14,7 +14,3 @@ interface IThemeOptions extends ThemeOptions {
   palette: IPalette;
   custom: any;
 }
-
-export type IIntl = {
-  locale?: string;
-};

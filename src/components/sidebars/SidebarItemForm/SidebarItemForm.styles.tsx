@@ -62,6 +62,12 @@ export default makeStyles((theme: ITheme) => ({
     },
     '& .MuiFormControlLabel-root': {
       width: 'fit-content'
+    },
+    '& .MuiIconButton-label': {
+      color: 'white'
+    },
+    '& .MuiChip-root': {
+      height: '28px'
     }
   },
   noBorderTopRadius: {

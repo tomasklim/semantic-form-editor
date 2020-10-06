@@ -19,7 +19,7 @@ const ItemFormEmpty: FC<ItemFormEmptyProps> = ({}) => {
 
   useEffect(() => {
     addNewTopLevelQuestion();
-  }, []);
+  }, [isWizardless]);
 
   const addNewTopLevelQuestion = () => {
     const clonedFormStructure = getClonedFormStructure();
@@ -41,7 +41,8 @@ const ItemFormEmpty: FC<ItemFormEmptyProps> = ({}) => {
         addNewNodes(questions, root, clonedFormStructure, intl);
         addButton?.classList.add(classes.buttonHighlight);
       },
-      isNewQuestion: true
+      isNewQuestion: true,
+      level: 0
     });
   };
 

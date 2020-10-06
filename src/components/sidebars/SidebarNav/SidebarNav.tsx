@@ -14,7 +14,7 @@ const SidebarNav = ({}) => {
 
   const addButton = useRef<HTMLButtonElement | null>(null);
 
-  const { getClonedFormStructure, addNewNodes, isWizardless } = useContext(FormStructureContext);
+  const { getClonedFormStructure, addNewNodes, isWizardless, isEmptyFormStructure } = useContext(FormStructureContext);
   const { customiseQuestion } = useContext(CustomiseQuestionContext);
   const { intl } = useContext(EditorContext);
 
@@ -42,7 +42,7 @@ const SidebarNav = ({}) => {
     <>
       <div className={classes.sidebarNav}>
         <CustomisedOutlineButton
-          onClick={addNewTopLevelQuestion}
+          onClick={!isEmptyFormStructure ? addNewTopLevelQuestion : undefined}
           title={!isWizardless ? 'Add new wizard step' : 'Add new question'}
           ref={addButton}
           startIcon={<AddIcon />}

@@ -1,6 +1,7 @@
 import React, { Dispatch, SetStateAction, useEffect } from 'react';
-import { IIntl } from '@interfaces/index';
+
 import { getIntl } from '@utils/formHelpers';
+import { Intl } from 's-forms';
 
 interface EditorProviderProps {
   children: React.ReactNode;
@@ -13,7 +14,7 @@ interface EditorContextValues {
   updateSFormsConfig: (change: Partial<SFormsConfig>) => void;
   languages: Array<string>;
   setLanguages: Dispatch<SetStateAction<Array<string>>>;
-  intl: IIntl;
+  intl: Intl;
   configModalDisplayed: boolean;
   setConfigModalDisplayed: Dispatch<SetStateAction<boolean>>;
 }
@@ -29,7 +30,7 @@ const EditorProvider: React.FC<EditorProviderProps> = ({ children }) => {
   const [activeStep, setActiveStep] = React.useState<number>(0);
   const [SFormsConfig, setSFormsConfig] = React.useState<Partial<SFormsConfig>>({});
   const [languages, setLanguages] = React.useState<Array<string>>([]);
-  const [intl, setIntl] = React.useState<IIntl>({});
+  const [intl, setIntl] = React.useState<Intl>({});
 
   const [configModalDisplayed, setConfigModalDisplayed] = React.useState<boolean>(false);
 
