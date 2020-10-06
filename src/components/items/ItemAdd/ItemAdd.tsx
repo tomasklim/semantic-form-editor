@@ -233,7 +233,7 @@ const ItemAdd: FC<ItemAddProps> = ({
         <AddIcon fontSize={'large'} />
       </div>
     ),
-    [isWizardPosition, topLevelPosition]
+    [isWizardPosition, topLevelPosition, formStructure]
   );
 };
 

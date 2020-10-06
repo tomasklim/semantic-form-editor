@@ -23,7 +23,7 @@ export default makeStyles((theme: ITheme) => ({
     borderRadius: '4px',
     padding: theme.spacing(3, 4, 3),
     '& h3': {
-      marginBottom: theme.spacing(5)
+      marginBottom: theme.spacing(4)
     },
     '&:focus': {
       outline: 'none'
@@ -41,7 +41,7 @@ export default makeStyles((theme: ITheme) => ({
   buttons: {
     display: 'flex',
     justifyContent: 'center',
-    marginTop: theme.spacing(3.5),
+    marginTop: theme.spacing(5),
     '& button': {
       width: '200px'
     }

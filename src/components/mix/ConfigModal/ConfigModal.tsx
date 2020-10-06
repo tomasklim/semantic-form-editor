@@ -33,6 +33,7 @@ const ConfigModal = () => {
   const modalBody = (
     <div className={classes.paper}>
       <h3>Form Configuration</h3>
+      <FormTypeSwitch cloneConfigModal={handleOpenConfigModal} />
       <Autocomplete
         multiple
         options={mergedLanguagesOptions}
@@ -57,7 +58,6 @@ const ConfigModal = () => {
           />
         )}
       />
-      <FormTypeSwitch />
       <div className={classes.buttons}>
         <CustomisedButton type="submit" size={'large'} onClick={handleOpenConfigModal}>
           Continue

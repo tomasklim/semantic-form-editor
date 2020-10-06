@@ -6,6 +6,8 @@ import { FormStructureQuestion, LanguageObject } from '@model/FormStructureQuest
 import { Context, JsonLdObj } from 'jsonld/jsonld-spec';
 import { ExpandedForm } from '@model/ExpandedForm';
 import { isObject } from 'lodash';
+import { NEW_WIZARD_SECTION_QUESTION } from '@constants/index';
+import { getId } from '@utils/itemHelpers';
 
 export const buildFormStructure = async (form: ExpandedForm) => {
   const flattenedForm: JsonLdObj = await jsonld.flatten(form, {});
@@ -191,4 +193,39 @@ export const getIntl = (lang: string): Intl => {
   return {
     locale: lang
   };
+};
+
+export const transformToSimpleForm = (formStructure: FormStructure) => {
+  const rootSubquestions = formStructure.getRoot().data[Constants.HAS_SUBQUESTION];
+
+  rootSubquestions?.forEach((subquestion) => {
+    subquestion[Constants.LAYOUT_CLASS] = subquestion[Constants.LAYOUT_CLASS].filter(
+      (layout) => layout !== Constants.LAYOUT.WIZARD_STEP
+    );
+  });
+};
+
+export const transformToWizardForm = (formStructure: FormStructure) => {
+  const rootData = formStructure.getRoot().data;
+
+  const id = getId('wizard-step');
+
+  const newWizardStep = {
+    ...NEW_WIZARD_SECTION_QUESTION,
+    '@id': id,
+    [Constants.HAS_SUBQUESTION]: rootData[Constants.HAS_SUBQUESTION]
+  };
+
+  const newNode = new FormStructureNode(formStructure.getRoot(), newWizardStep);
+
+  newWizardStep[Constants.HAS_SUBQUESTION]?.forEach((subquestion) => {
+    const subquestionNode = formStructure.getNode(subquestion['@id']);
+    if (subquestionNode) {
+      subquestionNode.parent = newNode;
+    }
+  });
+
+  rootData[Constants.HAS_SUBQUESTION] = [newWizardStep];
+
+  formStructure.addNode(id, newNode);
 };

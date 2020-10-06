@@ -198,7 +198,7 @@ const ItemSection: FC<ItemSectionProps> = ({ question, position, buildFormUI }) 
         </Accordion>
       </li>
     );
-  }, [question, expanded]);
+  }, [question, expanded, formStructure]);
 };
 
 export default ItemSection;

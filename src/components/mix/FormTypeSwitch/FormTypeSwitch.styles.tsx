@@ -3,13 +3,15 @@ import { ITheme } from '@interfaces/index';
 
 // @ts-ignore
 export default makeStyles((theme: ITheme) => ({
+  container: {
+    margin: theme.spacing(3, 0, 4)
+  },
   switchContainer: {
     display: 'flex',
     justifyContent: 'center',
     color: 'white',
     fontWeight: '500',
     fontSize: '1.1rem',
-    margin: theme.spacing(3, 0, 5),
     '& > span': {
       marginBottom: '0.3rem'
     }
@@ -27,5 +29,17 @@ export default makeStyles((theme: ITheme) => ({
   },
   switchDisabled: {
     cursor: 'not-allowed'
+  },
+  transformForm: {
+    fontStyle: 'italic',
+    marginTop: '0.3rem',
+    fontSize: '0.8rem'
+  },
+  transformFormClick: {
+    textDecoration: 'underline',
+    cursor: 'pointer',
+    '&:hover': {
+      color: theme.palette.custom.main
+    }
   }
 }));
