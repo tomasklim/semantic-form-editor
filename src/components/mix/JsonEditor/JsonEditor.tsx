@@ -1,15 +1,17 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import useStyles from './JsonEditor.styles';
-import JSONEditor, { JSONEditorMode } from 'jsoneditor';
+import JSONEditor, { JSONEditorOptions } from 'jsoneditor';
 import { useSnackbar } from 'notistack';
+import { JsonLdObj } from 'jsonld/jsonld-spec';
 
 interface JsonEditorProps {
-  form: any;
-  processForm: any;
-  finishCallback: any;
+  form: JsonLdObj | null;
+  processFormCallback?: (form: JsonLdObj) => void;
+  finishFormCallback?: Dispatch<SetStateAction<Function>>;
+  editorOptions: JSONEditorOptions;
 }
 
-const JsonEditor: React.FC<JsonEditorProps> = ({ form, processForm, finishCallback }) => {
+const JsonEditor: React.FC<JsonEditorProps> = ({ form, editorOptions, processFormCallback, finishFormCallback }) => {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -17,23 +19,20 @@ const JsonEditor: React.FC<JsonEditorProps> = ({ form, processForm, finishCallba
   const jsonEditorContainer = useRef<any>(null);
 
   useEffect(() => {
-    const options = {
-      mode: 'code' as JSONEditorMode
-    };
-
     if (!jsonEditorContainer.current.firstChild) {
-      const jsonEditor = new JSONEditor(jsonEditorContainer.current, options);
+      const jsonEditor = new JSONEditor(jsonEditorContainer.current, editorOptions);
       setJsonEditorInstance(jsonEditor);
     }
   }, []);
 
   useEffect(() => {
-    jsonEditorInstance?.set(form);
+    if (form) {
+      jsonEditorInstance?.set(form);
+      if (finishFormCallback) {
+        finishFormCallback(() => processFormEditor);
+      }
+    }
   }, [form]);
-
-  useEffect(() => {
-    finishCallback(backToFormCustomise);
-  }, [finishCallback]);
 
   const isFormValid = (form: any) => {
     if (!form['@context'] || !Object.keys(form['@context']).length) {
@@ -57,7 +56,7 @@ const JsonEditor: React.FC<JsonEditorProps> = ({ form, processForm, finishCallba
     return true;
   };
 
-  const backToFormCustomise = async () => {
+  const processFormEditor = async () => {
     let form;
     try {
       form = jsonEditorInstance?.get();
@@ -72,7 +71,7 @@ const JsonEditor: React.FC<JsonEditorProps> = ({ form, processForm, finishCallba
       return;
     }
 
-    processForm();
+    processFormCallback && processFormCallback(form);
   };
 
   return <div className={classes.container} ref={jsonEditorContainer} />;

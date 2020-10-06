@@ -1,13 +1,13 @@
-import React, { ChangeEvent, FC, useContext, useEffect, useRef, useState } from 'react';
-import JSONEditor, { JSONEditorMode } from 'jsoneditor';
+import React, { ChangeEvent, FC, useContext, useEffect, useState } from 'react';
+import { JSONEditorMode } from 'jsoneditor';
 import useStyles from './EditorNew.styles';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import { buildFormStructure, findFormLanguages } from '@utils/index';
-import { useSnackbar } from 'notistack';
 import { CustomisedButton } from '@styles/CustomisedButton';
 import { CustomisedOutlineButton } from '@styles/CustomisedOutlineButton';
 import 'jsoneditor/dist/jsoneditor.css';
 import { EditorContext } from '@contexts/EditorContext';
+import JsonEditor from '@components/mix/JsonEditor/JsonEditor';
 
 interface EditorNewProps {
   nextStep: () => void;
@@ -15,28 +15,18 @@ interface EditorNewProps {
 
 const EditorNew: FC<EditorNewProps> = ({ nextStep }) => {
   const classes = useStyles();
-  const { enqueueSnackbar } = useSnackbar();
 
   const [continueButtonDisabled, setContinueButtonDisabled] = useState(true);
-  const [jsonEditorInstance, setJsonEditorInstance] = useState<JSONEditor | null>(null);
-  const jsonEditorContainer = useRef<any>(null);
+  const [finishCallback, setFinishCallback] = useState<any>(null);
+
+  const [form, setForm] = useState<any>(null);
 
   const { setFormStructure, setFormContext, formFile, setFormFile } = useContext(FormStructureContext);
   const { setLanguages } = useContext(EditorContext);
 
   useEffect(() => {
-    const options = {
-      mode: 'code' as JSONEditorMode,
-      onChange: onJsonEditorChange
-    };
-
-    if (!jsonEditorContainer.current.firstChild) {
-      const jsonEditor = new JSONEditor(jsonEditorContainer.current, options);
-      setJsonEditorInstance(jsonEditor);
-
-      if (formFile) {
-        jsonEditor.set(formFile);
-      }
+    if (formFile) {
+      setForm(formFile);
     }
   }, []);
 
@@ -46,7 +36,7 @@ const EditorNew: FC<EditorNewProps> = ({ nextStep }) => {
 
   const initialiseNewForm = () => {
     const newForm = require('@data/newForm.json');
-    jsonEditorInstance?.set(newForm);
+    setForm(newForm);
     setContinueButtonDisabled(false);
   };
 
@@ -71,51 +61,14 @@ const EditorNew: FC<EditorNewProps> = ({ nextStep }) => {
       }
 
       const result = JSON.parse(e.target.result);
-      jsonEditorInstance?.set(result);
+      setForm(result);
       setContinueButtonDisabled(false);
     };
 
     reader.readAsText(file);
   };
 
-  const isFormValid = (form: any) => {
-    if (!form['@context'] || !Object.keys(form['@context']).length) {
-      enqueueSnackbar('Your JSON-LD form is missing the necessary property @context!', {
-        variant: 'error'
-      });
-      return false;
-    }
-    if (!form['@graph'] || !Array.isArray(form['@graph']) || !form['@graph'].length) {
-      enqueueSnackbar('Your JSON-LD form is missing the necessary property @graph!', {
-        variant: 'error'
-      });
-      return false;
-    }
-    if (!Object.values(form['@graph']).some((item) => item['has-layout-class'] === 'form')) {
-      enqueueSnackbar('Your JSON-LD form is missing the necessary root question with layout-class form!', {
-        variant: 'error'
-      });
-      return false;
-    }
-    return true;
-  };
-
-  const handleContinueToNextStep = async () => {
-    let form;
-    try {
-      form = jsonEditorInstance?.get();
-    } catch (err) {
-      enqueueSnackbar('There is a syntax error in your JSON-LD form!', {
-        variant: 'error'
-      });
-      setContinueButtonDisabled(true);
-      return;
-    }
-
-    if (!isFormValid(form)) {
-      return;
-    }
-
+  const handleContinueToNextStep = async (form: any) => {
     const formStructure = await buildFormStructure(form);
 
     const languages = findFormLanguages(formStructure);
@@ -158,12 +111,20 @@ const EditorNew: FC<EditorNewProps> = ({ nextStep }) => {
         <span>or</span>
         <span className={classes.italic}>Paste your JSON-LD form below</span>
       </div>
-      <div className={classes.container} ref={jsonEditorContainer} />
+      <JsonEditor
+        form={form}
+        editorOptions={{
+          mode: 'code' as JSONEditorMode,
+          onChange: onJsonEditorChange
+        }}
+        finishFormCallback={setFinishCallback}
+        processFormCallback={handleContinueToNextStep}
+      />
       <div className={classes.continueButtons}>
         <CustomisedButton
           className={classes.buttonWidth}
           variant="contained"
-          onClick={handleContinueToNextStep}
+          onClick={finishCallback}
           size="large"
           disabled={continueButtonDisabled}
         >

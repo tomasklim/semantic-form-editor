@@ -1,11 +1,12 @@
-import React, { FC, useContext, useEffect, useRef, useState } from 'react';
+import React, { FC, useContext, useEffect, useState } from 'react';
 import useStyles from './EditorExport.styles';
-import JSONEditor, { JSONEditorMode } from 'jsoneditor';
+import { JSONEditorMode } from 'jsoneditor';
 import { exportForm } from '@utils/index';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import { CustomisedOutlineButton } from '@styles/CustomisedOutlineButton';
 import { CustomisedButton } from '@styles/CustomisedButton';
 import 'jsoneditor/dist/jsoneditor.css';
+import JsonEditor from '@components/mix/JsonEditor/JsonEditor';
 
 interface EditorExportProps {
   resetEditor: () => void;
@@ -13,9 +14,6 @@ interface EditorExportProps {
 
 const EditorExport: FC<EditorExportProps> = ({ resetEditor }) => {
   const classes = useStyles();
-
-  const jsonEditorContainer = useRef<any>(null);
-  const [jsonEditorInstance, setJsonEditorInstance] = useState<JSONEditor | null>(null);
 
   const { formContext, getClonedFormStructure } = useContext(FormStructureContext);
   const [form, setForm] = useState<any>(null);
@@ -31,21 +29,6 @@ const EditorExport: FC<EditorExportProps> = ({ resetEditor }) => {
 
     getExportedForm();
   }, []);
-
-  useEffect(() => {
-    const options = {
-      mode: 'code' as JSONEditorMode,
-      onEditable: () => false
-    };
-
-    if (!jsonEditorContainer.current.firstChild) {
-      const jsonEditor = new JSONEditor(jsonEditorContainer.current, options);
-
-      setJsonEditorInstance(jsonEditor);
-    }
-
-    jsonEditorInstance?.set(form);
-  }, [form]);
 
   const downloadExportedForm = () => {
     const element = document.createElement('a');
@@ -87,7 +70,13 @@ const EditorExport: FC<EditorExportProps> = ({ resetEditor }) => {
         <span>or</span>
         <span className={classes.italic}>Copy your JSON-LD from form below</span>
       </div>
-      <div className={classes.container} ref={jsonEditorContainer} />
+      <JsonEditor
+        form={form}
+        editorOptions={{
+          mode: 'code' as JSONEditorMode,
+          onEditable: () => false
+        }}
+      />
       <div className={classes.buildNewFormButtonContainer}>
         <CustomisedButton variant="contained" size="large" onClick={resetEditor} className={classes.buttonWidth}>
           Build a new form
