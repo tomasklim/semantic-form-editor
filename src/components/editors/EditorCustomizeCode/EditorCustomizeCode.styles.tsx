@@ -2,21 +2,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { ITheme } from '@interfaces/index';
 
 export default makeStyles((theme: ITheme) => ({
-  newFormButtons: {
-    color: '#ffffffa6',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    '& button, & span': {
-      margin: theme.spacing(0.5)
-    },
-    '& label': {
-      margin: 0
-    }
-  },
-  italic: {
-    fontStyle: 'italic'
-  },
+  jsonEditor: { marginTop: '20px' },
   continueButtons: {
     color: '#ffffffa6',
     display: 'flex',
@@ -27,10 +13,8 @@ export default makeStyles((theme: ITheme) => ({
       margin: theme.spacing(0.5)
     }
   },
-  uploadFileInput: {
-    display: 'none'
-  },
-  buttonWidth: {
-    minWidth: '250px'
+  codeButton: {
+    minWidth: 'fit-content',
+    padding: '5px 10px'
   }
 }));

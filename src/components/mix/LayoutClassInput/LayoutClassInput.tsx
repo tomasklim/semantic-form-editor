@@ -84,7 +84,7 @@ const LayoutClassInput: React.FC<LayoutClassInputProps> = ({ question, handleCha
   const getLayoutClassOptions = (): Array<LayoutTypeOption> => {
     const copiedLayoutTypeOptions = [...layoutTypeOptions];
 
-    if (level === 0 && !isWizardless) {
+    if ((level === 0 && !isWizardless) || FormUtils.isWizardStep(question)) {
       return copiedLayoutTypeOptions.filter(
         (layoutTypeOption) =>
           layoutTypeOption.type === SECONDARY ||
