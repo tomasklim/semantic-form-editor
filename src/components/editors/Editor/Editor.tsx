@@ -7,12 +7,13 @@ import { FormStructureContext } from '@contexts/FormStructureContext';
 import { CustomiseQuestionProvider } from '@contexts/CustomiseQuestionContext';
 import { EditorContext } from '@contexts/EditorContext';
 import StepperBar from '@components/mix/StepperBar/StepperBar';
+import EditorCustomizeCode from '@components/editors/EditorCustomizeCode/EditorCustomizeCode';
 
 interface EditorProps {}
 
 const Editor: FC<EditorProps> = ({}) => {
   const { setFormFile } = useContext(FormStructureContext);
-  const { activeStep, setActiveStep } = useContext(EditorContext);
+  const { activeStep, setActiveStep, codeEditEnabled } = useContext(EditorContext);
 
   const [lockedSteps, setLockedSteps] = React.useState<boolean>(true);
 
@@ -32,10 +33,12 @@ const Editor: FC<EditorProps> = ({}) => {
       case 0:
         return <EditorNew nextStep={moveToCustomiseStep} />;
       case 1:
-        return (
+        return !codeEditEnabled ? (
           <CustomiseQuestionProvider>
             <EditorCustomize />
           </CustomiseQuestionProvider>
+        ) : (
+          <EditorCustomizeCode />
         );
       case 2:
         return <EditorPreview />;

@@ -23,6 +23,10 @@ export default makeStyles((theme: ITheme) => ({
   },
   expandButton: {
     minWidth: 'fit-content',
+    padding: '5px 10px'
+  },
+  codeButton: {
+    minWidth: 'fit-content',
     padding: '5px 10px',
     marginRight: 'auto'
   }

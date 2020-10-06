@@ -4,11 +4,11 @@ import React, { useContext, useRef } from 'react';
 import { NEW_QUESTION, NEW_WIZARD_SECTION_QUESTION } from '@constants/index';
 import { CustomiseQuestionContext, OnSaveQuestionsCallback } from '@contexts/CustomiseQuestionContext';
 import { FormStructureContext } from '@contexts/FormStructureContext';
-import useStyles from './SIdebarNav.styles';
+import useStyles from './SidebarNav.styles';
 import ConfigModal from '@components/mix/ConfigModal/ConfigModal';
 import { EditorContext } from '@contexts/EditorContext';
 import SidebarDroparea from '@components/sidebars/SidebarDroparea/SidebarDroparea';
-import { ExpandLess, ExpandMore } from '@material-ui/icons';
+import { ExpandLess, ExpandMore, Code } from '@material-ui/icons';
 
 const SidebarNav = ({}) => {
   const classes = useStyles();
@@ -17,7 +17,9 @@ const SidebarNav = ({}) => {
 
   const { getClonedFormStructure, addNewNodes, isWizardless, isEmptyFormStructure } = useContext(FormStructureContext);
   const { customiseQuestion } = useContext(CustomiseQuestionContext);
-  const { intl, setSectionsExpanded, sectionsExpanded } = useContext(EditorContext);
+  const { intl, setSectionsExpanded, sectionsExpanded, codeEditEnabled, setCodeEditEnabled } = useContext(
+    EditorContext
+  );
 
   const addNewTopLevelQuestion = () => {
     const clonedFormStructure = getClonedFormStructure();
@@ -43,6 +45,10 @@ const SidebarNav = ({}) => {
     setSectionsExpanded(!sectionsExpanded);
   };
 
+  const switchToCodeEditor = () => {
+    setCodeEditEnabled(!codeEditEnabled);
+  };
+
   return (
     <>
       <div className={classes.sidebarNav}>
@@ -63,6 +69,14 @@ const SidebarNav = ({}) => {
           onClick={handleSectionsExpansion}
         >
           {sectionsExpanded ? <ExpandLess /> : <ExpandMore />}
+        </CustomisedOutlineButton>
+        <CustomisedOutlineButton
+          variant="outlined"
+          title={'Edit in code'}
+          className={classes.codeButton}
+          onClick={switchToCodeEditor}
+        >
+          <Code />
         </CustomisedOutlineButton>
         <ConfigModal />
       </div>
