@@ -7,7 +7,7 @@ import { Context, JsonLdObj } from 'jsonld/jsonld-spec';
 import { ExpandedForm } from '@model/ExpandedForm';
 import { isObject } from 'lodash';
 import { NEW_WIZARD_SECTION_QUESTION } from '@constants/index';
-import { getId } from '@utils/itemHelpers';
+import { getUniqueId } from '@utils/itemHelpers';
 
 export const buildFormStructure = async (form: ExpandedForm) => {
   const flattenedForm: JsonLdObj = await jsonld.flatten(form, {});
@@ -208,7 +208,7 @@ export const transformToSimpleForm = (formStructure: FormStructure) => {
 export const transformToWizardForm = (formStructure: FormStructure) => {
   const rootData = formStructure.getRoot().data;
 
-  const id = getId('wizard-step');
+  const id = getUniqueId('wizard-step', formStructure);
 
   const newWizardStep = {
     ...NEW_WIZARD_SECTION_QUESTION,

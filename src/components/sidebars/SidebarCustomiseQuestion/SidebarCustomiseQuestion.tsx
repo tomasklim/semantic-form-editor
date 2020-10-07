@@ -4,7 +4,7 @@ import { Constants, FormUtils } from 's-forms';
 import { CustomisedButton } from '@styles/CustomisedButton';
 import { CustomisedLinkButton } from '@styles/CustomisedLinkButton';
 import useStyles from './SidebarCustomiseQuestion.styles';
-import { getId } from '@utils/itemHelpers';
+import { getUniqueId } from '@utils/itemHelpers';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import { CustomiseQuestionContext } from '@contexts/CustomiseQuestionContext';
 import { createJsonAttValue, getJsonAttValue } from '@utils/formHelpers';
@@ -12,9 +12,9 @@ import FormCustomAttributeList from '@components/sidebars/FormCustomAttributeLis
 import LocalisedInput from '@components/mix/LocalisedInput/LocalisedInput';
 import { EditorContext } from '@contexts/EditorContext';
 import { isString } from 'lodash';
+import LayoutClassInput from '@components/mix/LayoutClassInput/LayoutClassInput';
 // @ts-ignore
 import JsonLdUtils from 'jsonld-utils';
-import LayoutClassInput from '@components/mix/LayoutClassInput/LayoutClassInput';
 
 const SidebarCustomiseQuestion: React.FC = () => {
   const classes = useStyles();
@@ -52,10 +52,9 @@ const SidebarCustomiseQuestion: React.FC = () => {
 
     let id = customisingQuestion!['@id'];
     if (isNewQuestion) {
-      do {
-        const label = (isString(value) && value) || JsonLdUtils.getLocalized(value, intl);
-        id = getId(label);
-      } while (formStructure.getNode(id));
+      const label = (isString(value) && value) || JsonLdUtils.getLocalized(value, intl);
+
+      id = getUniqueId(label, formStructure);
     }
 
     setCustomisingQuestion({

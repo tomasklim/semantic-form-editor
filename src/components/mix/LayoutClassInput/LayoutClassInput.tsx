@@ -126,7 +126,7 @@ const LayoutClassInput: React.FC<LayoutClassInputProps> = ({ question, handleCha
         disableClearable={true}
       />
     ),
-    [question[Constants.LAYOUT_CLASS]]
+    [question]
   );
 };
 

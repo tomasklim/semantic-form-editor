@@ -3,7 +3,7 @@ import { MoreVert } from '@material-ui/icons';
 import { ClickAwayListener, Grow, MenuItem, MenuList, Paper, Popper } from '@material-ui/core';
 import { Constants } from 's-forms';
 import {
-  getId,
+  getUniqueId,
   highlightQuestion,
   removeFromFormStructure,
   removeFromSubquestions,
@@ -134,7 +134,7 @@ const ItemMenu: FC<Props> = ({ question }) => {
 
     const duplicateQuestion = (duplicatedQuestion: FormStructureQuestion, nodeParent: FormStructureNode) => {
       const label = JsonLdUtils.getLocalized(question[Constants.RDFS_LABEL], intl);
-      duplicatedQuestion['@id'] = getId(label);
+      duplicatedQuestion['@id'] = getUniqueId(label, clonedFormStructure);
 
       const duplicatedQuestionNode = new FormStructureNode(nodeParent, duplicatedQuestion);
 

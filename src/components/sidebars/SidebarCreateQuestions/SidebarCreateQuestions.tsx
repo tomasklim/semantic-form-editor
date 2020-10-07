@@ -6,7 +6,7 @@ import useStyles from './SidebarCreateQuestions.styles';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import { CustomiseQuestionContext } from '@contexts/CustomiseQuestionContext';
 import { Constants } from 's-forms';
-import { getId } from '@utils/itemHelpers';
+import { getUniqueId } from '@utils/itemHelpers';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
 import { EditorContext } from '@contexts/EditorContext';
 import { createJsonLanguageValue } from '@utils/formHelpers';
@@ -66,10 +66,8 @@ const SidebarCreateQuestions: React.FC<SidebarCreateQuestionsProps> = ({ handleC
     // @ts-ignore
     return splitLabelArrays.map((array: Array<ParsedLabelsWithSpaces>) => {
       const subquestions = createQuestionTree(array, level + 1);
-      let id;
-      do {
-        id = getId(array[0].label);
-      } while (formStructure.getNode(id) || usedIds.includes(id));
+      let id = getUniqueId(array[0].label, formStructure);
+
       usedIds.push(id);
 
       const layoutClass =

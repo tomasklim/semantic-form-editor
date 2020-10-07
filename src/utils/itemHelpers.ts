@@ -106,17 +106,20 @@ export const highlightQuestion = (movingNodeId: string): void => {
   }, 3000);
 };
 
-export const getId = (title: string): string => {
-  if (!title) {
+export const getUniqueId = (label: string, formStructure: FormStructure): string => {
+  if (!label) {
     return '';
   }
 
-  title = `${title}-${Math.floor(Math.random() * 10000)}`;
+  let id;
+  do {
+    id = `${label}-${Math.floor(Math.random() * 10000)}`
+      .match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g)!
+      .map((x: string) => x.toLowerCase())
+      .join('-');
+  } while (formStructure.getNode(id));
 
-  return title
-    .match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g)!
-    .map((x: string) => x.toLowerCase())
-    .join('-');
+  return id;
 };
 
 export const createFakeChangeEvent = (name: string, value: any): any => {
