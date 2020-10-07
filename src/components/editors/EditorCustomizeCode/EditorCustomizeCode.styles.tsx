@@ -6,15 +6,25 @@ export default makeStyles((theme: ITheme) => ({
   continueButtons: {
     color: '#ffffffa6',
     display: 'flex',
-    flexDirection: 'column',
+    flexDirection: 'row',
     alignItems: 'center',
-    margin: theme.spacing(3),
+    margin: theme.spacing(3, 2, 0),
     '& span': {
       margin: theme.spacing(0.5)
     }
   },
   codeButton: {
     minWidth: 'fit-content',
-    padding: '5px 10px'
+    padding: '1px 6px',
+    marginLeft: '-46px'
+  },
+  saveButton: {
+    padding: '1px 6px',
+    marginRight: '6px',
+    marginLeft: 'auto'
+  },
+  resetButton: {
+    padding: '1px 6px',
+    marginRight: 'auto'
   }
 }));

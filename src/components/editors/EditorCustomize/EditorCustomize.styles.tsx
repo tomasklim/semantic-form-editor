@@ -4,7 +4,6 @@ import { ITheme } from '@interfaces/index';
 // @ts-ignore
 export default makeStyles((theme: ITheme) => ({
   form: {
-    marginRight: theme.custom.sidebarWidth,
     padding: theme.spacing(0, 2, 1),
     listStyle: 'none',
     margin: 0,

@@ -2,10 +2,13 @@ import React, { useContext, useEffect, useState } from 'react';
 import useStyles from './EditorCustomizeCode.styles';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import { buildFormStructure, exportForm } from '@utils/formHelpers';
-import { CustomisedOutlineButton } from '@styles/CustomisedOutlineButton';
 import JsonEditor from '@components/mix/JsonEditor/JsonEditor';
 import { JSONEditorMode } from 'jsoneditor';
 import { NavigationContext } from '@contexts/NavigationContext';
+import { VerticalSplit } from '@material-ui/icons';
+import { CustomisedLinkButton } from '@styles/CustomisedLinkButton';
+import { CustomisedOutlineButton } from '@styles/CustomisedOutlineButton';
+import { CustomisedButton } from '@styles/CustomisedButton';
 
 const EditorCustomizeCode: React.FC = () => {
   const classes = useStyles();
@@ -35,7 +38,19 @@ const EditorCustomizeCode: React.FC = () => {
     setFormStructure(formStructure);
     setFormContext(form['@context']);
     setFormFile(form);
+    setForm(form);
+  };
 
+  const onReset = () => {
+    setForm({ ...form });
+  };
+
+  const onSave = () => {
+    finishCallback();
+  };
+
+  const onSwitchToEditorView = () => {
+    finishCallback();
     setEditorCustomizeCodeView(false);
   };
 
@@ -44,6 +59,22 @@ const EditorCustomizeCode: React.FC = () => {
   // @ts-ignore
   return (
     <>
+      <div className={classes.continueButtons}>
+        <CustomisedButton className={classes.saveButton} onClick={onSave}>
+          Save changes
+        </CustomisedButton>
+        <CustomisedLinkButton className={classes.resetButton} onClick={onReset}>
+          Reset changes
+        </CustomisedLinkButton>
+        <CustomisedOutlineButton
+          variant="outlined"
+          title={'Save and edit in editor'}
+          className={classes.codeButton}
+          onClick={onSwitchToEditorView}
+        >
+          <VerticalSplit />
+        </CustomisedOutlineButton>
+      </div>
       <JsonEditor
         form={form}
         processFormCallback={processForm}
@@ -53,11 +84,6 @@ const EditorCustomizeCode: React.FC = () => {
         }}
         className={classes.jsonEditor}
       />
-      <div className={classes.continueButtons}>
-        <CustomisedOutlineButton className={classes.codeButton} variant="outlined" onClick={finishCallback}>
-          &nbsp; Save and switch to customize view
-        </CustomisedOutlineButton>
-      </div>
     </>
   );
 };
