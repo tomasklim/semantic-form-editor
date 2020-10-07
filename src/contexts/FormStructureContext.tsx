@@ -83,7 +83,7 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
 
     questions.forEach((question) => {
       const node = new FormStructureNode(targetNode, question);
-      clonedFormStructure.addNode(question['@id'], node);
+      clonedFormStructure.addNode(node);
 
       buildFormStructureResursion(node, clonedFormStructure, intl);
       moveQuestion(node, targetNode);

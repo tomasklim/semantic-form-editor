@@ -204,7 +204,7 @@ const ItemAdd: FC<ItemAddProps> = ({
 
     const node = new FormStructureNode(targetNode, newQuestion);
 
-    clonedFormStructure.addNode(newQuestion['@id'], node);
+    clonedFormStructure.addNode(node);
 
     moveQuestionToSpecificPosition(position, targetNode, node);
 

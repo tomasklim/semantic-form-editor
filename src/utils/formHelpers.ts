@@ -21,7 +21,7 @@ export const buildFormStructure = async (form: ExpandedForm) => {
   const rootNode = new FormStructureNode(null, rootData);
 
   const formStructure = new FormStructure(rootNode);
-  formStructure.addNode(rootNode.data['@id'], rootNode);
+  formStructure.addNode(rootNode);
 
   const languages = findFormLanguages(formStructure);
 
@@ -76,7 +76,7 @@ export const buildFormStructureResursion = (parentNode: FormStructureNode, tree:
     subquestions.forEach((question: FormStructureQuestion) => {
       const node = new FormStructureNode(parentNode, question);
 
-      tree.addNode(question['@id'], node);
+      tree.addNode(node);
 
       buildFormStructureResursion(node, tree, intl);
     });
@@ -227,5 +227,5 @@ export const transformToWizardForm = (formStructure: FormStructure) => {
 
   rootData[Constants.HAS_SUBQUESTION] = [newWizardStep];
 
-  formStructure.addNode(id, newNode);
+  formStructure.addNode(newNode);
 };

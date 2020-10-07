@@ -13,8 +13,8 @@ class FormStructure {
     return this.root;
   }
 
-  addNode(nodeId: string, node: FormStructureNode) {
-    this.structure.set(nodeId, node);
+  addNode(node: FormStructureNode) {
+    this.structure.set(node.data['@id'], node);
   }
 
   getNode(nodeId: string): FormStructureNode | undefined {

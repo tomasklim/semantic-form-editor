@@ -140,7 +140,7 @@ const ItemMenu: FC<Props> = ({ question }) => {
 
       const duplicatedQuestionNode = new FormStructureNode(nodeParent, duplicatedQuestion);
 
-      clonedFormStructure.addNode(duplicatedQuestion['@id'], duplicatedQuestionNode);
+      clonedFormStructure.addNode(duplicatedQuestionNode);
 
       const subquestions = duplicatedQuestion[Constants.HAS_SUBQUESTION];
 
