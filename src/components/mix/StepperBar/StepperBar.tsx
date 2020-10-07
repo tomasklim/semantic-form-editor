@@ -1,36 +1,42 @@
 import { Step } from '@material-ui/core';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import useStyles from './StepperBar.styles';
 import { CustomisedConnector, CustomisedStepIcon, CustomisedStepLabel, CustomisedStepper } from './StepperBar.styles';
 import classNames from 'classnames';
-import { EditorContext } from '@contexts/EditorContext';
+import { FormStructureContext } from '@contexts/FormStructureContext';
+import { NavigationContext } from '@contexts/NavigationContext';
 
-interface StepperBarProps {
-  lockedSteps: boolean;
-}
-
-const StepperBar: React.FC<StepperBarProps> = ({ lockedSteps }) => {
+const StepperBar: React.FC = () => {
   const classes = useStyles();
 
-  const { activeStep, setActiveStep } = useContext(EditorContext);
+  const { steps, activeStep, setActiveStep, unlockedSteps, setUnlockedSteps, unlockAllSteps } = useContext(
+    NavigationContext
+  );
+  const { isEmptyFormStructure } = useContext(FormStructureContext);
 
-  const steps = ['New / Import', 'Customize', 'Preview', 'Export'];
+  useEffect(() => {
+    if (isEmptyFormStructure) {
+      setUnlockedSteps([0, 1]);
+    } else {
+      unlockAllSteps();
+    }
+  }, [isEmptyFormStructure]);
 
   const handleStepClick = (index: number): void => {
-    if (!lockedSteps) {
+    if (unlockedSteps.includes(index)) {
       setActiveStep(index);
     }
   };
 
   return (
     <div className={classes.stepperBar}>
-      <CustomisedStepper
-        activeStep={activeStep}
-        connector={<CustomisedConnector />}
-        className={classNames({ [classes.unlockedSteps]: !lockedSteps })}
-      >
+      <CustomisedStepper activeStep={activeStep} connector={<CustomisedConnector />}>
         {steps.map((label, index) => (
-          <Step key={label} onClick={() => handleStepClick(index)}>
+          <Step
+            key={label}
+            onClick={() => handleStepClick(index)}
+            className={classNames({ [classes.unlockedStep]: unlockedSteps.includes(index) })}
+          >
             <CustomisedStepLabel StepIconComponent={CustomisedStepIcon}>{label}</CustomisedStepLabel>
           </Step>
         ))}

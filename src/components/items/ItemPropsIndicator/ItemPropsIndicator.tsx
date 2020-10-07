@@ -10,6 +10,7 @@ import { highlightQuestion } from '@utils/itemHelpers';
 import { EditorContext } from '@contexts/EditorContext';
 // @ts-ignore
 import JsonLdUtils from 'jsonld-utils';
+import { NavigationContext } from '@contexts/NavigationContext';
 
 type Props = {
   question: FormStructureQuestion;
@@ -18,7 +19,8 @@ type Props = {
 const ItemPropsIndicator: FC<Props> = ({ question }) => {
   const classes = useStyles();
 
-  const { updateSFormsConfig, activeStep, setActiveStep } = useContext(EditorContext);
+  const { updateSFormsConfig } = useContext(EditorContext);
+  const { activeStep, setActiveStep } = useContext(NavigationContext);
 
   const handlePrecedingQuestionBadgeClick = (e: React.MouseEvent) => {
     e.stopPropagation();

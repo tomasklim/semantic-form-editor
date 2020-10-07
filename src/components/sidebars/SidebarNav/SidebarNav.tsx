@@ -9,6 +9,7 @@ import ConfigModal from '@components/mix/ConfigModal/ConfigModal';
 import { EditorContext } from '@contexts/EditorContext';
 import SidebarDroparea from '@components/sidebars/SidebarDroparea/SidebarDroparea';
 import { ExpandLess, ExpandMore, Code } from '@material-ui/icons';
+import { NavigationContext } from '@contexts/NavigationContext';
 
 const SidebarNav = ({}) => {
   const classes = useStyles();
@@ -17,9 +18,9 @@ const SidebarNav = ({}) => {
 
   const { getClonedFormStructure, addNewNodes, isWizardless, isEmptyFormStructure } = useContext(FormStructureContext);
   const { customiseQuestion } = useContext(CustomiseQuestionContext);
-  const { intl, setSectionsExpanded, sectionsExpanded, codeEditEnabled, setCodeEditEnabled } = useContext(
-    EditorContext
-  );
+  const { intl, setSectionsExpanded, sectionsExpanded } = useContext(EditorContext);
+
+  const { editorCustomizeCodeView, setEditorCustomizeCodeView } = useContext(NavigationContext);
 
   const addNewTopLevelQuestion = () => {
     const clonedFormStructure = getClonedFormStructure();
@@ -46,7 +47,7 @@ const SidebarNav = ({}) => {
   };
 
   const switchToCodeEditor = () => {
-    setCodeEditEnabled(!codeEditEnabled);
+    setEditorCustomizeCodeView(!editorCustomizeCodeView);
   };
 
   return (

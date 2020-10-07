@@ -5,32 +5,37 @@ import EditorNew from '@components/editors/EditorNew/EditorNew';
 import EditorExport from '@components/editors/EditorExport/EditorExport';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import { CustomiseQuestionProvider } from '@contexts/CustomiseQuestionContext';
-import { EditorContext } from '@contexts/EditorContext';
 import StepperBar from '@components/mix/StepperBar/StepperBar';
 import EditorCustomizeCode from '@components/editors/EditorCustomizeCode/EditorCustomizeCode';
+import { NavigationContext } from '@contexts/NavigationContext';
 
 interface EditorProps {}
 
 const Editor: FC<EditorProps> = ({}) => {
   const { setFormFile } = useContext(FormStructureContext);
-  const { activeStep, setActiveStep, setCodeEditEnabled, codeEditEnabled } = useContext(EditorContext);
 
-  const [lockedSteps, setLockedSteps] = React.useState<boolean>(true);
+  const {
+    activeStep,
+    setActiveStep,
+    resetSteps,
+    unlockStep,
+    editorCustomizeCodeView,
+    setEditorCustomizeCodeView
+  } = useContext(NavigationContext);
 
   useEffect(() => {
-    if (codeEditEnabled && activeStep !== 1) {
-      setCodeEditEnabled(false);
+    if (editorCustomizeCodeView && activeStep !== 1) {
+      setEditorCustomizeCodeView(false);
     }
   }, [activeStep]);
 
   const moveToCustomiseStep = () => {
     setActiveStep(1);
-    setLockedSteps(false);
+    unlockStep(1);
   };
 
   const resetEditor = () => {
-    setLockedSteps(true);
-    setActiveStep(0);
+    resetSteps();
     setFormFile(null);
   };
 
@@ -39,7 +44,7 @@ const Editor: FC<EditorProps> = ({}) => {
       case 0:
         return <EditorNew nextStep={moveToCustomiseStep} />;
       case 1:
-        return !codeEditEnabled ? (
+        return !editorCustomizeCodeView ? (
           <CustomiseQuestionProvider>
             <EditorCustomize />
           </CustomiseQuestionProvider>
@@ -57,7 +62,7 @@ const Editor: FC<EditorProps> = ({}) => {
 
   return (
     <>
-      <StepperBar lockedSteps={lockedSteps} />
+      <StepperBar />
       {stepContent}
     </>
   );

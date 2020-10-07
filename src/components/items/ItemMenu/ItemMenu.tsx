@@ -22,6 +22,7 @@ import { cloneDeep } from 'lodash';
 // @ts-ignore
 import JsonLdUtils from 'jsonld-utils';
 import FormStructureNode from '@model/FormStructureNode';
+import { NavigationContext } from '@contexts/NavigationContext';
 
 interface Props {
   question: FormStructureQuestion;
@@ -32,7 +33,8 @@ const ItemMenu: FC<Props> = ({ question }) => {
 
   const { getClonedFormStructure, setFormStructure, addNewNodes } = useContext(FormStructureContext);
   const { customiseQuestion } = useContext(CustomiseQuestionContext);
-  const { updateSFormsConfig, activeStep, setActiveStep, intl } = useContext(EditorContext);
+  const { updateSFormsConfig, intl } = useContext(EditorContext);
+  const { activeStep, setActiveStep } = useContext(NavigationContext);
 
   const [open, setOpen] = useState<boolean>(false);
   const anchorEl = useRef<HTMLDivElement | null>(null);

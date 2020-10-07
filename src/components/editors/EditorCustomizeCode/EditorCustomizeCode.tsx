@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react';
 import useStyles from './EditorCustomizeCode.styles';
 import { FormStructureContext } from '@contexts/FormStructureContext';
-import { EditorContext } from '@contexts/EditorContext';
 import { buildFormStructure, exportForm } from '@utils/formHelpers';
 import { CustomisedOutlineButton } from '@styles/CustomisedOutlineButton';
 import JsonEditor from '@components/mix/JsonEditor/JsonEditor';
 import { JSONEditorMode } from 'jsoneditor';
+import { NavigationContext } from '@contexts/NavigationContext';
 
 const EditorCustomizeCode: React.FC = () => {
   const classes = useStyles();
@@ -13,7 +13,7 @@ const EditorCustomizeCode: React.FC = () => {
   const { setFormStructure, getClonedFormStructure, formContext, setFormContext, setFormFile } = useContext(
     FormStructureContext
   );
-  const { setCodeEditEnabled } = useContext(EditorContext);
+  const { setEditorCustomizeCodeView } = useContext(NavigationContext);
 
   const [form, setForm] = useState<any>(null);
 
@@ -36,7 +36,7 @@ const EditorCustomizeCode: React.FC = () => {
     setFormContext(form['@context']);
     setFormFile(form);
 
-    setCodeEditEnabled(false);
+    setEditorCustomizeCodeView(false);
   };
 
   const [finishCallback, setFinishCallback] = useState<any>(null);

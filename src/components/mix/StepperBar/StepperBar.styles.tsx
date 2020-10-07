@@ -7,7 +7,7 @@ export default makeStyles((theme: ITheme) => ({
     backgroundColor: theme.palette.custom[600],
     marginBottom: theme.spacing(2)
   },
-  unlockedSteps: {
+  unlockedStep: {
     '& span': {
       cursor: 'pointer',
       fontWeight: 500

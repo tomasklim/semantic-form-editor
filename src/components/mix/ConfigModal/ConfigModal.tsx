@@ -9,6 +9,7 @@ import { FormStructureContext } from '@contexts/FormStructureContext';
 import { EditorContext } from '@contexts/EditorContext';
 import { union } from 'lodash';
 import { CustomisedOutlineButton } from '@styles/CustomisedOutlineButton';
+import { NavigationContext } from '@contexts/NavigationContext';
 
 const filter = createFilterOptions<string>();
 
@@ -18,13 +19,14 @@ const ConfigModal = () => {
   const classes = useStyles();
 
   const { isEmptyFormStructure } = useContext(FormStructureContext);
-  const { languages, setLanguages, configModalDisplayed, setConfigModalDisplayed } = useContext(EditorContext);
+  const { languages, setLanguages } = useContext(EditorContext);
+  const { showFormConfigurationModal, setShowFormConfigurationModal } = useContext(NavigationContext);
 
-  const [open, setOpen] = React.useState(isEmptyFormStructure && !configModalDisplayed);
+  const [open, setOpen] = React.useState(isEmptyFormStructure && !showFormConfigurationModal);
 
   const mergedLanguagesOptions = union(LANGUAGE_OPTIONS, languages);
 
-  useEffect(() => setConfigModalDisplayed(true), []);
+  useEffect(() => setShowFormConfigurationModal(true), []);
 
   const handleOpenConfigModal = () => {
     setOpen(!open);
