@@ -19,6 +19,12 @@ export default makeStyles((theme: ITheme) => ({
     alignItems: 'center',
     '& > :not(:first-child)': {
       marginLeft: theme.spacing(1)
+    },
+    '& .MuiButton-outlined.Mui-disabled': {
+      border: '1px solid rgb(255 255 255 / 12%)'
+    },
+    '& .MuiButton-root.Mui-disabled': {
+      color: 'rgb(255 255 255 / 26%)'
     }
   },
   expandButton: {
@@ -28,12 +34,6 @@ export default makeStyles((theme: ITheme) => ({
   codeButton: {
     minWidth: 'fit-content',
     padding: '5px 10px',
-    marginRight: 'auto',
-    '&.MuiButton-outlined.Mui-disabled': {
-      border: '1px solid rgb(255 255 255 / 12%)'
-    },
-    '&.MuiButton-root.Mui-disabled': {
-      color: 'rgb(255 255 255 / 26%)'
-    }
+    marginRight: 'auto'
   }
 }));

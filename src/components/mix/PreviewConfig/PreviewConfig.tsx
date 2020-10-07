@@ -38,12 +38,14 @@ const PreviewConfig: React.FC<PreviewConfigProps> = ({
           horizontalWizardNav={horizontalWizardNav}
         />
       )}
-      {languages.length ? (
+      {languages.length > 1 ? (
         <FormControl>
           <InputLabel>Language</InputLabel>
           <Select native value={intl?.locale} onChange={(e) => setIntl(getIntl((e.target.value as unknown) as string))}>
             {languages.map((language) => (
-              <option value={language}>{language.toUpperCase()}</option>
+              <option key={language} value={language}>
+                {language.toUpperCase()}
+              </option>
             ))}
           </Select>
         </FormControl>

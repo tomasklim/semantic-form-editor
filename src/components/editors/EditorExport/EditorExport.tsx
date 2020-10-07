@@ -79,7 +79,7 @@ const EditorExport: FC<EditorExportProps> = ({ resetEditor }) => {
       />
       <div className={classes.buildNewFormButtonContainer}>
         <CustomisedButton variant="contained" size="large" onClick={resetEditor} className={classes.buttonWidth}>
-          Build a new form
+          Start over
         </CustomisedButton>
       </div>
     </>

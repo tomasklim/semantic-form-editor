@@ -67,6 +67,7 @@ const SidebarNav = ({}) => {
           title={'Expand / collapse all'}
           className={classes.expandButton}
           onClick={handleSectionsExpansion}
+          disabled={isEmptyFormStructure}
         >
           {sectionsExpanded ? <ExpandLess /> : <ExpandMore />}
         </CustomisedOutlineButton>

@@ -3,6 +3,7 @@ import { MoreVert } from '@material-ui/icons';
 import { ClickAwayListener, Grow, MenuItem, MenuList, Paper, Popper } from '@material-ui/core';
 import { Constants } from 's-forms';
 import {
+  getId,
   highlightQuestion,
   removeFromFormStructure,
   removeFromSubquestions,
@@ -17,6 +18,10 @@ import { CustomiseQuestionContext, OnSaveQuestionsCallback } from '@contexts/Cus
 import useStyles from './ItemMenu.styles';
 import { NEW_QUESTION } from '@constants/index';
 import { EditorContext } from '@contexts/EditorContext';
+import { cloneDeep } from 'lodash';
+// @ts-ignore
+import JsonLdUtils from 'jsonld-utils';
+import FormStructureNode from '@model/FormStructureNode';
 
 interface Props {
   question: FormStructureQuestion;
@@ -107,6 +112,57 @@ const ItemMenu: FC<Props> = ({ question }) => {
     setFormStructure(clonedFormStructure);
   };
 
+  const handleDuplicateQuestion = (e: React.SyntheticEvent<EventTarget>) => {
+    e.stopPropagation();
+    handleClose(e);
+
+    const clonedFormStructure = getClonedFormStructure();
+
+    const clonedQuestion = clonedFormStructure.getNode(question['@id']);
+
+    if (!clonedQuestion) {
+      console.warn('Question with id not found', question['@id']);
+      return;
+    }
+
+    const questionParent = clonedQuestion.parent;
+
+    if (!questionParent) {
+      console.warn('Parent of question with id not found', question['@id']);
+      return;
+    }
+
+    const duplicateQuestion = (duplicatedQuestion: FormStructureQuestion, nodeParent: FormStructureNode) => {
+      const label = JsonLdUtils.getLocalized(question[Constants.RDFS_LABEL], intl);
+      duplicatedQuestion['@id'] = getId(label);
+
+      const duplicatedQuestionNode = new FormStructureNode(nodeParent, duplicatedQuestion);
+
+      clonedFormStructure.addNode(duplicatedQuestion['@id'], duplicatedQuestionNode);
+
+      const subquestions = duplicatedQuestion[Constants.HAS_SUBQUESTION];
+
+      if (subquestions) {
+        subquestions.forEach((subquestion) => duplicateQuestion(subquestion, duplicatedQuestionNode));
+      }
+
+      highlightQuestion(duplicatedQuestion['@id']);
+    };
+
+    const duplicatedQuestion = cloneDeep(clonedQuestion.data);
+
+    duplicateQuestion(duplicatedQuestion, questionParent);
+
+    questionParent.data[Constants.HAS_SUBQUESTION]!.push(duplicatedQuestion);
+
+    questionParent.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(
+      questionParent.data[Constants.HAS_SUBQUESTION],
+      intl
+    );
+
+    setFormStructure(clonedFormStructure);
+  };
+
   const handleViewInPreview = (e: React.SyntheticEvent<EventTarget>) => {
     e.stopPropagation();
 
@@ -156,6 +212,7 @@ const ItemMenu: FC<Props> = ({ question }) => {
                       <MenuItem onClick={removePrecedingQuestionLink}>Remove preceding question link</MenuItem>
                     )}
                     <MenuItem onClick={handleViewInPreview}>View in preview</MenuItem>
+                    <MenuItem onClick={handleDuplicateQuestion}>Duplicate question</MenuItem>
                     <MenuItem onClick={handleDelete}>Delete question</MenuItem>
                   </MenuList>
                 </ClickAwayListener>

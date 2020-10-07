@@ -37,7 +37,7 @@ export default makeStyles((theme: ITheme) => ({
       color: 'initial',
       backgroundColor: 'initial'
     },
-    '& .MuiCheckbox-root': { color: '#ffffffcc' },
+    '& .MuiCheckbox-root': { color: '#ffffffcc', marginLeft: '-8px' },
     '& .MuiCheckbox-colorSecondary:hover, & .MuiCheckbox-colorSecondary.Mui-checked:hover, & .MuiIconButton-root:hover': {
       backgroundColor: theme.palette.custom.main + '2b'
     },
