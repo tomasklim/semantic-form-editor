@@ -3,7 +3,6 @@ import { ITheme } from '@interfaces/index';
 
 export default makeStyles((theme: ITheme) => ({
   drawer: {
-    width: `calc(${theme.custom.sidebarWidth} - 14px)`,
     position: 'fixed',
     right: 0,
     '& .MuiOutlinedInput-notchedOutline': {

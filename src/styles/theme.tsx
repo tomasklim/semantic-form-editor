@@ -29,9 +29,7 @@ const theme = createMuiTheme({
       }
     }
   },
-  custom: {
-    sidebarWidth: '425px'
-  }
+  custom: {}
 } as IThemeOptions);
 
 export default theme;

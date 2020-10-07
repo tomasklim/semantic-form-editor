@@ -27,7 +27,7 @@ const Sidebar = () => {
       setDrawerTop(drawerTop > 0 ? drawerTop : 0);
 
       if (questionContainer) {
-        questionContainer.style.maxHeight = `calc(100vh - ${Math.max(drawerTop, 0) + 100}px)`;
+        questionContainer.style.maxHeight = `calc(100vh - ${Math.max(drawerTop, 0) + 112}px)`;
       }
     }
   };
