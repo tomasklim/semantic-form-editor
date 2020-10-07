@@ -19,9 +19,9 @@ const StepperBar: React.FC = () => {
   const { isEmptyFormStructure } = useContext(FormStructureContext);
 
   useEffect(() => {
-    if (isEmptyFormStructure) {
+    if (isEmptyFormStructure && activeStep === 1) {
       setUnlockedSteps([0, 1]);
-    } else {
+    } else if (!isEmptyFormStructure) {
       unlockAllSteps();
     }
   }, [isEmptyFormStructure]);
