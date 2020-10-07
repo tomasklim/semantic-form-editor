@@ -50,7 +50,7 @@ const EditorPreview: FC<EditorPreviewProps> = ({}) => {
 
   if (intl) {
     // @ts-ignore
-    options.intl = intl;
+    options.intl = intlPreview;
   }
 
   if (!form) {
