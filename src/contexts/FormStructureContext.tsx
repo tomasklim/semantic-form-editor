@@ -4,11 +4,11 @@ import { Constants, FormUtils, Intl } from 's-forms';
 import { JsonLdObj } from 'jsonld/jsonld-spec';
 import FormStructure from '@model/FormStructure';
 import {
+  buildFormStructureResursion,
   detectIsChildNode,
   highlightQuestion,
   isSectionOrWizardStep,
   moveQuestion,
-  buildFormStructureResursion,
   removeBeingPrecedingQuestion,
   removeFromSubquestions,
   removePrecedingQuestion,

@@ -8,7 +8,7 @@ import useStyles from './SidebarNav.styles';
 import ConfigModal from '@components/mix/ConfigModal/ConfigModal';
 import { EditorContext } from '@contexts/EditorContext';
 import SidebarDroparea from '@components/sidebars/SidebarDroparea/SidebarDroparea';
-import { ExpandLess, ExpandMore, Code } from '@material-ui/icons';
+import { Code, ExpandLess, ExpandMore } from '@material-ui/icons';
 import { NavigationContext } from '@contexts/NavigationContext';
 
 const SidebarNav = ({}) => {

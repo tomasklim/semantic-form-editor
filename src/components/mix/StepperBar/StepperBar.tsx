@@ -1,7 +1,11 @@
 import { Step } from '@material-ui/core';
 import React, { useContext, useEffect } from 'react';
-import useStyles from './StepperBar.styles';
-import { CustomisedConnector, CustomisedStepIcon, CustomisedStepLabel, CustomisedStepper } from './StepperBar.styles';
+import useStyles, {
+  CustomisedConnector,
+  CustomisedStepIcon,
+  CustomisedStepLabel,
+  CustomisedStepper
+} from './StepperBar.styles';
 import classNames from 'classnames';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import { NavigationContext } from '@contexts/NavigationContext';

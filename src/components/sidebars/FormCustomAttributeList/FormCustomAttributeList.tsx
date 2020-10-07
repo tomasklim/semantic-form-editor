@@ -7,7 +7,7 @@ import FormCustomAttributeInput from '@components/sidebars/FormCustomAttributeIn
 import { Clear } from '@material-ui/icons';
 import { createJsonAttIdValue, getJsonAttValue } from '@utils/formHelpers';
 import { FormStructureContext } from '@contexts/FormStructureContext';
-import { isObject, isNull } from 'lodash';
+import { isNull, isObject } from 'lodash';
 import { createFakeChangeEvent } from '@utils/itemHelpers';
 
 interface FormCustomAttributeListProps {
