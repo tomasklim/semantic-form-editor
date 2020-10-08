@@ -35,6 +35,7 @@ interface FormStructureContextValues {
   isWizardless: boolean;
   setIsWizardless: Dispatch<SetStateAction<boolean>>;
   isEmptyFormStructure: boolean;
+  resetFormStructureContext: () => void;
 }
 
 type AddNewFormStructureNode = (
@@ -56,6 +57,16 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
   // @ts-ignore
   const [isWizardless, setIsWizardless] = useState<boolean>(true);
   const [isEmptyFormStructure, setIsEmptyFormStructure] = useState<boolean>(true);
+
+  const resetFormStructureContext = () => {
+    // @ts-ignore
+    setFormStructure(null);
+    // @ts-ignore
+    setFormContext(null);
+    setFormFile(null);
+    setIsWizardless(true);
+    setIsEmptyFormStructure(true);
+  };
 
   useEffect(() => {
     if (formStructure?.root?.data && formStructure.root.data[Constants.HAS_SUBQUESTION]) {
@@ -188,7 +199,8 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
       setFormFile,
       isWizardless,
       setIsWizardless,
-      isEmptyFormStructure
+      isEmptyFormStructure,
+      resetFormStructureContext
     }),
     [formFile, formStructure, formContext, isWizardless, isEmptyFormStructure]
   );

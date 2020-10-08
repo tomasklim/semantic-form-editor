@@ -38,7 +38,7 @@ const SidebarNav = ({}) => {
       onCancel: () => () => addButton.current?.classList.remove(classes.buttonHighlight),
       onInit: () => addButton.current?.classList.add(classes.buttonHighlight),
       isNewQuestion: true,
-      level: 0
+      nestedLevel: 0
     });
   };
 

@@ -40,6 +40,10 @@ const ItemSection: FC<ItemSectionProps> = ({ question, position, buildFormUI }) 
     setExpanded(sectionsExpanded);
   }, [sectionsExpanded]);
 
+  useEffect(() => {
+    setExpanded(true);
+  }, []);
+
   const expandItemSection = (e: React.MouseEvent) => {
     e.stopPropagation();
 
@@ -66,11 +70,7 @@ const ItemSection: FC<ItemSectionProps> = ({ question, position, buildFormUI }) 
     itemContainer.current?.classList.remove('itemHover');
   };
 
-  const handleMouseOver = (
-    e: React.MouseEvent<HTMLDivElement>,
-    itemContainer: React.MutableRefObject<HTMLLIElement | null>,
-    question: FormStructureQuestion
-  ) => {
+  const handleMouseOver = (e: React.MouseEvent<HTMLDivElement>) => {
     const correctLevel = (e.target as HTMLOListElement | HTMLDivElement).id === question['@id'];
 
     if (correctLevel && !itemContainer.current?.classList.contains('itemHover')) {
@@ -179,7 +179,7 @@ const ItemSection: FC<ItemSectionProps> = ({ question, position, buildFormUI }) 
           <CustomisedAccordionDetails
             className={classes.cardContent}
             id={question['@id']}
-            onMouseOver={(e) => handleMouseOver(e, itemContainer, question)}
+            onMouseOver={handleMouseOver}
           >
             <ol id={question['@id']}>
               {subquestions &&
@@ -196,7 +196,7 @@ const ItemSection: FC<ItemSectionProps> = ({ question, position, buildFormUI }) 
         </Accordion>
       </li>
     );
-  }, [question, expanded]);
+  }, [question, position, expanded, intl]);
 };
 
 export default ItemSection;

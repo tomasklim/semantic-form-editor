@@ -59,7 +59,7 @@ interface LayoutClassInputProps {
 
 const LayoutClassInput: React.FC<LayoutClassInputProps> = ({ question, handleChange }) => {
   const { isWizardless } = useContext(FormStructureContext);
-  const { level, isNewQuestion } = useContext(CustomiseQuestionContext);
+  const { nestedLevel, isNewQuestion } = useContext(CustomiseQuestionContext);
 
   const layoutClasses = question[Constants.LAYOUT_CLASS] ? [...question[Constants.LAYOUT_CLASS]] : [];
 
@@ -92,7 +92,7 @@ const LayoutClassInput: React.FC<LayoutClassInputProps> = ({ question, handleCha
   const getLayoutClassOptions = (): Array<LayoutTypeOption> => {
     const copiedLayoutTypeOptions = [...layoutTypeOptions];
 
-    if ((level === 0 && !isWizardless) || FormUtils.isWizardStep(question)) {
+    if ((nestedLevel === 0 && !isWizardless) || FormUtils.isWizardStep(question)) {
       return copiedLayoutTypeOptions.filter(
         (layoutTypeOption) =>
           layoutTypeOption.type === SECONDARY ||

@@ -207,24 +207,34 @@ export const transformToSimpleForm = (formStructure: FormStructure) => {
 export const transformToWizardForm = (formStructure: FormStructure) => {
   const rootData = formStructure.getRoot().data;
 
-  const id = getUniqueId('wizard-step', formStructure);
+  const allRootSubquestionsAreSections = rootData[Constants.HAS_SUBQUESTION].every((question: FormStructureQuestion) =>
+    FormUtils.isSection(question)
+  );
 
-  const newWizardStep = {
-    ...NEW_WIZARD_SECTION_QUESTION,
-    '@id': id,
-    [Constants.HAS_SUBQUESTION]: rootData[Constants.HAS_SUBQUESTION]
-  };
+  if (allRootSubquestionsAreSections) {
+    rootData[Constants.HAS_SUBQUESTION].forEach((subquestion: FormStructureQuestion) => {
+      subquestion[Constants.LAYOUT_CLASS] = [Constants.LAYOUT.WIZARD_STEP, ...subquestion[Constants.LAYOUT_CLASS]];
+    });
+  } else {
+    const id = getUniqueId('wizard-step', formStructure);
 
-  const newNode = new FormStructureNode(formStructure.getRoot(), newWizardStep);
+    const newWizardStep = {
+      ...NEW_WIZARD_SECTION_QUESTION,
+      '@id': id,
+      [Constants.HAS_SUBQUESTION]: rootData[Constants.HAS_SUBQUESTION]
+    };
 
-  newWizardStep[Constants.HAS_SUBQUESTION]?.forEach((subquestion: FormStructureQuestion) => {
-    const subquestionNode = formStructure.getNode(subquestion['@id']);
-    if (subquestionNode) {
-      subquestionNode.parent = newNode;
-    }
-  });
+    const newNode = new FormStructureNode(formStructure.getRoot(), newWizardStep);
 
-  rootData[Constants.HAS_SUBQUESTION] = [newWizardStep];
+    newWizardStep[Constants.HAS_SUBQUESTION]?.forEach((subquestion: FormStructureQuestion) => {
+      const subquestionNode = formStructure.getNode(subquestion['@id']);
+      if (subquestionNode) {
+        subquestionNode.parent = newNode;
+      }
+    });
 
-  formStructure.addNode(newNode);
+    rootData[Constants.HAS_SUBQUESTION] = [newWizardStep];
+
+    formStructure.addNode(newNode);
+  }
 };

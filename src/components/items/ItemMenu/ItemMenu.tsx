@@ -226,7 +226,7 @@ const ItemMenu: FC<Props> = ({ question }) => {
         </Popper>
       </span>
     );
-  }, [question, open]);
+  }, [question, open, intl]);
 };
 
 export default ItemMenu;

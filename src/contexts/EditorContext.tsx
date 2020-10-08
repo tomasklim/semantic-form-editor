@@ -15,6 +15,7 @@ interface EditorContextValues {
   intl: Intl;
   sectionsExpanded: boolean;
   setSectionsExpanded: Dispatch<SetStateAction<boolean>>;
+  resetEditorContext: () => void;
 }
 
 interface SFormsConfig {
@@ -34,6 +35,13 @@ const EditorProvider: React.FC<EditorProviderProps> = ({ children }) => {
     setIntl(getIntl(languages[0]));
   }, [languages]);
 
+  const resetEditorContext = () => {
+    setSFormsConfig({});
+    setLanguages([]);
+    setIntl({});
+    setSectionsExpanded(true);
+  };
+
   const updateSFormsConfig = (change: Partial<SFormsConfig>): void => {
     setSFormsConfig({ ...SFormsConfig, ...change });
   };
@@ -46,7 +54,8 @@ const EditorProvider: React.FC<EditorProviderProps> = ({ children }) => {
       setLanguages,
       intl,
       sectionsExpanded,
-      setSectionsExpanded
+      setSectionsExpanded,
+      resetEditorContext
     }),
     [SFormsConfig, languages, intl, sectionsExpanded]
   );

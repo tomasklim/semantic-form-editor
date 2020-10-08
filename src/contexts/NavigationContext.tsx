@@ -11,7 +11,7 @@ interface NavigationContextValues {
   unlockedSteps: Array<number>;
   setUnlockedSteps: Dispatch<SetStateAction<Array<number>>>;
   unlockAllSteps: () => void;
-  resetSteps: () => void;
+  resetNavigationContext: () => void;
   unlockStep: (step: number) => void;
 
   showFormConfigurationModal: boolean;
@@ -32,7 +32,7 @@ const NavigationProvider: React.FC<NavigationProviderProps> = ({ children }) => 
   const steps = ['New / Import', 'Customize', 'Preview', 'Export'];
 
   const [activeStep, setActiveStep] = React.useState<number>(0);
-  const [unlockedSteps, setUnlockedSteps] = React.useState<Array<number>>(INITIAL_UNLOCKED_STEPS);
+  const [unlockedSteps, setUnlockedSteps] = React.useState<Array<number>>([...INITIAL_UNLOCKED_STEPS]);
 
   const allStepsUnlocked = steps.map((_, index) => {
     return index;
@@ -42,9 +42,11 @@ const NavigationProvider: React.FC<NavigationProviderProps> = ({ children }) => 
     setUnlockedSteps(allStepsUnlocked);
   };
 
-  const resetSteps = () => {
+  const resetNavigationContext = () => {
     setActiveStep(0);
-    setUnlockedSteps(INITIAL_UNLOCKED_STEPS);
+    setUnlockedSteps([...INITIAL_UNLOCKED_STEPS]);
+    setShowFormConfigurationModal(false);
+    setEditorCustomizeCodeView(false);
   };
 
   const unlockStep = (index: number) => {
@@ -59,7 +61,7 @@ const NavigationProvider: React.FC<NavigationProviderProps> = ({ children }) => 
       unlockedSteps,
       setUnlockedSteps,
       unlockAllSteps,
-      resetSteps,
+      resetNavigationContext,
       unlockStep,
       showFormConfigurationModal,
       setShowFormConfigurationModal,

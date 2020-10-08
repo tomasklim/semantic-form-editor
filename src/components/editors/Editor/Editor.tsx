@@ -8,20 +8,23 @@ import { CustomiseQuestionProvider } from '@contexts/CustomiseQuestionContext';
 import StepperBar from '@components/mix/StepperBar/StepperBar';
 import EditorCustomizeCode from '@components/editors/EditorCustomizeCode/EditorCustomizeCode';
 import { NavigationContext } from '@contexts/NavigationContext';
+import { EditorContext } from '@contexts/EditorContext';
 
 interface EditorProps {}
 
 const Editor: FC<EditorProps> = ({}) => {
-  const { setFormFile } = useContext(FormStructureContext);
+  const { resetFormStructureContext } = useContext(FormStructureContext);
 
   const {
     activeStep,
     setActiveStep,
-    resetSteps,
+    resetNavigationContext,
     unlockStep,
     editorCustomizeCodeView,
     setEditorCustomizeCodeView
   } = useContext(NavigationContext);
+
+  const { setSectionsExpanded, resetEditorContext } = useContext(EditorContext);
 
   useEffect(() => {
     if (editorCustomizeCodeView && activeStep !== 1) {
@@ -29,14 +32,19 @@ const Editor: FC<EditorProps> = ({}) => {
     }
   }, [activeStep]);
 
+  useEffect(() => {
+    setSectionsExpanded(true);
+  }, [activeStep, editorCustomizeCodeView]);
+
   const moveToCustomiseStep = () => {
     setActiveStep(1);
     unlockStep(1);
   };
 
   const resetEditor = () => {
-    resetSteps();
-    setFormFile(null);
+    resetFormStructureContext();
+    resetNavigationContext();
+    resetEditorContext();
   };
 
   const getStepContent = () => {

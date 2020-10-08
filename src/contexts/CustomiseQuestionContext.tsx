@@ -13,7 +13,7 @@ interface CustomiseQuestionContextValues {
   setCustomisingQuestion: Dispatch<SetStateAction<FormStructureQuestion | null>>;
   isNewQuestion: boolean;
   isSpecificPosition: boolean;
-  level?: number | null;
+  nestedLevel?: number | null;
 }
 
 export type OnSaveQuestionCallback = (customisingQuestion: FormStructureQuestion) => void;
@@ -35,7 +35,7 @@ export type CustomiseQuestion = ({
   onInit?: () => void;
   isNewQuestion?: boolean;
   isSpecificPosition?: boolean;
-  level?: number;
+  nestedLevel?: number;
 }) => void;
 
 // @ts-ignore
@@ -53,7 +53,7 @@ const CustomiseQuestionProvider: React.FC<CustomiseItemProviderProps> = ({ child
 
   const [isNewQuestion, setIsNewQuestion] = useState<boolean>(false);
   const [isSpecificPosition, setIsSpecificPosition] = useState<boolean>(false);
-  const [level, setLevel] = useState<number | null>(null);
+  const [nestedLevel, setNestedLevel] = useState<number | null>(null);
 
   const customiseQuestion: CustomiseQuestion = ({
     customisingQuestion,
@@ -62,7 +62,7 @@ const CustomiseQuestionProvider: React.FC<CustomiseItemProviderProps> = ({ child
     onInit,
     isNewQuestion,
     isSpecificPosition,
-    level
+    nestedLevel
   }) => {
     onCancelCallback && onCancelCallback();
     onInit && onInit();
@@ -71,7 +71,7 @@ const CustomiseQuestionProvider: React.FC<CustomiseItemProviderProps> = ({ child
     isNewQuestion && setIsNewQuestion(true);
     isSpecificPosition && setIsSpecificPosition(true);
     // @ts-ignore
-    Number.isInteger(level) && setLevel(level);
+    Number.isInteger(nestedLevel) && setNestedLevel(nestedLevel);
 
     setCustomisingQuestion(customisingQuestion);
   };
@@ -85,7 +85,7 @@ const CustomiseQuestionProvider: React.FC<CustomiseItemProviderProps> = ({ child
       setOnCancelCallback(null);
       setIsNewQuestion(false);
       setIsSpecificPosition(false);
-      setLevel(null);
+      setNestedLevel(null);
     }
   };
 
@@ -98,9 +98,9 @@ const CustomiseQuestionProvider: React.FC<CustomiseItemProviderProps> = ({ child
       resetCustomisationProcess,
       isNewQuestion,
       isSpecificPosition,
-      level
+      nestedLevel
     }),
-    [customisingQuestion, onSaveCallback, isNewQuestion, isSpecificPosition, level]
+    [customisingQuestion, onSaveCallback, isNewQuestion, isSpecificPosition, nestedLevel]
   );
 
   return <CustomiseQuestionContext.Provider value={values}>{children}</CustomiseQuestionContext.Provider>;

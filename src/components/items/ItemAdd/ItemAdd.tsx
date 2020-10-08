@@ -139,7 +139,7 @@ const ItemAdd: FC<ItemAddProps> = ({
 
     if (isWizardPosition && !layoutClass.includes(Constants.LAYOUT.WIZARD_STEP)) {
       layoutClass.push(Constants.LAYOUT.WIZARD_STEP);
-    } else if (isWizardPosition && layoutClass.includes(Constants.LAYOUT.WIZARD_STEP)) {
+    } else if (!isWizardPosition && layoutClass.includes(Constants.LAYOUT.WIZARD_STEP)) {
       layoutClass.splice(layoutClass.indexOf(Constants.LAYOUT.WIZARD_STEP), 1);
     }
 
@@ -186,7 +186,7 @@ const ItemAdd: FC<ItemAddProps> = ({
       onInit: () => addContainer.current?.classList.add(classes.highlightAddLine),
       isNewQuestion: true,
       isSpecificPosition: true,
-      level: isWizardPosition ? 0 : undefined
+      nestedLevel: isWizardPosition ? 0 : undefined
     });
   };
 
@@ -228,7 +228,7 @@ const ItemAdd: FC<ItemAddProps> = ({
         <AddIcon fontSize={'large'} />
       </div>
     ),
-    [isWizardPosition, isWizardPosition, topLevelPosition]
+    [isWizardPosition, isWizardless, topLevelPosition, formStructure, intl]
   );
 };
 

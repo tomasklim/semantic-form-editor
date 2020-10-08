@@ -26,7 +26,9 @@ const SidebarCreateQuestions: React.FC<SidebarCreateQuestionsProps> = ({ handleC
   const classes = useStyles();
 
   const { isWizardless, formStructure, isEmptyFormStructure } = useContext(FormStructureContext);
-  const { onSaveCallback, customisingQuestion, resetCustomisationProcess } = useContext(CustomiseQuestionContext);
+  const { onSaveCallback, customisingQuestion, resetCustomisationProcess, nestedLevel } = useContext(
+    CustomiseQuestionContext
+  );
   const { languages } = useContext(EditorContext);
 
   const [multipleQuestions, setMultipleQuestions] = useState<string>('');
@@ -71,7 +73,7 @@ const SidebarCreateQuestions: React.FC<SidebarCreateQuestionsProps> = ({ handleC
       usedIds.push(id);
 
       const layoutClass =
-        !isWizardless && level === 0
+        !isWizardless && nestedLevel === 0
           ? [Constants.LAYOUT.WIZARD_STEP, Constants.LAYOUT.QUESTION_SECTION]
           : subquestions
           ? [Constants.LAYOUT.QUESTION_SECTION]

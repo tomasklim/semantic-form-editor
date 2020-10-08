@@ -42,7 +42,7 @@ const ItemFormEmpty: FC<ItemFormEmptyProps> = ({}) => {
         addButton?.classList.add(classes.buttonHighlight);
       },
       isNewQuestion: true,
-      level: 0
+      nestedLevel: 0
     });
   };
 
