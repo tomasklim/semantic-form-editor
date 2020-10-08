@@ -54,7 +54,7 @@ export const removeFromSubquestions = (movingNodeParent: FormStructureNode, movi
 export const removeFromFormStructure = (formStructure: FormStructure, node: FormStructureNode): void => {
   formStructure.removeNode(node.data['@id']);
 
-  node.data[Constants.HAS_SUBQUESTION]?.forEach((q) => {
+  node.data[Constants.HAS_SUBQUESTION]?.forEach((q: FormStructureQuestion) => {
     removeFromFormStructure(formStructure, formStructure.getNode(q['@id'])!);
   });
 };

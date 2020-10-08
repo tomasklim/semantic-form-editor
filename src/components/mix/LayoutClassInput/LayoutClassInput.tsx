@@ -17,6 +17,7 @@ const primaryOptions = [
   Constants.LAYOUT.TIME,
   Constants.LAYOUT.DATETIME,
   Constants.LAYOUT.TEXTAREA,
+  Constants.LAYOUT.TEXT,
   Constants.LAYOUT.CHECKBOX,
   Constants.LAYOUT.QUESTION_TYPEAHEAD,
   Constants.LAYOUT.MASKED_INPUT
@@ -29,6 +30,7 @@ const layoutTypeOptions: Array<LayoutTypeOption> = [
   { value: Constants.LAYOUT.TIME, title: 'Time', type: PRIMARY },
   { value: Constants.LAYOUT.DATETIME, title: 'Datetime', type: PRIMARY },
   { value: Constants.LAYOUT.TEXTAREA, title: 'Textarea', type: PRIMARY },
+  { value: Constants.LAYOUT.TEXT, title: 'Text', type: PRIMARY },
   { value: Constants.LAYOUT.CHECKBOX, title: 'Checkbox', type: PRIMARY },
   { value: Constants.LAYOUT.QUESTION_TYPEAHEAD, title: 'Typeahead', type: PRIMARY },
   { value: Constants.LAYOUT.MASKED_INPUT, title: 'Masked Input', type: PRIMARY },
@@ -36,7 +38,12 @@ const layoutTypeOptions: Array<LayoutTypeOption> = [
   { value: Constants.LAYOUT.COLLAPSED, title: 'Collapsed', type: SECONDARY },
   { value: Constants.LAYOUT.DISABLED, title: 'Disabled', type: SECONDARY },
   { value: Constants.LAYOUT.EMPHASISED, title: 'Emphasised', type: SECONDARY },
-  { value: Constants.LAYOUT.HIDDEN, title: 'Hidden', type: SECONDARY }
+  { value: Constants.LAYOUT.HIDDEN, title: 'Hidden', type: SECONDARY },
+  { value: Constants.LAYOUT.CATEGORY[0], title: 'Category 1', type: SECONDARY },
+  { value: Constants.LAYOUT.CATEGORY[1], title: 'Category 2', type: SECONDARY },
+  { value: Constants.LAYOUT.CATEGORY[2], title: 'Category 3', type: SECONDARY },
+  { value: Constants.LAYOUT.CATEGORY[3], title: 'Category 4', type: SECONDARY },
+  { value: Constants.LAYOUT.CATEGORY[4], title: 'Category 5', type: SECONDARY }
 ];
 
 type LayoutTypeOption = {
@@ -73,11 +80,12 @@ const LayoutClassInput: React.FC<LayoutClassInputProps> = ({ question, handleCha
 
   const disabledOptions = (option: LayoutTypeOption) => {
     return !!(
-      primaryOptions.includes(option.value) &&
-      intersection(
-        Object.values(inputValues).map((inputValue) => inputValue.value),
-        primaryOptions
-      ).length
+      (primaryOptions.includes(option.value) &&
+        intersection(
+          Object.values(inputValues).map((inputValue) => inputValue.value),
+          primaryOptions
+        ).length) ||
+      (FormUtils.getCategory(question) && Constants.LAYOUT.CATEGORY.includes(option.value))
     );
   };
 
@@ -126,7 +134,7 @@ const LayoutClassInput: React.FC<LayoutClassInputProps> = ({ question, handleCha
         disableClearable={true}
       />
     ),
-    [question]
+    [question, layoutClassOptions]
   );
 };
 

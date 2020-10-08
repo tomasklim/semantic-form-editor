@@ -64,7 +64,9 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
       if (!rootSubquestions?.length) {
         setIsEmptyFormStructure(true);
       } else {
-        const isWizardless = rootSubquestions.every((question) => !FormUtils.isWizardStep(question));
+        const isWizardless = rootSubquestions.every(
+          (question: FormStructureQuestion) => !FormUtils.isWizardStep(question)
+        );
 
         setIsWizardless(isWizardless);
         setIsEmptyFormStructure(false);

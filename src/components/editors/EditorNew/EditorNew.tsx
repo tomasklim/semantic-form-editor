@@ -81,7 +81,6 @@ const EditorNew: FC<EditorNewProps> = ({ nextStep }) => {
     nextStep();
   };
 
-  // @ts-ignore
   return (
     <>
       <div className={classes.newFormButtons}>

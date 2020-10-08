@@ -60,7 +60,9 @@ const EditorCustomize: React.FC = () => {
         {item}
         {subquestions && (
           <ol id={question['@id']} className={classes.olPaddingLeft}>
-            {subquestions.map((subquestion, index) => buildFormUI(subquestion, index, question))}
+            {subquestions.map((subquestion: FormStructureQuestion, index: number) =>
+              buildFormUI(subquestion, index, question)
+            )}
           </ol>
         )}
         <ItemAdd parentQuestionId={parentQuestion['@id']} position={position + 1} />
@@ -75,7 +77,9 @@ const EditorCustomize: React.FC = () => {
       <ol className={classes.form} id="form">
         {!rootSubquestions?.length && <ItemFormEmpty />}
 
-        {rootSubquestions?.map((subquestion, index) => buildFormUI(subquestion, index, formStructure.root.data))}
+        {rootSubquestions?.map((subquestion: FormStructureQuestion, index: number) =>
+          buildFormUI(subquestion, index, formStructure.root.data)
+        )}
       </ol>
 
       <Sidebar />

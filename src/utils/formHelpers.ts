@@ -139,12 +139,11 @@ const transformToArray = (element: any): Array<any> => {
   return [element];
 };
 
-export const getJsonAttValue = (question: FormStructureQuestion, attribute: string | symbol, by?: string) => {
+export const getJsonAttValue = (question: FormStructureQuestion, attribute: string, by?: string) => {
   if (!question) {
     return null;
   }
 
-  // @ts-ignore
   const att = question[attribute];
 
   if (!att) {
@@ -198,9 +197,9 @@ export const getIntl = (lang: string): Intl => {
 export const transformToSimpleForm = (formStructure: FormStructure) => {
   const rootSubquestions = formStructure.getRoot().data[Constants.HAS_SUBQUESTION];
 
-  rootSubquestions?.forEach((subquestion) => {
+  rootSubquestions?.forEach((subquestion: FormStructureQuestion) => {
     subquestion[Constants.LAYOUT_CLASS] = subquestion[Constants.LAYOUT_CLASS].filter(
-      (layout) => layout !== Constants.LAYOUT.WIZARD_STEP
+      (layout: string) => layout !== Constants.LAYOUT.WIZARD_STEP
     );
   });
 };
@@ -218,7 +217,7 @@ export const transformToWizardForm = (formStructure: FormStructure) => {
 
   const newNode = new FormStructureNode(formStructure.getRoot(), newWizardStep);
 
-  newWizardStep[Constants.HAS_SUBQUESTION]?.forEach((subquestion) => {
+  newWizardStep[Constants.HAS_SUBQUESTION]?.forEach((subquestion: FormStructureQuestion) => {
     const subquestionNode = formStructure.getNode(subquestion['@id']);
     if (subquestionNode) {
       subquestionNode.parent = newNode;

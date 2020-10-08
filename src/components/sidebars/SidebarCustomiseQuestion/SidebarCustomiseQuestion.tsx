@@ -44,7 +44,7 @@ const SidebarCustomiseQuestion: React.FC = () => {
 
     const attribute = checked ? createJsonAttValue(true, Constants.XSD.BOOLEAN) : null;
 
-    setCustomisingQuestion({ ...customisingQuestion!, [(Constants.REQUIRES_ANSWER as unknown) as string]: attribute });
+    setCustomisingQuestion({ ...customisingQuestion!, [Constants.REQUIRES_ANSWER]: attribute });
   };
 
   const handleChangeLabel = (e: React.ChangeEvent<any>) => {
@@ -95,7 +95,7 @@ const SidebarCustomiseQuestion: React.FC = () => {
       />
 
       <LocalisedInput
-        type={(Constants.RDFS_LABEL as unknown) as string}
+        type={Constants.RDFS_LABEL}
         question={customisingQuestion}
         handleChange={handleChangeLabel}
         autoFocus
@@ -106,7 +106,7 @@ const SidebarCustomiseQuestion: React.FC = () => {
 
       {FormUtils.isMaskedInput(customisingQuestion) && (
         <TextField
-          name={(Constants.INPUT_MASK as unknown) as string}
+          name={Constants.INPUT_MASK}
           label="Input mask"
           variant="outlined"
           value={customisingQuestion[Constants.INPUT_MASK] || ''}
@@ -118,18 +118,17 @@ const SidebarCustomiseQuestion: React.FC = () => {
 
       {FormUtils.isTypeahead(customisingQuestion) && (
         <TextField
-          name={(Constants.HAS_OPTIONS_QUERY as unknown) as string}
+          name={Constants.HAS_OPTIONS_QUERY}
           label="Options query"
           variant="outlined"
           value={customisingQuestion[Constants.HAS_OPTIONS_QUERY] || ''}
           onChange={handleChangeDefault}
           autoComplete={'off'}
-          required
         />
       )}
 
       <LocalisedInput
-        type={(Constants.HELP_DESCRIPTION as unknown) as string}
+        type={Constants.HELP_DESCRIPTION}
         question={customisingQuestion}
         handleChange={handleChangeDefault}
         multiline
@@ -138,7 +137,7 @@ const SidebarCustomiseQuestion: React.FC = () => {
       <FormControlLabel
         control={
           <Checkbox
-            name={(Constants.REQUIRES_ANSWER as unknown) as string}
+            name={Constants.REQUIRES_ANSWER}
             onChange={handleChangeRequiresAnswer}
             checked={getJsonAttValue(customisingQuestion, Constants.REQUIRES_ANSWER) || false}
           />

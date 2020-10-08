@@ -6,7 +6,7 @@ export default makeStyles((theme: ITheme) => ({
   questionContainer: {
     backgroundColor: theme.palette.custom[800],
     padding: theme.spacing(1.75, 2),
-    maxHeight: 'calc(100vh - 248px)', // header + stepper-bar + space + footer
+    maxHeight: 'calc(100vh - 188px)', // stepper-bar + space + footer
     overflow: 'auto',
     borderRadius: '4px',
     '& form > *': {

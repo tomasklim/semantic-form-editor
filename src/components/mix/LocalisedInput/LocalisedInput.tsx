@@ -61,10 +61,10 @@ const LocalisedInput: React.FC<LocalisedInputProps> = ({
 
   let label: string;
   switch (type) {
-    case (Constants.RDFS_LABEL as unknown) as string:
+    case Constants.RDFS_LABEL:
       label = 'Label';
       break;
-    case (Constants.HELP_DESCRIPTION as unknown) as string:
+    case Constants.HELP_DESCRIPTION:
       label = 'Help description';
       break;
     default:
@@ -82,7 +82,6 @@ const LocalisedInput: React.FC<LocalisedInputProps> = ({
         autoComplete={'off'}
         autoFocus={autoFocus}
         required={required}
-        // @ts-ignore
         multiline={multiline}
       />
     );

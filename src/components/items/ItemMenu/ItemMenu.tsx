@@ -145,7 +145,9 @@ const ItemMenu: FC<Props> = ({ question }) => {
       const subquestions = duplicatedQuestion[Constants.HAS_SUBQUESTION];
 
       if (subquestions) {
-        subquestions.forEach((subquestion) => duplicateQuestion(subquestion, duplicatedQuestionNode));
+        subquestions.forEach((subquestion: FormStructureQuestion) =>
+          duplicateQuestion(subquestion, duplicatedQuestionNode)
+        );
       }
 
       highlightQuestion(duplicatedQuestion['@id']);

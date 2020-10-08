@@ -49,7 +49,6 @@ const EditorPreview: FC<EditorPreviewProps> = ({}) => {
   };
 
   if (intl) {
-    // @ts-ignore
     options.intl = intlPreview;
   }
 

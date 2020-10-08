@@ -27,6 +27,9 @@
     "has-possible-values-query": {
       "@id": "http://onto.fel.cvut.cz/ontologies/form/has-possible-values-query"
     },
+    "has-possible-value": {
+      "@id": "http://onto.fel.cvut.cz/ontologies/form/has-possible-value"
+    },
     "has-layout-class": {
       "@id": "http://onto.fel.cvut.cz/ontologies/form-layout/has-layout-class"
     },
@@ -138,7 +141,16 @@
       "has-layout-class": [
         "type-ahead"
       ],
-      "has-possible-values-query": "http://localhost:18080/rdf4j-server/repositories/fss-study-dev-formgen?default-graph-uri=http://vfn.cz/ontologies/study-model/data&query=PREFIX%20rdfs%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0APREFIX%20form%3A%20%3Chttp%3A%2F%2Fonto.fel.cvut.cz%2Fontologies%2Fform%2F%3E%20%0APREFIX%20stm%3A%20%3Chttp%3A%2F%2Fvfn.cz%2Fontologies%2Fstudy-model%2F%3E%20%0A%0ACONSTRUCT%20%7B%0A%20%20%20%20%20%3Fvalue%20rdfs%3Alabel%20%3Flabel%20%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20rdfs%3Acomment%20%3Fexplanation%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20form%3Ahas-preceding-value%20%3FvaluePreceding%20.%20%0A%7D%0AWHERE%20%7B%0A%20%20%20%20%20%20%3Fvalue%20a%20stm%3Asurgery-types%20.%0A%20%20%20%20%20%20%3Fvalue%20rdfs%3Alabel%20%3Flabel%20%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20rdfs%3Acomment%20%3Fexplanation%20.%0A%20%20%20%20%20%20OPTIONAL%20%7B%20%3Fvalue%20form%3Ahas-preceding-value%20%3FvaluePreceding%20.%20%7D%0A%7D",
+      "has-possible-value": [
+        {
+          "@id": "http://profession.com/chef",
+          "label": "Chef"
+        },
+        {
+          "@id": "http://profession.com/developer",
+          "label": "Developer"
+        }
+      ],
       "has-question-origin": "@id",
       "is-relevant-if": "_:b1",
       "label": "Type of surgery"

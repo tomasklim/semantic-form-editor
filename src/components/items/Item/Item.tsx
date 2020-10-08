@@ -8,30 +8,6 @@ import { CustomiseQuestionContext } from '@contexts/CustomiseQuestionContext';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import { EditorContext } from '@contexts/EditorContext';
 
-const handleMouseEnter = (itemContainer: React.MutableRefObject<HTMLLIElement | null>) => {
-  itemContainer.current?.classList.add('itemHover');
-};
-
-const handleMouseLeave = (itemContainer: React.MutableRefObject<HTMLLIElement | null>) => {
-  itemContainer.current?.classList.remove('itemHover');
-};
-
-const onDragStart = (e: React.DragEvent<HTMLLIElement>, isWizardless: boolean) => {
-  if (isWizardless) {
-    document.getElementById('question-drop-area')!.style.display = 'block';
-  }
-
-  handleDragStart(e);
-};
-
-const onDragEnd = (e: React.DragEvent<HTMLLIElement>, isWizardless: boolean) => {
-  if (isWizardless) {
-    document.getElementById('question-drop-area')!.style.display = 'none';
-  }
-
-  handleDragEnd(e);
-};
-
 type ItemProps = {
   question: FormStructureQuestion;
   position: number;
@@ -45,15 +21,39 @@ const Item: FC<ItemProps> = ({ question, position }) => {
   const { updateNode, isWizardless } = useContext(FormStructureContext);
   const { intl } = useContext(EditorContext);
 
+  const handleMouseEnter = () => {
+    itemContainer.current?.classList.add('itemHover');
+  };
+
+  const handleMouseLeave = () => {
+    itemContainer.current?.classList.remove('itemHover');
+  };
+
+  const onDragStart = (e: React.DragEvent<HTMLLIElement>) => {
+    if (isWizardless) {
+      document.getElementById('question-drop-area')!.style.display = 'block';
+    }
+
+    handleDragStart(e);
+  };
+
+  const onDragEnd = (e: React.DragEvent<HTMLLIElement>) => {
+    if (isWizardless) {
+      document.getElementById('question-drop-area')!.style.display = 'none';
+    }
+
+    handleDragEnd(e);
+  };
+
   return useMemo(
     () => (
       <li
         id={question['@id']}
         ref={itemContainer}
-        onDragStart={(e) => onDragStart(e, isWizardless)}
-        onDragEnd={(e) => onDragEnd(e, isWizardless)}
-        onMouseEnter={() => handleMouseEnter(itemContainer)}
-        onMouseLeave={() => handleMouseLeave(itemContainer)}
+        onDragStart={onDragStart}
+        onDragEnd={onDragEnd}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
         onClick={(e) =>
           onItemClickHandler(e, customiseQuestion, question, updateNode, itemContainer, classes.listItemHighlight, intl)
         }
@@ -65,7 +65,7 @@ const Item: FC<ItemProps> = ({ question, position }) => {
         </CustomisedCard>
       </li>
     ),
-    [question, position]
+    [question, position, intl]
   );
 };
 

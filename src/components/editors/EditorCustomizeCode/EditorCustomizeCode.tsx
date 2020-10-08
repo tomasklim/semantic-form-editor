@@ -56,7 +56,6 @@ const EditorCustomizeCode: React.FC = () => {
 
   const [finishCallback, setFinishCallback] = useState<any>(null);
 
-  // @ts-ignore
   return (
     <>
       <div className={classes.continueButtons}>

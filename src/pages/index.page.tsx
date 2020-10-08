@@ -28,7 +28,7 @@ const EditorProvider = dynamic(
 );
 
 const IndexPage: React.FC = () => (
-  <Layout title="Home">
+  <Layout title="Semantic Form Editor">
     <FormStructureProvider>
       <EditorProvider>
         <NavigationProvider>

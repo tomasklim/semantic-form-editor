@@ -2,7 +2,7 @@ import React, { FC, useContext, useEffect, useMemo, useRef, useState } from 'rea
 import useStyles, { CustomisedAccordionDetails } from './ItemSection.styles';
 import ItemHeader from '@components/items/ItemHeader/ItemHeader';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
-import { Constants, Intl } from 's-forms';
+import { Constants } from 's-forms';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import {
   detectIsChildNode,
@@ -13,105 +13,8 @@ import {
 } from '@utils/index';
 import { CustomiseQuestionContext } from '@contexts/CustomiseQuestionContext';
 import { Accordion } from '@material-ui/core';
-import FormStructure from '@model/FormStructure';
 
 import { EditorContext } from '@contexts/EditorContext';
-
-const onDragStart = (e: React.DragEvent<HTMLLIElement>) => {
-  document.getElementById('question-drop-area')!.style.display = 'block';
-
-  handleDragStart(e);
-};
-
-const onDragEnd = (e: React.DragEvent<HTMLLIElement>) => {
-  document.getElementById('question-drop-area')!.style.display = 'none';
-
-  handleDragEnd(e);
-};
-
-const handleMouseEnter = (itemContainer: React.MutableRefObject<HTMLLIElement | null>) => {
-  itemContainer.current?.classList.add('itemHover');
-};
-
-const handleMouseLeave = (itemContainer: React.MutableRefObject<HTMLLIElement | null>) => {
-  itemContainer.current?.classList.remove('itemHover');
-};
-
-const handleMouseOver = (
-  e: React.MouseEvent<HTMLDivElement>,
-  itemContainer: React.MutableRefObject<HTMLLIElement | null>,
-  question: FormStructureQuestion
-) => {
-  const correctLevel = (e.target as HTMLOListElement | HTMLDivElement).id === question['@id'];
-
-  if (correctLevel && !itemContainer.current?.classList.contains('itemHover')) {
-    itemContainer.current?.classList.add('itemHover');
-  } else if (!correctLevel && itemContainer.current?.classList.contains('itemHover')) {
-    itemContainer.current?.classList.remove('itemHover');
-  }
-};
-
-const handleDragOver = (e: React.DragEvent<HTMLLIElement>) => {
-  e.preventDefault();
-
-  e.dataTransfer.dropEffect = 'move';
-};
-
-const handleDragEnter = (e: React.DragEvent<HTMLLIElement>, formStructure: FormStructure) => {
-  if ((e.target as HTMLDivElement).classList.contains('listItemSection')) {
-    const movingNode = formStructure.getNode(e.dataTransfer.types.slice(-1)[0]);
-    const targetNode = formStructure.getNode((e.target as HTMLLIElement).id);
-
-    // if target element is child of moving element => no highlight
-    if (movingNode && targetNode && detectIsChildNode(movingNode, targetNode)) {
-      return;
-    }
-
-    (e.target as HTMLDivElement).classList.add('listItemSectionOver');
-    e.dataTransfer.dropEffect = 'move';
-  }
-};
-
-const handleDragLeave = (e: React.DragEvent<HTMLLIElement>) => {
-  if ((e.target as HTMLDivElement).classList.contains('listItemSection')) {
-    (e.target as HTMLDivElement).classList.remove('listItemSectionOver');
-  }
-};
-
-const handleDrop = (
-  e: React.DragEvent<HTMLLIElement>,
-  moveNodeUnderNode: (movingNodeId: string, targetNodeId: string, isWizardPosition: boolean, intl: Intl) => void,
-  intl: Intl
-) => {
-  if ((e.target as HTMLDivElement).classList.contains('listItemSection')) {
-    e.preventDefault();
-
-    (e.target as HTMLDivElement).style.opacity = '1';
-
-    enableNotDraggableAndDroppable();
-
-    [].forEach.call(document.getElementsByClassName('listItemSection'), (section: HTMLDivElement) => {
-      section.classList.remove('listItemSectionOver');
-    });
-
-    const movingNodeId = e.dataTransfer.types.slice(-1)[0];
-    const targetNodeId = (e.target as HTMLDivElement).id;
-
-    if (targetNodeId === movingNodeId) {
-      console.warn('Cannot move item under the same item!');
-      return;
-    }
-
-    if (!targetNodeId || !movingNodeId) {
-      console.warn('Missing targetNodeId or movingNodeId');
-      return;
-    }
-
-    document.getElementById('question-drop-area')!.style.display = 'none';
-
-    moveNodeUnderNode(movingNodeId, targetNodeId, false, intl);
-  }
-};
 
 type ItemSectionProps = {
   question: FormStructureQuestion;
@@ -143,6 +46,98 @@ const ItemSection: FC<ItemSectionProps> = ({ question, position, buildFormUI }) 
     setExpanded(!expanded);
   };
 
+  const onDragStart = (e: React.DragEvent<HTMLLIElement>) => {
+    document.getElementById('question-drop-area')!.style.display = 'block';
+
+    handleDragStart(e);
+  };
+
+  const onDragEnd = (e: React.DragEvent<HTMLLIElement>) => {
+    document.getElementById('question-drop-area')!.style.display = 'none';
+
+    handleDragEnd(e);
+  };
+
+  const handleMouseEnter = () => {
+    itemContainer.current?.classList.add('itemHover');
+  };
+
+  const handleMouseLeave = () => {
+    itemContainer.current?.classList.remove('itemHover');
+  };
+
+  const handleMouseOver = (
+    e: React.MouseEvent<HTMLDivElement>,
+    itemContainer: React.MutableRefObject<HTMLLIElement | null>,
+    question: FormStructureQuestion
+  ) => {
+    const correctLevel = (e.target as HTMLOListElement | HTMLDivElement).id === question['@id'];
+
+    if (correctLevel && !itemContainer.current?.classList.contains('itemHover')) {
+      itemContainer.current?.classList.add('itemHover');
+    } else if (!correctLevel && itemContainer.current?.classList.contains('itemHover')) {
+      itemContainer.current?.classList.remove('itemHover');
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLLIElement>) => {
+    e.preventDefault();
+
+    e.dataTransfer.dropEffect = 'move';
+  };
+
+  const handleDragEnter = (e: React.DragEvent<HTMLLIElement>) => {
+    if ((e.target as HTMLDivElement).classList.contains('listItemSection')) {
+      const movingNode = formStructure.getNode(e.dataTransfer.types.slice(-1)[0]);
+      const targetNode = formStructure.getNode((e.target as HTMLLIElement).id);
+
+      // if target element is child of moving element => no highlight
+      if (movingNode && targetNode && detectIsChildNode(movingNode, targetNode)) {
+        return;
+      }
+
+      (e.target as HTMLDivElement).classList.add('listItemSectionOver');
+      e.dataTransfer.dropEffect = 'move';
+    }
+  };
+
+  const handleDragLeave = (e: React.DragEvent<HTMLLIElement>) => {
+    if ((e.target as HTMLDivElement).classList.contains('listItemSection')) {
+      (e.target as HTMLDivElement).classList.remove('listItemSectionOver');
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLLIElement>) => {
+    if ((e.target as HTMLDivElement).classList.contains('listItemSection')) {
+      e.preventDefault();
+
+      (e.target as HTMLDivElement).style.opacity = '1';
+
+      enableNotDraggableAndDroppable();
+
+      [].forEach.call(document.getElementsByClassName('listItemSection'), (section: HTMLDivElement) => {
+        section.classList.remove('listItemSectionOver');
+      });
+
+      const movingNodeId = e.dataTransfer.types.slice(-1)[0];
+      const targetNodeId = (e.target as HTMLDivElement).id;
+
+      if (targetNodeId === movingNodeId) {
+        console.warn('Cannot move item under the same item!');
+        return;
+      }
+
+      if (!targetNodeId || !movingNodeId) {
+        console.warn('Missing targetNodeId or movingNodeId');
+        return;
+      }
+
+      document.getElementById('question-drop-area')!.style.display = 'none';
+
+      moveNodeUnderNode(movingNodeId, targetNodeId, false, intl);
+    }
+  };
+
   return useMemo(() => {
     const subquestions = question[Constants.HAS_SUBQUESTION];
 
@@ -153,11 +148,11 @@ const ItemSection: FC<ItemSectionProps> = ({ question, position, buildFormUI }) 
         onDragStart={onDragStart}
         onDragEnd={onDragEnd}
         onDragOver={handleDragOver}
-        onDragEnter={(e) => handleDragEnter(e, formStructure)}
+        onDragEnter={handleDragEnter}
         onDragLeave={handleDragLeave}
-        onDrop={(e) => handleDrop(e, moveNodeUnderNode, intl)}
-        onMouseEnter={() => handleMouseEnter(itemContainer)}
-        onMouseLeave={() => handleMouseLeave(itemContainer)}
+        onDrop={handleDrop}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
         className={'listItemSection'}
         data-droppable={true}
         onClick={(e) =>
@@ -187,7 +182,10 @@ const ItemSection: FC<ItemSectionProps> = ({ question, position, buildFormUI }) 
             onMouseOver={(e) => handleMouseOver(e, itemContainer, question)}
           >
             <ol id={question['@id']}>
-              {subquestions && subquestions.map((subquestion, index) => buildFormUI(subquestion, index, question))}
+              {subquestions &&
+                subquestions.map((subquestion: FormStructureQuestion, index: number) =>
+                  buildFormUI(subquestion, index, question)
+                )}
               {subquestions && !subquestions.length && (
                 <div id={question['@id']} className={classes.emptySection}>
                   Empty section...
@@ -198,7 +196,7 @@ const ItemSection: FC<ItemSectionProps> = ({ question, position, buildFormUI }) 
         </Accordion>
       </li>
     );
-  }, [question, expanded, formStructure]);
+  }, [question, expanded]);
 };
 
 export default ItemSection;

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Constants } from 's-forms';
 
 /* if you add attribute to model and generate value for it in code, add it also to constant below */

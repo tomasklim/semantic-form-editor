@@ -7,7 +7,7 @@ import SidebarNav from '@components/sidebars/SidebarNav/SidebarNav';
 import SidebarResizer from '@components/sidebars/SidebarResizer/SidebarResizer';
 
 // Header + Stepper
-const INITIAL_TOP = 60 + 88;
+const INITIAL_TOP = 88;
 
 const Sidebar = () => {
   const classes = useStyles();

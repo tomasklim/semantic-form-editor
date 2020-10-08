@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import Head from 'next/head';
-import Header from '@components/structure/Header/Header';
+// import Header from '@components/structure/Header/Header';
 import Footer from '@components/structure/Footer/Footer';
 import useStyles from './Layout.styles';
 import { TrackJS } from 'trackjs';
@@ -27,7 +27,7 @@ const Layout: React.FC<Props> = ({ children, title }) => {
       <Head>
         <title>{title}</title>
       </Head>
-      <Header />
+      {/* <Header /> */}
       {children}
       <Footer />
     </div>

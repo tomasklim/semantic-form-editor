@@ -12,7 +12,7 @@ const Footer: FC<Props> = ({}) => {
     <footer className={classes.footer}>
       <Typography variant="body2">
         <Link color="inherit" href="https://www.linkedin.com/in/tomáš-klíma-8a367b131/" target="_blank">
-          Copyright © {new Date().getFullYear()} by Tomáš Klíma
+          Semantic Form Editor © {new Date().getFullYear()} by Bc. Tomáš Klíma
         </Link>
       </Typography>
     </footer>
