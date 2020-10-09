@@ -8,6 +8,7 @@ import { CustomisedOutlineButton } from '@styles/CustomisedOutlineButton';
 import 'jsoneditor/dist/jsoneditor.css';
 import { EditorContext } from '@contexts/EditorContext';
 import JsonEditor from '@components/mix/JsonEditor/JsonEditor';
+import { NavigationContext } from '@contexts/NavigationContext';
 
 interface EditorNewProps {
   nextStep: () => void;
@@ -21,6 +22,7 @@ const EditorNew: FC<EditorNewProps> = ({ nextStep }) => {
 
   const [form, setForm] = useState<any>(null);
 
+  const { resetNavigationContext } = useContext(NavigationContext);
   const { setFormStructure, setFormContext, formFile, setFormFile } = useContext(FormStructureContext);
   const { setLanguages } = useContext(EditorContext);
 
@@ -69,6 +71,8 @@ const EditorNew: FC<EditorNewProps> = ({ nextStep }) => {
   };
 
   const handleContinueToNextStep = async (form: any) => {
+    resetNavigationContext();
+
     const formStructure = await buildFormStructure(form);
 
     const languages = findFormLanguages(formStructure);
