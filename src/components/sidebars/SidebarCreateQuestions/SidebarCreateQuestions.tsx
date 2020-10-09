@@ -26,7 +26,7 @@ const SidebarCreateQuestions: React.FC<SidebarCreateQuestionsProps> = ({ handleC
   const classes = useStyles();
 
   const { isWizardless, formStructure, isEmptyFormStructure } = useContext(FormStructureContext);
-  const { onSaveCallback, customisingQuestion, resetCustomisationProcess, nestedLevel } = useContext(
+  const { onSaveCallback, customisingQuestion, resetCustomiseQuestionContext, nestedLevel } = useContext(
     CustomiseQuestionContext
   );
   const { languages } = useContext(EditorContext);
@@ -114,12 +114,13 @@ const SidebarCreateQuestions: React.FC<SidebarCreateQuestionsProps> = ({ handleC
 
     // @ts-ignore
     onSaveCallback && onSaveCallback(questions);
-    resetCustomisationProcess(true);
     handleChangeTab(null, 0);
+
+    resetCustomiseQuestionContext();
   };
 
   const onCancel = () => {
-    resetCustomisationProcess();
+    resetCustomiseQuestionContext();
 
     handleChangeTab(null, 0);
   };

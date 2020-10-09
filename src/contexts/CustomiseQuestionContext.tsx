@@ -9,7 +9,7 @@ interface CustomiseQuestionContextValues {
   customiseQuestion: CustomiseQuestion;
   onSaveCallback: OnSaveQuestionCallback | OnSaveQuestionsCallback | null;
   customisingQuestion: FormStructureQuestion | null;
-  resetCustomisationProcess: (forceReset?: boolean) => void;
+  resetCustomiseQuestionContext: () => void;
   setCustomisingQuestion: Dispatch<SetStateAction<FormStructureQuestion | null>>;
   isNewQuestion: boolean;
   isSpecificPosition: boolean;
@@ -64,7 +64,8 @@ const CustomiseQuestionProvider: React.FC<CustomiseItemProviderProps> = ({ child
     isSpecificPosition,
     nestedLevel
   }) => {
-    onCancelCallback && onCancelCallback();
+    resetCustomiseQuestionContext();
+
     onInit && onInit();
     onSave && setOnSaveCallback(onSave);
     onCancel && setOnCancelCallback(onCancel);
@@ -76,17 +77,16 @@ const CustomiseQuestionProvider: React.FC<CustomiseItemProviderProps> = ({ child
     setCustomisingQuestion(customisingQuestion);
   };
 
-  const resetCustomisationProcess = (forceReset: boolean = false) => {
-    if (onCancelCallback || forceReset) {
-      onCancelCallback && onCancelCallback();
-
-      setOnSaveCallback(null);
-      setCustomisingQuestion(null);
-      setOnCancelCallback(null);
-      setIsNewQuestion(false);
-      setIsSpecificPosition(false);
-      setNestedLevel(null);
+  const resetCustomiseQuestionContext = () => {
+    if (onCancelCallback) {
+      onCancelCallback();
     }
+    setCustomisingQuestion(null);
+    setOnSaveCallback(null);
+    setOnCancelCallback(null);
+    setIsNewQuestion(false);
+    setIsSpecificPosition(false);
+    setNestedLevel(null);
   };
 
   const values = React.useMemo<CustomiseQuestionContextValues>(
@@ -95,7 +95,7 @@ const CustomiseQuestionProvider: React.FC<CustomiseItemProviderProps> = ({ child
       setCustomisingQuestion,
       onSaveCallback,
       customisingQuestion,
-      resetCustomisationProcess,
+      resetCustomiseQuestionContext,
       isNewQuestion,
       isSpecificPosition,
       nestedLevel

@@ -10,6 +10,7 @@ import { EditorContext } from '@contexts/EditorContext';
 import { union } from 'lodash';
 import { CustomisedOutlineButton } from '@styles/CustomisedOutlineButton';
 import { NavigationContext } from '@contexts/NavigationContext';
+import { CustomiseQuestionContext } from '@contexts/CustomiseQuestionContext';
 
 const filter = createFilterOptions<string>();
 
@@ -19,6 +20,7 @@ const ConfigModal = () => {
   const classes = useStyles();
 
   const { isEmptyFormStructure } = useContext(FormStructureContext);
+  const { resetCustomiseQuestionContext } = useContext(CustomiseQuestionContext);
   const { languages, setLanguages } = useContext(EditorContext);
   const { showFormConfigurationModal, setShowFormConfigurationModal } = useContext(NavigationContext);
 
@@ -30,6 +32,7 @@ const ConfigModal = () => {
 
   const handleOpenConfigModal = () => {
     setOpen(!open);
+    resetCustomiseQuestionContext();
   };
 
   const modalBody = (

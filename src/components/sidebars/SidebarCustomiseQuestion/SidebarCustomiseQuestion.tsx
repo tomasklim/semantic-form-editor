@@ -25,7 +25,7 @@ const SidebarCustomiseQuestion: React.FC = () => {
   const {
     onSaveCallback,
     customisingQuestion,
-    resetCustomisationProcess,
+    resetCustomiseQuestionContext,
     setCustomisingQuestion,
     isNewQuestion
   } = useContext(CustomiseQuestionContext);
@@ -73,11 +73,11 @@ const SidebarCustomiseQuestion: React.FC = () => {
     const newItem = { ...customisingQuestion! };
 
     onSaveCallback && onSaveCallback(newItem);
-    resetCustomisationProcess(true);
+    resetCustomiseQuestionContext();
   };
 
   const onCancel = () => {
-    resetCustomisationProcess();
+    resetCustomiseQuestionContext();
   };
 
   if (!customisingQuestion) {

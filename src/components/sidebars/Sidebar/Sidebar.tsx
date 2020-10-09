@@ -16,7 +16,7 @@ const Sidebar = () => {
 
   const [drawerTop, setDrawerTop] = useState<number>(INITIAL_TOP);
 
-  const { customiseQuestion, resetCustomisationProcess } = useContext(CustomiseQuestionContext);
+  const { customiseQuestion, resetCustomiseQuestionContext } = useContext(CustomiseQuestionContext);
 
   const calculateSidebarTopPosition = () => {
     const scrollTop = document.documentElement.scrollTop;
@@ -47,7 +47,7 @@ const Sidebar = () => {
       e.stopPropagation();
       // @ts-ignore
       if (!sidebarContainer.current?.contains(e.target) && !e.target.matches('[class^="MuiAutocomplete"]')) {
-        resetCustomisationProcess();
+        resetCustomiseQuestionContext();
       }
     };
 
@@ -55,7 +55,7 @@ const Sidebar = () => {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [sidebarContainer, resetCustomisationProcess]);
+  }, [sidebarContainer, resetCustomiseQuestionContext]);
 
   return (
     <Drawer
