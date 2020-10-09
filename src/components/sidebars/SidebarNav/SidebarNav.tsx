@@ -20,7 +20,7 @@ const SidebarNav = ({}) => {
   const { customiseQuestion } = useContext(CustomiseQuestionContext);
   const { intl, setSectionsExpanded, sectionsExpanded } = useContext(EditorContext);
 
-  const { editorCustomizeCodeView, setEditorCustomizeCodeView } = useContext(NavigationContext);
+  const { editorCustomiseCodeView, setEditorCustomiseCodeView } = useContext(NavigationContext);
 
   const addNewTopLevelQuestion = () => {
     const clonedFormStructure = getClonedFormStructure();
@@ -47,7 +47,7 @@ const SidebarNav = ({}) => {
   };
 
   const switchToCodeEditor = () => {
-    setEditorCustomizeCodeView(!editorCustomizeCodeView);
+    setEditorCustomiseCodeView(!editorCustomiseCodeView);
   };
 
   return (

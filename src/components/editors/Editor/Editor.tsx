@@ -1,12 +1,12 @@
 import React, { FC, useContext, useEffect } from 'react';
-import EditorCustomize from '@components/editors/EditorCustomize/EditorCustomize';
+import EditorCustomise from '@components/editors/EditorCustomise/EditorCustomise';
 import EditorPreview from '@components/editors/EditorPreview/EditorPreview';
 import EditorNew from '@components/editors/EditorNew/EditorNew';
 import EditorExport from '@components/editors/EditorExport/EditorExport';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import { CustomiseQuestionProvider } from '@contexts/CustomiseQuestionContext';
 import StepperBar from '@components/mix/StepperBar/StepperBar';
-import EditorCustomizeCode from '@components/editors/EditorCustomizeCode/EditorCustomizeCode';
+import EditorCustomiseCode from '@components/editors/EditorCustomiseCode/EditorCustomiseCode';
 import { NavigationContext } from '@contexts/NavigationContext';
 import { EditorContext } from '@contexts/EditorContext';
 
@@ -20,21 +20,21 @@ const Editor: FC<EditorProps> = ({}) => {
     setActiveStep,
     resetNavigationContext,
     unlockStep,
-    editorCustomizeCodeView,
-    setEditorCustomizeCodeView
+    editorCustomiseCodeView,
+    setEditorCustomiseCodeView
   } = useContext(NavigationContext);
 
   const { setSectionsExpanded, resetEditorContext } = useContext(EditorContext);
 
   useEffect(() => {
-    if (editorCustomizeCodeView && activeStep !== 1) {
-      setEditorCustomizeCodeView(false);
+    if (editorCustomiseCodeView && activeStep !== 1) {
+      setEditorCustomiseCodeView(false);
     }
   }, [activeStep]);
 
   useEffect(() => {
     setSectionsExpanded(true);
-  }, [activeStep, editorCustomizeCodeView]);
+  }, [activeStep, editorCustomiseCodeView]);
 
   const moveToCustomiseStep = () => {
     setActiveStep(1);
@@ -52,12 +52,12 @@ const Editor: FC<EditorProps> = ({}) => {
       case 0:
         return <EditorNew nextStep={moveToCustomiseStep} />;
       case 1:
-        return !editorCustomizeCodeView ? (
+        return !editorCustomiseCodeView ? (
           <CustomiseQuestionProvider>
-            <EditorCustomize />
+            <EditorCustomise />
           </CustomiseQuestionProvider>
         ) : (
-          <EditorCustomizeCode />
+          <EditorCustomiseCode />
         );
       case 2:
         return <EditorPreview />;

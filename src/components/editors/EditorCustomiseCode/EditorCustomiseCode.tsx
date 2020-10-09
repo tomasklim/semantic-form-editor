@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import useStyles from './EditorCustomizeCode.styles';
+import useStyles from './EditorCustomiseCode.styles';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import { buildFormStructure, exportForm } from '@utils/formHelpers';
 import JsonEditor from '@components/mix/JsonEditor/JsonEditor';
@@ -10,13 +10,13 @@ import { CustomisedLinkButton } from '@styles/CustomisedLinkButton';
 import { CustomisedOutlineButton } from '@styles/CustomisedOutlineButton';
 import { CustomisedButton } from '@styles/CustomisedButton';
 
-const EditorCustomizeCode: React.FC = () => {
+const EditorCustomiseCode: React.FC = () => {
   const classes = useStyles();
 
   const { setFormStructure, getClonedFormStructure, formContext, setFormContext, setFormFile } = useContext(
     FormStructureContext
   );
-  const { setEditorCustomizeCodeView } = useContext(NavigationContext);
+  const { setEditorCustomiseCodeView } = useContext(NavigationContext);
 
   const [form, setForm] = useState<any>(null);
 
@@ -51,7 +51,7 @@ const EditorCustomizeCode: React.FC = () => {
 
   const onSwitchToEditorView = () => {
     finishCallback();
-    setEditorCustomizeCodeView(false);
+    setEditorCustomiseCodeView(false);
   };
 
   const [finishCallback, setFinishCallback] = useState<any>(null);
@@ -87,4 +87,4 @@ const EditorCustomizeCode: React.FC = () => {
   );
 };
 
-export default EditorCustomizeCode;
+export default EditorCustomiseCode;

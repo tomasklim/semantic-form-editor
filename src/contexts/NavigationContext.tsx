@@ -16,8 +16,8 @@ interface NavigationContextValues {
 
   showFormConfigurationModal: boolean;
   setShowFormConfigurationModal: Dispatch<SetStateAction<boolean>>;
-  editorCustomizeCodeView: boolean;
-  setEditorCustomizeCodeView: Dispatch<SetStateAction<boolean>>;
+  editorCustomiseCodeView: boolean;
+  setEditorCustomiseCodeView: Dispatch<SetStateAction<boolean>>;
 }
 
 const INITIAL_UNLOCKED_STEPS = [0];
@@ -27,9 +27,9 @@ const NavigationContext = React.createContext<NavigationContextValues>({});
 
 const NavigationProvider: React.FC<NavigationProviderProps> = ({ children }) => {
   const [showFormConfigurationModal, setShowFormConfigurationModal] = React.useState<boolean>(false);
-  const [editorCustomizeCodeView, setEditorCustomizeCodeView] = React.useState<boolean>(false);
+  const [editorCustomiseCodeView, setEditorCustomiseCodeView] = React.useState<boolean>(false);
 
-  const steps = ['New / Import', 'Customize', 'Preview', 'Export'];
+  const steps = ['New / Import', 'Customise', 'Preview', 'Export'];
 
   const [activeStep, setActiveStep] = React.useState<number>(0);
   const [unlockedSteps, setUnlockedSteps] = React.useState<Array<number>>([...INITIAL_UNLOCKED_STEPS]);
@@ -46,7 +46,7 @@ const NavigationProvider: React.FC<NavigationProviderProps> = ({ children }) => 
     setActiveStep(0);
     setUnlockedSteps([...INITIAL_UNLOCKED_STEPS]);
     setShowFormConfigurationModal(false);
-    setEditorCustomizeCodeView(false);
+    setEditorCustomiseCodeView(false);
   };
 
   const unlockStep = (index: number) => {
@@ -65,10 +65,10 @@ const NavigationProvider: React.FC<NavigationProviderProps> = ({ children }) => 
       unlockStep,
       showFormConfigurationModal,
       setShowFormConfigurationModal,
-      editorCustomizeCodeView,
-      setEditorCustomizeCodeView
+      editorCustomiseCodeView,
+      setEditorCustomiseCodeView
     }),
-    [activeStep, unlockedSteps, showFormConfigurationModal, editorCustomizeCodeView]
+    [activeStep, unlockedSteps, showFormConfigurationModal, editorCustomiseCodeView]
   );
 
   return <NavigationContext.Provider value={values}>{children}</NavigationContext.Provider>;

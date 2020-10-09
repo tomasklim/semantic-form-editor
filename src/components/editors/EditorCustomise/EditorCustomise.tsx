@@ -4,12 +4,12 @@ import Item from '@components/items/Item/Item';
 import ItemAdd from '@components/items/ItemAdd/ItemAdd';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
-import useStyles from './EditorCustomize.styles';
+import useStyles from './EditorCustomise.styles';
 import ItemSection from '@components/items/ItemSection/ItemSection';
 import Sidebar from '@components/sidebars/Sidebar/Sidebar';
 import ItemFormEmpty from '@components/items/ItemFormEmpty/ItemFormEmpty';
 
-const EditorCustomize: React.FC = () => {
+const EditorCustomise: React.FC = () => {
   const classes = useStyles();
 
   const { formStructure } = useContext(FormStructureContext);
@@ -87,4 +87,4 @@ const EditorCustomize: React.FC = () => {
   );
 };
 
-export default EditorCustomize;
+export default EditorCustomise;
