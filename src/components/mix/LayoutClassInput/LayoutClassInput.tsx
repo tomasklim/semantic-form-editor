@@ -52,6 +52,7 @@ type LayoutTypeOption = {
   type: string;
 };
 
+// TODO
 interface LayoutClassInputProps {
   question: FormStructureQuestion;
   handleChange: any;

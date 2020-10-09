@@ -15,6 +15,7 @@ import { isString } from 'lodash';
 import LayoutClassInput from '@components/mix/LayoutClassInput/LayoutClassInput';
 // @ts-ignore
 import JsonLdUtils from 'jsonld-utils';
+import TypeaheadOptionsModal from '@components/mix/TypeaheadOptionsModal/TypeaheadOptionsModal';
 
 const SidebarCustomiseQuestion: React.FC = () => {
   const classes = useStyles();
@@ -64,6 +65,7 @@ const SidebarCustomiseQuestion: React.FC = () => {
     });
   };
 
+  // TODO can be default
   const handleChangeLayoutClass = (layoutClasses: Array<string>) => {
     setCustomisingQuestion({ ...customisingQuestion!, [Constants.LAYOUT_CLASS]: layoutClasses });
   };
@@ -117,14 +119,18 @@ const SidebarCustomiseQuestion: React.FC = () => {
       )}
 
       {FormUtils.isTypeahead(customisingQuestion) && (
-        <TextField
-          name={Constants.HAS_OPTIONS_QUERY}
-          label="Options query"
-          variant="outlined"
-          value={customisingQuestion[Constants.HAS_OPTIONS_QUERY] || ''}
-          onChange={handleChangeDefault}
-          autoComplete={'off'}
-        />
+        <>
+          <TextField
+            name={Constants.HAS_OPTIONS_QUERY}
+            label="Options query"
+            variant="outlined"
+            value={customisingQuestion[Constants.HAS_OPTIONS_QUERY] || ''}
+            onChange={handleChangeDefault}
+            autoComplete={'off'}
+          />
+          or
+          <TypeaheadOptionsModal question={customisingQuestion} handleChange={handleChangeDefault} />
+        </>
       )}
 
       <LocalisedInput

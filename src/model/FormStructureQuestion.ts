@@ -27,7 +27,8 @@ export const FORM_STRUCTURE_QUESTION_ATTRIBUTES = [
   Constants.HELP_DESCRIPTION,
   Constants.HAS_SUBQUESTION,
   Constants.HAS_PRECEDING_QUESTION,
-  Constants.REQUIRES_ANSWER
+  Constants.REQUIRES_ANSWER,
+  Constants.HAS_OPTION
 ];
 
 export type LanguageObject = {
