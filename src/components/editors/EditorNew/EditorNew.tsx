@@ -23,8 +23,10 @@ const EditorNew: FC<EditorNewProps> = ({ nextStep }) => {
   const [form, setForm] = useState<any>(null);
 
   const { resetNavigationContext } = useContext(NavigationContext);
-  const { setFormStructure, setFormContext, formFile, setFormFile } = useContext(FormStructureContext);
-  const { setLanguages } = useContext(EditorContext);
+  const { setFormStructure, setFormContext, formFile, setFormFile, resetFormStructureContext } = useContext(
+    FormStructureContext
+  );
+  const { setLanguages, resetEditorContext } = useContext(EditorContext);
 
   useEffect(() => {
     if (formFile) {
@@ -72,6 +74,8 @@ const EditorNew: FC<EditorNewProps> = ({ nextStep }) => {
 
   const handleContinueToNextStep = async (form: any) => {
     resetNavigationContext();
+    resetFormStructureContext();
+    resetEditorContext();
 
     const formStructure = await buildFormStructure(form);
 
