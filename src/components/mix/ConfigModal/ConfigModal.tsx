@@ -32,7 +32,9 @@ const ConfigModal = () => {
 
   const handleOpenConfigModal = () => {
     setOpen(!open);
-    resetCustomiseQuestionContext();
+    if (!isEmptyFormStructure) {
+      resetCustomiseQuestionContext();
+    }
   };
 
   const modalBody = (

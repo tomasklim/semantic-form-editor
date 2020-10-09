@@ -5,6 +5,7 @@ import { CustomiseQuestionContext } from '@contexts/CustomiseQuestionContext';
 import SidebarItemForm from '@components/sidebars/SidebarItemForm/SidebarItemForm';
 import SidebarNav from '@components/sidebars/SidebarNav/SidebarNav';
 import SidebarResizer from '@components/sidebars/SidebarResizer/SidebarResizer';
+import { FormStructureContext } from '@contexts/FormStructureContext';
 
 // Header + Stepper
 const INITIAL_TOP = 88;
@@ -17,6 +18,7 @@ const Sidebar = () => {
   const [drawerTop, setDrawerTop] = useState<number>(INITIAL_TOP);
 
   const { customiseQuestion, resetCustomiseQuestionContext } = useContext(CustomiseQuestionContext);
+  const { isEmptyFormStructure } = useContext(FormStructureContext);
 
   const calculateSidebarTopPosition = () => {
     const scrollTop = document.documentElement.scrollTop;
@@ -45,8 +47,12 @@ const Sidebar = () => {
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       e.stopPropagation();
-      // @ts-ignore
-      if (!sidebarContainer.current?.contains(e.target) && !e.target.matches('[class^="MuiAutocomplete"]')) {
+      if (
+        e.target &&
+        !sidebarContainer.current?.contains(e.target as Node) &&
+        !(e.target as HTMLElement).matches('[class^="MuiAutocomplete"]') &&
+        !isEmptyFormStructure
+      ) {
         resetCustomiseQuestionContext();
       }
     };
