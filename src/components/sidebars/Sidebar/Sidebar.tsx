@@ -47,11 +47,14 @@ const Sidebar = () => {
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       e.stopPropagation();
+      const options = document.getElementById('typeahead-options-modal');
+
       if (
         e.target &&
         !sidebarContainer.current?.contains(e.target as Node) &&
         !(e.target as HTMLElement).matches('[class^="MuiAutocomplete"]') &&
-        !isEmptyFormStructure
+        !isEmptyFormStructure &&
+        !options?.contains(e.target as Node)
       ) {
         resetCustomiseQuestionContext();
       }

@@ -238,3 +238,23 @@ export const transformToWizardForm = (formStructure: FormStructure) => {
     formStructure.addNode(newNode);
   }
 };
+
+export const editLocalisedLabel = (lang: string, value: string, questionAttribute: any) => {
+  const availableLanguage =
+    Array.isArray(questionAttribute) &&
+    questionAttribute.find((language: LanguageObject) => language['@language'] === lang);
+
+  // field already have value in this language
+  if (availableLanguage) {
+    availableLanguage['@value'] = value;
+  } else {
+    // language have to be added
+    if (!Array.isArray(questionAttribute)) {
+      questionAttribute = [];
+    }
+
+    const languageObject = createJsonLanguageValue(lang!, value);
+
+    questionAttribute.push(languageObject);
+  }
+};

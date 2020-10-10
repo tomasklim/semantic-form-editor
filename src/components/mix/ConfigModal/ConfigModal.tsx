@@ -83,9 +83,11 @@ const ConfigModal = () => {
       >
         <SettingsIcon />
       </CustomisedOutlineButton>
-      <Modal className={classes.modal} open={open} onClose={handleOpenConfigModal}>
-        {modalBody}
-      </Modal>
+      {open && (
+        <Modal className={classes.modal} open={open} onClose={handleOpenConfigModal}>
+          {modalBody}
+        </Modal>
+      )}
     </div>
   );
 };

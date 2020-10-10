@@ -15,6 +15,7 @@ import { isString } from 'lodash';
 import LayoutClassInput from '@components/mix/LayoutClassInput/LayoutClassInput';
 // @ts-ignore
 import JsonLdUtils from 'jsonld-utils';
+import TypeaheadOptionsModal from '@components/mix/TypeaheadOptionsModal/TypeaheadOptionsModal';
 
 const SidebarCustomiseQuestion: React.FC = () => {
   const classes = useStyles();
@@ -64,10 +65,6 @@ const SidebarCustomiseQuestion: React.FC = () => {
     });
   };
 
-  const handleChangeLayoutClass = (layoutClasses: Array<string>) => {
-    setCustomisingQuestion({ ...customisingQuestion!, [Constants.LAYOUT_CLASS]: layoutClasses });
-  };
-
   const onSave = (e: FormEvent) => {
     e.preventDefault();
     const newItem = { ...customisingQuestion! };
@@ -102,7 +99,7 @@ const SidebarCustomiseQuestion: React.FC = () => {
         required
       />
 
-      <LayoutClassInput question={customisingQuestion} handleChange={handleChangeLayoutClass} />
+      <LayoutClassInput question={customisingQuestion} handleChange={handleChangeDefault} />
 
       {FormUtils.isMaskedInput(customisingQuestion) && (
         <TextField
@@ -117,14 +114,17 @@ const SidebarCustomiseQuestion: React.FC = () => {
       )}
 
       {FormUtils.isTypeahead(customisingQuestion) && (
-        <TextField
-          name={Constants.HAS_OPTIONS_QUERY}
-          label="Options query"
-          variant="outlined"
-          value={customisingQuestion[Constants.HAS_OPTIONS_QUERY] || ''}
-          onChange={handleChangeDefault}
-          autoComplete={'off'}
-        />
+        <>
+          <TextField
+            name={Constants.HAS_OPTIONS_QUERY}
+            label="Options query"
+            variant="outlined"
+            value={customisingQuestion[Constants.HAS_OPTIONS_QUERY] || ''}
+            onChange={handleChangeDefault}
+            autoComplete={'off'}
+          />
+          <TypeaheadOptionsModal question={customisingQuestion} handleChange={handleChangeDefault} />
+        </>
       )}
 
       <LocalisedInput
