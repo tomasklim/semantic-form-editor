@@ -27,6 +27,9 @@
     "has-possible-values-query": {
       "@id": "http://onto.fel.cvut.cz/ontologies/form/has-possible-values-query"
     },
+    "has-possible-value": {
+      "@id": "http://onto.fel.cvut.cz/ontologies/form/has-possible-value"
+    },
     "has-layout-class": {
       "@id": "http://onto.fel.cvut.cz/ontologies/form-layout/has-layout-class"
     },

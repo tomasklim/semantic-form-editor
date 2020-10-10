@@ -6,7 +6,6 @@ import SidebarItemForm from '@components/sidebars/SidebarItemForm/SidebarItemFor
 import SidebarNav from '@components/sidebars/SidebarNav/SidebarNav';
 import SidebarResizer from '@components/sidebars/SidebarResizer/SidebarResizer';
 import { FormStructureContext } from '@contexts/FormStructureContext';
-import { getElementById } from 'domutils';
 
 // Header + Stepper
 const INITIAL_TOP = 88;
@@ -48,7 +47,8 @@ const Sidebar = () => {
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       e.stopPropagation();
-      const options = document.getElementById('typeahead-modal');
+      const options = document.getElementById('typeahead-options-modal');
+
       if (
         e.target &&
         !sidebarContainer.current?.contains(e.target as Node) &&

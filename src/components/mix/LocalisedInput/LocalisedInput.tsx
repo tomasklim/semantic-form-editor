@@ -4,7 +4,7 @@ import { TextField } from '@material-ui/core';
 import { Constants } from 's-forms';
 import { createFakeChangeEvent } from '@utils/itemHelpers';
 import { EditorContext } from '@contexts/EditorContext';
-import { createJsonLanguageValue } from '@utils/formHelpers';
+import { editLocalisedLabel } from '@utils/formHelpers';
 
 interface LocalisedInputProps {
   type: string;
@@ -35,24 +35,10 @@ const LocalisedInput: React.FC<LocalisedInputProps> = ({
     // simple no language field
     if (!lang) {
       handleChange(e);
+      return;
     }
 
-    const availableLanguage =
-      Array.isArray(questionValue) && questionValue.find((language: LanguageObject) => language['@language'] === lang);
-
-    // field already have value in this language
-    if (availableLanguage) {
-      availableLanguage['@value'] = target.value;
-    } else {
-      // language have to be added
-      if (!Array.isArray(questionValue)) {
-        questionValue = [];
-      }
-
-      const languageObject = createJsonLanguageValue(lang!, target.value);
-
-      questionValue.push(languageObject);
-    }
+    editLocalisedLabel(lang, target.value, questionValue);
 
     const fakeEvent = createFakeChangeEvent(type, questionValue);
 

@@ -6,6 +6,7 @@ import { intersection } from 'lodash';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import { CustomiseQuestionContext } from '@contexts/CustomiseQuestionContext';
+import { createFakeChangeEvent } from '@utils/itemHelpers';
 
 const PRIMARY = 'Primary (choose 0-1)';
 const SECONDARY = 'Secondary (choose 0-N)';
@@ -52,10 +53,9 @@ type LayoutTypeOption = {
   type: string;
 };
 
-// TODO
 interface LayoutClassInputProps {
   question: FormStructureQuestion;
-  handleChange: any;
+  handleChange: (e: React.ChangeEvent | React.ChangeEvent<{ value: unknown }>) => void;
 }
 
 const LayoutClassInput: React.FC<LayoutClassInputProps> = ({ question, handleChange }) => {
@@ -76,7 +76,11 @@ const LayoutClassInput: React.FC<LayoutClassInputProps> = ({ question, handleCha
 
   const onChange = (_: React.ChangeEvent<{}>, picks: Array<LayoutTypeOption>) => {
     picks.sort((pick) => (pick.type === PRIMARY ? -1 : 0));
-    handleChange(Object.values(picks).map((pick) => pick.value));
+    const result = Object.values(picks).map((pick) => pick.value);
+
+    const fakeEvent = createFakeChangeEvent(Constants.LAYOUT_CLASS, result);
+
+    handleChange(fakeEvent);
   };
 
   const disabledOptions = (option: LayoutTypeOption) => {

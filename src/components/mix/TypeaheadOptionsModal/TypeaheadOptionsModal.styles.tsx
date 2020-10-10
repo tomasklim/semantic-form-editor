@@ -14,7 +14,7 @@ export default makeStyles((theme: ITheme) => ({
   },
   paper: {
     position: 'absolute',
-    width: 600,
+    maxWidth: '90vw',
     backgroundColor: theme.palette.custom[900],
     border: '1px solid ' + theme.palette.custom.main,
     borderRadius: '4px',
@@ -33,7 +33,15 @@ export default makeStyles((theme: ITheme) => ({
     },
     maxHeight: '80vh',
     overflow: 'auto',
-    top: '108px'
+    top: '108px',
+    '& .MuiTableCell-root': {
+      borderBottom: 'none'
+    },
+    '& .MuiTableCell-stickyHeader': {
+      padding: 0,
+      backgroundColor: 'transparent',
+      color: 'white'
+    }
   },
   buttons: {
     display: 'flex',
@@ -42,5 +50,30 @@ export default makeStyles((theme: ITheme) => ({
     '& button': {
       width: '200px'
     }
+  },
+  addOptionsManually: {
+    marginTop: '-10px !important',
+    marginLeft: '10px !important',
+    marginBottom: '0 !important'
+  },
+  delete: {
+    cursor: 'pointer',
+    color: theme.palette.custom.main,
+    '&:hover': {
+      color: 'white'
+    }
+  },
+  addNewOption: {
+    textDecoration: 'none !important',
+    outline: 'none !important',
+    display: 'inline-flex',
+    alignItems: 'center',
+    '&:hover': {
+      color: 'white'
+    }
+  },
+  emptyOptions: {
+    fontStyle: 'italic',
+    marginBottom: theme.spacing(1)
   }
 }));

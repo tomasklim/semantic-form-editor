@@ -65,11 +65,6 @@ const SidebarCustomiseQuestion: React.FC = () => {
     });
   };
 
-  // TODO can be default
-  const handleChangeLayoutClass = (layoutClasses: Array<string>) => {
-    setCustomisingQuestion({ ...customisingQuestion!, [Constants.LAYOUT_CLASS]: layoutClasses });
-  };
-
   const onSave = (e: FormEvent) => {
     e.preventDefault();
     const newItem = { ...customisingQuestion! };
@@ -104,7 +99,7 @@ const SidebarCustomiseQuestion: React.FC = () => {
         required
       />
 
-      <LayoutClassInput question={customisingQuestion} handleChange={handleChangeLayoutClass} />
+      <LayoutClassInput question={customisingQuestion} handleChange={handleChangeDefault} />
 
       {FormUtils.isMaskedInput(customisingQuestion) && (
         <TextField
@@ -128,7 +123,6 @@ const SidebarCustomiseQuestion: React.FC = () => {
             onChange={handleChangeDefault}
             autoComplete={'off'}
           />
-          or
           <TypeaheadOptionsModal question={customisingQuestion} handleChange={handleChangeDefault} />
         </>
       )}
