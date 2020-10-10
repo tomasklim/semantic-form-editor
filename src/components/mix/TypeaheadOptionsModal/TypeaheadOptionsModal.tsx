@@ -14,7 +14,7 @@ import {
 import { CustomisedButton } from '@styles/CustomisedButton';
 import { EditorContext } from '@contexts/EditorContext';
 import { FormStructureQuestion, LanguageObject } from '@model/FormStructureQuestion';
-import { createJsonLanguageValue, editLocalisedLabel, getIntl } from '@utils/formHelpers';
+import { editLocalisedLabel, getIntl } from '@utils/formHelpers';
 import { Constants } from 's-forms';
 import { createFakeChangeEvent } from '@utils/itemHelpers';
 import { CustomisedLinkButton } from '@styles/CustomisedLinkButton';

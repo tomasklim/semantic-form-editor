@@ -16,7 +16,8 @@ export default makeStyles((theme: ITheme) => ({
   codeButton: {
     minWidth: 'fit-content',
     padding: '1px 6px',
-    marginLeft: '-46px'
+    position: 'absolute',
+    right: 15
   },
   saveButton: {
     padding: '1px 6px',
@@ -26,5 +27,12 @@ export default makeStyles((theme: ITheme) => ({
   resetButton: {
     padding: '1px 6px',
     marginRight: 'auto'
+  },
+  validateButton: {
+    padding: '1px 6px',
+    minWidth: 'fit-content'
+  },
+  validateContainer: {
+    position: 'absolute'
   }
 }));

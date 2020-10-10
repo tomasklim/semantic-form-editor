@@ -1,0 +1,35 @@
+export const validationRule = `
+# baseURI: http://onto.fel.cvut.cz/ontologies/shapes/form
+# imports: http://datashapes.org/dash
+
+@prefix dash: <http://datashapes.org/dash#> .
+@prefix doc: <http://onto.fel.cvut.cz/ontologies/documentation/> .
+@prefix form: <http://onto.fel.cvut.cz/ontologies/form/> .
+@prefix form-lt: <http://onto.fel.cvut.cz/ontologies/form-layout/> .
+@prefix form-sh: <http://onto.fel.cvut.cz/ontologies/shapes/form/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://onto.fel.cvut.cz/ontologies/shapes/form>
+  a owl:Ontology ;
+  owl:imports <http://datashapes.org/dash> ;
+.
+form-sh:question-shape
+  a rdfs:Class ;
+  a sh:NodeShape ;
+  rdfs:subClassOf rdfs:Resource ;
+  sh:property [
+      sh:path rdfs:label ;
+      sh:maxCount 1 ;
+      sh:minCount 1 ;
+    ] ;
+  sh:property [
+      sh:path form-lt:has-layout-class ;
+      sh:minCount 1 ;
+    ] ;
+  sh:targetClass doc:question ;
+.
+`;

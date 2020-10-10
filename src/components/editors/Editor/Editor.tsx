@@ -9,6 +9,7 @@ import StepperBar from '@components/mix/StepperBar/StepperBar';
 import EditorCustomiseCode from '@components/editors/EditorCustomiseCode/EditorCustomiseCode';
 import { NavigationContext } from '@contexts/NavigationContext';
 import { EditorContext } from '@contexts/EditorContext';
+import { ValidationProvider } from '@contexts/ValidationContext';
 
 interface EditorProps {}
 
@@ -52,12 +53,16 @@ const Editor: FC<EditorProps> = ({}) => {
       case 0:
         return <EditorNew nextStep={moveToCustomiseStep} />;
       case 1:
-        return !editorCustomiseCodeView ? (
-          <CustomiseQuestionProvider>
-            <EditorCustomise />
-          </CustomiseQuestionProvider>
-        ) : (
-          <EditorCustomiseCode />
+        return (
+          <ValidationProvider>
+            {!editorCustomiseCodeView ? (
+              <CustomiseQuestionProvider>
+                <EditorCustomise />
+              </CustomiseQuestionProvider>
+            ) : (
+              <EditorCustomiseCode />
+            )}
+          </ValidationProvider>
         );
       case 2:
         return <EditorPreview />;
