@@ -31,6 +31,7 @@ interface FormStructureContextValues {
   formFile: JsonLdObj | null;
   setFormFile: Dispatch<SetStateAction<FormStructure | null>>;
   setFormStructure: Dispatch<SetStateAction<FormStructure>>;
+  updateFormStructure: (form: FormStructure) => void;
   setFormContext: Dispatch<SetStateAction<JsonLdObj>>;
   getClonedFormStructure: () => FormStructure;
   formContext: JsonLdObj;
