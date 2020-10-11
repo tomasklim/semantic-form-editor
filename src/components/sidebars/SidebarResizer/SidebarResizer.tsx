@@ -60,8 +60,8 @@ const SidebarResizer: React.FC<SidebarResizerProps> = ({ sidebarContainer }) => 
     const localStorageSavedWidth = localStorage.getItem(LOCAL_STORAGE_SIDEBAR_WIDTH);
     const form: HTMLDivElement | null = document.querySelector('#form');
 
-    sidebarContainer!.current!.style.width = `${localStorageSavedWidth || 425}px`;
-    form!.style.marginRight = `${Number(localStorageSavedWidth || 425) + 14}px`;
+    sidebarContainer!.current!.style.width = `${localStorageSavedWidth || 450}px`;
+    form!.style.marginRight = `${Number(localStorageSavedWidth || 450) + 14}px`;
 
     resizer!.current!.addEventListener('mousedown', mouseDownHandler);
 

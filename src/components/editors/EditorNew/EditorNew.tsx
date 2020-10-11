@@ -9,12 +9,15 @@ import 'jsoneditor/dist/jsoneditor.css';
 import { EditorContext } from '@contexts/EditorContext';
 import JsonEditor from '@components/mix/JsonEditor/JsonEditor';
 import { NavigationContext } from '@contexts/NavigationContext';
+import { useRouter } from 'next/router';
+import Loader from '@components/mix/Loader/Loader';
 
 interface EditorNewProps {
   nextStep: () => void;
 }
 
 const EditorNew: FC<EditorNewProps> = ({ nextStep }) => {
+  const router = useRouter();
   const classes = useStyles();
 
   const [continueButtonDisabled, setContinueButtonDisabled] = useState(true);
@@ -31,6 +34,21 @@ const EditorNew: FC<EditorNewProps> = ({ nextStep }) => {
   useEffect(() => {
     if (formFile) {
       setForm(formFile);
+    }
+  }, []);
+
+  useEffect(() => {
+    async function getExportedForm() {
+      // @ts-ignore
+      const res = await fetch(router.query.formUrl);
+
+      const form = await res.json();
+
+      await handleContinueToNextStep(form);
+    }
+
+    if (router.query.formUrl) {
+      getExportedForm();
     }
   }, []);
 
@@ -88,6 +106,10 @@ const EditorNew: FC<EditorNewProps> = ({ nextStep }) => {
 
     nextStep();
   };
+
+  if (router.query.formUrl) {
+    return <Loader />;
+  }
 
   return (
     <>

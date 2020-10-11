@@ -1,4 +1,5 @@
 import React, { Dispatch, SetStateAction } from 'react';
+import { useRouter } from 'next/router';
 
 interface NavigationProviderProps {
   children: React.ReactNode;
@@ -22,19 +23,32 @@ interface NavigationContextValues {
 
 const INITIAL_UNLOCKED_STEPS = [0];
 
+const STEPS_LOCAL_FORM = ['New / Import', 'Customise', 'Preview', 'Export'];
+const STEPS_REMOTE_FORM = ['Fetch', 'Customise', 'Preview', 'Publish'];
+
 // @ts-ignore
 const NavigationContext = React.createContext<NavigationContextValues>({});
 
 const NavigationProvider: React.FC<NavigationProviderProps> = ({ children }) => {
+  const router = useRouter();
+
+  let steps: string[];
+  if (router.query.formUrl) {
+    steps = STEPS_REMOTE_FORM;
+  } else {
+    steps = STEPS_LOCAL_FORM;
+  }
+
   const [showFormConfigurationModal, setShowFormConfigurationModal] = React.useState<boolean>(false);
   const [editorCustomiseCodeView, setEditorCustomiseCodeView] = React.useState<boolean>(false);
-
-  const steps = ['New / Import', 'Customise', 'Preview', 'Export'];
 
   const [activeStep, setActiveStep] = React.useState<number>(0);
   const [unlockedSteps, setUnlockedSteps] = React.useState<Array<number>>([...INITIAL_UNLOCKED_STEPS]);
 
-  const allStepsUnlocked = steps.map((_, index) => {
+  const allStepsUnlocked = STEPS_LOCAL_FORM.map((_, index) => {
+    if (router.query.formUrl && index === 0) {
+      return -1;
+    }
     return index;
   });
 

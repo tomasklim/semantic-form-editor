@@ -7,12 +7,17 @@ import { CustomisedOutlineButton } from '@styles/CustomisedOutlineButton';
 import { CustomisedButton } from '@styles/CustomisedButton';
 import 'jsoneditor/dist/jsoneditor.css';
 import JsonEditor from '@components/mix/JsonEditor/JsonEditor';
+import { useRouter } from 'next/router';
+import { useSnackbar } from 'notistack';
 
 interface EditorExportProps {
   resetEditor: () => void;
 }
 
 const EditorExport: FC<EditorExportProps> = ({ resetEditor }) => {
+  const router = useRouter();
+  const { enqueueSnackbar } = useSnackbar();
+
   const classes = useStyles();
 
   const { formContext, getClonedFormStructure } = useContext(FormStructureContext);
@@ -47,9 +52,34 @@ const EditorExport: FC<EditorExportProps> = ({ resetEditor }) => {
     navigator.clipboard.writeText(JSON.stringify(form));
   };
 
+  const publishForm = async () => {
+    const serverUrl = router.query.formUrl;
+
+    // @ts-ignore
+    const res = await fetch(serverUrl, { method: 'POST', body: JSON.stringify(form) });
+
+    if (res.status === 200) {
+      enqueueSnackbar('Published successfully!', {
+        variant: 'success'
+      });
+    } else {
+      enqueueSnackbar('Publishing failed!', {
+        variant: 'error'
+      });
+    }
+  };
+
   return (
     <>
       <div className={classes.getExportedFormButtons}>
+        {router.query.formUrl && (
+          <>
+            <CustomisedButton size="large" onClick={publishForm} className={classes.buttonWidth}>
+              Publish modified form
+            </CustomisedButton>
+            <span>or</span>
+          </>
+        )}
         <CustomisedOutlineButton
           variant="outlined"
           size="large"
@@ -77,11 +107,13 @@ const EditorExport: FC<EditorExportProps> = ({ resetEditor }) => {
           onEditable: () => false
         }}
       />
-      <div className={classes.buildNewFormButtonContainer}>
-        <CustomisedButton variant="contained" size="large" onClick={resetEditor} className={classes.buttonWidth}>
-          Start over
-        </CustomisedButton>
-      </div>
+      {!router.query.formUrl && (
+        <div className={classes.buildNewFormButtonContainer}>
+          <CustomisedButton variant="contained" size="large" onClick={resetEditor} className={classes.buttonWidth}>
+            Start over
+          </CustomisedButton>
+        </div>
+      )}
     </>
   );
 };
