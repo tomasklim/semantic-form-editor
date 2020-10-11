@@ -9,6 +9,7 @@ import 'jsoneditor/dist/jsoneditor.css';
 import { EditorContext } from '@contexts/EditorContext';
 import JsonEditor from '@components/mix/JsonEditor/JsonEditor';
 import { NavigationContext } from '@contexts/NavigationContext';
+import { ValidationContext } from '@contexts/ValidationContext';
 
 interface EditorNewProps {
   nextStep: () => void;
@@ -27,6 +28,7 @@ const EditorNew: FC<EditorNewProps> = ({ nextStep }) => {
     FormStructureContext
   );
   const { setLanguages, resetEditorContext } = useContext(EditorContext);
+  const { resetValidationContext } = useContext(ValidationContext);
 
   useEffect(() => {
     if (formFile) {
@@ -76,6 +78,7 @@ const EditorNew: FC<EditorNewProps> = ({ nextStep }) => {
     resetNavigationContext();
     resetFormStructureContext();
     resetEditorContext();
+    resetValidationContext();
 
     const formStructure = await buildFormStructure(form);
 

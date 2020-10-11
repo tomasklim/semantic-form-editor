@@ -4,6 +4,7 @@ import JSONEditor, { JSONEditorOptions } from 'jsoneditor';
 import { useSnackbar } from 'notistack';
 import { JsonLdObj } from 'jsonld/jsonld-spec';
 import classNames from 'classnames';
+import { shaclFormValidation } from '@utils/formValidation';
 
 interface JsonEditorProps {
   form: JsonLdObj | null;
@@ -75,11 +76,11 @@ const JsonEditor: React.FC<JsonEditorProps> = ({
       return;
     }
 
-    if (!isFormValid(form)) {
-      return;
-    }
+    isFormValid(form);
 
-    processFormCallback && processFormCallback(form);
+    await shaclFormValidation(form);
+
+    return processFormCallback && processFormCallback(form);
   };
 
   return <div className={classNames(classes.container, { [className!]: className })} ref={jsonEditorContainer} />;

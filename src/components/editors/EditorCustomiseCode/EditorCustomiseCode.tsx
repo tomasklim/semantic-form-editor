@@ -5,10 +5,12 @@ import { buildFormStructure, exportForm } from '@utils/formHelpers';
 import JsonEditor from '@components/mix/JsonEditor/JsonEditor';
 import { JSONEditorMode } from 'jsoneditor';
 import { NavigationContext } from '@contexts/NavigationContext';
-import { VerticalSplit } from '@material-ui/icons';
+import { VerticalSplit, Spellcheck } from '@material-ui/icons';
 import { CustomisedLinkButton } from '@styles/CustomisedLinkButton';
 import { CustomisedOutlineButton } from '@styles/CustomisedOutlineButton';
 import { CustomisedButton } from '@styles/CustomisedButton';
+import { ValidationContext } from '@contexts/ValidationContext';
+import ErrorsModal from '@components/mix/ErrorsModal/ErrorsModal';
 
 const EditorCustomiseCode: React.FC = () => {
   const classes = useStyles();
@@ -17,6 +19,8 @@ const EditorCustomiseCode: React.FC = () => {
     FormStructureContext
   );
   const { setEditorCustomiseCodeView } = useContext(NavigationContext);
+
+  const { validateForm, isValid } = useContext(ValidationContext);
 
   const [form, setForm] = useState<any>(null);
 
@@ -39,6 +43,8 @@ const EditorCustomiseCode: React.FC = () => {
     setFormContext(form['@context']);
     setFormFile(form);
     setForm(form);
+
+    return form;
   };
 
   const onReset = () => {
@@ -47,6 +53,12 @@ const EditorCustomiseCode: React.FC = () => {
 
   const onSave = () => {
     finishCallback();
+  };
+
+  const onValidate = async () => {
+    const formToValidate = await finishCallback();
+
+    validateForm(formToValidate);
   };
 
   const onSwitchToEditorView = () => {
@@ -59,6 +71,17 @@ const EditorCustomiseCode: React.FC = () => {
   return (
     <>
       <div className={classes.continueButtons}>
+        <div className={classes.validateContainer}>
+          <CustomisedOutlineButton
+            onClick={onValidate}
+            className={classes.validateButton}
+            variant="outlined"
+            title="Save and validate form"
+          >
+            <Spellcheck />
+          </CustomisedOutlineButton>
+          {isValid === false ? <ErrorsModal /> : null}
+        </div>
         <CustomisedButton className={classes.saveButton} onClick={onSave}>
           Save changes
         </CustomisedButton>

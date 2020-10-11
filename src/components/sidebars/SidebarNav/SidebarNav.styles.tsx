@@ -35,5 +35,9 @@ export default makeStyles((theme: ITheme) => ({
     minWidth: 'fit-content',
     padding: '5px 10px',
     marginRight: 'auto'
+  },
+  spellCheckButton: {
+    minWidth: 'fit-content',
+    padding: '5px 10px'
   }
 }));
