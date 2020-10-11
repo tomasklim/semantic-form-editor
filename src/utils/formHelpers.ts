@@ -46,22 +46,27 @@ const findFormRoot = (structure: Array<FormStructureQuestion>): FormStructureQue
 
 export const findFormLanguages = (formStructure: FormStructure): Array<string> => {
   if (formStructure?.root?.data && formStructure.root.data[Constants.HAS_SUBQUESTION]) {
-    const rootSubquestions = formStructure.root.data[Constants.HAS_SUBQUESTION];
+    const rootData = formStructure.root.data;
     const languagesSet = new Set<string>();
 
-    // @ts-ignore
-    for (const [index, question] of rootSubquestions.entries()) {
-      // check first five root questions to find languages of the form
-      if (index === 5) break;
+    const findLanguagesRecursion = (question: FormStructureQuestion) => {
+      const subquestions = question[Constants.HAS_SUBQUESTION];
+      if (!subquestions || !subquestions.length) return;
 
-      const label = question[Constants.RDFS_LABEL];
+      question[Constants.HAS_SUBQUESTION].forEach((question: FormStructureQuestion) => {
+        const label = question[Constants.RDFS_LABEL];
 
-      if (Array.isArray(label)) {
-        label.forEach((localisedLabel) => {
-          languagesSet.add(localisedLabel['@language']);
-        });
-      }
-    }
+        if (Array.isArray(label)) {
+          label.forEach((localisedLabel) => {
+            languagesSet.add(localisedLabel['@language']);
+          });
+        }
+
+        findLanguagesRecursion(question);
+      });
+    };
+
+    findLanguagesRecursion(rootData);
 
     return Array.from(languagesSet);
   }
@@ -239,22 +244,22 @@ export const transformToWizardForm = (formStructure: FormStructure) => {
   }
 };
 
-export const editLocalisedLabel = (lang: string, value: string, questionAttribute: any) => {
+export const editLocalisedLabel = (lang: string, value: string, question: any, attribute: string) => {
   const availableLanguage =
-    Array.isArray(questionAttribute) &&
-    questionAttribute.find((language: LanguageObject) => language['@language'] === lang);
+    Array.isArray(question[attribute]) &&
+    question[attribute].find((language: LanguageObject) => language['@language'] === lang);
 
   // field already have value in this language
   if (availableLanguage) {
     availableLanguage['@value'] = value;
   } else {
     // language have to be added
-    if (!Array.isArray(questionAttribute)) {
-      questionAttribute = [];
+    if (!Array.isArray(question[attribute])) {
+      question[attribute] = [];
     }
 
     const languageObject = createJsonLanguageValue(lang!, value);
 
-    questionAttribute.push(languageObject);
+    question[attribute].push(languageObject);
   }
 };

@@ -38,9 +38,9 @@ const LocalisedInput: React.FC<LocalisedInputProps> = ({
       return;
     }
 
-    editLocalisedLabel(lang, target.value, questionValue);
+    editLocalisedLabel(lang, target.value, question, type);
 
-    const fakeEvent = createFakeChangeEvent(type, questionValue);
+    const fakeEvent = createFakeChangeEvent(type, question[type]);
 
     handleChange(fakeEvent);
   };

@@ -80,9 +80,7 @@ const TypeaheadOptionsModal: React.FC<TypeaheadOptionsModalProps> = ({ question,
             if (!lang) {
               option[Constants.RDFS_LABEL] = target.value;
             } else {
-              let optionLabel = option[Constants.RDFS_LABEL];
-
-              editLocalisedLabel(lang, target.value, optionLabel);
+              editLocalisedLabel(lang, target.value, option, Constants.RDFS_LABEL);
             }
 
             const fakeEvent = createFakeChangeEvent(Constants.HAS_OPTION, options);

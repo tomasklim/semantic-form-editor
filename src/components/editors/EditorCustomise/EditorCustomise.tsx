@@ -8,11 +8,13 @@ import useStyles from './EditorCustomise.styles';
 import ItemSection from '@components/items/ItemSection/ItemSection';
 import Sidebar from '@components/sidebars/Sidebar/Sidebar';
 import ItemFormEmpty from '@components/items/ItemFormEmpty/ItemFormEmpty';
+import { CustomiseQuestionContext } from '@contexts/CustomiseQuestionContext';
 
 const EditorCustomise: React.FC = () => {
   const classes = useStyles();
 
   const { formStructure } = useContext(FormStructureContext);
+  const { customiseQuestion } = useContext(CustomiseQuestionContext);
 
   const buildFormUI = (
     question: FormStructureQuestion,
@@ -32,7 +34,7 @@ const EditorCustomise: React.FC = () => {
       FormUtils.isTextarea(question, '') ||
       !(FormUtils.isSection(question) || FormUtils.isWizardStep(question)) // text field
     ) {
-      item = <Item question={question} position={position} />;
+      item = <Item question={question} position={position} customiseQuestion={customiseQuestion} />;
     } else {
       const isWizardStep = FormUtils.isWizardStep(question);
 
@@ -44,18 +46,34 @@ const EditorCustomise: React.FC = () => {
               position={position}
               isWizardPosition={isWizardStep}
               topLevelPosition={topLevelPosition}
+              customiseQuestion={customiseQuestion}
             />
           )}
-          <ItemSection question={question} buildFormUI={buildFormUI} position={position} />
-          <ItemAdd parentQuestionId={parentQuestion['@id']} position={position + 1} isWizardPosition={isWizardStep} />
+          <ItemSection
+            question={question}
+            buildFormUI={buildFormUI}
+            position={position}
+            customiseQuestion={customiseQuestion}
+          />
+          <ItemAdd
+            parentQuestionId={parentQuestion['@id']}
+            position={position + 1}
+            isWizardPosition={isWizardStep}
+            customiseQuestion={customiseQuestion}
+          />
         </React.Fragment>
       );
     }
 
     return (
-      <div key={question['@id']}>
+      <>
         {position === 0 && (
-          <ItemAdd parentQuestionId={parentQuestion['@id']} position={position} topLevelPosition={topLevelPosition} />
+          <ItemAdd
+            parentQuestionId={parentQuestion['@id']}
+            position={position}
+            topLevelPosition={topLevelPosition}
+            customiseQuestion={customiseQuestion}
+          />
         )}
         {item}
         {subquestions && (
@@ -65,8 +83,12 @@ const EditorCustomise: React.FC = () => {
             )}
           </ol>
         )}
-        <ItemAdd parentQuestionId={parentQuestion['@id']} position={position + 1} />
-      </div>
+        <ItemAdd
+          parentQuestionId={parentQuestion['@id']}
+          position={position + 1}
+          customiseQuestion={customiseQuestion}
+        />
+      </>
     );
   };
 

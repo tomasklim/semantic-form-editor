@@ -14,7 +14,7 @@ import { FormStructureContext } from '@contexts/FormStructureContext';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
 import AddIcon from '@material-ui/icons/Add';
 import SquaredIconButton from '@styles/SquaredIconButton';
-import { CustomiseQuestionContext, OnSaveQuestionsCallback } from '@contexts/CustomiseQuestionContext';
+import { CustomiseQuestion, OnSaveQuestionsCallback } from '@contexts/CustomiseQuestionContext';
 import useStyles from './ItemMenu.styles';
 import { NEW_QUESTION } from '@constants/index';
 import { EditorContext } from '@contexts/EditorContext';
@@ -26,13 +26,13 @@ import { NavigationContext } from '@contexts/NavigationContext';
 
 interface Props {
   question: FormStructureQuestion;
+  customiseQuestion: CustomiseQuestion;
 }
 
-const ItemMenu: FC<Props> = ({ question }) => {
+const ItemMenu: FC<Props> = ({ question, customiseQuestion }) => {
   const classes = useStyles();
 
   const { getClonedFormStructure, setFormStructure, addNewNodes } = useContext(FormStructureContext);
-  const { customiseQuestion } = useContext(CustomiseQuestionContext);
   const { updateSFormsConfig, intl } = useContext(EditorContext);
   const { activeStep, setActiveStep } = useContext(NavigationContext);
 

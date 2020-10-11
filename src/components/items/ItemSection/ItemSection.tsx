@@ -11,10 +11,10 @@ import {
   handleDragStart,
   onItemClickHandler
 } from '@utils/index';
-import { CustomiseQuestionContext } from '@contexts/CustomiseQuestionContext';
 import { Accordion } from '@material-ui/core';
 
 import { EditorContext } from '@contexts/EditorContext';
+import { CustomiseQuestion } from '@contexts/CustomiseQuestionContext';
 
 type ItemSectionProps = {
   question: FormStructureQuestion;
@@ -24,16 +24,16 @@ type ItemSectionProps = {
     position: number,
     parentQuestion: FormStructureQuestion
   ) => JSX.Element;
+  customiseQuestion: CustomiseQuestion;
 };
 
-const ItemSection: FC<ItemSectionProps> = ({ question, position, buildFormUI }) => {
+const ItemSection: FC<ItemSectionProps> = ({ question, position, buildFormUI, customiseQuestion }) => {
   const classes = useStyles();
   const itemContainer = useRef<HTMLLIElement | null>(null);
 
   const [expanded, setExpanded] = useState<boolean>(true);
 
   const { formStructure, moveNodeUnderNode, updateNode } = useContext(FormStructureContext);
-  const { customiseQuestion } = useContext(CustomiseQuestionContext);
   const { intl, sectionsExpanded } = useContext(EditorContext);
 
   useEffect(() => {
@@ -175,6 +175,7 @@ const ItemSection: FC<ItemSectionProps> = ({ question, position, buildFormUI }) 
             expandable={true}
             expanded={expanded}
             expandItemSection={expandItemSection}
+            customiseQuestion={customiseQuestion}
           />
           <CustomisedAccordionDetails
             className={classes.cardContent}

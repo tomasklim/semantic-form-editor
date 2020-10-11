@@ -81,7 +81,7 @@ const Sidebar = () => {
     >
       <SidebarResizer sidebarContainer={sidebarContainer} />
 
-      <SidebarNav />
+      <SidebarNav customiseQuestion={customiseQuestion} />
 
       <SidebarItemForm />
     </Drawer>

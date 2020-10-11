@@ -8,6 +8,7 @@ import ItemPropsIndicator from '@components/items/ItemPropsIndicator/ItemPropsIn
 // @ts-ignore
 import JsonLdUtils from 'jsonld-utils';
 import { EditorContext } from '@contexts/EditorContext';
+import { CustomiseQuestion } from '@contexts/CustomiseQuestionContext';
 
 type ItemHeaderProps = {
   container: React.MutableRefObject<HTMLLIElement | null>;
@@ -16,6 +17,7 @@ type ItemHeaderProps = {
   expandable?: boolean;
   expanded?: boolean;
   expandItemSection?: (e: React.MouseEvent) => void;
+  customiseQuestion: CustomiseQuestion;
 };
 
 const ItemHeader: FC<ItemHeaderProps> = ({
@@ -24,7 +26,8 @@ const ItemHeader: FC<ItemHeaderProps> = ({
   position,
   expandable,
   expanded,
-  expandItemSection
+  expandItemSection,
+  customiseQuestion
 }) => {
   const classes = useStyles();
 
@@ -56,7 +59,7 @@ const ItemHeader: FC<ItemHeaderProps> = ({
             <ItemPropsIndicator question={question} />
           </span>
           <span className={classes.cardHeaderItemRight} onMouseEnter={removeDraggable} onMouseLeave={addDraggable}>
-            <ItemMenu question={question} />
+            <ItemMenu question={question} customiseQuestion={customiseQuestion} />
           </span>
         </div>
       }

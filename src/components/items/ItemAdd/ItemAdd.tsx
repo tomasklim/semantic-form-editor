@@ -15,7 +15,7 @@ import {
 import { Constants } from 's-forms';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import FormStructureNode from '@model/FormStructureNode';
-import { CustomiseQuestionContext, OnSaveQuestionCallback } from '@contexts/CustomiseQuestionContext';
+import { CustomiseQuestion, OnSaveQuestionCallback } from '@contexts/CustomiseQuestionContext';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
 import FormStructure from '@model/FormStructure';
 import { NEW_QUESTION, NEW_WIZARD_SECTION_QUESTION } from '@constants/index';
@@ -27,19 +27,20 @@ type ItemAddProps = {
   parentQuestionId: string;
   isWizardPosition?: boolean;
   topLevelPosition?: boolean;
+  customiseQuestion: CustomiseQuestion;
 };
 
 const ItemAdd: FC<ItemAddProps> = ({
   parentQuestionId,
   position,
   isWizardPosition = false,
-  topLevelPosition = false
+  topLevelPosition = false,
+  customiseQuestion
 }) => {
   const classes = useStyles();
   const addContainer = useRef<HTMLDivElement | null>(null);
 
   const { formStructure, setFormStructure, getClonedFormStructure, isWizardless } = useContext(FormStructureContext);
-  const { customiseQuestion } = useContext(CustomiseQuestionContext);
   const { intl } = useContext(EditorContext);
 
   const handleMouseEnter = () => {

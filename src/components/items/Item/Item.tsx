@@ -4,20 +4,20 @@ import ItemHeader from '@components/items/ItemHeader/ItemHeader';
 import ItemContent from '@components/items/ItemContent/ItemContent';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
 import { handleDragEnd, handleDragStart, onItemClickHandler } from '@utils/index';
-import { CustomiseQuestionContext } from '@contexts/CustomiseQuestionContext';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import { EditorContext } from '@contexts/EditorContext';
+import { CustomiseQuestion } from '@contexts/CustomiseQuestionContext';
 
 type ItemProps = {
   question: FormStructureQuestion;
   position: number;
+  customiseQuestion: CustomiseQuestion;
 };
 
-const Item: FC<ItemProps> = ({ question, position }) => {
+const Item: FC<ItemProps> = ({ question, position, customiseQuestion }) => {
   const classes = useStyles();
   const itemContainer = useRef<HTMLLIElement | null>(null);
 
-  const { customiseQuestion } = useContext(CustomiseQuestionContext);
   const { updateNode, isWizardless } = useContext(FormStructureContext);
   const { intl } = useContext(EditorContext);
 
@@ -60,7 +60,12 @@ const Item: FC<ItemProps> = ({ question, position }) => {
         className={classes.listItem}
       >
         <CustomisedCard variant="outlined">
-          <ItemHeader container={itemContainer} question={question} position={position + 1} />
+          <ItemHeader
+            container={itemContainer}
+            question={question}
+            position={position + 1}
+            customiseQuestion={customiseQuestion}
+          />
           <ItemContent question={question} />
         </CustomisedCard>
       </li>

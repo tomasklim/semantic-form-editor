@@ -2,7 +2,7 @@ import { CustomisedOutlineButton } from '@styles/CustomisedOutlineButton';
 import AddIcon from '@material-ui/icons/Add';
 import React, { useContext, useRef } from 'react';
 import { NEW_QUESTION, NEW_WIZARD_SECTION_QUESTION } from '@constants/index';
-import { CustomiseQuestionContext, OnSaveQuestionsCallback } from '@contexts/CustomiseQuestionContext';
+import { CustomiseQuestion, OnSaveQuestionsCallback } from '@contexts/CustomiseQuestionContext';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import useStyles from './SidebarNav.styles';
 import ConfigModal from '@components/mix/ConfigModal/ConfigModal';
@@ -13,7 +13,11 @@ import { NavigationContext } from '@contexts/NavigationContext';
 import { exportForm } from '@utils/formHelpers';
 import { ValidationContext } from '@contexts/ValidationContext';
 
-const SidebarNav = ({}) => {
+interface SidebarNavProps {
+  customiseQuestion: CustomiseQuestion;
+}
+
+const SidebarNav: React.FC<SidebarNavProps> = ({ customiseQuestion }) => {
   const classes = useStyles();
 
   const addButton = useRef<HTMLButtonElement | null>(null);
@@ -21,7 +25,6 @@ const SidebarNav = ({}) => {
   const { getClonedFormStructure, formContext, addNewNodes, isWizardless, isEmptyFormStructure } = useContext(
     FormStructureContext
   );
-  const { customiseQuestion } = useContext(CustomiseQuestionContext);
   const { intl, setSectionsExpanded, sectionsExpanded } = useContext(EditorContext);
 
   const { editorCustomiseCodeView, setEditorCustomiseCodeView } = useContext(NavigationContext);

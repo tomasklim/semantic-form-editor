@@ -92,8 +92,6 @@ export const moveQuestion = (movingNode: FormStructureNode, targetNode: FormStru
 };
 
 export const highlightQuestion = (movingNodeId: string): void => {
-  document.getElementById(movingNodeId)?.classList.add('highlightQuestion');
-
   setTimeout(() => {
     document.getElementById(movingNodeId)?.classList.add('highlightQuestion');
 

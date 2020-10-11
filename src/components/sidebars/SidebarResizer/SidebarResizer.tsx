@@ -37,7 +37,7 @@ const SidebarResizer: React.FC<SidebarResizerProps> = ({ sidebarContainer }) => 
       }
 
       const width = Math.min(
-        Math.max(sidebarContainer.current.getBoundingClientRect().width + dx, 400),
+        Math.max(sidebarContainer.current.getBoundingClientRect().width + dx, 450),
         window.innerWidth / 2
       );
 
