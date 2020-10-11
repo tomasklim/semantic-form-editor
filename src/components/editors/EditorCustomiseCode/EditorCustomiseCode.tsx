@@ -20,7 +20,7 @@ const EditorCustomiseCode: React.FC = () => {
   );
   const { setEditorCustomiseCodeView } = useContext(NavigationContext);
 
-  const { validateForm, isValid, questionErrors } = useContext(ValidationContext);
+  const { validateForm, isValid } = useContext(ValidationContext);
 
   const [form, setForm] = useState<any>(null);
 

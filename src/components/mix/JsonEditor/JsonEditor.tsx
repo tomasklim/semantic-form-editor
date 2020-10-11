@@ -76,9 +76,7 @@ const JsonEditor: React.FC<JsonEditorProps> = ({
       return;
     }
 
-    if (!isFormValid(form)) {
-      return;
-    }
+    isFormValid(form);
 
     await shaclFormValidation(form);
 

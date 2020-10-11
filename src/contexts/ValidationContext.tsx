@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import React, { useState } from 'react';
 import { JsonLdObj } from 'jsonld/jsonld-spec';
 import { shaclFormValidation } from '@utils/formValidation';
 import { useSnackbar } from 'notistack';
@@ -15,7 +15,7 @@ export type ValidationError = Array<{
 interface ValidationContextValues {
   questionErrors: Map<string, ValidationError>;
   validateForm: (form: JsonLdObj) => void;
-  isValid: boolean;
+  isValid: boolean | undefined;
 }
 
 // @ts-ignore

@@ -14,10 +14,11 @@ export default makeStyles((theme: ITheme) => ({
   },
   paper: {
     position: 'absolute',
-    width: 600,
-    left: '50%',
-    top: '30%',
-    transform: 'translate(-50%, -50%)',
+    maxHeight: '80vh',
+    overflow: 'auto',
+    top: '108px',
+    maxWidth: '90vw',
+
     backgroundColor: theme.palette.custom[900],
     border: '1px solid ' + theme.palette.custom.main,
     borderRadius: '4px',
@@ -27,15 +28,6 @@ export default makeStyles((theme: ITheme) => ({
     },
     '&:focus': {
       outline: 'none'
-    },
-    '& .MuiInputBase-input, & .MuiIconButton-label, & .MuiFormLabel-root': {
-      color: '#ffffff'
-    },
-    '& .MuiOutlinedInput-notchedOutline': {
-      borderColor: '#ffffff !important'
-    },
-    '& .MuiChip-root': {
-      height: '25px'
     }
   },
   buttons: {
@@ -46,8 +38,10 @@ export default makeStyles((theme: ITheme) => ({
       width: '200px'
     }
   },
-  configButton: {
-    minWidth: 'fit-content',
-    padding: '5px 10px'
+  copyIcon: {
+    cursor: 'pointer',
+    '&:hover': {
+      color: theme.palette.custom.main
+    }
   }
 }));
