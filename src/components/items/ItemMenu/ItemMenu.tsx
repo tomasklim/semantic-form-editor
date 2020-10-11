@@ -32,7 +32,7 @@ interface Props {
 const ItemMenu: FC<Props> = ({ question, customiseQuestion }) => {
   const classes = useStyles();
 
-  const { getClonedFormStructure, setFormStructure, addNewNodes } = useContext(FormStructureContext);
+  const { getClonedFormStructure, updateFormStructure, addNewNodes } = useContext(FormStructureContext);
   const { updateSFormsConfig, intl } = useContext(EditorContext);
   const { activeStep, setActiveStep } = useContext(NavigationContext);
 
@@ -111,7 +111,7 @@ const ItemMenu: FC<Props> = ({ question, customiseQuestion }) => {
       intl
     );
 
-    setFormStructure(clonedFormStructure);
+    updateFormStructure(clonedFormStructure);
   };
 
   const handleDuplicateQuestion = (e: React.SyntheticEvent<EventTarget>) => {
@@ -164,7 +164,7 @@ const ItemMenu: FC<Props> = ({ question, customiseQuestion }) => {
       intl
     );
 
-    setFormStructure(clonedFormStructure);
+    updateFormStructure(clonedFormStructure);
   };
 
   const handleViewInPreview = (e: React.SyntheticEvent<EventTarget>) => {
@@ -191,7 +191,7 @@ const ItemMenu: FC<Props> = ({ question, customiseQuestion }) => {
 
     sortRelatedQuestions(nodeParent.data[Constants.HAS_SUBQUESTION], intl);
 
-    setFormStructure(clonedFormStructure);
+    updateFormStructure(clonedFormStructure);
 
     highlightQuestion(question['@id']);
   };

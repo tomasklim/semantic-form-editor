@@ -16,6 +16,9 @@ import {
 } from '@utils/index';
 import FormStructureNode from '@model/FormStructureNode';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
+import { useRouter } from 'next/router';
+import { useSnackbar } from 'notistack';
+import { exportForm } from '../utils';
 
 interface FormStructureProviderProps {
   children: React.ReactNode;
@@ -49,6 +52,9 @@ type AddNewFormStructureNode = (
 const FormStructureContext = React.createContext<FormStructureContextValues>({});
 
 const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children }) => {
+  const router = useRouter();
+  const { enqueueSnackbar } = useSnackbar();
+
   // @ts-ignore
   const [formStructure, setFormStructure] = useState<FormStructure>(null);
   // @ts-ignore
@@ -66,6 +72,27 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
     setFormFile(null);
     setIsWizardless(true);
     setIsEmptyFormStructure(true);
+  };
+
+  const updateFormStructure = async (form: FormStructure) => {
+    if (router.query.formUrl && router.query.updates) {
+      setFormStructure(form);
+
+      const clonedForm = cloneDeep(form);
+
+      const exportedForm = await exportForm(clonedForm, formContext);
+
+      try {
+        // @ts-ignore
+        await fetch(router.query.formUrl, { method: 'PUT', body: JSON.stringify(exportedForm) });
+      } catch (error) {
+        enqueueSnackbar('Update to server failed!', {
+          variant: 'error'
+        });
+      }
+    } else {
+      setFormStructure(form);
+    }
   };
 
   useEffect(() => {
@@ -106,7 +133,7 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
 
     sortRelatedQuestions(targetNode.data[Constants.HAS_SUBQUESTION], intl);
 
-    setFormStructure(clonedFormStructure);
+    updateFormStructure(clonedFormStructure);
   };
 
   const moveNodeUnderNode = (movingNodeId: string, targetNodeId: string, isWizardPosition: boolean, intl: Intl) => {
@@ -151,7 +178,7 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
 
     targetNode.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(targetNode.data[Constants.HAS_SUBQUESTION], intl);
 
-    setFormStructure(clonedFormStructure);
+    updateFormStructure(clonedFormStructure);
 
     highlightQuestion(movingNodeId);
   };
@@ -182,7 +209,7 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
       parent.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(parent.data[Constants.HAS_SUBQUESTION], intl);
     }
 
-    setFormStructure(clonedFormStructure);
+    updateFormStructure(clonedFormStructure);
   };
 
   const values = React.useMemo<FormStructureContextValues>(
@@ -192,6 +219,7 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
       getClonedFormStructure,
       updateNode,
       setFormStructure,
+      updateFormStructure,
       setFormContext,
       formStructure,
       formContext,

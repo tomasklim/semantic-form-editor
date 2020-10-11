@@ -40,7 +40,7 @@ const ItemAdd: FC<ItemAddProps> = ({
   const classes = useStyles();
   const addContainer = useRef<HTMLDivElement | null>(null);
 
-  const { formStructure, setFormStructure, getClonedFormStructure, isWizardless } = useContext(FormStructureContext);
+  const { formStructure, updateFormStructure, getClonedFormStructure, isWizardless } = useContext(FormStructureContext);
   const { intl } = useContext(EditorContext);
 
   const handleMouseEnter = () => {
@@ -159,7 +159,7 @@ const ItemAdd: FC<ItemAddProps> = ({
 
     targetNode.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(targetNode.data[Constants.HAS_SUBQUESTION], intl);
 
-    setFormStructure(clonedFormStructure);
+    updateFormStructure(clonedFormStructure);
 
     highlightQuestion(movingNodeId);
 
@@ -206,7 +206,7 @@ const ItemAdd: FC<ItemAddProps> = ({
 
     targetNode.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(targetNode.data[Constants.HAS_SUBQUESTION], intl);
 
-    setFormStructure(clonedFormStructure);
+    updateFormStructure(clonedFormStructure);
 
     highlightQuestion(newQuestion['@id']);
   };

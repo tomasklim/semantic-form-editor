@@ -15,7 +15,7 @@ import ErrorsModal from '@components/mix/ErrorsModal/ErrorsModal';
 const EditorCustomiseCode: React.FC = () => {
   const classes = useStyles();
 
-  const { setFormStructure, getClonedFormStructure, formContext, setFormContext, setFormFile } = useContext(
+  const { updateFormStructure, getClonedFormStructure, formContext, setFormContext, setFormFile } = useContext(
     FormStructureContext
   );
   const { setEditorCustomiseCodeView } = useContext(NavigationContext);
@@ -39,7 +39,7 @@ const EditorCustomiseCode: React.FC = () => {
   const processForm = async (form: any) => {
     const formStructure = await buildFormStructure(form);
 
-    setFormStructure(formStructure);
+    updateFormStructure(formStructure);
     setFormContext(form['@context']);
     setFormFile(form);
     setForm(form);

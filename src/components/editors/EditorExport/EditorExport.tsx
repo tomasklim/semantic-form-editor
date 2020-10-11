@@ -53,16 +53,21 @@ const EditorExport: FC<EditorExportProps> = ({ resetEditor }) => {
   };
 
   const publishForm = async () => {
-    const serverUrl = router.query.formUrl;
+    const formUrl = router.query.formUrl;
 
-    // @ts-ignore
-    const res = await fetch(serverUrl, { method: 'POST', body: JSON.stringify(form) });
-
-    if (res.status === 200) {
-      enqueueSnackbar('Published successfully!', {
-        variant: 'success'
-      });
-    } else {
+    try {
+      // @ts-ignore
+      const res = await fetch(formUrl, { method: 'POST', body: JSON.stringify(form) });
+      if (res.status === 200) {
+        enqueueSnackbar('Published successfully!', {
+          variant: 'success'
+        });
+      } else {
+        enqueueSnackbar('Publishing failed!', {
+          variant: 'error'
+        });
+      }
+    } catch (error) {
       enqueueSnackbar('Publishing failed!', {
         variant: 'error'
       });

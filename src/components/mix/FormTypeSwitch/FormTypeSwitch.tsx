@@ -14,9 +14,13 @@ interface FormTypeSwitchProps {
 const FormTypeSwitch: React.FC<FormTypeSwitchProps> = ({ cloneConfigModal }) => {
   const classes = useStyles();
 
-  const { isEmptyFormStructure, isWizardless, setIsWizardless, getClonedFormStructure, setFormStructure } = useContext(
-    FormStructureContext
-  );
+  const {
+    isEmptyFormStructure,
+    isWizardless,
+    setIsWizardless,
+    getClonedFormStructure,
+    updateFormStructure
+  } = useContext(FormStructureContext);
 
   const handleFormTypeChange = () => {
     setIsWizardless(!isWizardless);
@@ -30,7 +34,7 @@ const FormTypeSwitch: React.FC<FormTypeSwitchProps> = ({ cloneConfigModal }) => 
       transformToSimpleForm(clonedFormStructure);
     }
 
-    setFormStructure(clonedFormStructure);
+    updateFormStructure(clonedFormStructure);
     cloneConfigModal();
   };
 
