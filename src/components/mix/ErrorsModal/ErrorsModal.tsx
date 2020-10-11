@@ -18,7 +18,7 @@ const ErrorsModal = () => {
 
   const modalBody = (
     <div className={classes.paper}>
-      <h3>Errors modal</h3>
+      <h3>Validation errors</h3>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>

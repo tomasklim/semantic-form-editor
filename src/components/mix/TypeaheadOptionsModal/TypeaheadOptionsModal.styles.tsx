@@ -57,10 +57,12 @@ export default makeStyles((theme: ITheme) => ({
     marginBottom: '0 !important'
   },
   delete: {
-    cursor: 'pointer',
-    color: theme.palette.custom.main,
-    '&:hover': {
-      color: 'white'
+    '&.MuiTableCell-body': {
+      cursor: 'pointer',
+      color: theme.palette.custom.main,
+      '&:hover': {
+        color: 'white'
+      }
     }
   },
   addNewOption: {
