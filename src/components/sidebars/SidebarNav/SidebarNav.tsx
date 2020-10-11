@@ -8,19 +8,24 @@ import useStyles from './SidebarNav.styles';
 import ConfigModal from '@components/mix/ConfigModal/ConfigModal';
 import { EditorContext } from '@contexts/EditorContext';
 import SidebarDroparea from '@components/sidebars/SidebarDroparea/SidebarDroparea';
-import { Code, ExpandLess, ExpandMore } from '@material-ui/icons';
+import { Code, ExpandLess, ExpandMore, Spellcheck } from '@material-ui/icons';
 import { NavigationContext } from '@contexts/NavigationContext';
+import { exportForm } from '@utils/formHelpers';
+import { ValidationContext } from '@contexts/ValidationContext';
 
 const SidebarNav = ({}) => {
   const classes = useStyles();
 
   const addButton = useRef<HTMLButtonElement | null>(null);
 
-  const { getClonedFormStructure, addNewNodes, isWizardless, isEmptyFormStructure } = useContext(FormStructureContext);
+  const { getClonedFormStructure, formContext, addNewNodes, isWizardless, isEmptyFormStructure } = useContext(
+    FormStructureContext
+  );
   const { customiseQuestion } = useContext(CustomiseQuestionContext);
   const { intl, setSectionsExpanded, sectionsExpanded } = useContext(EditorContext);
 
   const { editorCustomiseCodeView, setEditorCustomiseCodeView } = useContext(NavigationContext);
+  const { validateForm } = useContext(ValidationContext);
 
   const addNewTopLevelQuestion = () => {
     const clonedFormStructure = getClonedFormStructure();
@@ -50,6 +55,14 @@ const SidebarNav = ({}) => {
     setEditorCustomiseCodeView(!editorCustomiseCodeView);
   };
 
+  const handleValidateForm = async () => {
+    const formStructure = getClonedFormStructure();
+
+    const exportedForm = await exportForm(formStructure, formContext);
+
+    validateForm(exportedForm);
+  };
+
   return (
     <>
       <div className={classes.sidebarNav}>
@@ -71,6 +84,15 @@ const SidebarNav = ({}) => {
           disabled={isEmptyFormStructure}
         >
           {sectionsExpanded ? <ExpandLess /> : <ExpandMore />}
+        </CustomisedOutlineButton>
+        <CustomisedOutlineButton
+          variant="outlined"
+          title={'Validate form'}
+          className={classes.spellCheckButton}
+          onClick={handleValidateForm}
+          disabled={isEmptyFormStructure}
+        >
+          <Spellcheck />
         </CustomisedOutlineButton>
         <CustomisedOutlineButton
           variant="outlined"

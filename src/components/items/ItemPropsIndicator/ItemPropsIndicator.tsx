@@ -3,7 +3,7 @@ import { Badge, Tooltip } from '@material-ui/core';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
 import React, { FC, useContext } from 'react';
 import { Constants } from 's-forms';
-import { Block, ExpandMore } from '@material-ui/icons';
+import { Block, ExpandMore, Warning } from '@material-ui/icons';
 import VerticalAlignTopIcon from '@material-ui/icons/VerticalAlignTop';
 import CommentIcon from '@material-ui/icons/Comment';
 import { highlightQuestion } from '@utils/itemHelpers';
@@ -11,6 +11,7 @@ import { EditorContext } from '@contexts/EditorContext';
 // @ts-ignore
 import JsonLdUtils from 'jsonld-utils';
 import { NavigationContext } from '@contexts/NavigationContext';
+import { ValidationContext, ValidationError } from '@contexts/ValidationContext';
 
 type Props = {
   question: FormStructureQuestion;
@@ -21,6 +22,7 @@ const ItemPropsIndicator: FC<Props> = ({ question }) => {
 
   const { updateSFormsConfig } = useContext(EditorContext);
   const { activeStep, setActiveStep } = useContext(NavigationContext);
+  const { questionErrors, isValid } = useContext(ValidationContext);
 
   const handlePrecedingQuestionBadgeClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -35,8 +37,29 @@ const ItemPropsIndicator: FC<Props> = ({ question }) => {
     setActiveStep(activeStep + 1);
   };
 
+  const errors: ValidationError = questionErrors.get(question['@id']);
+
+  const getErrorText = () => {
+    return (
+      <>
+        {errors.map((error) => (
+          <div>
+            {error.attribute}&nbsp;:&nbsp;{error.error}
+          </div>
+        ))}
+      </>
+    );
+  };
+
   return (
     <span className={classes.headerIndicators}>
+      {isValid === false && errors && (
+        <div className={classes.validationErrors}>
+          <Tooltip title={getErrorText()} PopperProps={{ className: classes.tooltipNowrap }}>
+            <Warning />
+          </Tooltip>
+        </div>
+      )}
       {question[Constants.REQUIRES_ANSWER] && (
         <div>
           <Tooltip title="Required" arrow>

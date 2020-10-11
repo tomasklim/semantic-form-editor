@@ -8,7 +8,7 @@ import { FormStructureContext } from '@contexts/FormStructureContext';
 import { CustomiseQuestionContext } from '@contexts/CustomiseQuestionContext';
 import { createFakeChangeEvent } from '@utils/itemHelpers';
 
-const PRIMARY = 'Primary (choose 0-1)';
+const PRIMARY = 'Primary (choose 1)';
 const SECONDARY = 'Secondary (choose 0-N)';
 
 const primaryOptions = [
@@ -124,7 +124,13 @@ const LayoutClassInput: React.FC<LayoutClassInputProps> = ({ question, handleCha
         getOptionLabel={(option) => option.title}
         groupBy={(option) => option.type}
         renderInput={(params) => (
-          <TextField {...params} variant="outlined" label="Layout class" placeholder="Choose layout classes" />
+          <TextField
+            {...params}
+            variant="outlined"
+            label={`Layout class${layoutClasses.length ? ' *' : ''}`}
+            required={!layoutClasses.length}
+            placeholder="Choose layout classes"
+          />
         )}
         renderTags={(tagValue, getTagProps) =>
           tagValue.map((option, index) => (

@@ -21,7 +21,7 @@ export default makeStyles(() => ({
   },
   required: {
     '& span': {
-      backgroundColor: red[500]
+      backgroundColor: green[500]
     }
   },
   preceding: {
@@ -70,6 +70,26 @@ export default makeStyles(() => ({
     '& span': {
       backgroundColor: teal[900],
       fontSize: '0.55rem'
+    }
+  },
+  validationErrors: {
+    color: red[500],
+    fontSize: '0.55rem',
+    width: 'auto',
+    height: 'auto',
+    marginRight: '1.3rem',
+    marginLeft: '-0.4rem'
+  },
+  tooltipNowrap: {
+    marginLeft: '13px',
+    '& > div': {
+      maxWidth: '100%',
+      fontSize: '0.8rem',
+      padding: '0.5rem 0.5rem',
+      fontWeight: 400,
+      '& > div': {
+        padding: '0.3rem'
+      }
     }
   }
 }));
