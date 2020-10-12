@@ -97,7 +97,7 @@ export const highlightQuestion = (movingNodeId: string): void => {
 
     document.querySelector('.itemHover')?.classList.remove('itemHover');
     document.querySelector('.itemHover')?.classList.remove('addItemHover');
-  }, 100);
+  }, 200);
 
   setTimeout(() => {
     document.getElementById(movingNodeId)?.classList.remove('highlightQuestion');

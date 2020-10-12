@@ -11,7 +11,7 @@ export default makeStyles(() => ({
       padding: '0.5rem 0.8rem',
       fontSize: '1rem',
       resize: 'none',
-      width: 195
+      width: 205
     },
     '& input::-webkit-calendar-picker-indicator': {
       filter: 'invert(1)'
@@ -37,7 +37,7 @@ export default makeStyles(() => ({
     borderRight: '5px solid transparent',
     borderTop: '5px solid white',
     marginTop: -22,
-    marginLeft: 175,
+    marginLeft: 185,
     position: 'absolute'
   }
 }));
