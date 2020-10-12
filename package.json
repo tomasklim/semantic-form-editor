@@ -17,6 +17,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "e2e": "npx cypress open",
     "test": "jest"
   },
   "dependencies": {
