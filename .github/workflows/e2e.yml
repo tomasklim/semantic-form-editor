@@ -1,7 +1,6 @@
 name: End-to-End Testing
 on: [deployment_status]
 jobs:
-  tests:
   e2e:
     if: github.event.deployment_status.state == 'success'
     runs-on: ubuntu-latest
