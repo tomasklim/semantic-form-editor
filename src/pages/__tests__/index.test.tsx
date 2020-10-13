@@ -1,11 +1,17 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import Index from '@pages/index.page';
+import theme from '@styles/theme';
+import { ThemeProvider } from '@material-ui/core/styles';
+import Footer from '@components/structure/Footer/Footer';
 
 describe('index page', () => {
   it('should have App component', () => {
-    const subject = mount(<Index />);
+    const subject = mount(
+      <ThemeProvider theme={theme}>
+        <Footer />
+      </ThemeProvider>
+    );
 
-    expect(subject.find('h1')).toHaveLength(1);
+    expect(subject.find('footer')).toHaveLength(1);
   });
 });
