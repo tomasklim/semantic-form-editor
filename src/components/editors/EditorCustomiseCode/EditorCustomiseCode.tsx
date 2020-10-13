@@ -11,9 +11,12 @@ import { CustomisedOutlineButton } from '@styles/CustomisedOutlineButton';
 import { CustomisedButton } from '@styles/CustomisedButton';
 import { ValidationContext } from '@contexts/ValidationContext';
 import ErrorsModal from '@components/mix/ErrorsModal/ErrorsModal';
+import { useSnackbar } from 'notistack';
 
 const EditorCustomiseCode: React.FC = () => {
   const classes = useStyles();
+
+  const { enqueueSnackbar } = useSnackbar();
 
   const { updateFormStructure, getClonedFormStructure, formContext, setFormContext, setFormFile } = useContext(
     FormStructureContext
@@ -48,10 +51,18 @@ const EditorCustomiseCode: React.FC = () => {
   };
 
   const onReset = () => {
+    enqueueSnackbar(`Changes reset!`, {
+      variant: 'error'
+    });
+
     setForm({ ...form });
   };
 
   const onSave = () => {
+    enqueueSnackbar(`Changes saved!`, {
+      variant: 'success'
+    });
+
     finishCallback();
   };
 

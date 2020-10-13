@@ -25,6 +25,8 @@ const EditorNew: FC<EditorNewProps> = ({ nextStep }) => {
 
   const [form, setForm] = useState<any>(null);
 
+  const [loading, setLoading] = useState<boolean>(false);
+
   const { resetNavigationContext } = useContext(NavigationContext);
   const { setFormStructure, setFormContext, formFile, setFormFile, resetFormStructureContext } = useContext(
     FormStructureContext
@@ -107,7 +109,7 @@ const EditorNew: FC<EditorNewProps> = ({ nextStep }) => {
     nextStep();
   };
 
-  if (router.query.formUrl) {
+  if (router.query.formUrl || loading) {
     return <Loader />;
   }
 
@@ -148,12 +150,17 @@ const EditorNew: FC<EditorNewProps> = ({ nextStep }) => {
         }}
         finishFormCallback={setFinishCallback}
         processFormCallback={handleContinueToNextStep}
+        onError={() => setLoading(false)}
+        skipErrors={false}
       />
       <div className={classes.continueButtons}>
         <CustomisedButton
           className={classes.buttonWidth}
           variant="contained"
-          onClick={finishCallback}
+          onClick={() => {
+            setLoading(true);
+            finishCallback();
+          }}
           size="large"
           disabled={continueButtonDisabled}
         >

@@ -12,6 +12,8 @@ interface JsonEditorProps {
   finishFormCallback?: Dispatch<SetStateAction<Function>>;
   editorOptions: JSONEditorOptions;
   className?: string;
+  skipErrors?: boolean;
+  onError?: () => void;
 }
 
 const JsonEditor: React.FC<JsonEditorProps> = ({
@@ -19,7 +21,9 @@ const JsonEditor: React.FC<JsonEditorProps> = ({
   editorOptions,
   processFormCallback,
   finishFormCallback,
-  className
+  className,
+  skipErrors,
+  onError
 }) => {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
@@ -73,10 +77,14 @@ const JsonEditor: React.FC<JsonEditorProps> = ({
       enqueueSnackbar('There is a syntax error in your JSON-LD form!', {
         variant: 'error'
       });
+      onError && onError();
       return;
     }
 
-    isFormValid(form);
+    if (!isFormValid(form) && !skipErrors) {
+      onError && onError();
+      return;
+    }
 
     await shaclFormValidation(form);
 

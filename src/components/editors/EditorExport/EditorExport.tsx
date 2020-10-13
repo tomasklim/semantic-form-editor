@@ -46,10 +46,18 @@ const EditorExport: FC<EditorExportProps> = ({ resetEditor }) => {
     element.click();
 
     document.body.removeChild(element);
+
+    enqueueSnackbar('Form is downloading!', {
+      variant: 'success'
+    });
   };
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(JSON.stringify(form));
+
+    enqueueSnackbar('Form copied to clipboard!', {
+      variant: 'success'
+    });
   };
 
   const publishForm = async () => {
