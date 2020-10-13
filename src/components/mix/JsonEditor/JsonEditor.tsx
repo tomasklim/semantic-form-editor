@@ -4,7 +4,7 @@ import JSONEditor, { JSONEditorOptions } from 'jsoneditor';
 import { useSnackbar } from 'notistack';
 import { JsonLdObj } from 'jsonld/jsonld-spec';
 import classNames from 'classnames';
-import { shaclFormValidation } from '@utils/formValidation';
+import { shaclFormValidation } from '@utils/index';
 
 interface JsonEditorProps {
   form: JsonLdObj | null;

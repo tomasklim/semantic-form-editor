@@ -21,7 +21,6 @@ export const buildFormStructure = async (form: ExpandedForm) => {
   const rootNode = new FormStructureNode(null, rootData);
 
   const formStructure = new FormStructure(rootNode);
-  formStructure.addNode(rootNode);
 
   const languages = findFormLanguages(formStructure);
 
@@ -226,6 +225,7 @@ export const transformToWizardForm = (formStructure: FormStructure) => {
     const newWizardStep = {
       ...NEW_WIZARD_SECTION_QUESTION,
       '@id': id,
+      [Constants.RDFS_LABEL]: 'Temporary name',
       [Constants.HAS_SUBQUESTION]: rootData[Constants.HAS_SUBQUESTION]
     };
 

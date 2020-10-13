@@ -27,7 +27,7 @@ const ItemPropsIndicator: FC<Props> = ({ question }) => {
   const handlePrecedingQuestionBadgeClick = (e: React.MouseEvent) => {
     e.stopPropagation();
 
-    highlightQuestion(question[Constants.HAS_PRECEDING_QUESTION]!['@id']);
+    highlightQuestion(question[Constants.HAS_PRECEDING_QUESTION]['@id']);
   };
 
   const handleViewInPreview = (e: React.MouseEvent) => {

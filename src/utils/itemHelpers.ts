@@ -6,13 +6,11 @@ import React from 'react';
 import { CustomiseQuestion } from '@contexts/CustomiseQuestionContext';
 
 export const detectIsChildNode = (testedNode: FormStructureNode, exemplarNode: FormStructureNode): boolean => {
-  if (!exemplarNode.parent) {
-    return false;
-  }
-
   return testedNode.data['@id'] === exemplarNode.data['@id']
     ? true
-    : detectIsChildNode(testedNode, exemplarNode.parent);
+    : exemplarNode.parent
+    ? detectIsChildNode(testedNode, exemplarNode.parent)
+    : false;
 };
 
 export const removePrecedingQuestion = (node: FormStructureNode): void => {
@@ -26,10 +24,10 @@ export const removeBeingPrecedingQuestion = (
   movingNode: FormStructureNode
 ): void => {
   // if some node has nodeToMove as a preceding node, it loses it
-  movingNodeParent.data[Constants.HAS_SUBQUESTION]?.forEach((question: FormStructureQuestion) => {
+  movingNodeParent.data[Constants.HAS_SUBQUESTION].forEach((question: FormStructureQuestion) => {
     if (
       question[Constants.HAS_PRECEDING_QUESTION] &&
-      question[Constants.HAS_PRECEDING_QUESTION]!['@id'] === movingNode.data['@id']
+      question[Constants.HAS_PRECEDING_QUESTION]['@id'] === movingNode.data['@id']
     ) {
       delete question[Constants.HAS_PRECEDING_QUESTION];
     }

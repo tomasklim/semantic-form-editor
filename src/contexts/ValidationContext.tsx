@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { JsonLdObj } from 'jsonld/jsonld-spec';
-import { shaclFormValidation } from '@utils/formValidation';
+import { shaclFormValidation } from '@utils/index';
 import { useSnackbar } from 'notistack';
 
 interface ValidationContextProps {

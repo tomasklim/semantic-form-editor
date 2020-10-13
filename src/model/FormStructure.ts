@@ -6,6 +6,7 @@ class FormStructure {
 
   constructor(root: FormStructureNode) {
     this.structure = new Map<string, FormStructureNode>();
+    this.structure.set(root.data['@id'], root);
     this.root = root;
   }
 
