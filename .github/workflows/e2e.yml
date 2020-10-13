@@ -1,4 +1,4 @@
-name: End-to-End Testing
+name: E2E Testing
 on: [deployment_status]
 jobs:
   e2e:
