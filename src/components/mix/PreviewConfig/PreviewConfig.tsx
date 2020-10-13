@@ -6,7 +6,7 @@ import { FormStructureContext } from '@contexts/FormStructureContext';
 import { EditorContext } from '@contexts/EditorContext';
 
 import { getIntl } from '@utils/formHelpers';
-import { Intl } from 's-forms';
+import { Constants, Intl } from 's-forms';
 
 interface PreviewConfigProps {
   horizontalWizardNav: boolean;
@@ -23,7 +23,7 @@ const PreviewConfig: React.FC<PreviewConfigProps> = ({
 }) => {
   const classes = useStyles();
 
-  const { isWizardless } = useContext(FormStructureContext);
+  const { isWizardless, formStructure } = useContext(FormStructureContext);
   const { languages } = useContext(EditorContext);
 
   const handleWizardTypeChange = () => {
@@ -32,7 +32,7 @@ const PreviewConfig: React.FC<PreviewConfigProps> = ({
 
   return (
     <div className={classes.previewConfig}>
-      {!isWizardless && (
+      {!isWizardless && formStructure.getRoot().data[Constants.HAS_SUBQUESTION].length > 1 && (
         <WizardOrientationSwitch
           handleWizardTypeChange={handleWizardTypeChange}
           horizontalWizardNav={horizontalWizardNav}
