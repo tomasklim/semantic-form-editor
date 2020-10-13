@@ -138,6 +138,18 @@ const ItemSection: FC<ItemSectionProps> = ({ question, position, buildFormUI, cu
     }
   };
 
+  const onItemClick = (e: React.MouseEvent) => {
+    onItemClickHandler(
+      e,
+      customiseQuestion,
+      question,
+      updateNode,
+      itemContainer,
+      classes.listItemSectionHighlight,
+      intl
+    );
+  };
+
   return useMemo(() => {
     const subquestions = question[Constants.HAS_SUBQUESTION];
 
@@ -155,17 +167,7 @@ const ItemSection: FC<ItemSectionProps> = ({ question, position, buildFormUI, cu
         onMouseLeave={handleMouseLeave}
         className={'listItemSection'}
         data-droppable={true}
-        onClick={(e) =>
-          onItemClickHandler(
-            e,
-            customiseQuestion,
-            question,
-            updateNode,
-            itemContainer,
-            classes.listItemSectionHighlight,
-            intl
-          )
-        }
+        onClick={onItemClick}
       >
         <Accordion expanded={expanded} variant="outlined">
           <ItemHeader
@@ -176,6 +178,7 @@ const ItemSection: FC<ItemSectionProps> = ({ question, position, buildFormUI, cu
             expanded={expanded}
             expandItemSection={expandItemSection}
             customiseQuestion={customiseQuestion}
+            onItemClick={onItemClick}
           />
           <CustomisedAccordionDetails
             className={classes.cardContent}

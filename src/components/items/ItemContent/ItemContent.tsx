@@ -15,17 +15,17 @@ const ItemContent: FC<ItemContentProps> = ({ question }) => {
   if (FormUtils.isTypeahead(question)) {
     content = (
       <>
-        <input type="text" value={'Typeahead'} data-disabled="true" readOnly />
+        <input type="text" value={'Typeahead'} data-disabled="true" readOnly tabIndex={-1} />
         <div className={classes.typeaheadArrow} />
       </>
     );
   } else if (FormUtils.isCalendar(question)) {
     if (FormUtils.isDateTime(question)) {
-      content = <input type="datetime-local" defaultValue={'dd/mm/yyyy, --:--'} data-disabled="true" />;
+      content = <input type="datetime-local" defaultValue={'dd/mm/yyyy, --:--'} data-disabled="true" tabIndex={-1} />;
     } else if (FormUtils.isDate(question)) {
-      content = <input type="date" defaultValue={'dd/mm/yyyy'} data-disabled="true" />;
+      content = <input type="date" defaultValue={'dd/mm/yyyy'} data-disabled="true" tabIndex={-1} />;
     } else if (FormUtils.isTime(question)) {
-      content = <input type="time" defaultValue={'--:--'} data-disabled="true" />;
+      content = <input type="time" defaultValue={'--:--'} data-disabled="true" tabIndex={-1} />;
     }
   } else if (FormUtils.isCheckbox(question)) {
     content = (
@@ -35,11 +35,11 @@ const ItemContent: FC<ItemContentProps> = ({ question }) => {
       </div>
     );
   } else if (FormUtils.isMaskedInput(question)) {
-    content = <input type="text" value={'Masked Input'} data-disabled="true" readOnly />;
+    content = <input type="text" value={'Masked Input'} data-disabled="true" readOnly tabIndex={-1} />;
   } else if (FormUtils.isTextarea(question, '')) {
-    content = <textarea rows={2} value={'Textarea'} data-disabled="true" readOnly />;
+    content = <textarea rows={2} value={'Textarea'} data-disabled="true" readOnly tabIndex={-1} />;
   } else {
-    content = <input type="text" value={'Text Input'} data-disabled="true" readOnly />;
+    content = <input type="text" value={'Text Input'} data-disabled="true" readOnly tabIndex={-1} />;
   }
 
   return <CustomisedCardContent className={classes.itemContent}>{content}</CustomisedCardContent>;

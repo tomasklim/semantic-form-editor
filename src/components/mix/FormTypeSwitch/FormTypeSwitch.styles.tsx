@@ -37,9 +37,15 @@ export default makeStyles((theme: ITheme) => ({
   },
   transformFormClick: {
     textDecoration: 'underline',
+    background: 'none',
+    color: 'inherit',
+    border: 'none',
+    padding: 0,
+    font: 'inherit',
     cursor: 'pointer',
-    '&:hover': {
-      color: theme.palette.custom.main
+    '&:hover, &:focus': {
+      color: theme.palette.custom.main,
+      outline: 'none'
     }
   }
 }));

@@ -1,4 +1,4 @@
-import React, { FC, useContext, useMemo, useRef, useState } from 'react';
+import React, { FC, useContext, useRef, useState } from 'react';
 import { MoreVert } from '@material-ui/icons';
 import { ClickAwayListener, Grow, MenuItem, MenuList, Paper, Popper } from '@material-ui/core';
 import { Constants } from 's-forms';
@@ -27,9 +27,10 @@ import { NavigationContext } from '@contexts/NavigationContext';
 interface Props {
   question: FormStructureQuestion;
   customiseQuestion: CustomiseQuestion;
+  onItemClick: (e: React.MouseEvent) => void;
 }
 
-const ItemMenu: FC<Props> = ({ question, customiseQuestion }) => {
+const ItemMenu: FC<Props> = ({ question, customiseQuestion, onItemClick }) => {
   const classes = useStyles();
 
   const { getClonedFormStructure, updateFormStructure, addNewNodes } = useContext(FormStructureContext);
@@ -196,37 +197,36 @@ const ItemMenu: FC<Props> = ({ question, customiseQuestion }) => {
     highlightQuestion(question['@id']);
   };
 
-  return useMemo(() => {
-    return (
-      <span>
-        <SquaredIconButton ref={addButton} onClick={addNewItem} title="Add new unordered subquestion">
-          <AddIcon />
-        </SquaredIconButton>
-        {/* @ts-ignore */}
-        <SquaredIconButton ref={anchorEl} onClick={handleToggle} title="Show more">
-          <MoreVert />
-        </SquaredIconButton>
-        <Popper open={open} anchorEl={anchorEl.current} transition={true} disablePortal={true} className={classes.menu}>
-          {({ TransitionProps }) => (
-            <Grow {...TransitionProps}>
-              <Paper>
-                <ClickAwayListener onClickAway={handleClose}>
-                  <MenuList>
-                    {question[Constants.HAS_PRECEDING_QUESTION] && (
-                      <MenuItem onClick={removePrecedingQuestionLink}>Remove preceding question link</MenuItem>
-                    )}
-                    <MenuItem onClick={handleViewInPreview}>View in preview</MenuItem>
-                    <MenuItem onClick={handleDuplicateQuestion}>Duplicate question</MenuItem>
-                    <MenuItem onClick={handleDelete}>Delete question</MenuItem>
-                  </MenuList>
-                </ClickAwayListener>
-              </Paper>
-            </Grow>
-          )}
-        </Popper>
-      </span>
-    );
-  }, [question, open, intl]);
+  return (
+    <span>
+      <SquaredIconButton ref={addButton} onClick={addNewItem} title="Add new unordered subquestion">
+        <AddIcon />
+      </SquaredIconButton>
+      {/* @ts-ignore */}
+      <SquaredIconButton ref={anchorEl} onClick={handleToggle} title="Show more">
+        <MoreVert />
+      </SquaredIconButton>
+      <Popper open={open} anchorEl={anchorEl.current} transition={true} disablePortal={true} className={classes.menu}>
+        {({ TransitionProps }) => (
+          <Grow {...TransitionProps}>
+            <Paper>
+              <ClickAwayListener onClickAway={handleClose}>
+                <MenuList>
+                  <MenuItem onClick={onItemClick}>Edit question</MenuItem>
+                  <MenuItem onClick={handleDuplicateQuestion}>Duplicate question</MenuItem>
+                  <MenuItem onClick={handleDelete}>Delete question</MenuItem>
+                  {question[Constants.HAS_PRECEDING_QUESTION] && (
+                    <MenuItem onClick={removePrecedingQuestionLink}>Remove preceding question link</MenuItem>
+                  )}
+                  <MenuItem onClick={handleViewInPreview}>View in preview</MenuItem>
+                </MenuList>
+              </ClickAwayListener>
+            </Paper>
+          </Grow>
+        )}
+      </Popper>
+    </span>
+  );
 };
 
 export default ItemMenu;

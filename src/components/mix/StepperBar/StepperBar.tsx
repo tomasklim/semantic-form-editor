@@ -1,4 +1,4 @@
-import { Step } from '@material-ui/core';
+import { Step, StepButton } from '@material-ui/core';
 import React, { useContext, useEffect } from 'react';
 import useStyles, {
   CustomisedConnector,
@@ -36,12 +36,10 @@ const StepperBar: React.FC = () => {
     <div className={classes.stepperBar}>
       <CustomisedStepper activeStep={activeStep} connector={<CustomisedConnector />}>
         {steps.map((label, index) => (
-          <Step
-            key={label}
-            onClick={() => handleStepClick(index)}
-            className={classNames({ [classes.unlockedStep]: unlockedSteps.includes(index) })}
-          >
-            <CustomisedStepLabel StepIconComponent={CustomisedStepIcon}>{label}</CustomisedStepLabel>
+          <Step key={label} className={classNames({ [classes.unlockedStep]: unlockedSteps.includes(index) })}>
+            <StepButton onClick={() => handleStepClick(index)} disabled={!unlockedSteps.includes(index)}>
+              <CustomisedStepLabel StepIconComponent={CustomisedStepIcon}>{label}</CustomisedStepLabel>
+            </StepButton>
           </Step>
         ))}
       </CustomisedStepper>

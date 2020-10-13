@@ -18,6 +18,7 @@ type ItemHeaderProps = {
   expanded?: boolean;
   expandItemSection?: (e: React.MouseEvent) => void;
   customiseQuestion: CustomiseQuestion;
+  onItemClick: (e: React.MouseEvent) => void;
 };
 
 const ItemHeader: FC<ItemHeaderProps> = ({
@@ -27,7 +28,8 @@ const ItemHeader: FC<ItemHeaderProps> = ({
   expandable,
   expanded,
   expandItemSection,
-  customiseQuestion
+  customiseQuestion,
+  onItemClick
 }) => {
   const classes = useStyles();
 
@@ -59,7 +61,7 @@ const ItemHeader: FC<ItemHeaderProps> = ({
             <ItemPropsIndicator question={question} />
           </span>
           <span className={classes.cardHeaderItemRight} onMouseEnter={removeDraggable} onMouseLeave={addDraggable}>
-            <ItemMenu question={question} customiseQuestion={customiseQuestion} />
+            <ItemMenu question={question} customiseQuestion={customiseQuestion} onItemClick={onItemClick} />
           </span>
         </div>
       }

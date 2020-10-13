@@ -62,9 +62,9 @@ const FormTypeSwitch: React.FC<FormTypeSwitchProps> = ({ cloneConfigModal }) => 
       {!isEmptyFormStructure && (
         <div className={classes.transformForm}>
           To change form type, transform the form by{' '}
-          <span className={classes.transformFormClick} onClick={transformFormType}>
+          <button className={classes.transformFormClick} onClick={transformFormType}>
             clicking here
-          </span>
+          </button>
           .
         </div>
       )}

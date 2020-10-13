@@ -45,6 +45,10 @@ const Item: FC<ItemProps> = ({ question, position, customiseQuestion }) => {
     handleDragEnd(e);
   };
 
+  const onItemClick = (e: React.MouseEvent) => {
+    onItemClickHandler(e, customiseQuestion, question, updateNode, itemContainer, classes.listItemHighlight, intl);
+  };
+
   return useMemo(
     () => (
       <li
@@ -54,9 +58,7 @@ const Item: FC<ItemProps> = ({ question, position, customiseQuestion }) => {
         onDragEnd={onDragEnd}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        onClick={(e) =>
-          onItemClickHandler(e, customiseQuestion, question, updateNode, itemContainer, classes.listItemHighlight, intl)
-        }
+        onClick={onItemClick}
         className={classes.listItem}
       >
         <CustomisedCard variant="outlined">
@@ -65,6 +67,7 @@ const Item: FC<ItemProps> = ({ question, position, customiseQuestion }) => {
             question={question}
             position={position + 1}
             customiseQuestion={customiseQuestion}
+            onItemClick={onItemClick}
           />
           <ItemContent question={question} />
         </CustomisedCard>

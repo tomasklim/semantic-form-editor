@@ -5,7 +5,10 @@ import { StepConnector, StepIcon, StepLabel, Stepper } from '@material-ui/core';
 export default makeStyles((theme: ITheme) => ({
   stepperBar: {
     backgroundColor: theme.palette.custom[600],
-    marginBottom: theme.spacing(2)
+    marginBottom: theme.spacing(2),
+    '& button:focus': {
+      outline: 'none'
+    }
   },
   unlockedStep: {
     '& span': {
