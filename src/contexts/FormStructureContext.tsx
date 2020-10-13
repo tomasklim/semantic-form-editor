@@ -76,7 +76,7 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
   };
 
   const updateFormStructure = async (form: FormStructure) => {
-    if (router.query.formUrl && router.query.draftUpdate) {
+    if (router.query.formUrl && router.query.draftUpdate === 'true') {
       setFormStructure(form);
 
       const clonedForm = cloneDeep(form);
