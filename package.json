@@ -43,6 +43,7 @@
     "trackjs": "^3.7.5"
   },
   "devDependencies": {
+    "@babel/plugin-transform-react-jsx": "^7.10.4",
     "@types/classnames": "^2.2.10",
     "@types/enzyme": "^3.10.7",
     "@types/jest": "^26.0.14",
