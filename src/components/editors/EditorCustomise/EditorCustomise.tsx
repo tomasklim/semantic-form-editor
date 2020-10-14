@@ -21,6 +21,10 @@ const EditorCustomise: React.FC = () => {
     position: number,
     parentQuestion: FormStructureQuestion
   ): JSX.Element => {
+    if (!question) {
+      console.warn('Question is undefined', parentQuestion, formStructure);
+      return <></>;
+    }
     const subquestions = question[Constants.HAS_SUBQUESTION];
     const topLevelPosition = FormUtils.isForm(parentQuestion);
 

@@ -23,6 +23,7 @@ import { cloneDeep } from 'lodash';
 import JsonLdUtils from 'jsonld-utils';
 import FormStructureNode from '@model/FormStructureNode';
 import { NavigationContext } from '@contexts/NavigationContext';
+import { useSnackbar } from 'notistack';
 
 interface Props {
   question: FormStructureQuestion;
@@ -32,6 +33,7 @@ interface Props {
 
 const ItemMenu: FC<Props> = ({ question, customiseQuestion, onItemClick }) => {
   const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
 
   const { getClonedFormStructure, updateFormStructure, addNewNodes } = useContext(FormStructureContext);
   const { updateSFormsConfig, intl } = useContext(EditorContext);
@@ -143,6 +145,8 @@ const ItemMenu: FC<Props> = ({ question, customiseQuestion, onItemClick }) => {
 
       clonedFormStructure.addNode(duplicatedQuestionNode);
 
+      removePrecedingQuestion(duplicatedQuestionNode);
+
       const subquestions = duplicatedQuestion[Constants.HAS_SUBQUESTION];
 
       if (subquestions) {
@@ -166,6 +170,9 @@ const ItemMenu: FC<Props> = ({ question, customiseQuestion, onItemClick }) => {
     );
 
     updateFormStructure(clonedFormStructure);
+    enqueueSnackbar(`Questions duplicated!`, {
+      variant: 'success'
+    });
   };
 
   const handleViewInPreview = (e: React.SyntheticEvent<EventTarget>) => {

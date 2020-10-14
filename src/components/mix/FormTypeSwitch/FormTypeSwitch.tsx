@@ -6,6 +6,7 @@ import React, { useContext } from 'react';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import classNames from 'classnames';
 import { transformToSimpleForm, transformToWizardForm } from '@utils/formHelpers';
+import { useSnackbar } from 'notistack';
 
 interface FormTypeSwitchProps {
   cloneConfigModal: () => void;
@@ -13,6 +14,7 @@ interface FormTypeSwitchProps {
 
 const FormTypeSwitch: React.FC<FormTypeSwitchProps> = ({ cloneConfigModal }) => {
   const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
 
   const {
     isEmptyFormStructure,
@@ -36,6 +38,10 @@ const FormTypeSwitch: React.FC<FormTypeSwitchProps> = ({ cloneConfigModal }) => 
 
     updateFormStructure(clonedFormStructure);
     cloneConfigModal();
+
+    enqueueSnackbar(`Form type changed!`, {
+      variant: 'success'
+    });
   };
 
   return (
