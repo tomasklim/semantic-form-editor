@@ -9,7 +9,7 @@ import { isObject } from 'lodash';
 import { NEW_WIZARD_SECTION_QUESTION } from '@constants/index';
 import { getUniqueId } from '@utils/itemHelpers';
 
-export const buildFormStructure = async (form: ExpandedForm) => {
+export const buildFormStructure = async (form: ExpandedForm): Promise<FormStructure> => {
   const flattenedForm: JsonLdObj = await jsonld.flatten(form, {});
 
   // @ts-ignore
@@ -27,6 +27,23 @@ export const buildFormStructure = async (form: ExpandedForm) => {
   buildFormStructureResursion(rootNode, formStructure, getIntl(languages[0]));
 
   return formStructure;
+};
+
+export const buildFormStructureResursion = (parentNode: FormStructureNode, tree: FormStructure, intl: Intl) => {
+  let subquestions = parentNode.data[Constants.HAS_SUBQUESTION];
+  if (subquestions) {
+    subquestions = sortRelatedQuestions(subquestions, intl);
+
+    subquestions.forEach((question: FormStructureQuestion) => {
+      const node = new FormStructureNode(parentNode, question);
+
+      tree.addNode(node);
+
+      buildFormStructureResursion(node, tree, intl);
+    });
+  }
+
+  return;
 };
 
 export const exportForm = async (formStructure: FormStructure, formContext: Context) => {
@@ -70,23 +87,6 @@ export const findFormLanguages = (formStructure: FormStructure): Array<string> =
     return Array.from(languagesSet);
   }
   return [];
-};
-
-export const buildFormStructureResursion = (parentNode: FormStructureNode, tree: FormStructure, intl: Intl) => {
-  let subquestions = parentNode.data[Constants.HAS_SUBQUESTION];
-  if (subquestions) {
-    subquestions = sortRelatedQuestions(subquestions, intl);
-
-    subquestions.forEach((question: FormStructureQuestion) => {
-      const node = new FormStructureNode(parentNode, question);
-
-      tree.addNode(node);
-
-      buildFormStructureResursion(node, tree, intl);
-    });
-  }
-
-  return;
 };
 
 export const sortRelatedQuestions = (
@@ -143,32 +143,6 @@ const transformToArray = (element: any): Array<any> => {
   return [element];
 };
 
-export const getJsonAttValue = (question: FormStructureQuestion, attribute: string, by?: string) => {
-  if (!question) {
-    return null;
-  }
-
-  const att = question[attribute];
-
-  if (!att) {
-    return null;
-  }
-
-  if (typeof att === 'string') {
-    return att;
-  }
-
-  if (by && att[by]) {
-    return att[by];
-  }
-
-  if (att['@value']) {
-    return att['@value'];
-  }
-
-  return null;
-};
-
 export const createJsonAttValue = (value: string | boolean, dataType: string): object => {
   return {
     '@type': dataType,
@@ -182,7 +156,7 @@ export const createJsonAttIdValue = (id: string): object => {
   };
 };
 
-export const createJsonLanguageValue = (lang: string, value: string): LanguageObject => {
+export const createJsonLocalisedValue = (lang: string, value: string): LanguageObject => {
   return {
     '@language': lang,
     '@value': value
@@ -258,7 +232,7 @@ export const editLocalisedLabel = (lang: string, value: string, question: any, a
       question[attribute] = [];
     }
 
-    const languageObject = createJsonLanguageValue(lang!, value);
+    const languageObject = createJsonLocalisedValue(lang!, value);
 
     question[attribute].push(languageObject);
   }

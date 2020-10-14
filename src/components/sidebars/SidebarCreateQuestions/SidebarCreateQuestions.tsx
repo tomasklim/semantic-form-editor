@@ -9,7 +9,7 @@ import { Constants } from 's-forms';
 import { getUniqueId } from '@utils/itemHelpers';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
 import { EditorContext } from '@contexts/EditorContext';
-import { createJsonLanguageValue } from '@utils/formHelpers';
+import { createJsonLocalisedValue } from '@utils/formHelpers';
 
 interface SidebarCreateQuestionsProps {
   handleChangeTab: (_: any, newValue: number) => void;
@@ -77,7 +77,7 @@ const SidebarCreateQuestions: React.FC<SidebarCreateQuestionsProps> = ({ handleC
           ? [Constants.LAYOUT.QUESTION_SECTION]
           : [];
 
-      const label = languages.length ? [createJsonLanguageValue(languages[0], array[0].label)] : array[0].label;
+      const label = languages.length ? [createJsonLocalisedValue(languages[0], array[0].label)] : array[0].label;
 
       return {
         '@id': id,

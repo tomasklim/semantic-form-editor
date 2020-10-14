@@ -5,10 +5,12 @@ import { FormControl, IconButton, InputAdornment, InputLabel, Link, OutlinedInpu
 import AddIcon from '@material-ui/icons/Add';
 import FormCustomAttributeInput from '@components/sidebars/FormCustomAttributeInput/FormCustomAttributeInput';
 import { Clear } from '@material-ui/icons';
-import { createJsonAttIdValue, getJsonAttValue } from '@utils/formHelpers';
+import { createJsonAttIdValue } from '@utils/formHelpers';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import { isNull, isObject } from 'lodash';
 import { createFakeChangeEvent } from '@utils/itemHelpers';
+// @ts-ignore
+import JsonLdUtils from 'jsonld-utils';
 
 interface FormCustomAttributeListProps {
   question: FormStructureQuestion;
@@ -61,7 +63,7 @@ const FormCustomAttributeList: React.FC<FormCustomAttributeListProps> = ({
     return Object.entries(question)
       .filter(([key]) => !FORM_STRUCTURE_QUESTION_ATTRIBUTES.includes(key))
       .map(([key, value]) => {
-        const jsonAttValue = getJsonAttValue(question, key, '@id');
+        const jsonAttValue = JsonLdUtils.getJsonAttValue(question, key, '@id');
         // if jsonAttValue is null, but value is not null and is object, then it is JSON
         const textFieldValue =
           !jsonAttValue && isObject(value) && !isNull(value) ? JSON.stringify(value, undefined, 2) : jsonAttValue;

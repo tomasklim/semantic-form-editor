@@ -1,0 +1,106 @@
+{
+  "@context": {
+    "doc": "http://onto.fel.cvut.cz/ontologies/documentation/",
+    "x": "https://x.com/x/",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "form": "http://onto.fel.cvut.cz/ontologies/form/",
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "label": {
+      "@id": "http://www.w3.org/2000/01/rdf-schema#label"
+    },
+    "has-layout-class": {
+      "@id": "http://onto.fel.cvut.cz/ontologies/form-layout/has-layout-class"
+    },
+    "has_related_question": {
+      "@id": "http://onto.fel.cvut.cz/ontologies/documentation/has_related_question",
+      "@type": "@id"
+    }
+  },
+  "@graph": [
+    {
+      "@id": "antelope",
+      "@type": "doc:question",
+      "has_related_question": [],
+      "has-layout-class": "checkbox",
+      "label": [
+        {
+          "@language": "en",
+          "@value": "Antelope"
+        },
+        {
+          "@language": "cs",
+          "@value": "3 Antilopa"
+        }
+      ]
+    },
+    {
+      "@id": "baobab",
+      "@type": "doc:question",
+      "has_related_question": [],
+      "has-layout-class": "checkbox",
+      "label": [
+        {
+          "@language": "en",
+          "@value": "Baobab"
+        },
+        {
+          "@language": "cs",
+          "@value": "2 Baobab"
+        }
+      ]
+    },
+    {
+      "@id": "cuttlefish",
+      "@type": "doc:question",
+      "has_related_question": [],
+      "has-layout-class": "checkbox",
+      "label": [
+        {
+          "@language": "en",
+          "@value": "Cuttlefish"
+        },
+        {
+          "@language": "cs",
+          "@value": "1 Sépie"
+        }
+      ]
+    },
+    {
+      "@id": "x:form-root",
+      "@type": "doc:question",
+      "has_related_question": [
+        "what-is-your-name-8755",
+        "which-animals-do-you-know"
+      ],
+      "has-layout-class": "form",
+      "label": "form"
+    },
+    {
+      "@id": "what-is-your-name-8755",
+      "@type": "doc:question",
+      "has_related_question": [],
+      "has-layout-class": "text",
+      "label": [
+        {
+          "@language": "en",
+          "@value": "What is your name?"
+        },
+        {
+          "@language": "cs",
+          "@value": "Jak se jmenuješ?"
+        }
+      ]
+    },
+    {
+      "@id": "which-animals-do-you-know",
+      "@type": "doc:question",
+      "has_related_question": [
+        "antelope",
+        "baobab",
+        "cuttlefish"
+      ],
+      "has-layout-class": "section",
+      "label": "Which animals do you know?"
+    }
+  ]
+}

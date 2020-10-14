@@ -7,7 +7,7 @@ import useStyles from './SidebarCustomiseQuestion.styles';
 import { getUniqueId } from '@utils/itemHelpers';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import { CustomiseQuestionContext } from '@contexts/CustomiseQuestionContext';
-import { createJsonAttValue, getJsonAttValue } from '@utils/formHelpers';
+import { createJsonAttValue } from '@utils/formHelpers';
 import FormCustomAttributeList from '@components/sidebars/FormCustomAttributeList/FormCustomAttributeList';
 import LocalisedInput from '@components/mix/LocalisedInput/LocalisedInput';
 import { EditorContext } from '@contexts/EditorContext';
@@ -139,7 +139,7 @@ const SidebarCustomiseQuestion: React.FC = () => {
           <Checkbox
             name={Constants.REQUIRES_ANSWER}
             onChange={handleChangeRequiresAnswer}
-            checked={getJsonAttValue(customisingQuestion, Constants.REQUIRES_ANSWER) || false}
+            checked={JsonLdUtils.getJsonAttValue(customisingQuestion, Constants.REQUIRES_ANSWER) || false}
           />
         }
         label="Required"

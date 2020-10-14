@@ -104,7 +104,7 @@ export const highlightQuestion = (movingNodeId: string): void => {
 
 export const getUniqueId = (label: string, formStructure: FormStructure): string => {
   if (!label) {
-    return '';
+    label = 'id';
   }
 
   let id;
