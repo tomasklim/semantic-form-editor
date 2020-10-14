@@ -11,6 +11,7 @@ import 's-forms/css/s-forms.min.css';
 import PreviewConfig from '@components/mix/PreviewConfig/PreviewConfig';
 import { CustomisedOutlineButton } from '@styles/CustomisedOutlineButton';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
+import { useSnackbar } from 'notistack';
 
 const fetchTypeaheadValuesMock = (_: string): Promise<object> => {
   const possibleValues = require('@data/possibleValuesMock.json');
@@ -21,6 +22,8 @@ const fetchTypeaheadValuesMock = (_: string): Promise<object> => {
 interface EditorPreviewProps {}
 
 const EditorPreview: FC<EditorPreviewProps> = ({}) => {
+  const { enqueueSnackbar } = useSnackbar();
+
   const classes = useStyles();
 
   // @ts-ignore
@@ -84,6 +87,10 @@ const EditorPreview: FC<EditorPreviewProps> = ({}) => {
       formData.forEach((question: FormStructureQuestion) => addQuestionAnswer(question));
 
       setFormStructure(formStructure);
+
+      enqueueSnackbar(`Values saved to form!`, {
+        variant: 'success'
+      });
     }
   };
   const options: SOptions = {
