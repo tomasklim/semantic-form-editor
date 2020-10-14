@@ -7,5 +7,15 @@ export default makeStyles((theme: ITheme) => ({
     '& > div': {
       borderRadius: '2px'
     }
+  },
+  buttons: {
+    color: '#ffffffa6',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    margin: theme.spacing(3),
+    '& span': {
+      margin: theme.spacing(0.5)
+    }
   }
 }));
