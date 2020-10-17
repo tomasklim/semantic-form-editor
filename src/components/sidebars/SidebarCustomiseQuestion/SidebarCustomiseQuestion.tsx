@@ -82,13 +82,14 @@ const SidebarCustomiseQuestion: React.FC = () => {
   }
 
   return (
-    <form className={classes.form} onSubmit={onSave}>
+    <form className={classes.form} onSubmit={onSave} id="customise-question-form">
       <TextField
         name="@id"
         label="Identification"
         variant="outlined"
         value={customisingQuestion['@id'] || ' '}
         disabled
+        inputProps={{ id: 'identification-input' }}
       />
 
       <LocalisedInput
@@ -152,7 +153,7 @@ const SidebarCustomiseQuestion: React.FC = () => {
       />
 
       <div className={classes.sidebarButtons}>
-        <CustomisedButton type="submit" size={'large'} className={classes.saveButton}>
+        <CustomisedButton type="submit" size={'large'} className={classes.saveButton} id="save-question">
           Save
         </CustomisedButton>
         {!isEmptyFormStructure && (

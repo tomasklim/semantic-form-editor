@@ -72,10 +72,10 @@ const SidebarNav: React.FC<SidebarNavProps> = ({ customiseQuestion }) => {
         <CustomisedOutlineButton
           onClick={!isEmptyFormStructure ? addNewTopLevelQuestion : undefined}
           title={!isWizardless ? 'Add new wizard step' : 'Add new question'}
+          id={!isWizardless ? 'add-new-wizard-step-button' : 'add-new-question'}
           ref={addButton}
           startIcon={<AddIcon />}
           variant="outlined"
-          id="new-question-button"
         >
           {!isWizardless ? 'Add new wizard step' : 'Add new question'}
         </CustomisedOutlineButton>

@@ -141,9 +141,10 @@ const SidebarCreateQuestions: React.FC<SidebarCreateQuestionsProps> = ({ handleC
         autoComplete={'off'}
         required
         autoFocus
+        inputProps={{ id: 'create-questions' }}
       />
       <div className={classes.sidebarButtons}>
-        <CustomisedButton type="submit" size={'large'} className={classes.saveButton}>
+        <CustomisedButton type="submit" size={'large'} className={classes.saveButton} id="add-multiple-questions">
           Add
         </CustomisedButton>
         {!isEmptyFormStructure && (

@@ -31,7 +31,7 @@ const ItemFormEmpty: FC<ItemFormEmptyProps> = ({}) => {
       return;
     }
 
-    const addButton = document.getElementById('new-question-button');
+    const addButton = document.getElementById(!isWizardless ? 'add-new-wizard-step-button' : 'add-new-question');
     itemFormEmptyContainer.current?.classList.add(classes.itemSectionHighlight);
     addButton?.classList.add(classes.buttonHighlight);
 
@@ -47,7 +47,7 @@ const ItemFormEmpty: FC<ItemFormEmptyProps> = ({}) => {
   };
 
   return (
-    <div className={classes.itemFormEmptyContainer} ref={itemFormEmptyContainer}>
+    <div className={classes.itemFormEmptyContainer} ref={itemFormEmptyContainer} id="empty-form">
       <Accordion expanded={true} className={classes.accordion} title="Add new question">
         <CustomisedAccordionDetails>
           <AddIcon />

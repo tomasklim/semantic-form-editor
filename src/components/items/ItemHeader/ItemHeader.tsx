@@ -54,10 +54,8 @@ const ItemHeader: FC<ItemHeaderProps> = ({
               </div>
             )}
             <DragIndicator className={classes.cardHeaderDrag} />
-            <span>
-              {position}.&nbsp;
-              {JsonLdUtils.getLocalized(question[Constants.RDFS_LABEL], intl) || question['@id']}
-            </span>
+            <span className={classes.position}>{position}.</span>
+            <span>{JsonLdUtils.getLocalized(question[Constants.RDFS_LABEL], intl) || question['@id']}</span>
             <ItemPropsIndicator question={question} />
           </span>
           <span className={classes.cardHeaderItemRight} onMouseEnter={removeDraggable} onMouseLeave={addDraggable}>

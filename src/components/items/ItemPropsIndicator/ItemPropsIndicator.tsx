@@ -68,7 +68,7 @@ const ItemPropsIndicator: FC<Props> = ({ question }) => {
         </div>
       )}
       {question[Constants.HAS_PRECEDING_QUESTION] && (
-        <div onClick={handlePrecedingQuestionBadgeClick}>
+        <div onClick={handlePrecedingQuestionBadgeClick} data-testid={'preceding-question-indicator'}>
           <Tooltip title="Has preceding question" arrow>
             <Badge badgeContent={<VerticalAlignTopIcon fontSize="small" />} className={classes.preceding} />
           </Tooltip>

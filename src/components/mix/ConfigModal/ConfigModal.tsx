@@ -45,6 +45,7 @@ const ConfigModal = () => {
         multiple
         options={mergedLanguagesOptions}
         value={languages}
+        data-testid="languages-autocomplete"
         onChange={(_, value) => setLanguages(value)}
         getOptionLabel={(option) => option}
         filterOptions={(options, params) => {
@@ -66,7 +67,7 @@ const ConfigModal = () => {
         )}
       />
       <div className={classes.buttons}>
-        <CustomisedButton type="submit" size={'large'} onClick={handleOpenConfigModal}>
+        <CustomisedButton type="submit" size={'large'} onClick={handleOpenConfigModal} id="close-config-modal">
           Continue
         </CustomisedButton>
       </div>
@@ -80,6 +81,7 @@ const ConfigModal = () => {
         className={classes.configButton}
         title={'Form configuration'}
         onClick={handleOpenConfigModal}
+        id="config-modal-button"
       >
         <SettingsIcon />
       </CustomisedOutlineButton>

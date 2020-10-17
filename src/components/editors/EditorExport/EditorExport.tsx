@@ -87,7 +87,7 @@ const EditorExport: FC<EditorExportProps> = ({ resetEditor }) => {
       <div className={classes.getExportedFormButtons}>
         {router.query.formUrl && (
           <>
-            <CustomisedButton size="large" onClick={publishForm} className={classes.buttonWidth}>
+            <CustomisedButton size="large" onClick={publishForm} className={classes.buttonWidth} id="publish-button">
               Publish
             </CustomisedButton>
             <span>or</span>

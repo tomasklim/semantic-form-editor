@@ -7,6 +7,7 @@ import { handleDragEnd, handleDragStart, onItemClickHandler } from '@utils/index
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import { EditorContext } from '@contexts/EditorContext';
 import { CustomiseQuestion } from '@contexts/CustomiseQuestionContext';
+import { Constants } from 's-forms';
 
 type ItemProps = {
   question: FormStructureQuestion;
@@ -60,6 +61,7 @@ const Item: FC<ItemProps> = ({ question, position, customiseQuestion }) => {
         onMouseLeave={handleMouseLeave}
         onClick={onItemClick}
         className={classes.listItem}
+        data-testid={`item-${question[Constants.LAYOUT_CLASS].join('-')}`}
       >
         <CustomisedCard variant="outlined">
           <ItemHeader

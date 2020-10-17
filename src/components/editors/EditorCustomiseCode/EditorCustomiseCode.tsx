@@ -28,13 +28,13 @@ const EditorCustomiseCode: React.FC = () => {
   const [form, setForm] = useState<any>(null);
 
   useEffect(() => {
-    async function getExportedForm() {
+    const getExportedForm = async () => {
       const formStructure = getClonedFormStructure();
 
       const exportedForm = await exportForm(formStructure, formContext);
 
       setForm(exportedForm);
-    }
+    };
 
     getExportedForm();
   }, []);

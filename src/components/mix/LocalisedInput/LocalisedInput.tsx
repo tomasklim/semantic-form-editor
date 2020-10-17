@@ -69,6 +69,7 @@ const LocalisedInput: React.FC<LocalisedInputProps> = ({
         autoFocus={autoFocus}
         required={required}
         multiline={multiline}
+        inputProps={{ 'data-testid': 'non-localised-label-input' }}
       />
     );
   }
@@ -88,7 +89,7 @@ const LocalisedInput: React.FC<LocalisedInputProps> = ({
           <TextField
             key={language}
             name={type}
-            inputProps={{ ['data-language']: language }}
+            inputProps={{ 'data-language': language, 'data-testid': `localised-input-${language}` }}
             label={`${label} ${language.toUpperCase()}`}
             variant="outlined"
             value={(foundLanguageObject && foundLanguageObject['@value']) || ''}

@@ -138,7 +138,7 @@ const ItemMenu: FC<Props> = ({ question, customiseQuestion, onItemClick }) => {
     }
 
     const duplicateQuestion = (duplicatedQuestion: FormStructureQuestion, nodeParent: FormStructureNode) => {
-      const label = JsonLdUtils.getLocalized(question[Constants.RDFS_LABEL], intl);
+      const label = JsonLdUtils.getLocalized(duplicatedQuestion[Constants.RDFS_LABEL], intl);
       duplicatedQuestion['@id'] = getUniqueId(label, clonedFormStructure);
 
       const duplicatedQuestionNode = new FormStructureNode(nodeParent, duplicatedQuestion);
@@ -206,11 +206,16 @@ const ItemMenu: FC<Props> = ({ question, customiseQuestion, onItemClick }) => {
 
   return (
     <span>
-      <SquaredIconButton ref={addButton} onClick={addNewItem} title="Add new unordered subquestion">
+      <SquaredIconButton
+        ref={addButton}
+        onClick={addNewItem}
+        title="Add new unordered subquestion"
+        data-testid="add-subquestion-unordered"
+      >
         <AddIcon />
       </SquaredIconButton>
       {/* @ts-ignore */}
-      <SquaredIconButton ref={anchorEl} onClick={handleToggle} title="Show more">
+      <SquaredIconButton ref={anchorEl} onClick={handleToggle} title="Show more" data-testid="menu-header">
         <MoreVert />
       </SquaredIconButton>
       <Popper open={open} anchorEl={anchorEl.current} transition={true} disablePortal={true} className={classes.menu}>

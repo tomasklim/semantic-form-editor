@@ -1,0 +1,60 @@
+{
+  "@context": {
+    "doc": "http://onto.fel.cvut.cz/ontologies/documentation/",
+    "x": "https://x.com/x/",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "form": "http://onto.fel.cvut.cz/ontologies/form/",
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "label": {
+      "@id": "http://www.w3.org/2000/01/rdf-schema#label"
+    },
+    "has-layout-class": {
+      "@id": "http://onto.fel.cvut.cz/ontologies/form-layout/has-layout-class"
+    },
+    "has_related_question": {
+      "@id": "http://onto.fel.cvut.cz/ontologies/documentation/has_related_question",
+      "@type": "@id"
+    }
+  },
+  "@graph": [
+    {
+      "@id": "antelope",
+      "@type": "doc:question",
+      "has_related_question": [],
+      "has-layout-class": "checkbox",
+      "label": "Antelope"
+    },
+    {
+      "@id": "baobab",
+      "@type": "doc:question",
+      "has_related_question": [],
+      "has-layout-class": "checkbox",
+      "label": "Baobab"
+    },
+    {
+      "@id": "cuttlefish",
+      "@type": "doc:question",
+      "has_related_question": [],
+      "has-layout-class": "checkbox",
+      "label": "Cuttlefish"
+    },
+    {
+      "@id": "x:form-root",
+      "@type": "doc:question",
+      "has_related_question": "which-animals-do-you-know",
+      "has-layout-class": "form",
+      "label": "form"
+    },
+    {
+      "@id": "which-animals-do-you-know",
+      "@type": "doc:question",
+      "has_related_question": [
+        "baobab",
+        "cuttlefish",
+        "antelope"
+      ],
+      "has-layout-class": "section",
+      "label": "Which animals do you know?"
+    }
+  ]
+}
