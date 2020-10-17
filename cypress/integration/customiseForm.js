@@ -29,7 +29,7 @@ const getSidebarQuestionForm = () => {
 };
 
 const addUnorderedFormSubquestion = (id) => {
-  cy.get(`#${id}`).get('[data-testid="add-subquestion-unordered"]').click();
+  cy.get(`#${id}`).find('[data-testid="add-subquestion-unordered"]').click();
 };
 
 const addUnorderedFormQuestion = () => {
@@ -49,7 +49,7 @@ describe('Open empty form and customise it', () => {
     cy.get('#continue-button').click();
   });
 
-  it.skip('creates section in simple form and wizard step is not available', () => {
+  it('creates section in simple form and wizard step is not available', () => {
     closeConfigModal();
 
     const labelSection = 'Label Section';
@@ -74,7 +74,7 @@ describe('Open empty form and customise it', () => {
     getSidebarQuestionForm().should('have.length', 1);
   });
 
-  it.skip('allows to create only wizard steps on top level and section in higher level of form', () => {
+  it('allows to create only wizard steps on top level and section in higher level of form', () => {
     cy.contains('Wizard form').click();
     closeConfigModal();
 
@@ -127,7 +127,7 @@ describe('Open empty form and customise it', () => {
       });
   });
 
-  it.skip('transforms wizard-step to section and vice versa if moved to top level', () => {
+  it('transforms wizard-step to section and vice versa if moved to top level', () => {
     cy.contains('Wizard form').click();
     closeConfigModal();
 
@@ -168,7 +168,7 @@ describe('Open empty form and customise it', () => {
       });
   });
 
-  it.skip('does not allow to move non-wizard-step question to unordered top level in wizard form type', () => {
+  it('does not allow to move non-wizard-step question to unordered top level in wizard form type', () => {
     cy.contains('Wizard form').click();
     closeConfigModal();
 
@@ -201,7 +201,7 @@ describe('Open empty form and customise it', () => {
       });
   });
 
-  it.skip('does not allow to move non-wizard-step question to certain place in top level in wizard form type', () => {
+  it('does not allow to move non-wizard-step question to certain place in top level in wizard form type', () => {
     cy.contains('Wizard form').click();
     closeConfigModal();
     //
@@ -234,7 +234,7 @@ describe('Open empty form and customise it', () => {
       });
   });
 
-  it.skip('allows to move non-wizard-step question to top level in simple form type', () => {
+  it('allows to move non-wizard-step question to top level in simple form type', () => {
     closeConfigModal();
 
     getLabelInput().type('Section');
@@ -271,7 +271,7 @@ describe('Open empty form and customise it', () => {
       });
   });
 
-  it.skip('allows to move non-wizard-step question to certain place in top level in simple form type', () => {
+  it('allows to move non-wizard-step question to certain place in top level in simple form type', () => {
     closeConfigModal();
 
     createSimpleQuestion('Section', 'Section');
@@ -296,7 +296,7 @@ describe('Open empty form and customise it', () => {
 
             saveSidebarForm();
 
-            cy.get(`#${questionId1}`).drag(`[data-testid="item-add-0-wizard-position"]`, { force: true });
+            cy.get(`#${questionId1}`).drag(`[data-testid="item-add-0"]`, { force: true });
 
             cy.get(`#${sectionStepId}`).contains(`#${questionId1}`).should('not.exist');
 
@@ -305,7 +305,7 @@ describe('Open empty form and customise it', () => {
       });
   });
 
-  it.skip('offers to fill labels in selected languages and shows them correctly', () => {
+  it('offers to fill labels in selected languages and shows them correctly', () => {
     cy.get('[data-testid="languages-autocomplete"').click();
 
     cy.contains('cs').click();
@@ -332,7 +332,7 @@ describe('Open empty form and customise it', () => {
       });
   });
 
-  it.skip('allows to create questions on certain places on top level', () => {
+  it('allows to create questions on certain places on top level', () => {
     closeConfigModal();
 
     createSimpleQuestion('Section', 'Section');
@@ -365,7 +365,7 @@ describe('Open empty form and customise it', () => {
     cy.get('li').eq(4).should('have.attr', 'data-testid', 'item-time');
   });
 
-  it.skip('allows to create questions on certain places in section', () => {
+  it('allows to create questions on certain places in section', () => {
     cy.contains('Wizard form').click();
 
     closeConfigModal();
@@ -399,7 +399,7 @@ describe('Open empty form and customise it', () => {
       });
   });
 
-  it.skip('allows to specify custom attribute of question', () => {
+  it('allows to specify custom attribute of question', () => {
     closeConfigModal();
 
     createSimpleQuestion('Text', 'Text');
@@ -427,7 +427,7 @@ describe('Open empty form and customise it', () => {
       });
   });
 
-  it.skip('adds multiple questions correctly in simple form', () => {
+  it('adds multiple questions correctly in simple form', () => {
     closeConfigModal();
 
     cy.get('#multiple-questions-tab').click();
@@ -441,7 +441,7 @@ describe('Open empty form and customise it', () => {
     cy.get(`li[id^="text"][data-testid="item-"]`);
   });
 
-  it.skip('adds multiple questions correctly in wizard form', () => {
+  it('adds multiple questions correctly in wizard form', () => {
     cy.contains('Wizard form').click();
 
     closeConfigModal();
@@ -458,7 +458,7 @@ describe('Open empty form and customise it', () => {
     cy.get(`li[id^="wizard"][data-testid="item-wizard-step"]`);
   });
 
-  it.skip('allows to add multiple questions only in unordered add mode', () => {
+  it('allows to add multiple questions only in unordered add mode', () => {
     closeConfigModal();
 
     cy.get('#multiple-questions-tab').click();
@@ -478,7 +478,7 @@ describe('Open empty form and customise it', () => {
     cy.get('#multiple-questions-tab').should('be.disabled');
   });
 
-  it.skip('allows to specify possible values of typeahead question', () => {
+  it('allows to specify possible values of typeahead question', () => {
     closeConfigModal();
 
     createSimpleQuestion('Typeahead', 'Typeahead');
@@ -515,7 +515,7 @@ describe('Open empty form and customise it', () => {
     cy.get('#add-options').should('have.text', 'Add options - 2 available');
   });
 
-  it.skip('allows to specify possible values of typeahead question in more languages', () => {
+  it('allows to specify possible values of typeahead question in more languages', () => {
     cy.get('[data-testid="languages-autocomplete"').click();
 
     cy.contains('cs').click();
@@ -553,6 +553,25 @@ describe('Open empty form and customise it', () => {
     cy.get('#options-modal').find('[data-testid="option-2-delete"]').click();
     cy.get('#options-modal').find('[data-testid="option-2-ue"]').should('not.exist');
   });
+
+  it('allows to modify source code during customisation of form', () => {
+    closeConfigModal();
+
+    cy.get('#edit-in-code').should('be.disabled');
+
+    createSimpleQuestion('Text', 'Text');
+    saveSidebarForm();
+
+    cy.get('#edit-in-code').click();
+
+    cy.get('.jsoneditor').should('exist');
+    cy.get('#validate-form').should('exist');
+    cy.get('#save-changes').should('exist');
+    cy.get('#reset-changes').should('exist');
+    cy.get('#edit-in-editor-button').click();
+
+    cy.get('#form').should('exist');
+  });
 });
 
 describe('Open simple form and customise it', () => {
@@ -564,7 +583,7 @@ describe('Open simple form and customise it', () => {
     cy.get('#continue-button').click();
   });
 
-  it.skip('transforms simple form without non-section questions to wizard form and vice versa', () => {
+  it('transforms simple form without non-section questions to wizard form and vice versa', () => {
     openConfigModal();
 
     cy.get('#transform-form-type').click();
@@ -583,7 +602,7 @@ describe('Open simple form and customise it', () => {
     getLayoutClassInput().contains('Section').should('exist');
   });
 
-  it.skip('transforms simple form with non-section questions to wizard form and vice versa', () => {
+  it('transforms simple form with non-section questions to wizard form and vice versa', () => {
     addUnorderedFormQuestion();
     createSimpleQuestion('Text', 'Text');
     saveSidebarForm();
@@ -614,7 +633,7 @@ describe('Open simple form and customise it', () => {
       });
   });
 
-  it.skip('allows to duplicate question and delete the old one', () => {
+  it('allows to duplicate question and delete the old one', () => {
     cy.get('li').should('have.length', 4);
 
     cy.get('#which-animals-do-you-know').find('[data-testid="menu-header"]').first().click();
@@ -646,5 +665,130 @@ describe('Open simple form and customise it', () => {
     cy.get('li#baobab').find('[data-testid="preceding-question-indicator"]').click();
 
     cy.get('li#cuttlefish').should('have.class', 'highlightQuestion');
+  });
+
+  it('allows to unorder questions within its parent question by drag and drop api', () => {
+    cy.get('li#cuttlefish').drag('#which-animals-do-you-know [data-testid="item-add-0"]');
+    cy.get('li#baobab').drag('#which-animals-do-you-know [data-testid="item-add-1"]');
+
+    cy.get(`li#which-animals-do-you-know`).find('ol').find('li').eq(1).should('have.id', 'baobab');
+    cy.get('li#baobab').drag('#which-animals-do-you-know');
+    cy.get(`li#which-animals-do-you-know`).find('ol').find('li').eq(0).should('have.id', 'antelope');
+    cy.get(`li#which-animals-do-you-know`).find('ol').find('li').eq(1).should('have.id', 'baobab');
+  });
+
+  it('allows to unorder questions within its parent question by single click', () => {
+    cy.get('li#which-animals-do-you-know').find('[data-testid="preceding-question-indicator"]').should('not.exist');
+
+    cy.get('li#cuttlefish').drag('[data-testid="item-add-0"]');
+    cy.get('li#baobab').drag('[data-testid="item-add-0"]');
+    cy.get('li#antelope').drag('[data-testid="item-add-1"]');
+
+    cy.get('li#which-animals-do-you-know').find('[data-testid="preceding-question-indicator"]').should('exist');
+
+    cy.get('li#which-animals-do-you-know').find('[data-testid="menu-header"]').first().click();
+    cy.get('#menu-list').find('#menu-item-preceding-question').click('top');
+    cy.get(`li`).eq(0).should('have.id', 'baobab');
+
+    cy.get(`li`).eq(1).should('have.id', 'antelope');
+    cy.get(`li`).eq(2).should('have.id', 'cuttlefish');
+    cy.get(`li`).eq(3).should('have.id', 'which-animals-do-you-know');
+
+    cy.get('li#which-animals-do-you-know').find('[data-testid="preceding-question-indicator"]').should('not.exist');
+  });
+});
+
+describe('Open wizard form and customise it', () => {
+  beforeEach(() => {
+    cy.visit('/');
+
+    cy.get('#import-form-button').attachFile('wizzardFormWithAttributes.json');
+
+    cy.get('#continue-button').click();
+  });
+
+  it('moves to preview if user clicks on comment indicator', () => {
+    cy.get('[data-testid="comment-indicator"]').click();
+
+    cy.get('#preview-form').should('exist');
+  });
+
+  it('allows to collapse and expand certain sections', () => {
+    cy.get('#author').should('be.visible');
+
+    cy.get('#authors').find('[data-testid="collapse-button"]').click();
+
+    cy.get('#author').should('be.hidden');
+    cy.get('#authors').should('be.visible');
+
+    cy.get('#authors').find('[data-testid="collapse-button"]').click();
+
+    cy.get('#author').should('be.visible');
+    cy.get('#authors').should('be.visible');
+  });
+
+  it('allows to collapse and expand all sections at once', () => {
+    cy.get('#authors').should('be.visible');
+    cy.get('#do-you-have-favourite-book').should('be.visible');
+    cy.get('#author').should('be.visible');
+
+    cy.get('#collapse-all-button').click();
+
+    cy.get('#authors').should('be.hidden');
+    cy.get('#do-you-have-favourite-book').should('be.hidden');
+    cy.get('#author').should('be.hidden');
+
+    cy.get('#collapse-all-button').click();
+
+    cy.get('#authors').should('be.visible');
+    cy.get('#do-you-have-favourite-book').should('be.visible');
+    cy.get('#author').should('be.visible');
+  });
+
+  it('allows to fill values to form', () => {
+    cy.get('.MuiStepper-root').contains('Preview').click();
+
+    cy.get('[placeholder="YYYY"]').type('1995');
+
+    cy.get('#add-values-to-form').click();
+
+    cy.get('.MuiStepper-root').contains('Customise').click();
+    cy.get('.MuiStepper-root').contains('Preview').click();
+
+    cy.get('[placeholder="YYYY"]').should('have.value', 1995);
+  });
+
+  it('allows to configure form language in preview', () => {
+    cy.get('.MuiStepper-root').contains('Preview').click();
+
+    cy.get('#form-type-switch').should('exist');
+
+    cy.get('#preview-form').contains('Magazines').should('exist');
+
+    cy.get('#preview-form').contains('Zeitschriften').should('not.exist');
+
+    cy.get('#language-select').select('de');
+
+    cy.get('#preview-form').contains('Zeitschriften').should('exist');
+
+    cy.get('#preview-form').contains('Magazines').should('not.exist');
+  });
+
+  it('exports renders correctly', () => {
+    cy.get('.MuiStepper-root').contains('Export').click();
+
+    cy.get('#copy-to-clipboard-button').should('exist');
+    cy.get('#download-button').should('exist');
+    cy.get('.jsoneditor').should('exist');
+  });
+
+  it('navigates to first step from export on start over button click', () => {
+    cy.get('.MuiStepper-root').contains('Export').click();
+
+    cy.get('#reset-button').click();
+
+    cy.get('.MuiStepper-root').find('button').should('have.length', 4);
+    cy.get('.MuiStepper-root').find('button:disabled').should('have.length', 3);
+    cy.get('.MuiStepper-root').find('button:not([disabled])').should('have.length', 1).contains('New / Import');
   });
 });

@@ -85,6 +85,7 @@ const SidebarNav: React.FC<SidebarNavProps> = ({ customiseQuestion }) => {
           className={classes.expandButton}
           onClick={handleSectionsExpansion}
           disabled={isEmptyFormStructure}
+          id="collapse-all-button"
         >
           {sectionsExpanded ? <ExpandLess /> : <ExpandMore />}
         </CustomisedOutlineButton>
@@ -103,6 +104,7 @@ const SidebarNav: React.FC<SidebarNavProps> = ({ customiseQuestion }) => {
           className={classes.codeButton}
           onClick={switchToCodeEditor}
           disabled={isEmptyFormStructure}
+          id="edit-in-code"
         >
           <Code />
         </CustomisedOutlineButton>

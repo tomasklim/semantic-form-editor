@@ -64,7 +64,7 @@ describe('Import form from formUrl', () => {
 
     cy.get('#close-config-modal').click();
 
-    cy.get('[data-testid="non-localised-label-input"]').type('test');
+    cy.get('[data-testid="non-localised-label-input"]').first().type('test');
     cy.get('[data-testid="layout-class-input"]').click();
 
     cy.contains('Section').click();
@@ -86,7 +86,7 @@ describe('Import form from formUrl', () => {
     cy.get('.MuiStepper-root').find('button:disabled').should('have.length', 1).contains('Load');
 
     cy.get('#empty-form').should('have.length', 0);
-    cy.get('li[data-testid="item"]').should('have.length', 3);
+    cy.get('li[data-testid="item-checkbox"]').should('have.length', 3);
     cy.get('li[data-testid="item-section"]').should('have.length', 1);
   });
 
@@ -96,7 +96,7 @@ describe('Import form from formUrl', () => {
     cy.visit('/?formUrl=http://example.com/simpleForm.json');
 
     cy.get('#empty-form').should('have.length', 0);
-    cy.get('li[data-testid="item"]').should('have.length', 3);
+    cy.get('li[data-testid="item-checkbox"]').should('have.length', 3);
     cy.get('li[data-testid="item-section"]').should('have.length', 1);
   });
 

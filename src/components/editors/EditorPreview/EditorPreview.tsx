@@ -110,7 +110,7 @@ const EditorPreview: FC<EditorPreviewProps> = ({}) => {
   }
 
   return (
-    <div className={classes.previewContainer}>
+    <div className={classes.previewContainer} id="preview-form">
       <PreviewConfig
         horizontalWizardNav={horizontalWizardNav}
         setHorizontalWizardNav={setHorizontalWizardNav}
@@ -119,7 +119,12 @@ const EditorPreview: FC<EditorPreviewProps> = ({}) => {
       />
       <SForms ref={sforms} form={form} options={options} fetchTypeAheadValues={fetchTypeaheadValuesMock} />
       <div className={classes.buttons}>
-        <CustomisedOutlineButton variant="outlined" size={'large'} onClick={handleAddValuesToForm}>
+        <CustomisedOutlineButton
+          variant="outlined"
+          size={'large'}
+          onClick={handleAddValuesToForm}
+          id="add-values-to-form"
+        >
           Save values to form
         </CustomisedOutlineButton>
       </div>

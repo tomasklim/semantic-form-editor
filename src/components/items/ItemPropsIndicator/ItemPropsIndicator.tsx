@@ -89,7 +89,7 @@ const ItemPropsIndicator: FC<Props> = ({ question }) => {
         </div>
       )}
       {question[Constants.RDFS_COMMENT] && (
-        <div onClick={handleViewInPreview}>
+        <div onClick={handleViewInPreview} data-testid={'comment-indicator'}>
           <Tooltip title={JsonLdUtils.getLocalized(question[Constants.RDFS_COMMENT], {}) || ''} arrow>
             <Badge badgeContent={<CommentIcon fontSize="small" />} className={classes.comment} />
           </Tooltip>

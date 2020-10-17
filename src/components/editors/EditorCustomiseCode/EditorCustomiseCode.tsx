@@ -88,15 +88,16 @@ const EditorCustomiseCode: React.FC = () => {
             className={classes.validateButton}
             variant="outlined"
             title="Save and validate form"
+            id="validate-form"
           >
             <Spellcheck />
           </CustomisedOutlineButton>
           {isValid === false ? <ErrorsModal /> : null}
         </div>
-        <CustomisedButton className={classes.saveButton} onClick={onSave}>
+        <CustomisedButton className={classes.saveButton} onClick={onSave} id="save-changes">
           Save changes
         </CustomisedButton>
-        <CustomisedLinkButton className={classes.resetButton} onClick={onReset}>
+        <CustomisedLinkButton className={classes.resetButton} onClick={onReset} id="reset-changes">
           Reset changes
         </CustomisedLinkButton>
         <CustomisedOutlineButton
@@ -104,6 +105,7 @@ const EditorCustomiseCode: React.FC = () => {
           title={'Save and edit in editor'}
           className={classes.codeButton}
           onClick={onSwitchToEditorView}
+          id="edit-in-editor-button"
         >
           <VerticalSplit />
         </CustomisedOutlineButton>

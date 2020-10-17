@@ -223,12 +223,14 @@ const ItemMenu: FC<Props> = ({ question, customiseQuestion, onItemClick }) => {
           <Grow {...TransitionProps}>
             <Paper>
               <ClickAwayListener onClickAway={handleClose}>
-                <MenuList>
+                <MenuList id="menu-list">
                   <MenuItem onClick={onItemClick}>Edit question</MenuItem>
                   <MenuItem onClick={handleDuplicateQuestion}>Duplicate question</MenuItem>
                   <MenuItem onClick={handleDelete}>Delete question</MenuItem>
                   {question[Constants.HAS_PRECEDING_QUESTION] && (
-                    <MenuItem onClick={removePrecedingQuestionLink}>Remove preceding question link</MenuItem>
+                    <MenuItem onClick={removePrecedingQuestionLink} id="menu-item-preceding-question">
+                      Remove preceding question link
+                    </MenuItem>
                   )}
                   <MenuItem onClick={handleViewInPreview}>View in preview</MenuItem>
                 </MenuList>
