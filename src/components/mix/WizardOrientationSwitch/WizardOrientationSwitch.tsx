@@ -15,7 +15,7 @@ const WizardOrientationSwitch: React.FC<WizardOrientationSwitchProps> = ({
   const classes = useStyles();
 
   return (
-    <div className={classes.switchContainer}>
+    <div className={classes.switchContainer} id="form-type-switch">
       <span>Navigation</span>
       <Grid component="label" container spacing={1} className={classes.switch}>
         <Grid item>Horizontal</Grid>

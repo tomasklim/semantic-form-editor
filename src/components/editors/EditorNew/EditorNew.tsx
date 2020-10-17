@@ -121,6 +121,7 @@ const EditorNew: FC<EditorNewProps> = ({ nextStep }) => {
           onClick={initialiseNewForm}
           size="large"
           className={classes.buttonWidth}
+          id="new-form-button"
         >
           New form
         </CustomisedOutlineButton>
@@ -129,11 +130,11 @@ const EditorNew: FC<EditorNewProps> = ({ nextStep }) => {
           color="primary"
           accept="application/json"
           type="file"
-          id="icon-button-file"
+          id="import-form-button"
           className={classes.uploadFileInput}
           onChange={onFileSelected}
         />
-        <label htmlFor="icon-button-file">
+        <label htmlFor="import-form-button">
           {/* @ts-ignore */}
           <CustomisedOutlineButton variant="outlined" component="span" size="large" className={classes.buttonWidth}>
             Import existing form
@@ -162,6 +163,7 @@ const EditorNew: FC<EditorNewProps> = ({ nextStep }) => {
             finishCallback();
           }}
           size="large"
+          id="continue-button"
           disabled={continueButtonDisabled}
         >
           Save and continue to next step

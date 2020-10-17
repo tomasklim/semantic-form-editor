@@ -72,10 +72,10 @@ const SidebarNav: React.FC<SidebarNavProps> = ({ customiseQuestion }) => {
         <CustomisedOutlineButton
           onClick={!isEmptyFormStructure ? addNewTopLevelQuestion : undefined}
           title={!isWizardless ? 'Add new wizard step' : 'Add new question'}
+          id={!isWizardless ? 'add-new-wizard-step-button' : 'add-new-question'}
           ref={addButton}
           startIcon={<AddIcon />}
           variant="outlined"
-          id="new-question-button"
         >
           {!isWizardless ? 'Add new wizard step' : 'Add new question'}
         </CustomisedOutlineButton>
@@ -85,6 +85,7 @@ const SidebarNav: React.FC<SidebarNavProps> = ({ customiseQuestion }) => {
           className={classes.expandButton}
           onClick={handleSectionsExpansion}
           disabled={isEmptyFormStructure}
+          id="collapse-all-button"
         >
           {sectionsExpanded ? <ExpandLess /> : <ExpandMore />}
         </CustomisedOutlineButton>
@@ -103,6 +104,7 @@ const SidebarNav: React.FC<SidebarNavProps> = ({ customiseQuestion }) => {
           className={classes.codeButton}
           onClick={switchToCodeEditor}
           disabled={isEmptyFormStructure}
+          id="edit-in-code"
         >
           <Code />
         </CustomisedOutlineButton>

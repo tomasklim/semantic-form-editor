@@ -24,6 +24,9 @@ export default makeStyles((theme: ITheme) => ({
     '&:hover': {
       color: theme.palette.custom.main
     }
+  },
+  position: {
+    marginRight: '0.5rem'
   }
 }));
 

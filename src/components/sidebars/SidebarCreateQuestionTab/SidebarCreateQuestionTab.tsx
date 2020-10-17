@@ -28,8 +28,9 @@ const SidebarCreateQuestionTab: React.FC<SidebarCreateQuestionTabProps> = ({ act
 
   return (
     <Tabs className={styles.appBar} variant="fullWidth" value={activeTab} onChange={handleChange}>
-      <Tab label="one question" />
+      <Tab label="one question" id="one-question-tab" />
       <Tab
+        id="multiple-questions-tab"
         tabIndex={0}
         label={
           <>

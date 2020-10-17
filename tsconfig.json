@@ -31,7 +31,8 @@
     }
   },
   "exclude": [
-    "semantic-form-web-editor/node_modules"
+    "semantic-form-web-editor/node_modules",
+    "semantic-form-web-editor/cypress"
   ],
   "include": ["**/*.ts", "**/*.tsx"]
 }

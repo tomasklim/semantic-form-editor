@@ -68,7 +68,7 @@ const ItemPropsIndicator: FC<Props> = ({ question }) => {
         </div>
       )}
       {question[Constants.HAS_PRECEDING_QUESTION] && (
-        <div onClick={handlePrecedingQuestionBadgeClick}>
+        <div onClick={handlePrecedingQuestionBadgeClick} data-testid={'preceding-question-indicator'}>
           <Tooltip title="Has preceding question" arrow>
             <Badge badgeContent={<VerticalAlignTopIcon fontSize="small" />} className={classes.preceding} />
           </Tooltip>
@@ -89,7 +89,7 @@ const ItemPropsIndicator: FC<Props> = ({ question }) => {
         </div>
       )}
       {question[Constants.RDFS_COMMENT] && (
-        <div onClick={handleViewInPreview}>
+        <div onClick={handleViewInPreview} data-testid={'comment-indicator'}>
           <Tooltip title={JsonLdUtils.getLocalized(question[Constants.RDFS_COMMENT], {}) || ''} arrow>
             <Badge badgeContent={<CommentIcon fontSize="small" />} className={classes.comment} />
           </Tooltip>

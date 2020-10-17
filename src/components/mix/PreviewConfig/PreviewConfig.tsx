@@ -41,7 +41,12 @@ const PreviewConfig: React.FC<PreviewConfigProps> = ({
       {languages.length > 1 ? (
         <FormControl>
           <InputLabel>Language</InputLabel>
-          <Select native value={intl?.locale} onChange={(e) => setIntl(getIntl((e.target.value as unknown) as string))}>
+          <Select
+            native
+            value={intl?.locale}
+            onChange={(e) => setIntl(getIntl((e.target.value as unknown) as string))}
+            id="language-select"
+          >
             {languages.map((language) => (
               <option key={language} value={language}>
                 {language.toUpperCase()}

@@ -225,11 +225,12 @@ const ItemAdd: FC<ItemAddProps> = ({
         onClick={handleAddNewQuestion}
         title={isWizardPosition ? 'Add new wizard step on certain position' : 'Add new question on certain position'}
         data-droppable={true}
+        data-testid={`item-add-${position}${isWizardPosition ? '-wizard-position' : ''}`}
       >
         <AddIcon fontSize={'large'} />
       </div>
     ),
-    [isWizardPosition, isWizardless, topLevelPosition, formStructure, intl]
+    [isWizardPosition, isWizardless, topLevelPosition, position, formStructure, intl]
   );
 };
 

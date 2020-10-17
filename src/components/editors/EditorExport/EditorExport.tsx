@@ -87,7 +87,7 @@ const EditorExport: FC<EditorExportProps> = ({ resetEditor }) => {
       <div className={classes.getExportedFormButtons}>
         {router.query.formUrl && (
           <>
-            <CustomisedButton size="large" onClick={publishForm} className={classes.buttonWidth}>
+            <CustomisedButton size="large" onClick={publishForm} className={classes.buttonWidth} id="publish-button">
               Publish
             </CustomisedButton>
             <span>or</span>
@@ -98,6 +98,7 @@ const EditorExport: FC<EditorExportProps> = ({ resetEditor }) => {
           size="large"
           onClick={downloadExportedForm}
           className={classes.buttonWidth}
+          id="download-button"
         >
           Download
         </CustomisedOutlineButton>
@@ -107,6 +108,7 @@ const EditorExport: FC<EditorExportProps> = ({ resetEditor }) => {
           size="large"
           onClick={copyToClipboard}
           className={classes.buttonWidth}
+          id="copy-to-clipboard-button"
         >
           Copy to clipboard
         </CustomisedOutlineButton>
@@ -122,7 +124,13 @@ const EditorExport: FC<EditorExportProps> = ({ resetEditor }) => {
       />
       {!router.query.formUrl && (
         <div className={classes.buildNewFormButtonContainer}>
-          <CustomisedButton variant="contained" size="large" onClick={resetEditor} className={classes.buttonWidth}>
+          <CustomisedButton
+            variant="contained"
+            size="large"
+            onClick={resetEditor}
+            className={classes.buttonWidth}
+            id="reset-button"
+          >
             Start over
           </CustomisedButton>
         </div>

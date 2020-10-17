@@ -21,7 +21,8 @@ interface NavigationContextValues {
   setEditorCustomiseCodeView: Dispatch<SetStateAction<boolean>>;
 }
 
-const INITIAL_UNLOCKED_STEPS = [0];
+const INITIAL_UNLOCKED_STEPS_LOCAL = [0];
+const INITIAL_UNLOCKED_STEPS_REMOTE = [1];
 
 const STEPS_LOCAL_FORM = ['New / Import', 'Customise', 'Preview', 'Export'];
 const STEPS_REMOTE_FORM = ['Load', 'Customise', 'Preview', 'Publish'];
@@ -39,11 +40,18 @@ const NavigationProvider: React.FC<NavigationProviderProps> = ({ children }) => 
     steps = STEPS_LOCAL_FORM;
   }
 
+  let initialUnlockedSteps: number[];
+  if (router.query.formUrl) {
+    initialUnlockedSteps = INITIAL_UNLOCKED_STEPS_REMOTE;
+  } else {
+    initialUnlockedSteps = INITIAL_UNLOCKED_STEPS_LOCAL;
+  }
+
   const [showFormConfigurationModal, setShowFormConfigurationModal] = React.useState<boolean>(false);
   const [editorCustomiseCodeView, setEditorCustomiseCodeView] = React.useState<boolean>(false);
 
   const [activeStep, setActiveStep] = React.useState<number>(0);
-  const [unlockedSteps, setUnlockedSteps] = React.useState<Array<number>>([...INITIAL_UNLOCKED_STEPS]);
+  const [unlockedSteps, setUnlockedSteps] = React.useState<Array<number>>([...initialUnlockedSteps]);
 
   const allStepsUnlocked = STEPS_LOCAL_FORM.map((_, index) => {
     if (router.query.formUrl && index === 0) {
@@ -58,7 +66,7 @@ const NavigationProvider: React.FC<NavigationProviderProps> = ({ children }) => 
 
   const resetNavigationContext = () => {
     setActiveStep(0);
-    setUnlockedSteps([...INITIAL_UNLOCKED_STEPS]);
+    setUnlockedSteps([...initialUnlockedSteps]);
     setShowFormConfigurationModal(false);
     setEditorCustomiseCodeView(false);
   };

@@ -88,6 +88,7 @@ const FormCustomAttributeInput: React.FC<FormCustomAttributeInputProps> = ({
         onChange={handleChangeCustomAttributeName}
         selectOnFocus
         clearOnBlur
+        data-testid="custom-attribute-input"
         handleHomeEndKeys
         options={contextAttributes}
         getOptionLabel={(option) => option.id}
@@ -112,10 +113,11 @@ const FormCustomAttributeInput: React.FC<FormCustomAttributeInputProps> = ({
         }}
         inputRef={customAttValueEl}
         value={customAttributeValue}
+        id="custom-attribute-value"
         required
       />
       <div className={classes.addNewAttributeButtons}>
-        <CustomisedButton type="submit" size={'small'} onClick={addGenericAttribute}>
+        <CustomisedButton type="submit" size={'small'} onClick={addGenericAttribute} id="add-custom-attribute">
           Add
         </CustomisedButton>
         <CustomisedLinkButton

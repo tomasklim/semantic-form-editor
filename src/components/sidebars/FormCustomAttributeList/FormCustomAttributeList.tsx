@@ -77,6 +77,7 @@ const FormCustomAttributeList: React.FC<FormCustomAttributeListProps> = ({
               value={textFieldValue}
               multiline
               onChange={handleCustomAttributeInputChange}
+              inputProps={{ id: key }}
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton onClick={() => deleteGenericAttribute(key)} edge="end">
@@ -110,6 +111,7 @@ const FormCustomAttributeList: React.FC<FormCustomAttributeListProps> = ({
           }}
           type="button"
           className={classes.addNewAttribute}
+          data-testid="add-new-attribute"
         >
           <AddIcon /> &nbsp;Add new custom attribute
         </Link>

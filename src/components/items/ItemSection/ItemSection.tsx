@@ -2,7 +2,7 @@ import React, { FC, useContext, useEffect, useMemo, useRef, useState } from 'rea
 import useStyles, { CustomisedAccordionDetails } from './ItemSection.styles';
 import ItemHeader from '@components/items/ItemHeader/ItemHeader';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
-import { Constants } from 's-forms';
+import { Constants, FormUtils } from 's-forms';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import {
   detectIsChildNode,
@@ -168,6 +168,7 @@ const ItemSection: FC<ItemSectionProps> = ({ question, position, buildFormUI, cu
         className={'listItemSection'}
         data-droppable={true}
         onClick={onItemClick}
+        data-testid={FormUtils.isWizardStep(question) ? 'item-wizard-step' : 'item-section'}
       >
         <Accordion expanded={expanded} variant="outlined">
           <ItemHeader

@@ -123,6 +123,7 @@ const LayoutClassInput: React.FC<LayoutClassInputProps> = ({ question, handleCha
         onChange={onChange}
         getOptionLabel={(option) => option.title}
         groupBy={(option) => option.type}
+        data-testid="layout-class-input"
         renderInput={(params) => (
           <TextField
             {...params}

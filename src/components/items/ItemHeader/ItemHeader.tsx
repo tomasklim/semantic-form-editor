@@ -49,15 +49,17 @@ const ItemHeader: FC<ItemHeaderProps> = ({
         <div className={classes.cardHeader} onMouseEnter={addDraggable} onMouseLeave={removeDraggable}>
           <span className={classes.cardHeaderItemLeft}>
             {expandable && (
-              <div className={classes.expandableSection} title={expanded ? 'Collapse section' : 'Expand section'}>
+              <div
+                className={classes.expandableSection}
+                title={expanded ? 'Collapse section' : 'Expand section'}
+                data-testid="collapse-button"
+              >
                 {expanded ? <ExpandLess onClick={expandItemSection} /> : <ExpandMore onClick={expandItemSection} />}
               </div>
             )}
             <DragIndicator className={classes.cardHeaderDrag} />
-            <span>
-              {position}.&nbsp;
-              {JsonLdUtils.getLocalized(question[Constants.RDFS_LABEL], intl) || question['@id']}
-            </span>
+            <span className={classes.position}>{position}.</span>
+            <span>{JsonLdUtils.getLocalized(question[Constants.RDFS_LABEL], intl) || question['@id']}</span>
             <ItemPropsIndicator question={question} />
           </span>
           <span className={classes.cardHeaderItemRight} onMouseEnter={removeDraggable} onMouseLeave={addDraggable}>

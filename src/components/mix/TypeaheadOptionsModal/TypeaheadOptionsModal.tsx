@@ -87,13 +87,14 @@ const TypeaheadOptionsModal: React.FC<TypeaheadOptionsModalProps> = ({ question,
 
             handleChange(fakeEvent);
           }}
+          inputProps={{ 'data-testid': `option-${index}` }}
         />
       </TableCell>
     );
   };
 
   const modalBody = (
-    <div className={classes.paper}>
+    <div className={classes.paper} id="options-modal">
       <h3>Typeahead options</h3>
       {options.length ? (
         <TableContainer>
@@ -126,7 +127,7 @@ const TypeaheadOptionsModal: React.FC<TypeaheadOptionsModalProps> = ({ question,
 
                       const label = JsonLdUtils.getLocalized(option[Constants.RDFS_LABEL], intl);
 
-                      return getTableLanguageCell(option, label, index + lang, lang);
+                      return getTableLanguageCell(option, label, index + '-' + lang, lang);
                     })}
                     {!languages.length &&
                       getTableLanguageCell(
@@ -134,7 +135,11 @@ const TypeaheadOptionsModal: React.FC<TypeaheadOptionsModalProps> = ({ question,
                         JsonLdUtils.getLocalized(option[Constants.RDFS_LABEL], {}),
                         index + ''
                       )}
-                    <TableCell className={classes.delete} onClick={() => handleDeleteOption(options, option)}>
+                    <TableCell
+                      className={classes.delete}
+                      onClick={() => handleDeleteOption(options, option)}
+                      data-testid={`option-${index}-delete`}
+                    >
                       <DeleteIcon />
                     </TableCell>
                   </TableRow>
@@ -144,7 +149,9 @@ const TypeaheadOptionsModal: React.FC<TypeaheadOptionsModalProps> = ({ question,
           </Table>
         </TableContainer>
       ) : (
-        <div className={classes.emptyOptions}>No options available...</div>
+        <div className={classes.emptyOptions} id="empty-options">
+          No options available...
+        </div>
       )}
       <Link
         component="button"
@@ -161,12 +168,13 @@ const TypeaheadOptionsModal: React.FC<TypeaheadOptionsModalProps> = ({ question,
         }}
         type="button"
         className={classes.addNewOption}
+        id="add-new-option-button"
       >
         <AddIcon />
         &nbsp;Add new option
       </Link>
       <div className={classes.buttons}>
-        <CustomisedButton type="submit" size={'large'} onClick={handleOpenConfigModal}>
+        <CustomisedButton type="submit" size={'large'} onClick={handleOpenConfigModal} id={'close-options-modal'}>
           Close
         </CustomisedButton>
       </div>
@@ -176,8 +184,8 @@ const TypeaheadOptionsModal: React.FC<TypeaheadOptionsModalProps> = ({ question,
   return (
     <div className={classes.addOptionsManually}>
       or
-      <CustomisedLinkButton title="Typeahead option values" onClick={handleOpenConfigModal}>
-        Add options - {question[Constants.HAS_OPTION].length} available
+      <CustomisedLinkButton title="Typeahead option values" onClick={handleOpenConfigModal} id="add-options">
+        {`Add options - ${question[Constants.HAS_OPTION].length} available`}
       </CustomisedLinkButton>
       {open && (
         <Modal className={classes.modal} open={open} onClose={handleOpenConfigModal} id={'typeahead-options-modal'}>
