@@ -2,5 +2,6 @@
   "baseUrl": "http://localhost:3000",
   "projectId": "qo33nd",
   "defaultCommandTimeout": 10000,
-  "experimentalFetchPolyfill": true
+  "experimentalFetchPolyfill": true,
+  "viewportHeight": 800
 }
