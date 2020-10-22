@@ -21,6 +21,7 @@ import FormStructure from '@model/FormStructure';
 import { NEW_QUESTION, NEW_WIZARD_SECTION_QUESTION } from '@constants/index';
 import classNames from 'classnames';
 import { EditorContext } from '@contexts/EditorContext';
+import useOnMouseItemEvent from '../../../hooks/useOnMouseItemEvent/useOnMouseItemEvent';
 
 type ItemAddProps = {
   position: number;
@@ -43,13 +44,7 @@ const ItemAdd: FC<ItemAddProps> = ({
   const { formStructure, updateFormStructure, getClonedFormStructure, isWizardless } = useContext(FormStructureContext);
   const { intl } = useContext(EditorContext);
 
-  const handleMouseEnter = () => {
-    addContainer.current?.classList.add('addItemHover');
-  };
-
-  const handleMouseLeave = () => {
-    addContainer.current?.classList.remove('addItemHover');
-  };
+  const [handleMouseEnter, handleMouseLeave] = useOnMouseItemEvent(addContainer, 'addItemHover');
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();

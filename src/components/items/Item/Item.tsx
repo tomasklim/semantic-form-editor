@@ -8,6 +8,7 @@ import { FormStructureContext } from '@contexts/FormStructureContext';
 import { EditorContext } from '@contexts/EditorContext';
 import { CustomiseQuestion } from '@contexts/CustomiseQuestionContext';
 import { Constants } from 's-forms';
+import useOnMouseItemEvent from '../../../hooks/useOnMouseItemEvent/useOnMouseItemEvent';
 
 type ItemProps = {
   question: FormStructureQuestion;
@@ -22,13 +23,7 @@ const Item: FC<ItemProps> = ({ question, position, customiseQuestion }) => {
   const { updateNode, isWizardless } = useContext(FormStructureContext);
   const { intl } = useContext(EditorContext);
 
-  const handleMouseEnter = () => {
-    itemContainer.current?.classList.add('itemHover');
-  };
-
-  const handleMouseLeave = () => {
-    itemContainer.current?.classList.remove('itemHover');
-  };
+  const [handleMouseEnter, handleMouseLeave] = useOnMouseItemEvent(itemContainer, 'itemHover');
 
   const onDragStart = (e: React.DragEvent<HTMLLIElement>) => {
     if (isWizardless) {

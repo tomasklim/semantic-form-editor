@@ -15,6 +15,7 @@ import { Accordion } from '@material-ui/core';
 
 import { EditorContext } from '@contexts/EditorContext';
 import { CustomiseQuestion } from '@contexts/CustomiseQuestionContext';
+import useOnMouseItemEvent from '../../../hooks/useOnMouseItemEvent/useOnMouseItemEvent';
 
 type ItemSectionProps = {
   question: FormStructureQuestion;
@@ -35,6 +36,8 @@ const ItemSection: FC<ItemSectionProps> = ({ question, position, buildFormUI, cu
 
   const { formStructure, moveNodeUnderNode, updateNode } = useContext(FormStructureContext);
   const { intl, sectionsExpanded } = useContext(EditorContext);
+
+  const [handleMouseEnter, handleMouseLeave] = useOnMouseItemEvent(itemContainer, 'itemHover');
 
   useEffect(() => {
     setExpanded(sectionsExpanded);
@@ -60,14 +63,6 @@ const ItemSection: FC<ItemSectionProps> = ({ question, position, buildFormUI, cu
     document.getElementById('question-drop-area')!.style.display = 'none';
 
     handleDragEnd(e);
-  };
-
-  const handleMouseEnter = () => {
-    itemContainer.current?.classList.add('itemHover');
-  };
-
-  const handleMouseLeave = () => {
-    itemContainer.current?.classList.remove('itemHover');
   };
 
   const handleMouseOver = (e: React.MouseEvent<HTMLDivElement>) => {
