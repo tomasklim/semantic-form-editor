@@ -61,7 +61,7 @@ const Item: FC<ItemProps> = ({ question, position, customiseQuestion }) => {
         onMouseLeave={handleMouseLeave}
         onClick={onItemClick}
         className={classes.listItem}
-        data-testid={`item-${question[Constants.LAYOUT_CLASS].join('-')}`}
+        data-testid={`item-${question[Constants.LAYOUT_CLASS]?.join('-') || ''}`}
       >
         <CustomisedCard variant="outlined">
           <ItemHeader
