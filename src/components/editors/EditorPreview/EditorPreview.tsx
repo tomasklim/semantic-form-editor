@@ -1,7 +1,5 @@
-import { FC, useContext, useEffect, useRef, useState } from 'react';
+import { FC, useContext, useRef, useState } from 'react';
 import SForms, { Constants, Intl, SOptions } from 's-forms';
-import { exportForm } from '@utils/index';
-import { JsonLdObj } from 'jsonld/jsonld-spec';
 import { FormStructureContext } from '@contexts/FormStructureContext';
 import useStyles from './EditorPreview.styles';
 import { EditorContext } from '@contexts/EditorContext';
@@ -12,6 +10,7 @@ import PreviewConfig from '@components/mix/PreviewConfig/PreviewConfig';
 import { CustomisedOutlineButton } from '@styles/CustomisedOutlineButton';
 import { FormStructureQuestion } from '@model/FormStructureQuestion';
 import { useSnackbar } from 'notistack';
+import useExportedForm from '../../../hooks/useExportedForm/useExportedForm';
 
 const fetchTypeaheadValuesMock = (_: string): Promise<object> => {
   const possibleValues = require('@data/possibleValuesMock.json');
@@ -29,24 +28,13 @@ const EditorPreview: FC<EditorPreviewProps> = ({}) => {
   // @ts-ignore
   const sforms = useRef<HTMLDivElement>(null);
 
-  const { formContext, getClonedFormStructure, setFormStructure } = useContext(FormStructureContext);
+  const { getClonedFormStructure, setFormStructure } = useContext(FormStructureContext);
   const { SFormsConfig, intl } = useContext(EditorContext);
 
-  const [form, setForm] = useState<JsonLdObj>();
   const [horizontalWizardNav, setHorizontalWizardNav] = useState<boolean>(true);
   const [intlPreview, setIntlPreview] = useState<Intl>(intl);
 
-  useEffect(() => {
-    async function getExportedForm() {
-      const formStructure = getClonedFormStructure();
-
-      const exportedForm = await exportForm(formStructure, formContext);
-
-      setForm(exportedForm);
-    }
-
-    getExportedForm();
-  }, []);
+  const form = useExportedForm();
 
   const handleAddValuesToForm = () => {
     // @ts-ignore

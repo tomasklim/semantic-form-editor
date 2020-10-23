@@ -1,14 +1,13 @@
-import React, { FC, useContext, useEffect, useState } from 'react';
+import React, { FC } from 'react';
 import useStyles from './EditorExport.styles';
 import { JSONEditorMode } from 'jsoneditor';
-import { exportForm } from '@utils/index';
-import { FormStructureContext } from '@contexts/FormStructureContext';
 import { CustomisedOutlineButton } from '@styles/CustomisedOutlineButton';
 import { CustomisedButton } from '@styles/CustomisedButton';
 import 'jsoneditor/dist/jsoneditor.css';
 import JsonEditor from '@components/mix/JsonEditor/JsonEditor';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
+import useExportedForm from '../../../hooks/useExportedForm/useExportedForm';
 
 interface EditorExportProps {
   resetEditor: () => void;
@@ -20,20 +19,7 @@ const EditorExport: FC<EditorExportProps> = ({ resetEditor }) => {
 
   const classes = useStyles();
 
-  const { formContext, getClonedFormStructure } = useContext(FormStructureContext);
-  const [form, setForm] = useState<any>(null);
-
-  useEffect(() => {
-    async function getExportedForm() {
-      const formStructure = getClonedFormStructure();
-
-      const exportedForm = await exportForm(formStructure, formContext);
-
-      setForm(exportedForm);
-    }
-
-    getExportedForm();
-  }, []);
+  const form = useExportedForm();
 
   const downloadExportedForm = () => {
     const element = document.createElement('a');
