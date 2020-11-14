@@ -1,5 +1,6 @@
 import {
   addUnorderedFormQuestion,
+  addUnorderedFormSubquestion,
   closeConfigModal,
   createEmptyForm,
   createFormFromFile,
@@ -7,6 +8,7 @@ import {
   getForm,
   getHelpInput,
   getIdInput,
+  getLabelInput,
   getLayoutClassInput,
   openConfigModal,
   saveSidebarForm
@@ -70,6 +72,41 @@ describe('Specify question attributes', () => {
 
         getHelpInput().should('have.value', 'Heelp!');
         cy.get(`[name="${Constants.HAS_UNIT}"]`).should('have.value', 'mm');
+      });
+  });
+
+  it('allows to modify subquestion of modified question and does not rollback the data', () => {
+    closeConfigModal();
+
+    createSimpleQuestion('Section', 'Section');
+
+    getIdInput()
+      .invoke('val')
+      .then((sectionQuestionId) => {
+        saveSidebarForm();
+
+        addUnorderedFormSubquestion(sectionQuestionId);
+        createSimpleQuestion('Text', 'Text');
+
+        getIdInput()
+          .invoke('val')
+          .then((textQuestionId) => {
+            saveSidebarForm();
+
+            cy.get(`#${sectionQuestionId}`).click('top');
+            getLabelInput().clear().type('TestSection');
+            saveSidebarForm();
+
+            cy.get(`#${textQuestionId}`).click('top');
+            getLabelInput().clear().type('TestText');
+            saveSidebarForm();
+
+            cy.get(`#${sectionQuestionId}`).click('top');
+            getLabelInput().should('have.value', 'TestSection');
+
+            cy.get(`#${textQuestionId}`).click('top');
+            getLabelInput().should('have.value', 'TestText');
+          });
       });
   });
 });

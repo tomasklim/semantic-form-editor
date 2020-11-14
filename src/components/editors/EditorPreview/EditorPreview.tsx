@@ -28,7 +28,7 @@ const EditorPreview: FC<EditorPreviewProps> = ({}) => {
   // @ts-ignore
   const sforms = useRef<HTMLDivElement>(null);
 
-  const { getClonedFormStructure, setFormStructure } = useContext(FormStructureContext);
+  const { formStructure, updateFormStructure } = useContext(FormStructureContext);
   const { SFormsConfig, intl } = useContext(EditorContext);
 
   const [horizontalWizardNav, setHorizontalWizardNav] = useState<boolean>(true);
@@ -39,8 +39,6 @@ const EditorPreview: FC<EditorPreviewProps> = ({}) => {
   const handleAddValuesToForm = () => {
     // @ts-ignore
     if (sforms.current?.getFormQuestionsData) {
-      const formStructure = getClonedFormStructure();
-
       const addQuestionAnswer = (question: FormStructureQuestion) => {
         const questionNode = formStructure.getNode(question['@id']);
 
@@ -74,7 +72,7 @@ const EditorPreview: FC<EditorPreviewProps> = ({}) => {
 
       formData.forEach((question: FormStructureQuestion) => addQuestionAnswer(question));
 
-      setFormStructure(formStructure);
+      updateFormStructure(formStructure);
 
       enqueueSnackbar(`Values saved to form!`, {
         variant: 'success'

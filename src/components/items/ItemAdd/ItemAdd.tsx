@@ -110,10 +110,8 @@ const ItemAdd: FC<ItemAddProps> = ({
   };
 
   const moveNodes = (movingNodeId: string, targetNodeId: string) => {
-    const clonedFormStructure = getClonedFormStructure();
-
-    const movingNode = clonedFormStructure.getNode(movingNodeId);
-    const targetNode = clonedFormStructure.getNode(targetNodeId);
+    const movingNode = formStructure.getNode(movingNodeId);
+    const targetNode = formStructure.getNode(targetNodeId);
     const movingNodeParent = movingNode?.parent;
 
     if (!movingNode?.data || !targetNode?.data || !movingNodeParent) {
@@ -154,7 +152,7 @@ const ItemAdd: FC<ItemAddProps> = ({
 
     targetNode.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(targetNode.data[Constants.HAS_SUBQUESTION], intl);
 
-    updateFormStructure(clonedFormStructure);
+    updateFormStructure(formStructure);
 
     highlightQuestion(movingNodeId);
 

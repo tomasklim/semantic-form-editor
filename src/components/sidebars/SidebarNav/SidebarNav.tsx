@@ -22,27 +22,30 @@ const SidebarNav: React.FC<SidebarNavProps> = ({ customiseQuestion }) => {
 
   const addButton = useRef<HTMLButtonElement | null>(null);
 
-  const { getClonedFormStructure, formContext, addNewNodes, isWizardless, isEmptyFormStructure } = useContext(
-    FormStructureContext
-  );
+  const {
+    formStructure,
+    formContext,
+    addNewNodes,
+    isWizardless,
+    isEmptyFormStructure,
+    getClonedFormStructure
+  } = useContext(FormStructureContext);
   const { intl, setSectionsExpanded, sectionsExpanded } = useContext(EditorContext);
 
   const { editorCustomiseCodeView, setEditorCustomiseCodeView } = useContext(NavigationContext);
   const { validateForm } = useContext(ValidationContext);
 
   const addNewTopLevelQuestion = () => {
-    const clonedFormStructure = getClonedFormStructure();
-
-    const root = clonedFormStructure.getRoot();
+    const root = formStructure.getRoot();
 
     if (!root) {
-      console.warn('Missing root', clonedFormStructure);
+      console.warn('Missing root', formStructure);
       return;
     }
 
     customiseQuestion({
       customisingQuestion: !isWizardless ? { ...NEW_WIZARD_SECTION_QUESTION } : { ...NEW_QUESTION },
-      onSave: (): OnSaveQuestionsCallback => (questions) => addNewNodes(questions, root, clonedFormStructure, intl),
+      onSave: (): OnSaveQuestionsCallback => (questions) => addNewNodes(questions, root, intl),
       onCancel: () => () => addButton.current?.classList.remove(classes.buttonHighlight),
       onInit: () => addButton.current?.classList.add(classes.buttonHighlight),
       isNewQuestion: true,

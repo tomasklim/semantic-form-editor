@@ -13,7 +13,7 @@ const ItemFormEmpty: FC<ItemFormEmptyProps> = ({}) => {
   const classes = useStyles();
   const itemFormEmptyContainer = useRef<HTMLDivElement | null>(null);
 
-  const { getClonedFormStructure, addNewNodes, isWizardless } = useContext(FormStructureContext);
+  const { formStructure, addNewNodes, isWizardless } = useContext(FormStructureContext);
   const { customiseQuestion } = useContext(CustomiseQuestionContext);
   const { intl } = useContext(EditorContext);
 
@@ -22,12 +22,10 @@ const ItemFormEmpty: FC<ItemFormEmptyProps> = ({}) => {
   }, [isWizardless]);
 
   const addNewTopLevelQuestion = () => {
-    const clonedFormStructure = getClonedFormStructure();
-
-    const root = clonedFormStructure.getRoot();
+    const root = formStructure.getRoot();
 
     if (!root) {
-      console.warn('Missing root question!', clonedFormStructure);
+      console.warn('Missing root question!', formStructure);
       return;
     }
 
@@ -38,7 +36,7 @@ const ItemFormEmpty: FC<ItemFormEmptyProps> = ({}) => {
     customiseQuestion({
       customisingQuestion: !isWizardless ? { ...NEW_WIZARD_SECTION_QUESTION } : { ...NEW_QUESTION },
       onSave: (): OnSaveQuestionsCallback => (questions) => {
-        addNewNodes(questions, root, clonedFormStructure, intl);
+        addNewNodes(questions, root, intl);
         addButton?.classList.add(classes.buttonHighlight);
       },
       isNewQuestion: true,

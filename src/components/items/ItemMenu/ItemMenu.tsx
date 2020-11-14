@@ -35,7 +35,7 @@ const ItemMenu: FC<Props> = ({ question, customiseQuestion, onItemClick }) => {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
-  const { getClonedFormStructure, updateFormStructure, addNewNodes } = useContext(FormStructureContext);
+  const { formStructure, updateFormStructure, addNewNodes } = useContext(FormStructureContext);
   const { updateSFormsConfig, intl } = useContext(EditorContext);
   const { activeStep, setActiveStep } = useContext(NavigationContext);
 
@@ -59,9 +59,7 @@ const ItemMenu: FC<Props> = ({ question, customiseQuestion, onItemClick }) => {
   const addNewItem = (e: React.MouseEvent) => {
     e.stopPropagation();
 
-    const clonedFormStructure = getClonedFormStructure();
-
-    const targetNode = clonedFormStructure.getNode(question['@id']);
+    const targetNode = formStructure.getNode(question['@id']);
 
     if (!targetNode) {
       console.warn('Missing targetNode', targetNode);
@@ -70,8 +68,7 @@ const ItemMenu: FC<Props> = ({ question, customiseQuestion, onItemClick }) => {
 
     customiseQuestion({
       customisingQuestion: { ...NEW_QUESTION },
-      onSave: (): OnSaveQuestionsCallback => (questions) =>
-        addNewNodes(questions, targetNode, clonedFormStructure, intl),
+      onSave: (): OnSaveQuestionsCallback => (questions) => addNewNodes(questions, targetNode, intl),
       onCancel: () => () => addButton.current?.classList.remove(classes.addButtonHighlight),
       onInit: () => addButton.current?.classList.add(classes.addButtonHighlight),
       isNewQuestion: true
@@ -82,9 +79,7 @@ const ItemMenu: FC<Props> = ({ question, customiseQuestion, onItemClick }) => {
     e.stopPropagation();
     handleClose(e);
 
-    const clonedFormStructure = getClonedFormStructure();
-
-    const clonedQuestion = clonedFormStructure.getNode(question['@id']);
+    const clonedQuestion = formStructure.getNode(question['@id']);
 
     if (!clonedQuestion) {
       console.warn('Question with id not found', question['@id']);
@@ -100,7 +95,7 @@ const ItemMenu: FC<Props> = ({ question, customiseQuestion, onItemClick }) => {
 
     const index = removeFromSubquestions(questionParent, clonedQuestion);
 
-    removeFromFormStructure(clonedFormStructure, clonedQuestion);
+    removeFromFormStructure(formStructure, clonedQuestion);
 
     const potentialFollowingQuestion = questionParent?.data[Constants.HAS_SUBQUESTION]![index];
 
@@ -114,16 +109,14 @@ const ItemMenu: FC<Props> = ({ question, customiseQuestion, onItemClick }) => {
       intl
     );
 
-    updateFormStructure(clonedFormStructure);
+    updateFormStructure(formStructure);
   };
 
   const handleDuplicateQuestion = (e: React.SyntheticEvent<EventTarget>) => {
     e.stopPropagation();
     handleClose(e);
 
-    const clonedFormStructure = getClonedFormStructure();
-
-    const clonedQuestion = clonedFormStructure.getNode(question['@id']);
+    const clonedQuestion = formStructure.getNode(question['@id']);
 
     if (!clonedQuestion) {
       console.warn('Question with id not found', question['@id']);
@@ -139,11 +132,11 @@ const ItemMenu: FC<Props> = ({ question, customiseQuestion, onItemClick }) => {
 
     const duplicateQuestion = (duplicatedQuestion: FormStructureQuestion, nodeParent: FormStructureNode) => {
       const label = JsonLdUtils.getLocalized(duplicatedQuestion[Constants.RDFS_LABEL], intl);
-      duplicatedQuestion['@id'] = getUniqueId(label, clonedFormStructure);
+      duplicatedQuestion['@id'] = getUniqueId(label, formStructure);
 
       const duplicatedQuestionNode = new FormStructureNode(nodeParent, duplicatedQuestion);
 
-      clonedFormStructure.addNode(duplicatedQuestionNode);
+      formStructure.addNode(duplicatedQuestionNode);
 
       removePrecedingQuestion(duplicatedQuestionNode);
 
@@ -169,7 +162,7 @@ const ItemMenu: FC<Props> = ({ question, customiseQuestion, onItemClick }) => {
       intl
     );
 
-    updateFormStructure(clonedFormStructure);
+    updateFormStructure(formStructure);
     enqueueSnackbar(`Questions duplicated!`, {
       variant: 'success'
     });
@@ -186,9 +179,7 @@ const ItemMenu: FC<Props> = ({ question, customiseQuestion, onItemClick }) => {
     e.stopPropagation();
     handleClose();
 
-    const clonedFormStructure = getClonedFormStructure();
-
-    const clonedNode = clonedFormStructure.getNode(question['@id']);
+    const clonedNode = formStructure.getNode(question['@id']);
     const nodeParent = clonedNode?.parent;
 
     if (!clonedNode || !nodeParent) {
@@ -199,7 +190,7 @@ const ItemMenu: FC<Props> = ({ question, customiseQuestion, onItemClick }) => {
 
     sortRelatedQuestions(nodeParent.data[Constants.HAS_SUBQUESTION], intl);
 
-    updateFormStructure(clonedFormStructure);
+    updateFormStructure(formStructure);
 
     highlightQuestion(question['@id']);
   };

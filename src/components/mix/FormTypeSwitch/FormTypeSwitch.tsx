@@ -16,27 +16,22 @@ const FormTypeSwitch: React.FC<FormTypeSwitchProps> = ({ cloneConfigModal }) => 
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
-  const {
-    isEmptyFormStructure,
-    isWizardless,
-    setIsWizardless,
-    getClonedFormStructure,
-    updateFormStructure
-  } = useContext(FormStructureContext);
+  const { isEmptyFormStructure, isWizardless, setIsWizardless, formStructure, updateFormStructure } = useContext(
+    FormStructureContext
+  );
 
   const handleFormTypeChange = () => {
     setIsWizardless(!isWizardless);
   };
 
   const transformFormType = () => {
-    const clonedFormStructure = getClonedFormStructure();
     if (isWizardless) {
-      transformToWizardForm(clonedFormStructure);
+      transformToWizardForm(formStructure);
     } else {
-      transformToSimpleForm(clonedFormStructure);
+      transformToSimpleForm(formStructure);
     }
 
-    updateFormStructure(clonedFormStructure);
+    updateFormStructure(formStructure);
     cloneConfigModal();
 
     enqueueSnackbar(`Form type changed!`, {

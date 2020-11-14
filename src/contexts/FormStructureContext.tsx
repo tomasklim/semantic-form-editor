@@ -45,7 +45,6 @@ interface FormStructureContextValues {
 type AddNewFormStructureNode = (
   newItemData: FormStructureQuestion | Array<FormStructureQuestion>,
   targetNode: FormStructureNode,
-  clonedFormStructure: FormStructure,
   intl: Intl
 ) => void;
 
@@ -77,7 +76,7 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
 
   const updateFormStructure = async (form: FormStructure) => {
     if (router.query.formUrl && router.query.draftUpdate === 'true') {
-      setFormStructure(form);
+      setFormStructure(cloneDeep(form));
 
       const clonedForm = cloneDeep(form);
 
@@ -92,7 +91,7 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
         });
       }
     } else {
-      setFormStructure(form);
+      setFormStructure(cloneDeep(form));
     }
   };
 
@@ -117,16 +116,16 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
     return cloneDeep(formStructure)!;
   };
 
-  const addNewNodes: AddNewFormStructureNode = (questions, targetNode, clonedFormStructure, intl) => {
+  const addNewNodes: AddNewFormStructureNode = (questions, targetNode, intl) => {
     if (!Array.isArray(questions)) {
       questions = [questions];
     }
 
     questions.forEach((question) => {
       const node = new FormStructureNode(targetNode, question);
-      clonedFormStructure.addNode(node);
+      formStructure.addNode(node);
 
-      buildFormStructureResursion(node, clonedFormStructure, intl);
+      buildFormStructureResursion(node, formStructure, intl);
       moveQuestion(node, targetNode);
 
       highlightQuestion(question['@id']);
@@ -134,14 +133,12 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
 
     sortRelatedQuestions(targetNode.data[Constants.HAS_SUBQUESTION], intl);
 
-    updateFormStructure(clonedFormStructure);
+    updateFormStructure(formStructure);
   };
 
   const moveNodeUnderNode = (movingNodeId: string, targetNodeId: string, isWizardPosition: boolean, intl: Intl) => {
-    const clonedFormStructure = getClonedFormStructure();
-
-    const movingNode = clonedFormStructure.structure.get(movingNodeId);
-    const targetNode = clonedFormStructure.structure.get(targetNodeId);
+    const movingNode = formStructure.structure.get(movingNodeId);
+    const targetNode = formStructure.structure.get(targetNodeId);
 
     if (!movingNode?.data || !movingNode?.parent || !targetNode?.data) {
       console.warn("Missing movingNode's data or parent, or target's data");
@@ -179,18 +176,16 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
 
     targetNode.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(targetNode.data[Constants.HAS_SUBQUESTION], intl);
 
-    updateFormStructure(clonedFormStructure);
+    updateFormStructure(formStructure);
 
     highlightQuestion(movingNodeId);
   };
 
   const updateNode = (question: FormStructureQuestion, intl: Intl) => {
-    const clonedFormStructure = getClonedFormStructure();
-
-    const node = clonedFormStructure.structure.get(question['@id']);
+    const node = formStructure.structure.get(question['@id']);
 
     if (!node) {
-      console.warn('Not existing node id', clonedFormStructure, question);
+      console.warn('Not existing node id', formStructure, question);
       return;
     }
 
@@ -210,7 +205,7 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
       parent.data[Constants.HAS_SUBQUESTION] = sortRelatedQuestions(parent.data[Constants.HAS_SUBQUESTION], intl);
     }
 
-    updateFormStructure(clonedFormStructure);
+    updateFormStructure(formStructure);
   };
 
   const values = React.useMemo<FormStructureContextValues>(
