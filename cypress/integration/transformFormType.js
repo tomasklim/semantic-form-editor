@@ -13,7 +13,7 @@ describe('Transform form type', () => {
     createFormFromFile('simpleForm.json');
   });
 
-  it('transforms simple form without non-section questions to wizard form and vice versa', () => {
+  it('transforms classic form without non-section questions to wizard form and vice versa', () => {
     openConfigModal();
 
     cy.get('#transform-form-type').click();
@@ -32,9 +32,9 @@ describe('Transform form type', () => {
     getLayoutClassInput().contains('Section').should('exist');
   });
 
-  it('transforms simple form with non-section questions to wizard form and vice versa', () => {
+  it('transforms classic form with non-section questions to wizard form and vice versa', () => {
     addUnorderedFormQuestion();
-    createSimpleQuestion('Text', 'Text');
+    createSimpleQuestion('Text Field', 'Text field');
     saveSidebarForm();
 
     openConfigModal();

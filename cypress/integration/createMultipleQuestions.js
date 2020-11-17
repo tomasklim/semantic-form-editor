@@ -1,25 +1,11 @@
-import {
-  addUnorderedFormQuestion,
-  closeConfigModal,
-  createEmptyForm,
-  createFormFromFile,
-  createSimpleQuestion,
-  getForm,
-  getHelpInput,
-  getIdInput,
-  getLayoutClassInput,
-  openConfigModal,
-  saveSidebarForm,
-  switchFormType
-} from '../helpers';
-import { Constants } from 's-forms';
+import { closeConfigModal, createEmptyForm, switchFormType } from '../helpers';
 
 describe('create multiple questions', () => {
   beforeEach(() => {
     createEmptyForm();
   });
 
-  it('adds multiple questions correctly in simple form', () => {
+  it('adds multiple questions correctly in classic form', () => {
     closeConfigModal();
 
     cy.get('#multiple-questions-tab').click();

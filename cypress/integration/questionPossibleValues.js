@@ -11,10 +11,10 @@ describe("Specify question's possible values", () => {
     createEmptyForm();
   });
 
-  it('allows to specify possible values of typeahead question', () => {
+  it('allows to specify possible values of autocomplete question', () => {
     closeConfigModal();
 
-    createSimpleQuestion('Typeahead', 'Typeahead');
+    createSimpleQuestion('Autocomplete', 'Autocomplete');
 
     cy.get('#add-options').should('have.text', 'Add options - 0 available');
     cy.get('#add-options').click();
@@ -48,7 +48,7 @@ describe("Specify question's possible values", () => {
     cy.get('#add-options').should('have.text', 'Add options - 2 available');
   });
 
-  it('allows to specify possible values of typeahead question in more languages', () => {
+  it('allows to specify possible values of autocomplete question in more languages', () => {
     cy.get('[data-testid="languages-autocomplete"').click();
 
     cy.contains('cs').click();
@@ -57,7 +57,7 @@ describe("Specify question's possible values", () => {
     closeConfigModal();
 
     getLayoutClassInput().click();
-    cy.contains(new RegExp(`^Typeahead$`)).click();
+    cy.contains(new RegExp(`^Autocomplete`)).click();
 
     cy.get('#add-options').should('have.text', 'Add options - 0 available');
     cy.get('#add-options').click();

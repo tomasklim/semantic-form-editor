@@ -18,7 +18,7 @@ describe('Open empty form and customise it', () => {
     createEmptyForm();
   });
 
-  it('creates section in simple form, wizard step is not available', () => {
+  it('creates section in classic form, wizard step is not available', () => {
     closeConfigModal();
 
     getLabelInput().type('Label Section');
@@ -102,7 +102,7 @@ describe('Open empty form and customise it', () => {
 
         addUnorderedFormSubquestion(wizardStepId1);
 
-        createSimpleQuestion('Text Field', 'Text');
+        createSimpleQuestion('Text Field', 'Text field');
 
         getIdInput()
           .invoke('val')
@@ -129,7 +129,7 @@ describe('Open empty form and customise it', () => {
 
         addUnorderedFormSubquestion(wizardStepId1);
 
-        createSimpleQuestion('Text Field', 'Text');
+        createSimpleQuestion('Text Field', 'Text field');
 
         getIdInput()
           .invoke('val')
@@ -143,7 +143,7 @@ describe('Open empty form and customise it', () => {
       });
   });
 
-  it('allows to move non-wizard-step question to top level in simple form type', () => {
+  it('allows to move non-wizard-step question to top level in classic form type', () => {
     closeConfigModal();
 
     getLabelInput().type('Section');
@@ -158,7 +158,7 @@ describe('Open empty form and customise it', () => {
 
         addUnorderedFormSubquestion(sectionStepId);
 
-        createSimpleQuestion('Text Field', 'Text');
+        createSimpleQuestion('Text Field', 'Text field');
 
         getIdInput()
           .invoke('val')
@@ -174,7 +174,7 @@ describe('Open empty form and customise it', () => {
       });
   });
 
-  it('allows to move non-wizard-step question to certain place in top level in simple form type', () => {
+  it('allows to move non-wizard-step question to certain place in top level in classic form type', () => {
     closeConfigModal();
 
     createSimpleQuestion('Section', 'Section');
@@ -190,7 +190,7 @@ describe('Open empty form and customise it', () => {
 
         addUnorderedFormSubquestion(sectionStepId);
 
-        createSimpleQuestion('Text Field', 'Text');
+        createSimpleQuestion('Text Field', 'Text field');
 
         getIdInput()
           .invoke('val')

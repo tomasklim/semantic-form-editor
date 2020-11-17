@@ -22,12 +22,12 @@ describe('Create questions on specific places', () => {
 
     cy.get('[data-testid="item-add-0"]').click();
 
-    createSimpleQuestion('Text', 'Text');
+    createSimpleQuestion('Text Field', 'Text field');
     saveSidebarForm();
 
     cy.get('[data-testid="item-add-0"]').click();
 
-    createSimpleQuestion('Textarea', 'Textarea');
+    createSimpleQuestion('Text area', 'Text area');
     saveSidebarForm();
 
     cy.get('[data-testid="item-add-3"]').click();
@@ -59,7 +59,7 @@ describe('Create questions on specific places', () => {
         saveSidebarForm();
 
         addUnorderedFormSubquestion(wizardStepId);
-        createSimpleQuestion('Text', 'Text');
+        createSimpleQuestion('Text Field', 'Text field');
         saveSidebarForm();
 
         cy.get('[data-testid="item-add-1"]').click();

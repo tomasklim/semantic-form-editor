@@ -10,7 +10,7 @@ describe('code customisation', () => {
 
     cy.get('#edit-in-code').should('be.disabled');
 
-    createSimpleQuestion('Text', 'Text');
+    createSimpleQuestion('Text Field', 'Text field');
     saveSidebarForm();
 
     cy.get('#edit-in-code').click();

@@ -44,7 +44,10 @@ const FormTypeSwitch: React.FC<FormTypeSwitchProps> = ({ cloneConfigModal }) => 
       <div className={classes.switchContainer}>
         <Grid component="label" container spacing={1} className={classes.switch}>
           <Grid item>
-            <Tooltip title="Editor allows you to create a form with wizard. That means that your form can consist of more pages.">
+            <Tooltip
+              title="Wizard form is a form type, where the form is divided into multiple steps having one step per one screen.
+            It uses wizard which alows a user to navigate directly between specific steps without completing the previous steps."
+            >
               <HelpIcon fontSize={'small'} />
             </Tooltip>
             &nbsp;Wizard form
@@ -53,8 +56,8 @@ const FormTypeSwitch: React.FC<FormTypeSwitchProps> = ({ cloneConfigModal }) => 
             <CustomisedSwitch checked={isWizardless} onChange={handleFormTypeChange} disabled={!isEmptyFormStructure} />
           </Grid>
           <Grid item>
-            Simple form&nbsp;
-            <Tooltip title="Editor allows you to create one page simple form.">
+            Classic form&nbsp;
+            <Tooltip title="Classic form is a form type, where all questions are displayed on one screen at a time. The respondent can scroll to navigate between questions.">
               <HelpIcon fontSize={'small'} />
             </Tooltip>
           </Grid>

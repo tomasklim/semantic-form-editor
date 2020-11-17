@@ -190,7 +190,7 @@ describe('getIntl', () => {
 });
 
 describe('transformToSimpleForm', () => {
-  it('transforms wizard form to simple form', async () => {
+  it('transforms wizard form to classic form', async () => {
     const wizardForm = require('../../../__mock__/wizardStepForm.json');
 
     const formStructure = await buildFormStructure(wizardForm);
@@ -204,7 +204,7 @@ describe('transformToSimpleForm', () => {
 });
 
 describe('transformToWizardForm', () => {
-  it('transforms simple form with only section question on top level position to wizard', async () => {
+  it('transforms classic form with only section question on top level position to wizard', async () => {
     const form = require('../../../__mock__/simpleForm.json');
 
     const formStructure = await buildFormStructure(form);
@@ -226,7 +226,7 @@ describe('transformToWizardForm', () => {
     });
   });
 
-  it('transforms simple form with simple question on top level position to wizard', async () => {
+  it('transforms classic form with simple question on top level position to wizard', async () => {
     const form = require('../../../__mock__/localisedSimpleForm.json');
 
     const formStructure = await buildFormStructure(form);

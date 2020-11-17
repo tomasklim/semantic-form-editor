@@ -15,7 +15,7 @@ const ItemContent: FC<ItemContentProps> = ({ question }) => {
   if (FormUtils.isTypeahead(question)) {
     content = (
       <>
-        <input type="text" value={'Typeahead'} data-disabled="true" readOnly tabIndex={-1} />
+        <input type="text" value={'Autocomplete'} data-disabled="true" readOnly tabIndex={-1} />
         <div className={classes.typeaheadArrow} />
       </>
     );
@@ -35,11 +35,11 @@ const ItemContent: FC<ItemContentProps> = ({ question }) => {
       </div>
     );
   } else if (FormUtils.isMaskedInput(question)) {
-    content = <input type="text" value={'Masked Input'} data-disabled="true" readOnly tabIndex={-1} />;
+    content = <input type="text" value={'Masked text'} data-disabled="true" readOnly tabIndex={-1} />;
   } else if (FormUtils.isTextarea(question, '')) {
-    content = <textarea rows={2} value={'Textarea'} data-disabled="true" readOnly tabIndex={-1} />;
+    content = <textarea rows={2} value={'Text area'} data-disabled="true" readOnly tabIndex={-1} />;
   } else {
-    content = <input type="text" value={'Text Input'} data-disabled="true" readOnly tabIndex={-1} />;
+    content = <input type="text" value={'Text field'} data-disabled="true" readOnly tabIndex={-1} />;
   }
 
   return <CustomisedCardContent className={classes.itemContent}>{content}</CustomisedCardContent>;

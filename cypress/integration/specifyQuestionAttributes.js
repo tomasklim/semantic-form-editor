@@ -1,16 +1,12 @@
 import {
-  addUnorderedFormQuestion,
   addUnorderedFormSubquestion,
   closeConfigModal,
   createEmptyForm,
-  createFormFromFile,
   createSimpleQuestion,
-  getForm,
   getHelpInput,
   getIdInput,
   getLabelInput,
   getLayoutClassInput,
-  openConfigModal,
   saveSidebarForm
 } from '../helpers';
 import { Constants } from 's-forms';
@@ -33,7 +29,7 @@ describe('Specify question attributes', () => {
     cy.get('[data-testid="localised-input-ue"]').first().type('Ukrainian');
 
     getLayoutClassInput().click();
-    cy.contains(new RegExp(`^Text$`)).click();
+    cy.contains(new RegExp(`^Text field$`)).click();
 
     getIdInput()
       .invoke('val')
@@ -50,7 +46,7 @@ describe('Specify question attributes', () => {
   it('allows to specify custom attribute of question', () => {
     closeConfigModal();
 
-    createSimpleQuestion('Text', 'Text');
+    createSimpleQuestion('Text Field', 'Text field');
 
     getIdInput()
       .invoke('val')
@@ -86,7 +82,7 @@ describe('Specify question attributes', () => {
         saveSidebarForm();
 
         addUnorderedFormSubquestion(sectionQuestionId);
-        createSimpleQuestion('Text', 'Text');
+        createSimpleQuestion('Text Field', 'Text field');
 
         getIdInput()
           .invoke('val')
