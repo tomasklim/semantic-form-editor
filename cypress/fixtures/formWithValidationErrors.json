@@ -1,0 +1,40 @@
+{
+  "@context": {
+    "doc": "http://onto.fel.cvut.cz/ontologies/documentation/",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "label": {
+      "@id": "http://www.w3.org/2000/01/rdf-schema#label"
+    },
+    "has-layout-class": {
+      "@id": "http://onto.fel.cvut.cz/ontologies/form-layout/has-layout-class"
+    },
+    "has_related_question": {
+      "@id": "http://onto.fel.cvut.cz/ontologies/documentation/has_related_question",
+      "@type": "@id"
+    }
+  },
+  "@graph": [
+    {
+      "@id": "no-label",
+      "@type": "doc:question",
+      "has_related_question": [],
+      "has-layout-class": "textarea"
+    },
+    {
+      "@id": "no-layout-class",
+      "@type": "doc:question",
+      "has_related_question": [],
+      "label": "Field without layout class"
+    },
+    {
+      "@id": "form-root",
+      "@type": "doc:question",
+      "has_related_question": [
+        "no-label",
+        "no-layout-class"
+      ],
+      "has-layout-class": "form",
+      "label": "form"
+    }
+  ]
+}

@@ -110,6 +110,7 @@ const SidebarNav: React.FC<SidebarNavProps> = ({ customiseQuestion }) => {
             className={classes.spellCheckButton}
             onClick={handleValidateForm}
             disabled={isEmptyFormStructure}
+            id="validate-form"
           >
             <Spellcheck />
           </CustomisedOutlineButton>

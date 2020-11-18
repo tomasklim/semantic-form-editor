@@ -18,7 +18,7 @@ const ErrorsModal = () => {
   };
 
   const modalBody = (
-    <div className={classes.paper}>
+    <div className={classes.paper} id="validation-result-window">
       <h3>Validation result</h3>
       <TableContainer component={Paper}>
         <Table>
@@ -53,7 +53,12 @@ const ErrorsModal = () => {
         </Table>
       </TableContainer>
       <div className={classes.buttons}>
-        <CustomisedButton type="submit" size={'large'} onClick={handleOpenConfigModal}>
+        <CustomisedButton
+          type="submit"
+          size={'large'}
+          onClick={handleOpenConfigModal}
+          id="close-validation-result-window"
+        >
           Close
         </CustomisedButton>
       </div>
