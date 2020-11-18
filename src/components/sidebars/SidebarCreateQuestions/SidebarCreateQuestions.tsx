@@ -131,7 +131,7 @@ const SidebarCreateQuestions: React.FC<SidebarCreateQuestionsProps> = ({ handleC
     <form className={classes.form} onSubmit={onAdd}>
       <TextField
         name="create-questions"
-        label="Create questions"
+        label="Add multiple questions"
         multiline
         rowsMax={40}
         rows={20}
@@ -145,7 +145,7 @@ const SidebarCreateQuestions: React.FC<SidebarCreateQuestionsProps> = ({ handleC
       />
       <div className={classes.sidebarButtons}>
         <CustomisedButton type="submit" size={'large'} className={classes.saveButton} id="add-multiple-questions">
-          Add
+          Add questions
         </CustomisedButton>
         {!isEmptyFormStructure && (
           <CustomisedLinkButton onClick={onCancel} size={'large'}>

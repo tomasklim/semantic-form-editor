@@ -13,7 +13,7 @@ import {
   switchFormType
 } from '../helpers';
 
-describe('Open empty form and customise it', () => {
+describe('Open empty form and edit it', () => {
   beforeEach(() => {
     createEmptyForm();
   });

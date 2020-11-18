@@ -166,7 +166,7 @@ const EditorNew: FC<EditorNewProps> = ({ nextStep }) => {
           id="continue-button"
           disabled={continueButtonDisabled}
         >
-          Save and continue to next step
+          Save and start editing
         </CustomisedButton>
       </div>
     </>

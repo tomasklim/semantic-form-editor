@@ -18,7 +18,7 @@ describe('Preview form', () => {
 
     cy.get('#add-values-to-form').click();
 
-    cy.get('.MuiStepper-root').contains('Customise').click();
+    cy.get('.MuiStepper-root').contains('Edit').click();
     cy.get('.MuiStepper-root').contains('Preview').click();
 
     cy.get('[placeholder="YYYY"]').should('have.value', 1995);

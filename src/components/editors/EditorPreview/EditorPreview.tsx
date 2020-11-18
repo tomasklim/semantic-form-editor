@@ -111,7 +111,7 @@ const EditorPreview: FC<EditorPreviewProps> = ({}) => {
           onClick={handleAddValuesToForm}
           id="add-values-to-form"
         >
-          Save values to form
+          Save Answers
         </CustomisedOutlineButton>
       </div>
     </div>

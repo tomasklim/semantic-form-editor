@@ -154,7 +154,7 @@ const SidebarCustomiseQuestion: React.FC = () => {
 
       <div className={classes.sidebarButtons}>
         <CustomisedButton type="submit" size={'large'} className={classes.saveButton} id="save-question">
-          Save
+          {isNewQuestion ? 'Add question' : 'Update question'}
         </CustomisedButton>
         {!isEmptyFormStructure && (
           <CustomisedLinkButton onClick={onCancel} size={'large'}>

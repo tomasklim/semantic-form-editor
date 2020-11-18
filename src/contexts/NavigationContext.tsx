@@ -24,8 +24,8 @@ interface NavigationContextValues {
 const INITIAL_UNLOCKED_STEPS_LOCAL = [0];
 const INITIAL_UNLOCKED_STEPS_REMOTE = [1];
 
-const STEPS_LOCAL_FORM = ['New / Import', 'Customise', 'Preview', 'Export'];
-const STEPS_REMOTE_FORM = ['Load', 'Customise', 'Preview', 'Publish'];
+const STEPS_LOCAL_FORM = ['New / Import', 'Edit', 'Preview', 'Export'];
+const STEPS_REMOTE_FORM = ['Load', 'Edit', 'Preview', 'Publish'];
 
 // @ts-ignore
 const NavigationContext = React.createContext<NavigationContextValues>({});

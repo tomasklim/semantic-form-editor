@@ -52,7 +52,7 @@ const EditorCustomiseCode: React.FC = () => {
 
   const onReset = () => {
     enqueueSnackbar(`Changes reset!`, {
-      variant: 'error'
+      variant: 'info'
     });
 
     setForm({ ...form });

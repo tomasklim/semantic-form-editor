@@ -8,10 +8,9 @@ export default makeStyles((theme: ITheme) => ({
     flexDirection: 'column'
   },
   sidebarButtons: {
-    display: 'flex',
-    justifyContent: 'center'
+    display: 'flex'
   },
   saveButton: {
-    width: '90px'
+    width: '160px'
   }
 }));

@@ -1,7 +1,7 @@
 import { closeConfigModal, createSimpleQuestion, getEmptyItemForm, getStepper, saveSidebarForm } from '../helpers';
 
 describe('Import form from server', () => {
-  it('should start in customise step with empty form downloaded from formUrl', () => {
+  it('should start in edit mode with empty form downloaded from formUrl', () => {
     cy.server();
     cy.route('GET', 'http://example.com/newForm.json', 'fixture:newForm.json');
 
@@ -11,7 +11,7 @@ describe('Import form from server', () => {
 
     getStepper().find('button').should('have.length', 4);
     getStepper().find('button:disabled').should('have.length', 3);
-    getStepper().find('button:not([disabled])').should('have.length', 1).contains('Customise');
+    getStepper().find('button:not([disabled])').should('have.length', 1).contains('Edit');
 
     cy.get('#empty-form').should('have.length', 1);
   });
@@ -32,7 +32,7 @@ describe('Import form from server', () => {
     cy.get('@draftUpdate.all').should('have.length', 1);
   });
 
-  it('should start in customise step with empty form downloaded from formUrl', () => {
+  it('should start in edit mode with empty form downloaded from formUrl', () => {
     cy.server();
     cy.route('GET', 'http://example.com/simpleForm.json', 'fixture:simpleForm.json');
     cy.visit('/?formUrl=http://example.com/simpleForm.json');
@@ -46,7 +46,7 @@ describe('Import form from server', () => {
     cy.get('li[data-testid="item-section"]').should('have.length', 1);
   });
 
-  it('should start in customise step with empty form downloaded from formUrl', () => {
+  it('should start in edit mode with empty form downloaded from formUrl', () => {
     cy.server();
     cy.route('GET', 'http://example.com/simpleForm.json', 'fixture:simpleForm.json');
     cy.visit('/?formUrl=http://example.com/simpleForm.json');
@@ -56,7 +56,7 @@ describe('Import form from server', () => {
     cy.get('li[data-testid="item-section"]').should('have.length', 1);
   });
 
-  it('should start in customise step with empty form downloaded from formUrl', () => {
+  it('should start in edit mode with empty form downloaded from formUrl', () => {
     cy.server();
     cy.route('GET', 'http://example.com/simpleForm.json', 'fixture:simpleForm.json');
     cy.route('POST', 'http://example.com/simpleForm.json', { status: 200 }).as('publish');
