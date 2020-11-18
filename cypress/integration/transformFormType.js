@@ -5,7 +5,8 @@ import {
   getIdInput,
   getLayoutClassInput,
   openConfigModal,
-  saveSidebarForm
+  saveSidebarForm,
+  switchFormType
 } from '../helpers';
 
 describe('Transform form type', () => {
@@ -16,7 +17,7 @@ describe('Transform form type', () => {
   it('transforms classic form without non-section questions to wizard form and vice versa', () => {
     openConfigModal();
 
-    cy.get('#transform-form-type').click();
+    switchFormType();
 
     cy.get('#which-animals-do-you-know').click('top');
 
@@ -24,7 +25,7 @@ describe('Transform form type', () => {
     getLayoutClassInput().contains('Section').should('exist');
 
     openConfigModal();
-    cy.get('#transform-form-type').click();
+    switchFormType();
 
     cy.get('#which-animals-do-you-know').click('top');
 
@@ -39,7 +40,7 @@ describe('Transform form type', () => {
 
     openConfigModal();
 
-    cy.get('#transform-form-type').click();
+    switchFormType();
 
     cy.get('#which-animals-do-you-know').click('top');
 
@@ -54,7 +55,7 @@ describe('Transform form type', () => {
       .invoke('val')
       .then((wizardStepId) => {
         openConfigModal();
-        cy.get('#transform-form-type').click();
+        switchFormType();
 
         cy.get(`#${wizardStepId}`).click('top');
 

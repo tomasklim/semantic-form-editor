@@ -53,7 +53,10 @@ const FormTypeSwitch: React.FC<FormTypeSwitchProps> = ({ cloneConfigModal }) => 
             &nbsp;Wizard form
           </Grid>
           <Grid item className={classNames({ [classes.switchDisabled]: !isEmptyFormStructure })}>
-            <CustomisedSwitch checked={isWizardless} onChange={handleFormTypeChange} disabled={!isEmptyFormStructure} />
+            <CustomisedSwitch
+              checked={isWizardless}
+              onChange={isEmptyFormStructure ? handleFormTypeChange : transformFormType}
+            />
           </Grid>
           <Grid item>
             Classic form&nbsp;
@@ -63,15 +66,6 @@ const FormTypeSwitch: React.FC<FormTypeSwitchProps> = ({ cloneConfigModal }) => 
           </Grid>
         </Grid>
       </div>
-      {!isEmptyFormStructure && (
-        <div className={classes.transformForm}>
-          To change form type, transform the form by{' '}
-          <button className={classes.transformFormClick} onClick={transformFormType} id="transform-form-type">
-            clicking here
-          </button>
-          .
-        </div>
-      )}
     </div>
   );
 };
