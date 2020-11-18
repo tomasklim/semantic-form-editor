@@ -1,5 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles';
 import { ITheme } from '@interfaces/index';
+import { red } from '@material-ui/core/colors';
 
 export default makeStyles((theme: ITheme) => ({
   modal: {
@@ -42,6 +43,12 @@ export default makeStyles((theme: ITheme) => ({
     cursor: 'pointer',
     '&:hover': {
       color: theme.palette.custom.main
+    }
+  },
+  errorsListButton: {
+    color: red[500],
+    '&:hover': {
+      color: red[400]
     }
   }
 }));

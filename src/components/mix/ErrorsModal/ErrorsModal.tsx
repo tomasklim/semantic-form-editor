@@ -5,6 +5,7 @@ import { CustomisedButton } from '@styles/CustomisedButton';
 import { CustomisedLinkButton } from '@styles/CustomisedLinkButton';
 import { ValidationContext, ValidationError } from '@contexts/ValidationContext';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
+import { Warning } from '@material-ui/icons';
 
 const ErrorsModal = () => {
   const classes = useStyles();
@@ -18,7 +19,7 @@ const ErrorsModal = () => {
 
   const modalBody = (
     <div className={classes.paper}>
-      <h3>Validation errors</h3>
+      <h3>Validation result</h3>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -61,7 +62,14 @@ const ErrorsModal = () => {
 
   return (
     <>
-      <CustomisedLinkButton onClick={handleOpenConfigModal}>Errors list</CustomisedLinkButton>
+      <CustomisedLinkButton
+        onClick={handleOpenConfigModal}
+        className={classes.errorsListButton}
+        id={'errors-list-button'}
+      >
+        <Warning />
+        &nbsp;Result
+      </CustomisedLinkButton>
       {open && (
         <Modal className={classes.modal} open={open} onClose={handleOpenConfigModal}>
           {modalBody}

@@ -9,10 +9,9 @@ export default makeStyles((theme: ITheme) => ({
     }
   },
   sidebarButtons: {
-    display: 'flex',
-    justifyContent: 'center'
+    display: 'flex'
   },
   saveButton: {
-    width: '90px'
+    width: '150px'
   }
 }));

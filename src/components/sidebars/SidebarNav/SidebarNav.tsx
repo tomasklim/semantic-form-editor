@@ -12,6 +12,7 @@ import { Code, ExpandLess, ExpandMore, Spellcheck } from '@material-ui/icons';
 import { NavigationContext } from '@contexts/NavigationContext';
 import { exportForm } from '@utils/formHelpers';
 import { ValidationContext } from '@contexts/ValidationContext';
+import ErrorsModal from '@components/mix/ErrorsModal/ErrorsModal';
 
 interface SidebarNavProps {
   customiseQuestion: CustomiseQuestion;
@@ -33,7 +34,7 @@ const SidebarNav: React.FC<SidebarNavProps> = ({ customiseQuestion }) => {
   const { intl, setSectionsExpanded, sectionsExpanded } = useContext(EditorContext);
 
   const { editorCustomiseCodeView, setEditorCustomiseCodeView } = useContext(NavigationContext);
-  const { validateForm } = useContext(ValidationContext);
+  const { validateForm, isValid } = useContext(ValidationContext);
 
   const addNewTopLevelQuestion = () => {
     const root = formStructure.getRoot();
@@ -72,45 +73,48 @@ const SidebarNav: React.FC<SidebarNavProps> = ({ customiseQuestion }) => {
   return (
     <>
       <div className={classes.sidebarNav}>
-        <CustomisedOutlineButton
-          onClick={!isEmptyFormStructure ? addNewTopLevelQuestion : undefined}
-          title={!isWizardless ? 'Add new wizard step' : 'Add new question'}
-          id={!isWizardless ? 'add-new-wizard-step-button' : 'add-new-question'}
-          ref={addButton}
-          startIcon={<AddIcon />}
-          variant="outlined"
-        >
-          {!isWizardless ? 'Add new wizard step' : 'Add new question'}
-        </CustomisedOutlineButton>
-        <CustomisedOutlineButton
-          variant="outlined"
-          title={'Expand / collapse all'}
-          className={classes.expandButton}
-          onClick={handleSectionsExpansion}
-          disabled={isEmptyFormStructure}
-          id="collapse-all-button"
-        >
-          {sectionsExpanded ? <ExpandLess /> : <ExpandMore />}
-        </CustomisedOutlineButton>
-        <CustomisedOutlineButton
-          variant="outlined"
-          title={'Validate form'}
-          className={classes.spellCheckButton}
-          onClick={handleValidateForm}
-          disabled={isEmptyFormStructure}
-        >
-          <Spellcheck />
-        </CustomisedOutlineButton>
-        <CustomisedOutlineButton
-          variant="outlined"
-          title={'Edit in code'}
-          className={classes.codeButton}
-          onClick={switchToCodeEditor}
-          disabled={isEmptyFormStructure}
-          id="edit-in-code"
-        >
-          <Code />
-        </CustomisedOutlineButton>
+        <div className={classes.sidebarNavLeft}>
+          <CustomisedOutlineButton
+            onClick={!isEmptyFormStructure ? addNewTopLevelQuestion : undefined}
+            title={!isWizardless ? 'Add new wizard step' : 'Add new question'}
+            id={!isWizardless ? 'add-new-wizard-step-button' : 'add-new-question'}
+            ref={addButton}
+            startIcon={<AddIcon />}
+            variant="outlined"
+          >
+            {!isWizardless ? 'New step' : 'New question'}
+          </CustomisedOutlineButton>
+          <CustomisedOutlineButton
+            variant="outlined"
+            title={'Expand / collapse all'}
+            className={classes.expandButton}
+            onClick={handleSectionsExpansion}
+            disabled={isEmptyFormStructure}
+            id="collapse-all-button"
+          >
+            {sectionsExpanded ? <ExpandLess /> : <ExpandMore />}
+          </CustomisedOutlineButton>
+          <CustomisedOutlineButton
+            variant="outlined"
+            title={'Edit in code'}
+            className={classes.codeButton}
+            onClick={switchToCodeEditor}
+            disabled={isEmptyFormStructure}
+            id="edit-in-code"
+          >
+            <Code />
+          </CustomisedOutlineButton>
+          <CustomisedOutlineButton
+            variant="outlined"
+            title={'Validate form'}
+            className={classes.spellCheckButton}
+            onClick={handleValidateForm}
+            disabled={isEmptyFormStructure}
+          >
+            <Spellcheck />
+          </CustomisedOutlineButton>
+          {isValid === false ? <ErrorsModal /> : null}
+        </div>
         <ConfigModal />
       </div>
       <SidebarDroparea />

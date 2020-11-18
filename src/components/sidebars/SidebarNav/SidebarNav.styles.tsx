@@ -17,14 +17,20 @@ export default makeStyles((theme: ITheme) => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    '& > :not(:first-child)': {
-      marginLeft: theme.spacing(1)
-    },
     '& .MuiButton-outlined.Mui-disabled': {
       border: '1px solid rgb(255 255 255 / 12%)'
     },
     '& .MuiButton-root.Mui-disabled': {
       color: 'rgb(255 255 255 / 26%)'
+    }
+  },
+  sidebarNavLeft: {
+    marginRight: 'auto',
+    '& > :not(:first-child)': {
+      marginLeft: theme.spacing(1)
+    },
+    '& #errors-list-button': {
+      marginLeft: 0
     }
   },
   expandButton: {
@@ -33,11 +39,11 @@ export default makeStyles((theme: ITheme) => ({
   },
   codeButton: {
     minWidth: 'fit-content',
-    padding: '5px 10px',
-    marginRight: 'auto'
+    padding: '5px 10px'
   },
   spellCheckButton: {
     minWidth: 'fit-content',
-    padding: '5px 10px'
+    padding: '5px 10px',
+    marginRight: 'auto'
   }
 }));

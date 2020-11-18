@@ -78,7 +78,8 @@ export default makeStyles(() => ({
     width: 'auto',
     height: 'auto',
     marginRight: '1.3rem',
-    marginLeft: '-0.4rem'
+    marginLeft: '-0.4rem',
+    cursor: 'pointer'
   },
   tooltipNowrap: {
     marginLeft: '13px',
