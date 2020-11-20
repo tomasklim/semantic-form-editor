@@ -52,12 +52,6 @@ export default makeStyles(() => ({
       }
     }
   },
-  inputMask: {
-    '& span': {
-      backgroundColor: teal[900],
-      fontSize: '0.55rem'
-    }
-  },
   disabled: {
     '& span': {
       backgroundColor: amber[900],
@@ -66,10 +60,12 @@ export default makeStyles(() => ({
       }
     }
   },
-  optionsQuery: {
+  hidden: {
     '& span': {
       backgroundColor: teal[900],
-      fontSize: '0.55rem'
+      '& .MuiSvgIcon-fontSizeSmall': {
+        fontSize: '0.65rem'
+      }
     }
   },
   validationErrors: {
