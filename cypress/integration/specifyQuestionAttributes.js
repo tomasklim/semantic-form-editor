@@ -74,7 +74,7 @@ describe('Specify question attributes', () => {
   it('allows to modify subquestion of modified question and does not rollback the data', () => {
     closeConfigModal();
 
-    createSimple Question('Section', 'Section');
+    createSimpleQuestion('Section', 'Section');
 
     getIdInput()
       .invoke('val')
