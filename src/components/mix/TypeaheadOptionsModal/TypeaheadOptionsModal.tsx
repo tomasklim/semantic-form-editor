@@ -185,7 +185,7 @@ const TypeaheadOptionsModal: React.FC<TypeaheadOptionsModalProps> = ({ question,
     <div className={classes.addOptionsManually}>
       or
       <CustomisedLinkButton title="Typeahead option values" onClick={handleOpenConfigModal} id="add-options">
-        {`Add options - ${question[Constants.HAS_OPTION].length} available`}
+        {`Add answer options - ${question[Constants.HAS_OPTION].length} available`}
       </CustomisedLinkButton>
       {open && (
         <Modal className={classes.modal} open={open} onClose={handleOpenConfigModal} id={'typeahead-options-modal'}>

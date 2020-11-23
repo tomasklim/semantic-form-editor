@@ -113,7 +113,7 @@ const FormCustomAttributeList: React.FC<FormCustomAttributeListProps> = ({
           className={classes.addNewAttribute}
           data-testid="add-new-attribute"
         >
-          <AddIcon /> &nbsp;Add new custom attribute
+          <AddIcon /> &nbsp;Add missing property
         </Link>
       )}
     </>

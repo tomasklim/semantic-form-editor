@@ -96,7 +96,7 @@ const SidebarNav: React.FC<SidebarNavProps> = ({ customiseQuestion }) => {
           </CustomisedOutlineButton>
           <CustomisedOutlineButton
             variant="outlined"
-            title={'Edit in code'}
+            title={'Edit a source code of a form'}
             className={classes.codeButton}
             onClick={switchToCodeEditor}
             disabled={isEmptyFormStructure}

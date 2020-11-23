@@ -16,7 +16,7 @@ describe("Specify question's possible values", () => {
 
     createSimpleQuestion('Autocomplete', 'Autocomplete');
 
-    cy.get('#add-options').should('have.text', 'Add options - 0 available');
+    cy.get('#add-options').should('have.text', 'Add answer options - 0 available');
     cy.get('#add-options').click();
     cy.get('#options-modal').find('#empty-options');
 
@@ -31,7 +31,7 @@ describe("Specify question's possible values", () => {
     cy.get('[data-testid="option-2"]').type('Option 3');
 
     cy.get('#close-options-modal').click();
-    cy.get('#add-options').should('have.text', 'Add options - 3 available');
+    cy.get('#add-options').should('have.text', 'Add answer options - 3 available');
     cy.get('#add-options').click();
 
     cy.get('#options-modal').find('[data-testid="option-2"]').should('have.value', 'Option 3');
@@ -40,12 +40,12 @@ describe("Specify question's possible values", () => {
     cy.get('#options-modal').find('[data-testid="option-2"]').should('not.exist');
     cy.get('#close-options-modal').click();
 
-    cy.get('#add-options').should('have.text', 'Add options - 2 available');
+    cy.get('#add-options').should('have.text', 'Add answer options - 2 available');
 
     saveSidebarForm();
 
     cy.get('[data-testid="item-type-ahead"]').click('top');
-    cy.get('#add-options').should('have.text', 'Add options - 2 available');
+    cy.get('#add-options').should('have.text', 'Add answer options - 2 available');
   });
 
   it('allows to specify possible values of autocomplete question in more languages', () => {
@@ -59,7 +59,7 @@ describe("Specify question's possible values", () => {
     getLayoutClassInput().click();
     cy.contains(new RegExp(`^Autocomplete`)).click();
 
-    cy.get('#add-options').should('have.text', 'Add options - 0 available');
+    cy.get('#add-options').should('have.text', 'Add answer options - 0 available');
     cy.get('#add-options').click();
     cy.get('#options-modal').find('#empty-options');
 
@@ -77,7 +77,7 @@ describe("Specify question's possible values", () => {
     cy.get('[data-testid="option-2-ue"]').type('Option 3 UE');
 
     cy.get('#close-options-modal').click();
-    cy.get('#add-options').should('have.text', 'Add options - 3 available');
+    cy.get('#add-options').should('have.text', 'Add answer options - 3 available');
     cy.get('#add-options').click();
 
     cy.get('#options-modal').find('[data-testid="option-2-cs"]').should('have.value', 'Option 3 CS');
