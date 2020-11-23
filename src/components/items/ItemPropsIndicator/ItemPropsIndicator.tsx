@@ -54,14 +54,14 @@ const ItemPropsIndicator: FC<Props> = ({ question }) => {
   return (
     <span className={classes.headerIndicators}>
       {isValid === false && errors && (
-        <div className={classes.validationErrors}>
+        <div className={classes.validationErrors} data-testid="invalid-indicator">
           <Tooltip title={getErrorText()} PopperProps={{ className: classes.tooltipNowrap }}>
             <Warning />
           </Tooltip>
         </div>
       )}
       {question[Constants.REQUIRES_ANSWER] && (
-        <div>
+        <div data-testid="required-indicator">
           <Tooltip title="Required" arrow>
             <Badge badgeContent="*" className={classes.required} />
           </Tooltip>
@@ -75,14 +75,14 @@ const ItemPropsIndicator: FC<Props> = ({ question }) => {
         </div>
       )}
       {question[Constants.LAYOUT_CLASS] && question[Constants.LAYOUT_CLASS].includes(Constants.LAYOUT.COLLAPSED) && (
-        <div>
+        <div data-testid="collapsed-indicator">
           <Tooltip title="Collapsed" arrow>
             <Badge badgeContent={<ExpandMore fontSize="small" />} className={classes.collapsable} />
           </Tooltip>
         </div>
       )}
       {question[Constants.HELP_DESCRIPTION] && (
-        <div>
+        <div data-testid="help-indicator">
           <Tooltip title="Help description" arrow>
             <Badge badgeContent="?" className={classes.helpDescription} />
           </Tooltip>
@@ -96,14 +96,14 @@ const ItemPropsIndicator: FC<Props> = ({ question }) => {
         </div>
       )}
       {question[Constants.LAYOUT_CLASS] && question[Constants.LAYOUT_CLASS].includes(Constants.LAYOUT.DISABLED) && (
-        <div>
+        <div data-testid="disabled-indicator">
           <Tooltip title={'Disabled'} arrow>
             <Badge badgeContent={<Block fontSize={'small'} />} className={classes.disabled} />
           </Tooltip>
         </div>
       )}
       {question[Constants.LAYOUT_CLASS] && question[Constants.LAYOUT_CLASS].includes(Constants.LAYOUT.HIDDEN) && (
-        <div>
+        <div data-testid="hidden-indicator">
           <Tooltip title={'Hidden'} arrow>
             <Badge badgeContent={<VisibilityOff fontSize={'small'} />} className={classes.hidden} />
           </Tooltip>

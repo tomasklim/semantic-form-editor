@@ -32,6 +32,7 @@ describe('Validate form', () => {
 
     cy.get('#close-validation-result-window').click();
 
+    cy.get('#no-label').get('[data-testid="invalid-indicator"]').should('exist');
     cy.get('#no-label').click();
     getLabelInput().type('Label');
     saveSidebarForm();
@@ -42,5 +43,6 @@ describe('Validate form', () => {
 
     cy.get('#validate-form').click();
     cy.get('#errors-list-button').should('not.have.exist');
+    cy.get('#no-label').get('[data-testid="invalid-indicator"]').should('not.exist');
   });
 });
