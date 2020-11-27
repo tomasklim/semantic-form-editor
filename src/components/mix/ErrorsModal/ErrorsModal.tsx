@@ -33,9 +33,9 @@ const ErrorsModal = () => {
             {/* @ts-ignore */}
             {Array.from(questionErrors).map(([key, value]: [string, ValidationError]) => {
               return (
-                <>
+                <React.Fragment key={key + value}>
                   {value.map((error) => (
-                    <TableRow key={key + error.attribute}>
+                    <TableRow key={key + error.attribute + error.attribute}>
                       <TableCell component="th" scope="row">
                         {key}&nbsp;
                         <span className={classes.copyIcon}>
@@ -46,7 +46,7 @@ const ErrorsModal = () => {
                       <TableCell align="right">{error.error}</TableCell>
                     </TableRow>
                   ))}
-                </>
+                </React.Fragment>
               );
             })}
           </TableBody>

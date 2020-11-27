@@ -1,0 +1,238 @@
+@prefix : <http://onto.fel.cvut.cz/ontologies/shapes/form/> .
+@prefix dash: <http://datashapes.org/dash#> .
+@prefix doc: <http://onto.fel.cvut.cz/ontologies/documentation/> .
+@prefix form: <http://onto.fel.cvut.cz/ontologies/form/> .
+@prefix form-lt: <http://onto.fel.cvut.cz/ontologies/form-layout/> .
+@prefix form-sh: <http://onto.fel.cvut.cz/ontologies/shapes/form/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://onto.fel.cvut.cz/ontologies/shapes/form>
+  a owl:Ontology ;
+  owl:imports <http://datashapes.org/dash> ;
+.
+
+#best-practices rules
+:s03
+  a sh:NodeShape ;
+  sh:property [
+    sh:path rdfs:label ;
+    sh:not [
+             sh:pattern "^(my|your) .*" ;
+             sh:languageIn ( "en") ;
+             sh:flags "i" ;
+           ] ;
+    sh:not [
+             sh:pattern ".* (my|your) .*" ;
+             sh:languageIn ( "en" ) ;
+             sh:flags "i" ;
+           ] ;
+    sh:message "Label should not contain personalisation words, unless the form is a conversation between more than two parties"@en
+  ] ;
+  sh:targetClass doc:question ;
+.
+
+:s04
+  a sh:NodeShape ;
+  sh:property [
+                sh:message "Title heading is mandatory"@en ;
+                sh:or (
+                      [
+                        sh:path rdfs:label ;
+                        sh:minCount 1 ;
+                        sh:maxCount 1 ;
+
+                      ]
+                      [
+                        sh:not [
+                          sh:path form-lt:has-layout-class ;
+                          sh:hasValue "form" ;
+                        ]
+                      ]
+                      )
+                    ];
+  sh:property [
+                sh:message "Wizard step label is mandatory"@en ;
+                sh:or (
+                        [
+                          sh:path rdfs:label ;
+                          sh:minCount 1 ;
+                          sh:maxCount 1 ;
+
+                        ]
+                        [
+                          sh:not [
+                                   sh:path form-lt:has-layout-class ;
+                                   sh:hasValue "form" ;
+                                 ]
+                        ]
+                      )
+              ];
+  sh:targetClass doc:question ;
+.
+
+:s05
+  a sh:NodeShape ;
+  sh:property [
+                sh:message "Title heading should not be longer than five words"@en ;
+                sh:or (
+                        [
+                          sh:path rdfs:label ;
+                          sh:pattern "^(?:\\w+\\W+){0,5}(?:\\w+)$"
+                        ]
+                        [
+                          sh:not [
+                                   sh:path form-lt:has-layout-class ;
+                                   sh:hasValue "form" ;
+                                 ]
+                        ]
+                      )
+              ];
+  sh:property [
+                sh:message "Wizard step label should not be longer than five words"@en ;
+                sh:or (
+                        [
+                          sh:path rdfs:label ;
+                          sh:pattern "^(?:\\w+\\W+){0,5}(?:\\w+)$"
+                        ]
+                        [
+                          sh:not [
+                                   sh:path form-lt:has-layout-class ;
+                                   sh:hasValue "wizard-step" ;
+                                 ]
+                        ]
+                      )
+              ];
+  sh:targetClass doc:question ;
+.
+
+:s06
+  a sh:NodeShape ;
+  sh:property [
+                sh:path rdfs:label ;
+                sh:not [
+                         sh:pattern ".* (online|web|form) .*" ;
+                         sh:languageIn ( "en" ) ;
+                         sh:flags "i" ;
+                       ] ;
+                sh:not [
+                         sh:pattern "^(online|web|form) .*" ;
+                         sh:languageIn ( "en" ) ;
+                         sh:flags "i" ;
+                       ] ;
+                sh:not [
+                         sh:pattern ".* (online|web|form)$" ;
+                         sh:languageIn ( "en" ) ;
+                         sh:flags "i" ;
+                       ] ;
+                sh:message "Label should not contain words online/web/form if it does not hinder comprehention."@en
+              ] ;
+  sh:property [
+                sh:path rdfs:label ;
+                sh:not [
+                         sh:pattern "^(a|an|the) .*" ;
+                         sh:languageIn ( "en" ) ;
+                         sh:flags "i" ;
+                       ] ;
+                sh:not [
+                         sh:pattern ".* (a|an|the) .*" ;
+                         sh:languageIn ( "en" ) ;
+                         sh:flags "i" ;
+                       ] ;
+                sh:message "Label should not contain articles 'a/an/the'."@en
+              ] ;
+  sh:targetClass doc:question ;
+.
+
+:s09
+  a sh:NodeShape ;
+  sh:property [
+                sh:message "Autocomplete should have more than three answer options"@en;
+                sh:or (
+                        [
+                          sh:path form:has-possible-value ;
+                          sh:minCount 4 ;
+                        ]
+                        [
+                          sh:not [
+                                   sh:path form-lt:has-layout-class ;
+                                   sh:hasValue "type-ahead" ;
+                                 ]
+                        ]
+                      )
+              ];
+  sh:targetClass doc:question ;
+.
+
+:s10
+  a sh:NodeShape ;
+  sh:property [
+                sh:message "Masked text with input mask is prefered over time pickers"@en;
+                sh:and (
+                         [sh:not [
+                                   sh:path form-lt:has-layout-class ;
+                                   sh:hasValue "time" ;
+                                 ]]
+                         [sh:not [
+                                   sh:path form-lt:has-layout-class ;
+                                   sh:hasValue "date" ;
+                                 ]]
+                         [sh:not [
+                                   sh:path form-lt:has-layout-class ;
+                                   sh:hasValue "datetime" ;
+                                 ]]
+                       )
+              ];
+  sh:targetClass doc:question ;
+.
+
+:s11
+  a sh:NodeShape ;
+  sh:property [
+                sh:message "Labels should be in sentence sense format"@en;
+                sh:path rdfs:label ;
+                sh:and (
+                         [sh:not [ sh:pattern "^[^A-Z]*$"]]
+                         [sh:not [ sh:pattern "^[^a-z]*$"]]
+                       )
+              ];
+  sh:targetClass doc:question ;
+.
+
+:s14
+  a sh:NodeShape ;
+  sh:property [
+                sh:message "Default answers should be avoided, unless the data shows that with a high probability a user will choose it"@en;
+                sh:path doc:has_answer ;
+                sh:maxCount 0 ;
+              ] ;
+  sh:targetClass doc:question ;
+.
+
+# Deactivated rules (SHACL constrains using SPARQL, which is not supported in rdf-validate-shacl library)
+:s02
+  a sh:NodeShape ;
+  sh:targetClass doc:question ;
+  sh:sparql [
+              a sh:SPARQLConstraint ;
+              sh:message "Mixing punctuation -- question label \"{?thisLabel}\" ends with puctuation but there is a question \"{?thatLabel}\" that does not have punctuation."@en ;
+              sh:select """
+    SELECT $this ?thisLabel ?thatLabel
+    WHERE {
+      $this a <http://onto.fel.cvut.cz/ontologies/documentation/question> .
+      $this <http://www.w3.org/2000/01/rdf-schema#label> ?thisLabel .
+      ?that a <http://onto.fel.cvut.cz/ontologies/documentation/question> .
+      ?that <http://www.w3.org/2000/01/rdf-schema#label> ?thatLabel .
+      FILTER(strEnds(?thisLabel, "."))
+      FILTER(!strEnds(?thatLabel, "."))
+    }
+    ORDER BY ?thatLabel
+    LIMIT 1
+    """ ;
+            ] ;
+  sh:deactivated true ;
+.
+

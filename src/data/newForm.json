@@ -105,7 +105,7 @@
       "@type": "doc:question",
       "has_related_question": [],
       "has-layout-class": "form",
-      "label": "form"
+      "label": "Root node"
     }
   ]
 }

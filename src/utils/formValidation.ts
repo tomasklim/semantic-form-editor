@@ -14,11 +14,13 @@ export const shaclFormValidation = async (form: JsonLdObj): Promise<[boolean, Ma
   const parserTTL = new ParserN3({ factory });
   const parserJsonLd = new ParserJsonld();
 
-  const validationShapes = require('@data/validation.shapes.ttl');
+  const bestPracticesValidationShapes = require('@data/validation/best-practices-rules.shapes.ttl');
+  const ontologyRUlesValidationShapes = require('@data/validation/ontology-rules.shapes.ttl');
 
   const inputTTL = new Readable({
     read: () => {
-      inputTTL.push(validationShapes.default);
+      inputTTL.push(bestPracticesValidationShapes.default);
+      inputTTL.push(ontologyRUlesValidationShapes.default);
       inputTTL.push(null);
     }
   });
@@ -46,9 +48,9 @@ export const shaclFormValidation = async (form: JsonLdObj): Promise<[boolean, Ma
   const validationResults = new Map();
 
   for (const result of report.results) {
-    const attribute = result.path.value;
-    const questionId = result.focusNode.value;
-    const error = result.message[0].value;
+    const attribute = result.path && result.path.value;
+    const questionId = result.focusNode && result.focusNode.value;
+    const error = result.message.length > 0 && result.message[0].value;
 
     const errorRecord = { attribute, error };
     if (validationResults.has(questionId)) {
