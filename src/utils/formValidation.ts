@@ -8,16 +8,17 @@ import factory from 'rdf-ext';
 import ParserN3 from '@rdfjs/parser-n3';
 // @ts-ignore
 import ParserJsonld from '@rdfjs/parser-jsonld';
-import { validationRule } from '@data/validationRules';
 import { ValidationError } from '@contexts/ValidationContext';
 
 export const shaclFormValidation = async (form: JsonLdObj): Promise<[boolean, Map<string, ValidationError>]> => {
   const parserTTL = new ParserN3({ factory });
   const parserJsonLd = new ParserJsonld();
 
+  const validationShapes = require('@data/validation.shapes.ttl');
+
   const inputTTL = new Readable({
     read: () => {
-      inputTTL.push(validationRule);
+      inputTTL.push(validationShapes.default);
       inputTTL.push(null);
     }
   });

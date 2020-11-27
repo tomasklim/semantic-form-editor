@@ -12,12 +12,6 @@ import { FormStructureQuestion } from '@model/FormStructureQuestion';
 import { useSnackbar } from 'notistack';
 import useExportedForm from '../../../hooks/useExportedForm/useExportedForm';
 
-const fetchTypeaheadValuesMock = (_: string): Promise<object> => {
-  const possibleValues = require('@data/possibleValuesMock.json');
-
-  return new Promise((resolve) => setTimeout(() => resolve(possibleValues), 1500));
-};
-
 interface EditorPreviewProps {}
 
 const EditorPreview: FC<EditorPreviewProps> = ({}) => {
@@ -103,7 +97,7 @@ const EditorPreview: FC<EditorPreviewProps> = ({}) => {
         intl={intlPreview}
         setIntl={setIntlPreview}
       />
-      <SForms ref={sforms} form={form} options={options} fetchTypeAheadValues={fetchTypeaheadValuesMock} />
+      <SForms ref={sforms} form={form} options={options} fetchTypeAheadValues={(_) => new Promise(() => {})} />
       <div className={classes.buttons}>
         <CustomisedOutlineButton
           variant="outlined"
