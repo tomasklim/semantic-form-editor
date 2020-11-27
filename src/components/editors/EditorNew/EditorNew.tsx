@@ -141,7 +141,7 @@ const EditorNew: FC<EditorNewProps> = ({ nextStep }) => {
           </CustomisedOutlineButton>
         </label>
         <span>or</span>
-        <span className={classes.italic}>Paste your JSON-LD form below</span>
+        <span className={classes.italic}>Paste your JSON-LD form to the editor below</span>
       </div>
       <JsonEditor
         form={form}

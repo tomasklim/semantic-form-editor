@@ -99,7 +99,7 @@ const EditorExport: FC<EditorExportProps> = ({ resetEditor }) => {
           Copy to clipboard
         </CustomisedOutlineButton>
         <span>or</span>
-        <span className={classes.italic}>Copy your JSON-LD from form below</span>
+        <span className={classes.italic}>Copy your JSON-LD form from the editor below</span>
       </div>
       <JsonEditor
         form={form}

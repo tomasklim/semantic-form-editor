@@ -19,9 +19,10 @@ import { Constants } from 's-forms';
 import { createFakeChangeEvent } from '@utils/itemHelpers';
 import { CustomisedLinkButton } from '@styles/CustomisedLinkButton';
 import DeleteIcon from '@material-ui/icons/Delete';
+import AddIcon from '@material-ui/icons/Add';
+import { cloneDeep } from 'lodash';
 // @ts-ignore
 import JsonLdUtils from 'jsonld-utils';
-import AddIcon from '@material-ui/icons/Add';
 
 interface TypeaheadOptionsModalProps {
   question: FormStructureQuestion;
@@ -60,6 +61,19 @@ const TypeaheadOptionsModal: React.FC<TypeaheadOptionsModalProps> = ({ question,
     return null;
   }
 
+  const handleAddOption = () => {
+    const clonedOptions = cloneDeep(question[Constants.HAS_OPTION]);
+
+    clonedOptions.push({
+      '@id': 'option-' + Math.floor(Math.random() * 10000000 + 1),
+      [Constants.RDFS_LABEL]: []
+    });
+
+    const fakeEvent = createFakeChangeEvent(Constants.HAS_OPTION, clonedOptions);
+
+    handleChange(fakeEvent);
+  };
+
   const handleDeleteOption = (options: Array<TypeaheadOption>, option: TypeaheadOption) => {
     const opt = options.filter((optionToCompare: TypeaheadOption) => optionToCompare !== option);
 
@@ -95,7 +109,7 @@ const TypeaheadOptionsModal: React.FC<TypeaheadOptionsModalProps> = ({ question,
 
   const modalBody = (
     <div className={classes.paper} id="options-modal">
-      <h3>Typeahead options</h3>
+      <h3>Answer options</h3>
       {options.length ? (
         <TableContainer>
           <Table stickyHeader aria-label="sticky table">
@@ -156,16 +170,7 @@ const TypeaheadOptionsModal: React.FC<TypeaheadOptionsModalProps> = ({ question,
       <Link
         component="button"
         variant="body1"
-        onClick={() => {
-          options.push({
-            '@id': 'option-' + Math.floor(Math.random() * 10000000 + 1),
-            [Constants.RDFS_LABEL]: []
-          });
-
-          const fakeEvent = createFakeChangeEvent(Constants.HAS_OPTION, options);
-
-          handleChange(fakeEvent);
-        }}
+        onClick={handleAddOption}
         type="button"
         className={classes.addNewOption}
         id="add-new-option-button"
@@ -184,7 +189,7 @@ const TypeaheadOptionsModal: React.FC<TypeaheadOptionsModalProps> = ({ question,
   return (
     <div className={classes.addOptionsManually}>
       or
-      <CustomisedLinkButton title="Typeahead option values" onClick={handleOpenConfigModal} id="add-options">
+      <CustomisedLinkButton title="Add answer options" onClick={handleOpenConfigModal} id="add-options">
         {`Add answer options - ${question[Constants.HAS_OPTION].length} available`}
       </CustomisedLinkButton>
       {open && (

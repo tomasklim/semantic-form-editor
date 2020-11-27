@@ -14,6 +14,7 @@ export default makeStyles((theme: ITheme) => ({
   },
   paper: {
     position: 'absolute',
+    minWidth: '30vw',
     maxWidth: '90vw',
     backgroundColor: theme.palette.custom[900],
     border: '1px solid ' + theme.palette.custom.main,

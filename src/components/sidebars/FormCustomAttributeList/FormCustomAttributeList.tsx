@@ -30,8 +30,9 @@ const FormCustomAttributeList: React.FC<FormCustomAttributeListProps> = ({
   const { formContext } = useContext(FormStructureContext);
 
   const deleteGenericAttribute = (key: string) => {
-    delete question[key];
-    setCustomisingQuestion({ ...question });
+    const questionDeleteAttribute = { ...question };
+    delete questionDeleteAttribute[key];
+    setCustomisingQuestion(questionDeleteAttribute);
   };
 
   const handleCustomAttributeInputChange = (e: React.ChangeEvent) => {

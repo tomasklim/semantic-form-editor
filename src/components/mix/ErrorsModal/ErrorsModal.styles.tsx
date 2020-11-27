@@ -19,6 +19,7 @@ export default makeStyles((theme: ITheme) => ({
     overflow: 'auto',
     top: '108px',
     maxWidth: '90vw',
+    minWidth: '30vw',
 
     backgroundColor: theme.palette.custom[900],
     border: '1px solid ' + theme.palette.custom.main,
