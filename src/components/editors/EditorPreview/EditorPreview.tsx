@@ -68,7 +68,7 @@ const EditorPreview: FC<EditorPreviewProps> = ({}) => {
 
       updateFormStructure(formStructure);
 
-      enqueueSnackbar(`Values saved to form!`, {
+      enqueueSnackbar(`Values saved to the form!`, {
         variant: 'success'
       });
     }

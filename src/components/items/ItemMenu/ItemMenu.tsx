@@ -110,6 +110,10 @@ const ItemMenu: FC<Props> = ({ question, customiseQuestion, onItemClick }) => {
     );
 
     updateFormStructure(formStructure);
+
+    enqueueSnackbar(`Question with id "${clonedQuestion.data['@id']}" has been deleted!`, {
+      variant: 'success'
+    });
   };
 
   const handleDuplicateQuestion = (e: React.SyntheticEvent<EventTarget>) => {
@@ -163,7 +167,7 @@ const ItemMenu: FC<Props> = ({ question, customiseQuestion, onItemClick }) => {
     );
 
     updateFormStructure(formStructure);
-    enqueueSnackbar(`Questions duplicated!`, {
+    enqueueSnackbar(`Question have been duplicated!`, {
       variant: 'success'
     });
   };
@@ -193,6 +197,10 @@ const ItemMenu: FC<Props> = ({ question, customiseQuestion, onItemClick }) => {
     updateFormStructure(formStructure);
 
     highlightQuestion(question['@id']);
+
+    enqueueSnackbar(`Preceding question of question with id "${clonedNode.data['@id']}" has been deleted!`, {
+      variant: 'success'
+    });
   };
 
   return (

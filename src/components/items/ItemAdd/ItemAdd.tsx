@@ -22,6 +22,7 @@ import { NEW_QUESTION, NEW_WIZARD_SECTION_QUESTION } from '@constants/index';
 import classNames from 'classnames';
 import { EditorContext } from '@contexts/EditorContext';
 import useOnMouseItemEvent from '../../../hooks/useOnMouseItemEvent/useOnMouseItemEvent';
+import { useSnackbar } from 'notistack';
 
 type ItemAddProps = {
   position: number;
@@ -40,6 +41,7 @@ const ItemAdd: FC<ItemAddProps> = ({
 }) => {
   const classes = useStyles();
   const addContainer = useRef<HTMLDivElement | null>(null);
+  const { enqueueSnackbar } = useSnackbar();
 
   const { formStructure, updateFormStructure, getClonedFormStructure, isWizardless } = useContext(FormStructureContext);
   const { intl } = useContext(EditorContext);
@@ -154,6 +156,10 @@ const ItemAdd: FC<ItemAddProps> = ({
 
     updateFormStructure(formStructure);
 
+    enqueueSnackbar(`Question with id "${movingNode.data['@id']}" has been moved!`, {
+      variant: 'success'
+    });
+
     highlightQuestion(movingNodeId);
 
     window.scrollBy(0, 40);
@@ -202,6 +208,10 @@ const ItemAdd: FC<ItemAddProps> = ({
     updateFormStructure(clonedFormStructure);
 
     highlightQuestion(newQuestion['@id']);
+
+    enqueueSnackbar(`Question with id "${newQuestion.data['@id']}" has been created!`, {
+      variant: 'success'
+    });
   };
 
   return useMemo(

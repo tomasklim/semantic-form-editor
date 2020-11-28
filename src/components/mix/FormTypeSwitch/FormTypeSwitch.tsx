@@ -34,7 +34,7 @@ const FormTypeSwitch: React.FC<FormTypeSwitchProps> = ({ cloneConfigModal }) => 
     updateFormStructure(formStructure);
     cloneConfigModal();
 
-    enqueueSnackbar(`Form type changed!`, {
+    enqueueSnackbar(`Form type have changed!`, {
       variant: 'success'
     });
   };

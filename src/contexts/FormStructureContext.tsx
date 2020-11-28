@@ -134,6 +134,13 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
     sortRelatedQuestions(targetNode.data[Constants.HAS_SUBQUESTION], intl);
 
     updateFormStructure(formStructure);
+
+    enqueueSnackbar(
+      questions.length === 1 ? `New question has been created!` : `${questions.length} new questions have been added!`,
+      {
+        variant: 'success'
+      }
+    );
   };
 
   const moveNodeUnderNode = (movingNodeId: string, targetNodeId: string, isWizardPosition: boolean, intl: Intl) => {
@@ -179,6 +186,10 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
     updateFormStructure(formStructure);
 
     highlightQuestion(movingNodeId);
+
+    enqueueSnackbar(`Question with id "${movingNode.data['@id']}" has been moved!`, {
+      variant: 'success'
+    });
   };
 
   const updateNode = (question: FormStructureQuestion, intl: Intl) => {
@@ -206,6 +217,10 @@ const FormStructureProvider: React.FC<FormStructureProviderProps> = ({ children 
     }
 
     updateFormStructure(formStructure);
+
+    enqueueSnackbar(`Question with id "${question['@id']}" has been updated!`, {
+      variant: 'success'
+    });
   };
 
   const values = React.useMemo<FormStructureContextValues>(
