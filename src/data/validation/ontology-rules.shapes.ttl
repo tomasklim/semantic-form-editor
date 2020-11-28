@@ -21,11 +21,13 @@
     a sh:NodeShape ;
     rdfs:subClassOf rdfs:Resource ;
     sh:property [
+                  sh:message "Label should be defined"@en;
                   sh:path rdfs:label ;
                   sh:maxCount 1 ;
                   sh:minCount 1 ;
                 ] ;
     sh:property [
+                  sh:message "Layout class should be defined"@en;
                   sh:path form-lt:has-layout-class ;
                   sh:minCount 1 ;
                 ] ;
