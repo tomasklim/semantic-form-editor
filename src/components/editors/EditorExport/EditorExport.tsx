@@ -23,8 +23,10 @@ const EditorExport: FC<EditorExportProps> = ({ resetEditor }) => {
 
   const downloadExportedForm = () => {
     const element = document.createElement('a');
-    element.setAttribute('href', 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(form)));
-    element.setAttribute('download', 'form');
+    element.setAttribute(
+      'href',
+      'data:application/ld+json;charset=utf-8,' + encodeURIComponent(JSON.stringify(form, undefined, 2))
+    );
 
     element.style.display = 'none';
     document.body.appendChild(element);
@@ -39,7 +41,7 @@ const EditorExport: FC<EditorExportProps> = ({ resetEditor }) => {
   };
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(JSON.stringify(form));
+    navigator.clipboard.writeText(JSON.stringify(form, undefined, 2));
 
     enqueueSnackbar('Form copied to clipboard!', {
       variant: 'success'
