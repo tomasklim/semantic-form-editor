@@ -128,9 +128,9 @@ const LayoutClassInput: React.FC<LayoutClassInputProps> = ({ question, handleCha
           <TextField
             {...params}
             variant="outlined"
-            label={`Layout class${layoutClasses.length ? ' *' : ''}`}
+            label={`Question type and properties${layoutClasses.length ? ' *' : ''}`}
             required={!layoutClasses.length}
-            placeholder="Choose layout classes"
+            placeholder="Choose question type and properties"
           />
         )}
         renderTags={(tagValue, getTagProps) =>

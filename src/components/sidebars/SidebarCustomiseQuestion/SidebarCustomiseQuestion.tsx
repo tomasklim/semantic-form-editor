@@ -118,7 +118,7 @@ const SidebarCustomiseQuestion: React.FC = () => {
         <>
           <TextField
             name={Constants.HAS_OPTIONS_QUERY}
-            label="Options query"
+            label="Remote answer options URL"
             variant="outlined"
             value={customisingQuestion[Constants.HAS_OPTIONS_QUERY] || ''}
             onChange={handleChangeDefault}

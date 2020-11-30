@@ -83,7 +83,7 @@ const ItemPropsIndicator: FC<Props> = ({ question }) => {
       )}
       {question[Constants.HELP_DESCRIPTION] && (
         <div data-testid="help-indicator">
-          <Tooltip title="Help description" arrow>
+          <Tooltip title="Question help" arrow>
             <Badge badgeContent="?" className={classes.helpDescription} />
           </Tooltip>
         </div>
