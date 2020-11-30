@@ -58,6 +58,7 @@ const ItemMenu: FC<Props> = ({ question, customiseQuestion, onItemClick }) => {
 
   const addNewItem = (e: React.MouseEvent) => {
     e.stopPropagation();
+    handleClose(e);
 
     const targetNode = formStructure.getNode(question['@id']);
 
@@ -226,6 +227,7 @@ const ItemMenu: FC<Props> = ({ question, customiseQuestion, onItemClick }) => {
                   <MenuItem onClick={onItemClick}>Edit question</MenuItem>
                   <MenuItem onClick={handleDuplicateQuestion}>Duplicate question</MenuItem>
                   <MenuItem onClick={handleDelete}>Delete question</MenuItem>
+                  <MenuItem onClick={addNewItem}>Add a subquestion</MenuItem>
                   {question[Constants.HAS_PRECEDING_QUESTION] && (
                     <MenuItem onClick={removePrecedingQuestionLink} id="menu-item-preceding-question">
                       Remove preceding question link
