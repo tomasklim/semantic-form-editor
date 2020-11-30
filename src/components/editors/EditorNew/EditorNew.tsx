@@ -128,7 +128,7 @@ const EditorNew: FC<EditorNewProps> = ({ nextStep }) => {
         <span>or</span>
         <input
           color="primary"
-          accept="application/json"
+          accept="application/json,application/ld+json"
           type="file"
           id="import-form-button"
           className={classes.uploadFileInput}
