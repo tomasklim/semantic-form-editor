@@ -1,4 +1,4 @@
-import { FormControl, InputLabel, Select } from '@material-ui/core';
+import { FormControl, InputLabel, MenuItem, Select } from '@material-ui/core';
 import React, { Dispatch, SetStateAction, useContext } from 'react';
 import useStyles from './PreviewConfig.styles';
 import WizardOrientationSwitch from '@components/mix/WizardOrientationSwitch/WizardOrientationSwitch';
@@ -42,15 +42,14 @@ const PreviewConfig: React.FC<PreviewConfigProps> = ({
         <FormControl>
           <InputLabel>Language</InputLabel>
           <Select
-            native
             value={intl?.locale}
             onChange={(e) => setIntl(getIntl((e.target.value as unknown) as string))}
             id="language-select"
           >
             {languages.map((language) => (
-              <option key={language} value={language}>
+              <MenuItem key={language} value={language}>
                 {language.toUpperCase()}
-              </option>
+              </MenuItem>
             ))}
           </Select>
         </FormControl>
