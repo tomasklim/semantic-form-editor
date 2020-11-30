@@ -113,7 +113,7 @@ const EditorCustomiseCode: React.FC = () => {
       <JsonEditor
         form={form}
         processFormCallback={processForm}
-        finishFormCallback={setFinishCallback}
+        setFinishFormCallback={setFinishCallback}
         editorOptions={{
           mode: 'code' as JSONEditorMode
         }}

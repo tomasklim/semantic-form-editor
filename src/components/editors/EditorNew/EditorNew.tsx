@@ -149,7 +149,7 @@ const EditorNew: FC<EditorNewProps> = ({ nextStep }) => {
           mode: 'code' as JSONEditorMode,
           onChange: onJsonEditorChange
         }}
-        finishFormCallback={setFinishCallback}
+        setFinishFormCallback={setFinishCallback}
         processFormCallback={handleContinueToNextStep}
         onError={() => setLoading(false)}
         skipErrors={false}

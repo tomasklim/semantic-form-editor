@@ -9,7 +9,7 @@ import { shaclFormValidation } from '@utils/index';
 interface JsonEditorProps {
   form: JsonLdObj | null;
   processFormCallback?: (form: JsonLdObj) => void;
-  finishFormCallback?: Dispatch<SetStateAction<Function>>;
+  setFinishFormCallback?: Dispatch<SetStateAction<Function>>;
   editorOptions: JSONEditorOptions;
   className?: string;
   skipErrors?: boolean;
@@ -20,7 +20,7 @@ const JsonEditor: React.FC<JsonEditorProps> = ({
   form,
   editorOptions,
   processFormCallback,
-  finishFormCallback,
+  setFinishFormCallback,
   className,
   skipErrors,
   onError
@@ -41,13 +41,19 @@ const JsonEditor: React.FC<JsonEditorProps> = ({
   useEffect(() => {
     if (form) {
       jsonEditorInstance?.set(form);
-      if (finishFormCallback) {
-        finishFormCallback(() => processFormEditor);
-      }
     }
-  }, [form]);
+    if (setFinishFormCallback) {
+      setFinishFormCallback(() => processFormEditor);
+    }
+  }, [form, jsonEditorInstance]);
 
   const isFormValid = (form: any) => {
+    if (!form) {
+      enqueueSnackbar('No form available!', {
+        variant: 'error'
+      });
+      return false;
+    }
     if (!form['@context'] || !Object.keys(form['@context']).length) {
       enqueueSnackbar('Your JSON-LD form is missing the necessary property @context!', {
         variant: 'error'
