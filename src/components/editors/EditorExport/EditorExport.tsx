@@ -27,6 +27,7 @@ const EditorExport: FC<EditorExportProps> = ({ resetEditor }) => {
       'href',
       'data:application/ld+json;charset=utf-8,' + encodeURIComponent(JSON.stringify(form, undefined, 2))
     );
+    element.setAttribute('download', 'form.json');
 
     element.style.display = 'none';
     document.body.appendChild(element);
