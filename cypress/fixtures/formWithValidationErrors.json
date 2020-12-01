@@ -34,7 +34,7 @@
         "no-layout-class"
       ],
       "has-layout-class": "form",
-      "label": "form"
+      "label": "Root node"
     }
   ]
 }

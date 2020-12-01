@@ -33,7 +33,8 @@ describe('Preview form', () => {
 
     cy.get('#preview-form').contains('Zeitschriften').should('not.exist');
 
-    cy.get('#language-select').select('de');
+    cy.get('#language-select').click();
+    cy.contains('DE').click();
 
     cy.get('#preview-form').contains('Zeitschriften').should('exist');
 

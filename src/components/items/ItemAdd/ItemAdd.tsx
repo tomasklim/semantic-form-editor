@@ -209,7 +209,7 @@ const ItemAdd: FC<ItemAddProps> = ({
 
     highlightQuestion(newQuestion['@id']);
 
-    enqueueSnackbar(`Question with id "${newQuestion.data['@id']}" has been created!`, {
+    enqueueSnackbar(`Question with id "${newQuestion['@id']}" has been created!`, {
       variant: 'success'
     });
   };
