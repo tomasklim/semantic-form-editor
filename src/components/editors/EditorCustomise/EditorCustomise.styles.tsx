@@ -8,25 +8,25 @@ export default makeStyles((theme: ITheme) => ({
     listStyle: 'none',
     margin: 0,
     '& *': { userSelect: 'none' },
-    '& li > div': {
+    '& li > div:not(.MuiPaper-root)': {
       backgroundColor: theme.palette.custom[800]
     },
-    '& ol li > div': {
+    '& ol li > div:not(.MuiPaper-root)': {
       backgroundColor: theme.palette.custom[700]
     },
-    '& ol ol li > div': {
+    '& ol ol li > div:not(.MuiPaper-root)': {
       backgroundColor: theme.palette.custom[500]
     },
-    '& ol ol ol li div': {
+    '& ol ol ol li div:not(.MuiPaper-root)': {
       backgroundColor: theme.palette.custom[400]
     },
-    '& ol ol ol ol li div': {
+    '& ol ol ol ol li div:not(.MuiPaper-root)': {
       backgroundColor: theme.palette.custom[300]
     },
-    '& ol ol ol ol ol li div': {
+    '& ol ol ol ol ol li div:not(.MuiPaper-root)': {
       backgroundColor: theme.palette.custom[200]
     },
-    '& ol ol ol ol ol ol li div': {
+    '& ol ol ol ol ol ol li div:not(.MuiPaper-root)': {
       backgroundColor: theme.palette.custom[100]
     },
     '& ol': {
