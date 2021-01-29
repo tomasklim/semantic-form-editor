@@ -33,7 +33,7 @@ Next.js, React, Material-UI, SForms, Cypress, Jest, RDF, RDFS, OWL, JSON-LD, SHA
 - Fix issues found in the user testing
 - Speed up the application
 
-## Master thesis document
+## Master thesis document
 
 - https://dspace.cvut.cz/handle/10467/92722
 
